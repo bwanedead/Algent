@@ -1,22 +1,32 @@
+import type { ComponentType } from "react";
+
 import { SourceLink } from "@/components/DailyVisuals";
 import MapStory from "@/components/MapStory";
+import NativeFlow from "@/components/NativeFlow";
+import NativeNetwork from "@/components/NativeNetwork";
 import NativeTimeline from "@/components/NativeTimeline";
+import NativeTrackerCompare from "@/components/NativeTrackerCompare";
 import Scene3D from "@/components/Scene3D";
 import Popover from "@/components/Popover";
 import { assetUrl } from "@/lib/assets";
 import type { DailyVisual, VisualKind } from "@/lib/daily";
 
 // An ad-hoc visual the desk made for a section (backend agents/intel/visuals.py), routed by kind and shape:
-//   - timeline / mapstory with a `spec`: drawn natively and interactively from the data spec (NativeTimeline, MapStory);
+//   - timeline / mapstory / network / flow / tracker_compare with a `spec`: drawn natively and interactively from the data
+//     spec (NativeTimeline, MapStory, NativeNetwork, NativeFlow, NativeTrackerCompare);
 //   - scene3d with a `scene`: the 3D viewer (Scene3D);
 //   - everything else, including older harness-drawn timelines (no `spec`): the picture first, a tap to enlarge.
-// Each has one line saying what it shows and its sources. Drawings that are not measurements (schematic, flow) wear a
+// Each has one line saying what it shows and its sources. Drawings that are not measurements (schematic, an older flow diagram) wear a
 // visible tag, in line with the site's AI-images policy.
+
+type NativeFigure = ComponentType<{ src: string; preview: string; title: string; caption: string }>;
 
 const KIND: Record<VisualKind, string> = {
   chart: "Chart",
   timeline: "Timeline",
   mapstory: "Map story",
+  network: "Network",
+  tracker_compare: "Trackers compared",
   comparison: "Comparison",
   map: "Map",
   scale: "To scale",
@@ -24,6 +34,14 @@ const KIND: Record<VisualKind, string> = {
   flow: "Diagram",
   before_after: "Before and after",
   scene3d: "3D scene",
+};
+
+const NATIVE: Partial<Record<VisualKind, NativeFigure>> = {
+  timeline: NativeTimeline,
+  mapstory: MapStory,
+  network: NativeNetwork,
+  flow: NativeFlow,
+  tracker_compare: NativeTrackerCompare,
 };
 
 export default function DailyFigure({ v }: { v: DailyVisual }) {
@@ -47,8 +65,8 @@ export default function DailyFigure({ v }: { v: DailyVisual }) {
       </details>
     );
   }
-  if ((v.kind === "timeline" || v.kind === "mapstory") && v.spec) {
-    const Native = v.kind === "timeline" ? NativeTimeline : MapStory;
+  const Native = NATIVE[v.kind];
+  if (v.spec && Native) {
     return (
       <figure className="geo-figure">
         <Native src={assetUrl(v.spec)} preview={assetUrl(v.preview)} title={v.title} caption={v.caption} />
@@ -73,7 +91,7 @@ export default function DailyFigure({ v }: { v: DailyVisual }) {
 function FigCaption({ v }: { v: DailyVisual }) {
   return (
     <figcaption>
-      <span className="geo-figure-tag">{KIND[v.kind]}</span>
+      <span className="geo-figure-tag">{v.kind === "flow" && v.spec ? "Flows" : KIND[v.kind]}</span>
       {v.title && <b className="geo-strong"> {v.title}. </b>}
       <span>{v.caption}</span>
       <span className="geo-figure-src">

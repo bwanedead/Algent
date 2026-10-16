@@ -1,0 +1,124 @@
+/* The native data figures: network (NativeNetwork.tsx), flow map (NativeFlow.tsx), tracker comparison (NativeTrackerCompare.tsx).
+   Colours are the visual language's tokens (app/visual.css): the category tints for lines, so a relation family or a tracker
+   line keeps one colour on every surface. Shared bits (bar, detail card, list) are `nv-`; each figure has its own prefix. */
+
+.nv-host, .nn, .nf, .nc { min-width: 0; }
+.nv-wait { min-height: 120px; }
+.nv-still { display: block; width: 100%; height: auto; background: #fff; border: 1px solid var(--rule-strong); }
+
+/* ---- shared: scrubber bar, detail card, all-items list ---------------------------------------------------- */
+.nv-bar { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.nv-btn[aria-pressed="true"] { border-color: var(--accent); background: var(--panel); }
+.nv-btn { font: inherit; font-size: 12px; min-height: 40px; padding: 0 12px; border: 1px solid var(--rule-strong); background: transparent; color: var(--strong); cursor: pointer; }
+.nv-btn:focus-visible { outline: 2px solid var(--link-accent); outline-offset: 2px; }
+.nv-range { flex: 1 1 140px; min-width: 0; min-height: 40px; accent-color: var(--accent); }
+.nv-count { min-width: 72px; text-align: right; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.nv-detail { min-height: 76px; margin-top: 8px; padding: 8px 10px; background: var(--panel); border-left: 3px solid var(--accent); }
+.nv-head { margin: 0; font-size: 15px; line-height: 21px; font-weight: 600; color: var(--strong); overflow-wrap: anywhere; }
+.nv-head .isof { vertical-align: -2px; }
+.nv-text { margin: 2px 0 0; font-size: 14px; line-height: 20px; color: var(--text); overflow-wrap: anywhere; }
+.nv-meta { margin: 2px 0 0; font-size: 12px; line-height: 16px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.nv-hint { margin: 0; font-size: 13px; line-height: 19px; color: var(--muted); }
+.nv-src { display: flex; flex-wrap: wrap; gap: 0 10px; margin: 4px 0 0; font-size: 12px; }
+.nv-ties { list-style: none; margin: 4px 0 0; padding: 0; }
+.nv-ties button, .nv-all button { width: 100%; min-height: 40px; padding: 6px 8px; font: inherit; font-size: 13px; line-height: 18px; text-align: left; color: var(--text); background: transparent; border: 0; border-bottom: 1px solid var(--rule); cursor: pointer; overflow-wrap: anywhere; }
+.nv-ties button:hover, .nv-all button:hover { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.nv-all { margin-top: 6px; font-size: 12px; }
+.nv-all summary { display: flex; align-items: center; min-height: 32px; cursor: pointer; color: var(--muted); }
+.nv-all ol { list-style: none; margin: 0; padding: 0; }
+.nv-all li.is-on button { background: var(--panel); }
+.nv-all li.is-cut b { color: var(--vl-up); }
+.nv-all li.is-alt b { color: var(--vl-down); }
+.nv-all button:disabled { cursor: default; }
+.nv-all b { color: var(--strong); }
+.nv-ties button:focus-visible, .nv-all button:focus-visible, .nv-all summary:focus-visible, .nv-range:focus-visible { outline: 2px solid var(--link-accent); outline-offset: 2px; }
+
+/* one colour per family / tone, the visual language's tints */
+.nn-f-backing { --c: var(--vl-energy); }
+.nn-f-hostile { --c: var(--vl-conflict); }
+.nn-f-exchange { --c: var(--vl-economy); }
+.nn-f-talks { --c: var(--vl-politics); }
+
+/* ---- network ------------------------------------------------------------------------------------------------ */
+.nn-svg { display: block; width: 100%; height: auto; max-height: 560px; border: 1px solid var(--rule); border-radius: var(--vl-r-sm, 9px); background: var(--vl-surface, var(--panel)); }
+.nn-line { fill: none; stroke: var(--c); opacity: 0.5; stroke-linecap: round; }
+.nn-pulse { fill: none; stroke: var(--c); stroke-linecap: round; stroke-dasharray: 0.1 14; pointer-events: none; animation: nn-flow 1.2s linear infinite; }
+.nn-hit { fill: none; stroke: transparent; cursor: pointer; }
+.nn-arrow { fill: var(--c); }
+.nn-tie.is-dim { opacity: 0.16; }
+.nn-tie.is-sel .nn-line { opacity: 1; }
+@keyframes nn-flow { to { stroke-dashoffset: -14.1; } }
+.nn-node { cursor: pointer; transition: opacity 160ms ease; }
+.nn-node.is-off, .nn-node.is-dim { opacity: 0.3; }
+.nn-touch { fill: transparent; }
+.nn-dot { fill: var(--strong); stroke: var(--vl-surface, var(--bg)); stroke-width: 2; }
+.nn-node.k-group .nn-dot { fill: var(--muted); }
+.nn-node.k-person .nn-dot { fill: var(--vl-politics); }
+.nn-node.k-place .nn-dot { fill: var(--vl-steady); }
+.nn-node.is-sel .nn-dot { stroke: var(--accent); stroke-width: 3.5; }
+.nn-node:focus-visible { outline: none; }
+.nn-node:focus-visible .nn-dot { stroke: var(--link-accent); stroke-width: 3.5; }
+.nn-label { font-size: 11.5px; font-weight: 600; fill: var(--text); paint-order: stroke; stroke: var(--vl-surface, var(--bg)); stroke-width: 3px; stroke-linejoin: round; pointer-events: none; }
+.nn-key, .nf-key { display: flex; flex-wrap: wrap; gap: 4px 14px; list-style: none; margin: 8px 0 0; padding: 0; font-size: 12px; color: var(--muted); }
+.nn-key li, .nf-key li { display: inline-flex; align-items: center; gap: 6px; }
+.nn-key i { display: inline-block; width: 16px; height: 4px; border-radius: 2px; background: var(--c); }
+
+/* ---- flow map ------------------------------------------------------------------------------------------------ */
+.nf-key i { display: inline-block; width: 16px; height: 4px; border-radius: 2px; background: var(--c); }
+.nf-key li { text-transform: capitalize; }
+.nf-t-cool { --c: #5aa9d6; }
+.nf-t-accent { --c: #f0a33a; }
+.nf-t-warn { --c: #f0b429; }
+.nf-t-ink { --c: #e5e7eb; }
+.nf-t-hot { --c: #ff6b4a; }
+.nf-t-good { --c: #6fbf7f; }
+:root[data-theme="paper"] .nf-t-cool { --c: #1d6fa5; }
+:root[data-theme="paper"] .nf-t-accent { --c: #c2410c; }
+:root[data-theme="paper"] .nf-t-warn { --c: #d98e04; }
+:root[data-theme="paper"] .nf-t-ink { --c: #1f2933; }
+:root[data-theme="paper"] .nf-t-hot { --c: #c8321e; }
+:root[data-theme="paper"] .nf-t-good { --c: #2f7a46; }
+.nf-steps { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+
+
+/* ---- tracker comparison -------------------------------------------------------------------------------------- */
+.nc-c0 { --c: var(--vl-energy); }
+.nc-c1 { --c: var(--vl-conflict); }
+.nc-c2 { --c: var(--vl-economy); }
+.nc-c3 { --c: var(--vl-politics); }
+.nc-c4 { --c: var(--vl-disaster); }
+.nc-c5 { --c: var(--accent); }
+.nc-svg { display: block; width: 100%; height: auto; touch-action: pan-y; user-select: none; }
+.nc-line { stroke: var(--c); stroke-width: 2.2; stroke-linejoin: round; stroke-linecap: round; }
+.nc-dot { fill: var(--c); stroke: var(--bg); stroke-width: 1.5; }
+.nc-lbl { font-size: 11px; font-weight: 700; fill: var(--c); }
+.nc-grid { stroke: var(--rule); stroke-width: 1; }
+.nc-grid.is-base { stroke: var(--rule-strong); stroke-dasharray: 4 4; }
+.nc-tick { font-size: 10.5px; fill: var(--muted); font-variant-numeric: tabular-nums; }
+.nc-panel { font-size: 11px; fill: var(--muted); }
+.nc-cursor { stroke: var(--muted); stroke-dasharray: 3 3; }
+.nc-flagline { stroke: var(--rule-strong); stroke-dasharray: 2 3; }
+.nc-flagmark { fill: var(--accent); }
+.nc-flag { cursor: pointer; }
+.nc-flag:focus-visible { outline: none; }
+.nc-flag:focus-visible .nc-flagmark { stroke: var(--link-accent); stroke-width: 2; }
+.nc-hit { fill: transparent; }
+.nc-read { min-height: 0; }
+.nc-rows { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 3px; }
+.nc-rows li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; font-size: 13px; line-height: 19px; }
+.nc-rows i, .nc-chip i { flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--c); align-self: center; }
+.nc-name { color: var(--text); }
+.nc-rows b { color: var(--strong); font-variant-numeric: tabular-nums; }
+.nc-raw { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.nc-note { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--rule); }
+.nc-chips { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 8px 0 0; padding: 0; }
+.nc-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px; font: inherit; font-size: 12px; color: var(--text); background: transparent; border: 1px solid var(--rule-strong); border-radius: 99px; cursor: pointer; }
+.nc-chip[aria-pressed="false"] { opacity: 0.5; text-decoration: line-through; }
+.nc-chip:focus-visible { outline: 2px solid var(--link-accent); outline-offset: 2px; }
+.nc-srclist { list-style: none; margin: 0; padding: 0; }
+.nc-srclist li { padding: 6px 0; border-bottom: 1px solid var(--rule); font-size: 13px; line-height: 18px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .nn-pulse { animation: none; stroke-dasharray: 0.1 14; }
+  .nn-node { transition: none; }
+}

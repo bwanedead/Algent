@@ -129,3 +129,149 @@ export function parseMapStory(raw: unknown): MapStorySpec | null {
   const bounds = b.length === 4 && b.every((x) => x !== null) && (b[0] as number) < (b[2] as number) && (b[1] as number) < (b[3] as number) ? (b as [number, number, number, number]) : null;
   return { title: str(raw.title), caption: str(raw.caption), steps, bounds, alt: str(raw.alt) };
 }
+
+// ---- network (backend agents/intel/network_spec.py) ----------------------------------------------------------------------
+
+export type NetKind = "state" | "group" | "person" | "org" | "place";
+export const NET_KINDS = ["state", "group", "person", "org", "place"] as const;
+export type NetRelation = "supports" | "arms" | "funds" | "allied_with" | "opposes" | "attacks" | "sanctions" | "trades" | "depends_on" | "negotiates_with";
+/** The colour families: one meaning each (backing, hostility, exchange, talks). Same table as the backend's `FAMILY`. */
+export type NetFamily = "backing" | "hostile" | "exchange" | "talks";
+export const NET_FAMILY: Record<NetRelation, NetFamily> = {
+  supports: "backing", arms: "backing", funds: "backing", allied_with: "backing",
+  opposes: "hostile", attacks: "hostile", sanctions: "hostile",
+  trades: "exchange", depends_on: "exchange", negotiates_with: "talks",
+};
+export const NET_PHRASE: Record<NetRelation, string> = {
+  supports: "supports", arms: "arms", funds: "funds", allied_with: "is allied with", opposes: "opposes", attacks: "attacks",
+  sanctions: "sanctions", trades: "trades with", depends_on: "depends on", negotiates_with: "negotiates with",
+};
+export type NetNode = { id: string; label: string; kind: NetKind; iso: string; weight: number };
+export type NetEdge = {
+  id: string; source: string; target: string; relation: NetRelation; family: NetFamily; both: boolean;
+  strength: 1 | 2 | 3; detail: string; start: string; end: string; sources: SpecSource[];
+};
+export type NetworkSpec = { title: string; caption: string; weightLabel: string; nodes: NetNode[]; edges: NetEdge[]; alt: string };
+
+export function parseNetwork(raw: unknown): NetworkSpec | null {
+  if (!isObj(raw)) return null;
+  const nodes = arr(raw.nodes)
+    .filter(isObj)
+    .map((n): NetNode | null => {
+      const id = str(n.id);
+      const label = str(n.label);
+      const w = fin(n.weight);
+      return id && label ? { id, label, kind: oneOf(n.kind, NET_KINDS, "group"), iso: /^[A-Za-z]{2}$/.test(str(n.iso)) ? str(n.iso).toUpperCase() : "", weight: w !== null && w > 0 ? w : 0 } : null;
+    })
+    .filter((n): n is NetNode => n !== null);
+  const have = new Set(nodes.map((n) => n.id));
+  const rels = Object.keys(NET_FAMILY) as NetRelation[];
+  const date = (v: unknown) => (DATE_RE.test(str(v)) ? str(v) : "");
+  const edges = arr(raw.edges)
+    .filter(isObj)
+    .map((e, i): NetEdge | null => {
+      const source = str(e.source);
+      const target = str(e.target);
+      if (!rels.includes(e.relation as NetRelation) || !have.has(source) || !have.has(target) || source === target) return null;
+      const relation = e.relation as NetRelation;
+      const s = fin(e.strength);
+      return {
+        id: str(e.id) || `e${i}`, source, target, relation, family: NET_FAMILY[relation], both: e.direction === "both",
+        strength: s !== null && s >= 3 ? 3 : s !== null && s <= 1 ? 1 : 2, detail: str(e.detail), start: date(e.start), end: date(e.end), sources: sources(e.sources),
+      };
+    })
+    .filter((e): e is NetEdge => e !== null);
+  if (nodes.length < 2 || edges.length < 1) return null;
+  return { title: str(raw.title), caption: str(raw.caption), weightLabel: str(raw.weight_label), nodes, edges, alt: str(raw.alt) };
+}
+
+// ---- flow (backend agents/intel/flow_spec.py) ----------------------------------------------------------------------------
+
+export type FlowRole = "source" | "sink" | "hub" | "chokepoint";
+export type FlowPlace = { id: string; name: string; role: FlowRole; at: LonLat };
+export type FlowRoute = {
+  id: string; source: string; target: string; commodity: string; amount: number; unit: string; period: string;
+  via: string[]; detail: string; sources: SpecSource[];
+};
+export type FlowDisruption = { id: string; date: string; breaks: string[]; reroutes: string[]; effect: string; sources: SpecSource[] };
+export type FlowSpec = {
+  title: string; caption: string; places: FlowPlace[]; flows: FlowRoute[]; disruptions: FlowDisruption[];
+  bounds: [number, number, number, number] | null; alt: string;
+};
+
+export function parseFlow(raw: unknown): FlowSpec | null {
+  if (!isObj(raw)) return null;
+  const places = arr(raw.places)
+    .filter(isObj)
+    .map((p): FlowPlace | null => {
+      const lat = fin(p.lat);
+      const lon = fin(p.lon);
+      const id = str(p.id);
+      return id && lat !== null && lon !== null && Math.abs(lat) <= 90 && Math.abs(lon) <= 180
+        ? { id, name: str(p.name), role: oneOf(p.role, ["source", "sink", "hub", "chokepoint"] as const, "hub"), at: [lon, lat] }
+        : null;
+    })
+    .filter((p): p is FlowPlace => p !== null);
+  const have = new Set(places.map((p) => p.id));
+  const flows = arr(raw.flows)
+    .filter(isObj)
+    .map((f, i): FlowRoute | null => {
+      const source = str(f.source);
+      const target = str(f.target);
+      if (!have.has(source) || !have.has(target) || source === target) return null;
+      const amount = fin(f.amount);
+      return {
+        id: str(f.id) || `f${i}`, source, target, commodity: str(f.commodity), amount: amount !== null && amount > 0 ? amount : 0,
+        unit: str(f.unit), period: str(f.period), via: arr(f.via).map(str).filter((v) => have.has(v)), detail: str(f.detail), sources: sources(f.sources),
+      };
+    })
+    .filter((f): f is FlowRoute => f !== null);
+  if (flows.length < 1) return null;
+  const ids = new Set(flows.map((f) => f.id));
+  const known = new Set([...Array.from(ids), ...Array.from(have)]);
+  const disruptions = arr(raw.disruptions)
+    .filter(isObj)
+    .map((d): FlowDisruption | null => {
+      const breaks = arr(d.breaks).map(str).filter((b) => known.has(b));
+      return DATE_RE.test(str(d.date)) && breaks.length
+        ? { id: str(d.id), date: str(d.date), breaks, reroutes: arr(d.reroutes).map(str).filter((r) => ids.has(r)), effect: str(d.effect), sources: sources(d.sources) }
+        : null;
+    })
+    .filter((d): d is FlowDisruption => d !== null)
+    .sort((a, b) => a.date.localeCompare(b.date));
+  const b = arr(raw.bounds).map(fin);
+  const bounds = b.length === 4 && b.every((x) => x !== null) && (b[0] as number) < (b[2] as number) && (b[1] as number) < (b[3] as number) ? (b as [number, number, number, number]) : null;
+  return { title: str(raw.title), caption: str(raw.caption), places, flows, disruptions, bounds, alt: str(raw.alt) };
+}
+
+// ---- tracker comparison (backend agents/intel/tracker_compare_spec.py) ------------------------------------------------------
+
+export type TrackerLine = { id: string; label: string; unit: string; source: string; sourceUrl: string; points: [string, number][] };
+export type TrackerMarker = { date: string; label: string; sources: SpecSource[] };
+export type TrackerCompareSpec = { title: string; caption: string; start: string; end: string; series: TrackerLine[]; markers: TrackerMarker[]; alt: string };
+
+export function parseTrackerCompare(raw: unknown): TrackerCompareSpec | null {
+  if (!isObj(raw)) return null;
+  const series = arr(raw.series)
+    .filter(isObj)
+    .map((s): TrackerLine | null => {
+      const dates = arr(s.dates).map(str);
+      const values = arr(s.values).map(fin);
+      const points: [string, number][] = [];
+      dates.forEach((d, i) => {
+        const v = values[i];
+        if (DATE_RE.test(d) && v !== null && v !== undefined) points.push([d, v]);
+      });
+      points.sort((a, b) => a[0].localeCompare(b[0]));
+      return str(s.id) && points.length >= 2
+        ? { id: str(s.id), label: str(s.label) || str(s.id), unit: str(s.unit), source: str(s.source), sourceUrl: /^https?:\/\//.test(str(s.source_url)) ? str(s.source_url) : "", points }
+        : null;
+    })
+    .filter((s): s is TrackerLine => s !== null);
+  if (series.length < 2) return null;
+  const markers = arr(raw.markers)
+    .filter(isObj)
+    .map((m): TrackerMarker | null => (DATE_RE.test(str(m.date)) && str(m.label) ? { date: str(m.date), label: str(m.label), sources: sources(m.sources) } : null))
+    .filter((m): m is TrackerMarker => m !== null);
+  return { title: str(raw.title), caption: str(raw.caption), start: str(raw.start), end: str(raw.end), series, markers, alt: str(raw.alt) };
+}

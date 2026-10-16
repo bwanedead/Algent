@@ -30,13 +30,13 @@ from . import visuals_facts as vf
 from .visuals_grounding import ungrounded as _ungrounded      # the one grounding rule (scene_spec shares it)
 
 #: What a visual can BE. ``kind`` in the record. Chart-like forms are drawn as charts, the rest as illustrations.
-Form = Literal["chart", "timeline", "mapstory", "comparison", "map", "scale", "schematic", "flow", "before_after", "scene3d"]
+Form = Literal["chart", "timeline", "mapstory", "network", "flow", "tracker_compare", "comparison", "map", "scale", "schematic", "before_after", "scene3d"]
 _CHARTLIKE = {"chart", "comparison"}
 #: Forms the SITE draws natively and interactively from a validated data spec (no coding harness): a second
 #: structured model call after planning (``native_forms``), like ``scene3d`` (``scene3d.py``).
-_NATIVE = {"timeline", "mapstory"}
+_NATIVE = {"timeline", "mapstory", "network", "flow", "tracker_compare"}
 #: Forms that are drawings of a structure or system, not measurements: they must say so under the picture.
-_SIGNPOSTED = {"schematic", "flow"}
+_SIGNPOSTED = {"schematic"}
 SIGNPOST = "Schematic, not to exact detail."
 _SIGNPOST_WORDS = re.compile(r"schematic|illustrat|not to (exact|scale)|diagram", re.I)
 
@@ -81,9 +81,17 @@ still tell someone something real about the world.
 FORMS (choose whichever conveys the most; name the question it answers in `reader_question` and why it beats prose
 in `why_not_prose`):
 - How something UNFOLDED: events, strikes or moves played in order with their consequences, over a map: `mapstory`.
-- A LIVING NETWORK or FLOWS: who backs, funds, arms, opposes or depends on whom; goods, energy, money, people or
-  weapons moving between places, and what happens when a route breaks: `flow`.
-- A CAUSE-AND-EFFECT CHAIN: one decision rippling to concrete outcomes with the real numbers: `flow` (as a chain).
+- A LIVING NETWORK: who backs, funds, arms, opposes, sanctions or depends on whom, and how those ties changed over
+  time; the reader taps a party to see its ties: `network`. Every tie must be stated by a cited fact naming both ends.
+- FLOWS between places: goods, energy, money, weapons or people moving along routes, with widths where the facts
+  give amounts, and what happens when a route breaks and the traffic reroutes: `flow`.
+- OUR OWN TRACKERS COMPARED: several of our measured series (chokepoint transits, tanker counts, aircraft or fire
+  counts, energy storage, rates) on one interactive chart, indexed to a common start, with the day's developments
+  marked on it: `tracker_compare`. It carries no number you write: name the theater story it illuminates in `spec`
+  and the series are chosen from our catalog when it is built. Use it whenever setting our tracked series side by
+  side shows more than any one of them (transits against tanker counts, a route against its alternative).
+- A CAUSE-AND-EFFECT CHAIN: one decision rippling to concrete outcomes with the real numbers: `schematic`
+  (labelled as one), or a `timeline` when the order is the point.
 - SYSTEM STATE: how much of a grid, fleet, supply or alliance is intact versus lost, and how that is changing:
   `chart`, `comparison` or `before_after`.
 - A BEFORE/AFTER of a structure, a balance of power or a network: `before_after`.
@@ -114,12 +122,14 @@ rich (at most 3). The bar never moves to fill a quota.
 GROUNDING. Every number, date, dimension and relationship in a visual comes from a cited fact: list its id in
 `fact_ids` (at least two facts, or one plus a `source_hint`). You may NOT write a number of your own in `finding`,
 `caption` or `spec` that is not in the cited facts (dates as the facts give them are fine; quote a figure exactly,
-never round or derive one). A `timeline` or `mapstory` is built from the cited facts ALONE, so cite every fact that
-gives one of its events or steps (its dates, places and figures all come from them). A form that needs published specifications the facts lack (a
+never round or derive one). A `timeline`, `mapstory`, `network` or `flow` is built from the cited facts ALONE, so cite every fact that
+gives one of its events, steps, ties or routes (its dates, places, parties and figures all come from them; a tie or a
+route whose two ends no cited fact names is dropped). A `tracker_compare` draws only from our instruments store; cite
+the facts that give the dated developments to mark on it. A form that needs published specifications the facts lack (a
 submarine's length, a missile's range) sets `source_hint` to the exact public source to fetch; it is drawn only if
 the source can be named under the picture. Never invent positions, boundaries, ranges or capabilities.
 
-HONESTY OF FORM. Code-drawn only, no generated art. A schematic or flow says so in `caption` ("Schematic, not to
+HONESTY OF FORM. Code-drawn only, no generated art. A schematic says so in `caption` ("Schematic, not to
 exact detail"). `finding` states the finding ("Strikes tripled in four days"), not the measure; `caption` is one
 plain sentence to the reader, never about "the reader" or why we made it. Label directly on the plot; units in
 words; no legends to match; no dual axes. Prefer the whole field to a hand-picked handful.
@@ -148,7 +158,7 @@ def validate(plan: Any, facts: list[vf.Fact], theater_ids: set[str], cap: int) -
         elif ask.form == "scene3d" and not flags.scene3d_enabled():
             dropped.append(f"{tag}: 3D scenes are switched off")
         elif ask.form in _NATIVE and not flags.native_forms_enabled():
-            dropped.append(f"{tag}: native timelines and map stories are switched off")
+            dropped.append(f"{tag}: native interactive forms are switched off")
         elif len(kept) >= cap:
             dropped.append(f"{tag}: over the daily cap of {cap}")
         elif not (ask.finding.strip() and ask.caption.strip() and ask.spec.strip()):
@@ -333,7 +343,7 @@ def attach(sections: list[dict], *, ctx: Any, domain: str, as_of: str, ask: Call
 def _spec_forms(specs: list[tuple[VisualAsk, list[vf.Fact]]], sections: list[dict], *, ask: Callable[[Any, str, str], Any],
                 domain: str, as_of: str, uploader: Callable[[dict[str, bytes]], dict], report: dict, first: int) -> None:
     """Interactive forms the site renders from a data spec: a structured model call + mechanical validation, no
-    coding harness (``scene3d`` for 3D scenes, ``native_forms`` for timelines and map stories)."""
+    coding harness (``scene3d`` for 3D scenes, ``native_forms`` for timelines, map stories, networks, flows and tracker comparisons)."""
     from . import native_forms, scene3d
 
     for n, (brief, cited) in enumerate(specs, first):

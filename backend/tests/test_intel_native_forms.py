@@ -226,7 +226,7 @@ def test_visuals_only_regenerates_today_as_a_native_timeline(tmp_path, monkeypat
     saved = json.loads((tmp_path / "2026-10-14.json").read_text(encoding="utf-8"))
     v = saved["theaters"][0]["visuals"]
     assert len(v) == 1 and v[0]["kind"] == "timeline" and v[0]["spec"] and saved["summary"] == {"headline": "H", "the_day": []}
-    assert native_forms.NATIVE_FORMS == ("timeline", "mapstory")
+    assert native_forms.NATIVE_FORMS[:2] == ("timeline", "mapstory")
 
 
 @pytest.mark.parametrize("bad", ["2026-13-01", "2026-10-1", "tomorrow", ""])

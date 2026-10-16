@@ -59,9 +59,9 @@ Daily files: ``content/intel/daily/<domain>/<YYYY-MM-DD>.json`` = the persisted 
          "on_record":[{"id","speaker","role","affiliation","iso2","date","venue","quote","paraphrase","about":[..],
                        "about_iso2":[..],"signal","stance":-2..2,"significance","url"}],   // the statements the writer
                        // was shown, in sensing's order (``on_record.build``); absent in older records
-         "visuals":[{"id","kind":"chart|timeline|mapstory|comparison|map|scale|schematic|flow|before_after|scene3d","title","caption",
+         "visuals":[{"id","kind":"chart|timeline|mapstory|network|flow|tracker_compare|comparison|map|scale|schematic|before_after|scene3d","title","caption",
                      "asset":"/analytics/daily/<domain>/<date>/<file>","raster","schematic":bool,"as_of","ai_label",
-                     "spec"(timeline/mapstory) or "scene"(scene3d): the data JSON the site renders,"preview","sources":[{"label","url"}],"detail"}],
+                     "spec"(timeline/mapstory/network/flow/tracker_compare) or "scene"(scene3d): the data JSON the site renders,"preview","sources":[{"label","url"}],"detail"}],
          // desk-drawn figures (``intel/visuals.py``); absent when none
          "bottom_line","since_yesterday":[{"what","kind":"escalated|eased|new|resolved|unchanged"}],
          "developments":[{"headline","detail","when","where","actors":[...],

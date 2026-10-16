@@ -130,7 +130,7 @@ export type TheaterNumbers = { as_of: string; trackers: Tracker[]; actors: Numbe
 
 /** An ad-hoc visual the backend drew for a section (agents/intel/visuals.py). `kind` is its form; `schematic` forms
  *  must read as drawings, not measurements. Older reports: none. */
-export type VisualKind = "chart" | "timeline" | "mapstory" | "comparison" | "map" | "scale" | "schematic" | "flow" | "before_after" | "scene3d";
+export type VisualKind = "chart" | "timeline" | "mapstory" | "network" | "tracker_compare" | "comparison" | "map" | "scale" | "schematic" | "flow" | "before_after" | "scene3d";
 export type DailyVisual = {
   id: string;
   kind: VisualKind;
@@ -141,9 +141,9 @@ export type DailyVisual = {
   schematic: boolean;
   /** scene3d only: the scene JSON and its still (`asset` is the still, so older readers show an image). */
   scene: string;
-  /** Native timeline / map story: the data spec the site renders (empty on an older, image-only timeline). */
+  /** Native timeline / map story / network / flow map / tracker comparison: the data spec the site renders (empty on an older, image-only one). */
   spec: string;
-  /** The still of a scene3d / timeline / map story (an image, for no-script, link previews and failures). */
+  /** The still of a scene3d / native form (an image, for no-script, link previews and failures). */
   preview: string;
   as_of: string;
   ai_label: string;
@@ -451,7 +451,10 @@ function parseDevelopment(raw: unknown): DailyDevelopment | null {
   };
 }
 
-const VISUAL_KINDS = ["chart", "timeline", "mapstory", "comparison", "map", "scale", "schematic", "flow", "before_after", "scene3d"] as const;
+const VISUAL_KINDS = ["chart", "timeline", "mapstory", "network", "tracker_compare", "comparison", "map", "scale", "schematic", "flow", "before_after", "scene3d"] as const;
+
+/** Kinds the site draws from a data `spec` (backend agents/intel/native_forms.py). */
+const NATIVE_KINDS: readonly VisualKind[] = ["timeline", "mapstory", "network", "flow", "tracker_compare"];
 
 function parseVisual(raw: unknown): DailyVisual | null {
   if (!isObj(raw)) return null;
@@ -460,14 +463,14 @@ function parseVisual(raw: unknown): DailyVisual | null {
   const kind = oneOf(raw.kind, VISUAL_KINDS, "chart");
   const own = (p: string) => /^\/analytics\/[\w./-]+$/.test(p) && !p.includes("..");
   const scene = kind === "scene3d" && own(str(raw.scene)) ? str(raw.scene) : "";
-  const spec = (kind === "timeline" || kind === "mapstory") && own(str(raw.spec)) ? str(raw.spec) : "";
+  const spec = NATIVE_KINDS.includes(kind) && own(str(raw.spec)) ? str(raw.spec) : "";
   return {
     id: str(raw.id) || asset,
     kind,
     title: str(raw.title),
     caption: str(raw.caption),
     asset,
-    schematic: raw.schematic === true || kind === "schematic" || kind === "flow",
+    schematic: raw.schematic === true || kind === "schematic" || (kind === "flow" && !spec), // a native flow map is data, an older harness-drawn flow is a drawing
     scene,
     spec,
     preview: (scene || spec) && own(str(raw.preview)) ? str(raw.preview) : asset,
