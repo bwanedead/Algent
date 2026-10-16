@@ -117,10 +117,13 @@ reader must grasp and which form transfers it with the least effort:
 |---|---|---|
 | a sequence: who did what, in what order, how fast | `timeline` | native: structured call -> `timeline_spec.Timeline` |
 | movement or spread over geography and time | `mapstory` | native: structured call -> `mapstory_spec.MapStory` |
+| who backs, funds, arms, opposes, depends on whom (and how that changed) | `network` | native: structured call -> `network_spec.Network` |
+| goods, energy, money, weapons moving between places; what a broken route does | `flow` | native: structured call -> `flow_spec.FlowMap` |
+| our own measured series side by side (transits vs tanker counts...) | `tracker_compare` | native: ids chosen by the model, points read from the instruments store -> `tracker_compare_spec.TrackerCompare` |
 | physical scale, geometry, 3D relations | `scene3d` | structured call -> `scene_spec.Scene` |
 | quantities, trends, comparisons (and map/scale/schematic/flow/before_after stills) | `chart` etc. | the coding harness (grok/codex), static SVG/PNG |
 
-The data forms (`timeline`, `mapstory`, `scene3d`) are never routed to the harness: a second structured model call after
+The data forms (`timeline`, `mapstory`, `network`, `flow`, `tracker_compare`, `scene3d`) are never routed to the harness: a second structured model call after
 planning fills a typed spec, the contract validates it against the cited facts mechanically, and the SITE renders it.
 They need no subscription CLI and do not depend on the harness being ready. `flags.py` holds the switches
 (`VISUALS_*`, `SCENE3D_*`, `NATIVE_FORMS_ENABLED` / `ALGENT_NATIVE_FORMS`).
@@ -139,8 +142,31 @@ They need no subscription CLI and do not depend on the harness being ready. `fla
   every feature names the place it is at and that place must be one the step's facts speak of (coordinates cannot be
   checked against prose, the name given to them can); a range radius must be a figure the facts hold; `bounds` are computed
   mechanically. Dropped steps/features are named; fewer than 2 steps, or none on the map, refuses it.
+- **`network`** (`network_spec.py`): nodes `{id, label <=5 words, kind (state/group/person/org/place), iso?, weight?}` and edges
+  `{id, source, target, relation (supports/arms/funds/allied_with/opposes/attacks/sanctions/trades/depends_on/negotiates_with),
+  direction (forward/both), strength 1-3, detail <=20 words, start?, end?, fact_ids, sources}`; relations fall in four colour
+  families (backing, hostile, exchange, talks). `start`/`end` dates give the picture a scrubber (a relation that changes is
+  an ending edge plus a new one). Grounding: an edge cites facts that name BOTH ends (`mentions_entity`: a distinctive word
+  of the label, the whole label if it is generic, or an acronym), its dates are stated by a cited fact, no number in its
+  words is one the facts lack; a node size (`weight`) must be a figure its own cited facts hold, else it is cleared. Fewer
+  than 3 nodes or 3 edges refuses it. Site: `NativeNetwork.tsx` (+ `netLayout.ts` force layout, `nativeviz.css`): pulses run
+  along each tie in its direction, tap a party or a tie for detail and sources, scrubber + play when dated.
+- **`flow`** (`flow_spec.py`): places `{id, name, role, lat, lon}`, flows `{id, source, target, via[], commodity, amount, unit,
+  period, detail, fact_ids}`, disruptions `{id, date, breaks[] (flow or place ids), reroutes[] (flow ids drawn only while on),
+  effect, fact_ids}`. Grounding: a flow's cited facts name both ends and every waypoint; an `amount` must be a figure its facts
+  hold or it is CLEARED (the flow stays, drawn with the default width, never an invented one); a disruption's date is stated by
+  a cited fact that names what breaks. Site: `NativeFlow.tsx` (+ `map/flowFrame.ts`): arcs over `LiveMap`, particles
+  moving source to target, width in proportion to the amount among flows sharing a unit, buttons step through the disruptions
+  (broken route red and dashed with a cross, the reroute green). Replaces the old harness-drawn `flow` diagram (those stay as images).
+- **`tracker_compare`** (`tracker_compare_spec.py`): the model writes ids, short labels, `window_days` (30/60/90/180/365) and
+  dated `markers`; it writes NO data. `ground` reads each series from the instruments store (`instruments.store`) and keeps only
+  catalog series that exist, are `public_display` (internal-only sources, e.g. the unofficial market feeds, are refused) and have
+  at least 4 stored points in the window; 2 to 6 remain. The spec embeds the stored points (so the chart is the day's
+  snapshot and has a still), and the instruments are named as sources. Site: `NativeTrackerCompare.tsx` (+ `trackerChart.ts`):
+  indexed to 100 where every line has begun, or raw (one panel per line on a shared time axis, never two axes on one plot), end
+  labels, crosshair, flags for the day's developments, chips to hide a line.
 - **Hosting**: `/analytics/daily/<domain>/<date>/<id>.<form>.json` (the spec) plus `<id>.<form>.svg` (`native_preview.py`:
-  a plain server-drawn still for link previews, social, no-script and failures). Record: `kind` (`timeline`/`mapstory`),
+  a plain server-drawn still for link previews, social, no-script and failures). Record: `kind` (the form),
   `spec`, `preview`, `asset` (= the still, so older readers show an image), `detail` (the text alternative), `sources`.
   Older harness-drawn timelines have no `spec` and keep rendering as images.
 - **Site**: `components/DailyFigure.tsx` routes by kind and shape. `NativeTimeline.tsx` (+ `timelineLayout.ts`,

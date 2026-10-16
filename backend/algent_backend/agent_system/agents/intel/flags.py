@@ -60,9 +60,9 @@ VISUALS_HARNESS = ""
 #: better than any flat picture. Counts against ``VISUALS_MAX_PER_DAY``. False = the planner is told it cannot.
 SCENE3D_ENABLED = True
 
-#: Native interactive timelines and map stories (``native_forms.py``): the site draws them from a validated data
+#: Native interactive forms - timelines, map stories, networks, flow maps, tracker comparisons (``native_forms.py``): the site draws them from a validated data
 #: spec, one structured model call each, no harness. Counts against ``VISUALS_MAX_PER_DAY``. False = the planner
-#: cannot choose them (timelines are never routed to the static-chart harness either way).
+#: cannot choose them (these forms are never routed to the static-chart harness either way).
 NATIVE_FORMS_ENABLED = True
 
 #: Size limits the scene validator enforces (mobile budget): objects, and total vertices across coastlines,
