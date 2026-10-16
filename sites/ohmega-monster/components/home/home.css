@@ -1,40 +1,89 @@
-/* Home (app/page.tsx): a calm hub. One idea per block, generous space, hairlines instead of boxes. */
-.hm-hero { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px calc(var(--line) * 2); align-items: center; padding: calc(var(--line) * 1.5) 0 var(--line); }
-.hm-hero-text { min-width: 0; }
-.hm-kicker { margin: 0; color: var(--muted); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
-.hm-claim { max-width: 28ch; margin: 6px 0 calc(var(--line) * 0.75); color: var(--strong); font-size: clamp(22px, 3.4vw, 32px); line-height: 1.25; font-weight: 600; letter-spacing: -0.02em; text-wrap: balance; }
-.hm-globe { display: flex; justify-content: center; opacity: 0.95; }
+/* Home (app/page.tsx): drawn, not written. Built on the visual language (app/visual.css): cards, chips, direction marks, heat bars.
+   First screen = globe + short headline + three counts + four theater tiles; text is the headline, the tile names and tiny labels. */
 
-.hm-lines { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--rule); }
-.hm-lines li { border-bottom: 1px solid var(--rule); }
-.hm-line { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 0 10px; align-items: baseline; padding: 9px 0; color: var(--text); text-decoration: none; }
-.hm-line:hover .hm-line-name, .hm-line:focus-visible .hm-line-name { color: var(--accent); }
-.hm-line:focus-visible { outline: 2px solid var(--link-accent); outline-offset: 2px; }
-.hm-line-flags { display: flex; gap: 2px; align-items: center; min-height: 18px; }
-.hm-line-flags .isof { margin-right: 0; }
-.hm-line-text { display: flex; flex-direction: column; min-width: 0; }
-.hm-line-name { color: var(--strong); font-size: 13px; line-height: 20px; }
-.hm-line-claim { color: var(--muted); font-size: 12px; line-height: 18px; overflow-wrap: anywhere; }
-.hm-dir { color: var(--muted); font-size: 11px; }
-.hm-dir.is-up { color: var(--accent); }
-.hm-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.hm-more { display: flex; flex-wrap: wrap; gap: 4px 20px; margin: 12px 0 0; font-size: 12px; }
+/* ---- hero: globe left, headline + counts right, tiles beneath ----------------------------------------------- */
+.hm-hero { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "globe claim" "globe stats" "tiles tiles" "more more"; gap: 10px calc(var(--line) * 1.5); align-items: center; padding: calc(var(--line) * 1.25) 0 var(--line); }
+.hm-globe { grid-area: globe; display: flex; justify-content: center; align-self: center; }
+.hm-globe .globe-spinner svg { width: clamp(150px, 22vw, 232px); height: clamp(150px, 22vw, 232px); }
+.hm-claim-wrap { grid-area: claim; align-self: end; min-width: 0; }
+.hm-kicker { margin: 0; color: var(--muted); font-size: var(--vl-t-label, 10px); letter-spacing: 0.1em; text-transform: uppercase; }
+.hm-claim { max-width: 24ch; margin: 6px 0 0; color: var(--strong); font-size: var(--vl-t-display, 34px); line-height: 1.12; font-weight: 700; letter-spacing: -0.03em; text-wrap: balance; overflow-wrap: anywhere; }
+.hm-stats { grid-area: stats; display: flex; gap: calc(var(--line) * 1.5); align-self: start; flex-wrap: wrap; }
+.hm-stat-up .vl-num { color: var(--vl-up); }
+.hm-stat-down .vl-num { color: var(--vl-down); }
 
+/* ---- theater tiles ---------------------------------------------------------------------------------------- */
+.hm-tiles { grid-area: tiles; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--vl-gap, 14px); margin: calc(var(--line) * 0.5) 0 0; padding: 0; list-style: none; }
+.hm-tiles > li { min-width: 0; }
+.hm-tile { display: flex; flex-direction: column; gap: 10px; height: 100%; padding: 14px 14px 14px 18px; }
+.hm-tile-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.hm-tile-flags { display: flex; min-height: 14px; }
+.hm-tile-flags .isof { margin-right: 0; gap: 3px; }
+.hm-tile-name { color: var(--strong); font-size: 16px; font-weight: 600; line-height: 21px; letter-spacing: -0.01em; overflow-wrap: anywhere; }
+.hm-tile-meter { display: flex; align-items: center; gap: 12px; margin-top: auto; }
+.hm-tile:hover .hm-tile-name, .hm-tile:focus-visible .hm-tile-name { color: var(--accent); }
+.hm-more { grid-area: more; display: flex; flex-wrap: wrap; gap: 4px 20px; margin: 4px 0 0; font-size: 12px; }
+
+/* ---- live: a stamp-sized map and an icon row of counts ------------------------------------------------------ */
 .hm-live { margin-top: calc(var(--line) * 1.5); }
-.hm-sub { margin: 0 0 6px; color: var(--muted); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
-.hm-sub-when { color: var(--faint); letter-spacing: 0.04em; }
-.hm-sub .xt { margin-left: 8px; letter-spacing: 0.04em; text-transform: none; }
-.hm-live ul { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 8px 20px; margin: 0; padding: 0; list-style: none; }
-.hm-live-item { display: flex; gap: 8px; align-items: baseline; color: var(--text); font-size: 12px; line-height: 18px; text-decoration: none; }
-.hm-live-item:hover { color: var(--strong); }
-.hm-live-layer { flex: none; color: var(--accent); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+.hm-live-card { display: grid; grid-template-columns: minmax(150px, 280px) minmax(0, 1fr) auto; gap: 16px; align-items: center; padding: 12px 18px 12px 12px; }
+.hm-minimap { display: block; width: 100%; height: auto; border-radius: var(--vl-r-sm); }
+.hm-minimap-sea { fill: var(--vl-sea); }
+.hm-minimap-land { fill: var(--vl-land); }
+.hm-live-body { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.hm-live-head { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--muted); }
+.hm-live-when { color: var(--faint); font-size: 11px; font-variant-numeric: tabular-nums; }
+.hm-live-counts { display: flex; flex-wrap: wrap; gap: 14px 26px; margin: 0; padding: 0; list-style: none; }
+.hm-live-counts li { display: grid; grid-template-columns: auto auto; grid-template-areas: "icon n" "label label"; align-items: center; justify-content: start; column-gap: 8px; row-gap: 2px; }
+.hm-live-counts .vl-glyph { grid-area: icon; }
+.hm-live-n { grid-area: n; color: var(--strong); font-size: 22px; font-weight: 700; line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.hm-live-counts .vl-label { grid-area: label; }
+.hm-live-go { color: var(--faint); font-size: 18px; transition: color 120ms ease, transform 120ms ease; }
+.hm-live-card:hover .hm-live-go, .hm-live-card:focus-visible .hm-live-go { color: var(--accent); transform: translateX(3px); }
 
+/* ---- blocks, headings, article cards ------------------------------------------------------------------------ */
 .hm-block { margin-top: calc(var(--line) * 2.5); }
-.hm-block .feed { margin-top: 4px; }
-.hm-all { margin: 10px 0 0; font-size: 12px; }
+.hm-sub { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; color: var(--muted); font-size: var(--vl-t-label, 10px); letter-spacing: 0.1em; text-transform: uppercase; }
+.hm-all { margin: 12px 0 0; font-size: 12px; }
 
-@media (max-width: 700px) {
-  .hm-hero { grid-template-columns: 1fr; padding-top: var(--line); }
-  .hm-globe { order: 2; margin-top: calc(var(--line) * 0.5); }
-  .hm-claim { max-width: none; }
+.hm-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--vl-gap, 14px); margin: 0; padding: 0; list-style: none; }
+.hm-cards > li { min-width: 0; }
+.hm-card { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+.hm-card-pic { position: relative; display: block; aspect-ratio: 16 / 10; background: color-mix(in srgb, var(--cat, var(--accent)) 12%, var(--vl-surface)); overflow: hidden; }
+.hm-card-pic img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.hm-card-pic.is-ai { box-shadow: inset 0 0 0 3px var(--ai); }
+.hm-card-fallback { position: absolute; inset: 0; display: grid; place-items: center; color: var(--cat, var(--accent)); }
+.hm-card-ai { position: absolute; left: 8px; bottom: 8px; padding: 1px 8px; border-radius: 99px; background: var(--bg); color: var(--ai); font-size: 10px; letter-spacing: 0.08em; line-height: 18px; text-transform: uppercase; }
+.hm-card-body { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px 14px; }
+.hm-card-meta { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 11px; line-height: 16px; }
+.hm-card-meta .feed-flags { display: inline-flex; gap: 3px; }
+.hm-card-title { color: var(--strong); font-size: 16px; font-weight: 600; line-height: 22px; letter-spacing: -0.015em; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.hm-card:hover .hm-card-title, .hm-card:focus-visible .hm-card-title { color: var(--accent); }
+
+@media (max-width: 900px) {
+  .hm-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hm-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hm-cards > li:nth-child(3) { grid-column: 1 / -1; }
 }
+@media (max-width: 700px) {
+  /* globe small beside the counts; the headline runs full width beneath */
+  .hm-hero { grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "globe stats" "claim claim" "tiles tiles" "more more"; gap: 10px 14px; }
+  .hm-globe .globe-spinner svg { width: 104px; height: 104px; }
+  .hm-claim { max-width: none; font-size: clamp(24px, 7vw, 30px); }
+  .hm-stats { align-self: center; gap: 18px; }
+  .hm-claim-wrap { align-self: start; }
+  .hm-live-card { grid-template-columns: minmax(0, 1fr); }
+  .hm-live-go { display: none; }
+}
+@media (max-width: 480px) {
+  .hm-tiles { gap: 10px; }
+  .hm-tile { padding: 12px 12px 12px 16px; }
+  .hm-tile-name { font-size: 15px; }
+  .hm-cards { grid-template-columns: minmax(0, 1fr); }
+  .hm-cards > li:nth-child(3) { grid-column: auto; }
+  .hm-card { flex-direction: row; }
+  .hm-card-pic { flex: none; width: 108px; aspect-ratio: auto; }
+  .hm-card-body { padding: 10px 12px; justify-content: center; }
+  .hm-card-title { font-size: 15px; line-height: 20px; -webkit-line-clamp: 3; }
+}
+@media (prefers-reduced-motion: reduce) { .hm-live-go { transition: none; } }

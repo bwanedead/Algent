@@ -6,6 +6,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
 import "./globals.css";
+import "./visual.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
