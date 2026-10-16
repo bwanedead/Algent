@@ -27,8 +27,8 @@ function build(g: EntityGraph): { nodes: Node[]; edges: Edge[] } {
   const maxA = Math.max(1, ...g.actors.map((a) => a.weight));
   const maxT = Math.max(1, ...g.theaters.map((t) => t.weight));
   const nodes: Node[] = [
-    ...g.theaters.map((t, i): Node => ({ id: `t:${t.id}`, kind: "t", label: t.name, key: t.id, r: 7 + 11 * Math.sqrt(t.weight / maxT), x: 0, y: 0, vx: 0, vy: 0, dir: t.direction, linked: t.linked, w: t.weight, ...ring(i, g.theaters.length, 140) })),
-    ...g.actors.map((a, i): Node => ({ id: `a:${a.iso2}`, kind: "a", label: a.name, key: a.iso2, r: 4 + 9 * Math.sqrt(a.weight / maxA), x: 0, y: 0, vx: 0, vy: 0, dir: "unclear", linked: true, w: a.weight, ...ring(i, g.actors.length, 250) })),
+    ...g.theaters.map((t, i): Node => ({ id: `t:${t.id}`, kind: "t", label: t.name, key: t.id, r: 7 + 11 * Math.sqrt(t.weight / maxT), vx: 0, vy: 0, dir: t.direction, linked: t.linked, w: t.weight, ...ring(i, g.theaters.length, 140) })),
+    ...g.actors.map((a, i): Node => ({ id: `a:${a.iso2}`, kind: "a", label: a.name, key: a.iso2, r: 4 + 9 * Math.sqrt(a.weight / maxA), vx: 0, vy: 0, dir: "unclear", linked: true, w: a.weight, ...ring(i, g.actors.length, 250) })),
   ];
   const at = new Map(nodes.map((n, i) => [n.id, i]));
   const edges = g.links.flatMap((l): Edge[] => {
