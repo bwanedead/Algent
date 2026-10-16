@@ -17,7 +17,7 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 
 import { buildRings, landPath } from "@/lib/globe/clip";
-import { cameraAt, ECL_SIN, VIEWS, PERSPECTIVES, type Perspective, type ViewDef } from "@/lib/globe/camera";
+import { cameraAt, ECL_SIN, spun, VIEWS, PERSPECTIVES, type Perspective, type ViewDef } from "@/lib/globe/camera";
 import { f1, paths, C, R } from "@/lib/globe/project";
 import { COARSE_POLYS, GRAT, loadLand, RAD, type Poly } from "@/lib/globe/sphere";
 
