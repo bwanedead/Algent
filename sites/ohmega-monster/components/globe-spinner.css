@@ -30,3 +30,6 @@
 /* A centred loading slot: fills its parent and centres the globe. */
 .globe-fill { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
 .globe-page { min-height: 50vh; display: grid; place-items: center; padding: 48px 16px; }
+/* A spinner that opens the interactive globe (/globe): a hairline ring appears on hover or focus. */
+.globe-link { display: inline-flex; line-height: 0; border-radius: 50%; outline: 1px solid transparent; outline-offset: 3px; transition: outline-color 0.15s; }
+.globe-link:hover, .globe-link:focus-visible { outline-color: var(--link-accent); }
