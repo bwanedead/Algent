@@ -1,0 +1,159 @@
+/* The visual language (vl-*). Governing doctrine: docs/ethos/information-ergonomics-ethos.md, "analytics must be intuitive".
+   Purpose: carry information in shape, colour and size instead of sentences, so the eye takes in a screen before it reads it.
+   Imported once, after globals.css, by app/layout.tsx. Everything is a token or a `vl-` class; surfaces opt in.
+
+   One meaning per channel:
+   - direction colour   = escalating (--vl-up) / steady (--vl-steady) / easing (--vl-down). Arrows, never decoration.
+   - category tint      = conflict / economy / politics / energy / disaster. A glyph and an edge, never a status.
+   - freshness          = a dot: fresh / aging / stale.
+   - heat               = bar length on one shared scale, in the brand accent.
+   - the accent (amber) stays "change / new", as in globals.css. Severity bands (--band-*) are untouched.
+   Contrast: every text-capable colour is >= 4.5:1 on --bg and on --vl-surface in its theme (checked 2026-10-16: dark 4.9-10.3,
+   paper 4.7-6.4). Graphics-only tints (--vl-edge-*, live layer fills) are >= 3:1. */
+
+:root,
+:root[data-theme="dark-amber"] {
+  /* surfaces: one step above the page, one more for hover; depth comes from a hairline highlight plus a soft shadow */
+  --vl-surface: #151a18;
+  --vl-surface-hi: #1b211f;
+  --vl-shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 8px 22px rgb(0 0 0 / 0.38);
+  --vl-shadow-hi: 0 1px 0 rgb(255 255 255 / 0.06) inset, 0 12px 28px rgb(0 0 0 / 0.5);
+  /* direction */
+  --vl-up: #ff7a5c;
+  --vl-steady: #a9b0a6;
+  --vl-down: #6fcf8a;
+  /* category */
+  --vl-conflict: #f0779a;
+  --vl-economy: #e0b948;
+  --vl-politics: #97a4f5;
+  --vl-energy: #3fc9ab;
+  --vl-disaster: #c995f2;
+  /* freshness */
+  --vl-fresh: #6fcf8a;
+  --vl-aging: #e0b948;
+  --vl-stale: #858981;
+  /* live layers on a map (graphics, not text) */
+  --vl-l-ship: #e3a13b;
+  --vl-l-air: #a68df0;
+  --vl-l-fire: #ff7a5c;
+  --vl-l-outage: #9fb0c0;
+  --vl-l-quake: #5fb4f0;
+  --vl-land: #232a27;
+  --vl-sea: #101412;
+  --vl-heat: var(--accent);
+}
+
+:root[data-theme="paper"] {
+  --vl-surface: #faf8f2;
+  --vl-surface-hi: #ffffff;
+  --vl-shadow: 0 1px 2px rgb(40 36 20 / 0.08), 0 6px 18px rgb(40 36 20 / 0.08);
+  --vl-shadow-hi: 0 2px 4px rgb(40 36 20 / 0.1), 0 12px 26px rgb(40 36 20 / 0.14);
+  --vl-up: #b3361a;
+  --vl-steady: #585e56;
+  --vl-down: #1a7038;
+  --vl-conflict: #b0245a;
+  --vl-economy: #7a5c00;
+  --vl-politics: #3c4fc4;
+  --vl-energy: #08705a;
+  --vl-disaster: #7b3fb5;
+  --vl-fresh: #1a7038;
+  --vl-aging: #7a5c00;
+  --vl-stale: #666b64;
+  --vl-l-ship: #b5700a;
+  --vl-l-air: #6a4cc2;
+  --vl-l-fire: #c4421f;
+  --vl-l-outage: #5b6b7a;
+  --vl-l-quake: #1f6fb5;
+  --vl-land: #d9d6cb;
+  --vl-sea: #ebe8de;
+}
+
+/* Shape and scale, shared. Type has three clear steps: display (a numeral, a headline), label (tiny caps), body (everything else). */
+:root {
+  --vl-r: 14px;
+  --vl-r-sm: 9px;
+  --vl-gap: 14px;
+  --vl-t-display: clamp(26px, 4.6vw, 40px);
+  --vl-t-numeral: clamp(26px, 3.6vw, 34px);
+  --vl-t-label: 10px;
+}
+
+.vl-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.vl-glyph { flex: none; display: block; }
+
+/* ---- category + direction classes: set a custom property the primitives read ------------------------------ */
+.vl-cat-conflict { --cat: var(--vl-conflict); }
+.vl-cat-economy { --cat: var(--vl-economy); }
+.vl-cat-politics { --cat: var(--vl-politics); }
+.vl-cat-energy { --cat: var(--vl-energy); }
+.vl-cat-disaster { --cat: var(--vl-disaster); }
+
+/* ---- card: a soft raised surface; the lift on hover tells the reader it is a door -------------------------- */
+.vl-card {
+  position: relative;
+  min-width: 0;
+  border: 1px solid var(--rule);
+  border-radius: var(--vl-r);
+  background: var(--vl-surface);
+  box-shadow: var(--vl-shadow);
+  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
+}
+a.vl-card { color: var(--text); text-decoration: none; display: block; }
+a.vl-card:hover, a.vl-card:focus-visible { transform: translateY(-2px); box-shadow: var(--vl-shadow-hi); border-color: var(--rule-strong); }
+a.vl-card:focus-visible { outline: 2px solid var(--link-accent); outline-offset: 2px; }
+.vl-card.has-cat::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; border-radius: var(--vl-r) 0 0 var(--vl-r); background: var(--cat); }
+
+/* A glyph in a tinted round chip: the category (or object) at a glance */
+.vl-chip { flex: none; display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; color: var(--cat, var(--accent)); background: color-mix(in srgb, var(--cat, var(--accent)) 14%, transparent); }
+
+/* ---- type -------------------------------------------------------------------------------------------------- */
+.vl-label { color: var(--muted); font-size: var(--vl-t-label); letter-spacing: 0.1em; line-height: 14px; text-transform: uppercase; }
+.vl-num { color: var(--strong); font-size: var(--vl-t-numeral); font-weight: 700; line-height: 1.05; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.vl-numeral { display: inline-flex; flex-direction: column; gap: 3px; min-width: 0; }
+
+/* ---- direction mark ----------------------------------------------------------------------------------------- */
+.vl-dir { display: inline-flex; align-items: center; gap: 5px; color: var(--vl-steady); font-size: 11px; line-height: 16px; font-weight: 600; }
+.vl-dir-up { color: var(--vl-up); }
+.vl-dir-down { color: var(--vl-down); }
+.vl-dir-steady { color: var(--vl-steady); }
+.vl-dir-unclear { color: var(--muted); }
+.vl-dir-word { letter-spacing: 0.04em; text-transform: uppercase; }
+
+/* ---- heat bar, sparkline, freshness dot ---------------------------------------------------------------------- */
+.vl-bar { position: relative; display: block; flex: 1 1 auto; height: 6px; min-width: 24px; border-radius: 99px; background: color-mix(in srgb, var(--rule-strong) 45%, transparent); overflow: hidden; }
+.vl-bar-fill { position: absolute; inset: 0 auto 0 0; border-radius: 99px; background: var(--tone, var(--vl-heat)); }
+.vl-spark { flex: none; width: 54px; height: 20px; display: block; }
+.vl-spark rect { fill: color-mix(in srgb, var(--muted) 70%, transparent); }
+.vl-spark rect.vl-spark-now { fill: var(--accent); }
+.vl-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--vl-stale); vertical-align: 1px; }
+.vl-dot-fresh { background: var(--vl-fresh); box-shadow: 0 0 0 3px color-mix(in srgb, var(--vl-fresh) 22%, transparent); }
+.vl-dot-aging { background: var(--vl-aging); }
+
+/* ---- the nav, lightly: the same pill + dot language as the cards ------------------------------------------- */
+.site-nav > a { padding: 5px 10px; border-radius: 99px; }
+.site-nav > a:hover, .site-nav > a:focus-visible { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.site-nav > a.is-here { background: var(--vl-surface); box-shadow: inset 0 0 0 1px var(--rule-strong); }
+.site-nav > a.is-here::before { content: ""; display: inline-block; width: 6px; height: 6px; margin: 0 7px 1px 0; border-radius: 50%; background: var(--accent); }
+.site-nav { gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+.display-toggle { border-radius: 99px; }
+@media (max-width: 700px) { .site-nav > a { padding: 4px 8px; } }
+
+/* ---- the geopolitics daily's top: title strip, headline, "day in 30 seconds" tiles ------------------------ */
+.geo > .intel-strip { padding: 10px 14px; border: 1px solid var(--rule); border-radius: var(--vl-r); background: var(--vl-surface); box-shadow: var(--vl-shadow); }
+.geo > .intel-strip .intel-strip-title { color: var(--strong); font-size: 13px; }
+.geo .geo-headline { font-size: var(--vl-t-display); line-height: 1.15; letter-spacing: -0.03em; margin: 20px 0 18px; max-width: 30ch; text-wrap: balance; }
+.geo .geo-thirty ul { display: grid; gap: 10px; margin-top: 8px; }
+.geo .geo-thirty li, .geo .geo-thirty li:last-child { border: 1px solid var(--rule); border-radius: var(--vl-r); background: var(--vl-surface); box-shadow: var(--vl-shadow); overflow: hidden; }
+.geo .geo-thirty li { position: relative; transition: transform 140ms ease, box-shadow 140ms ease; }
+.geo .geo-thirty li:hover { transform: translateY(-1px); box-shadow: var(--vl-shadow-hi); }
+.geo .geo-thirty li::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--cat, var(--rule-strong)); }
+.geo .geo-thirty-link { padding: 12px 14px 12px 16px; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 0 12px; }
+.geo .geo-thirty-meta { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+.geo .geo-thirty-meta .isof { margin-right: 0; }
+.geo .geo-thirty .geo-micro { display: inline; }
+.geo .geo-thirty .vl-dir { font-size: 12px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .vl-card, a.vl-card, .geo .geo-thirty li { transition: none; }
+  a.vl-card:hover, a.vl-card:focus-visible, .geo .geo-thirty li:hover { transform: none; }
+}

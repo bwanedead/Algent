@@ -2,22 +2,20 @@ import Link from "next/link";
 
 import type { Daily } from "@/lib/daily";
 import { editionTag, headlineOf, shortTheater, theaterAnchor } from "@/lib/daily";
-import type { Direction } from "@/lib/intel";
+import { categoryOf } from "@/lib/visual";
 
 import IsoFlags from "./IsoFlags";
+import Glyph from "./vl/Glyph";
+import { DirMark } from "./vl/primitives";
 
 // "The day in 30 seconds": the whole report for a newcomer, one line per theater (flags, the writer's headline,
 // which way it is moving), each jumping to its section. Built only from fields the record already holds. A report
 // built in parts shows the whole day: later additions and updates are lines too, the newest first.
 
-const ARROW: Record<Direction, { glyph: string; word: string; moving: boolean }> = {
-  rising: { glyph: "▲", word: "rising", moving: true },
-  steady: { glyph: "◆", word: "steady", moving: false },
-  easing: { glyph: "▼", word: "easing", moving: true },
-  unclear: { glyph: "?", word: "unclear", moving: false },
-};
 const MAX_LINES = 5; // per part of the day
 const MAX_FLAGS = 3;
+
+const line0 = (t: { headline: string; bottom_line: string }) => `${t.headline} ${t.bottom_line}`;
 
 export default function DailyThirty({ report }: { report: Daily }) {
   // One line per section and per update, each with the anchor it jumps to; newest part first, stable within a part.
@@ -33,27 +31,27 @@ export default function DailyThirty({ report }: { report: Daily }) {
       <h2 className="geo-h2">The day in 30 seconds</h2>
       <ul>
         {rows.map(({ t, anchor, update }, i) => {
-          const a = ARROW[t.escalation.direction];
+          const cat = categoryOf(t.name, line0(t));
           const flags = [...new Set(t.pulses.flatMap((p) => p.actors_iso2))].slice(0, MAX_FLAGS);
           const line = headlineOf(t.headline, t.bottom_line, 120) || t.name;
           return (
-            <li key={t.theater_id + i}>
+            <li key={t.theater_id + i} className={`vl-cat-${cat}`}>
               <Link href={`#${anchor}`} className="geo-thirty-link" title={t.name}>
-                <span className="geo-thirty-flags">
-                  <IsoFlags codes={flags} />
+                <span className="vl-chip">
+                  <Glyph name={cat} size={18} />
                 </span>
                 <span className="geo-thirty-text">
-                  <span className="geo-micro">
-                    {update ? "Update · " : ""}
-                    {shortTheater(t.name)}
-                    {editionTag(report, t.edition) ? ` · ${editionTag(report, t.edition)}` : ""}
-                  </span>{" "}
+                  <span className="geo-thirty-meta">
+                    <IsoFlags codes={flags} />
+                    <span className="geo-micro">
+                      {update ? "Update · " : ""}
+                      {shortTheater(t.name)}
+                      {editionTag(report, t.edition) ? ` · ${editionTag(report, t.edition)}` : ""}
+                    </span>
+                  </span>
                   {line}
                 </span>
-                <span className={`geo-dir${a.moving ? " is-moving" : ""}`} title={`Direction: ${a.word}`}>
-                  <span aria-hidden="true">{a.glyph}</span>
-                  <span className="geo-sr"> {a.word}</span>
-                </span>
+                <DirMark direction={t.escalation.direction} />
               </Link>
             </li>
           );
