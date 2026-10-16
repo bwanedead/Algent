@@ -9,6 +9,7 @@ series; aircraft and fire counts are context for the section writers.
 
 from __future__ import annotations
 
+from algent_backend.live.memory.areas import DAILY, daily_series
 from algent_backend.live.regions import FIRE_BOXES, GATES, REGIONS
 
 from .contracts import Series
@@ -68,4 +69,23 @@ def _series() -> list[Series]:
     return out
 
 
-LIVE_SERIES: list[Series] = _series()
+_PLAIN_MEM = ("The average number of {noun} present in {label} across a UTC day, from Ohmega's own hourly memory of public live position "
+              "broadcasts. It is the baseline Ohmega's anomaly detector learns from; coverage is partial, so read the trend, not the exact number.")
+
+
+def _memory_series() -> list[Series]:
+    """Daily means of what Ohmega's live memory (``live/memory/``) saw present in each watched area: ships, tankers, naval ships, military aircraft."""
+    out: list[Series] = []
+    for sid, area, name in daily_series():
+        noun = DAILY[name][1]
+        aircraft = name == "mil_air"
+        out.append(Series(
+            id=sid, name=f"{area.label} - {noun} present, daily mean (Ohmega memory)", unit="objects", frequency="daily", cadence="daily",
+            lag_days=1, source="Ohmega live memory (ADS-B)" if aircraft else "Ohmega live memory (AIS)",
+            source_url=_ADSB_URL if aircraft else _AIS_URL, fetcher="live", licence=_LICENCE, public_display=True,
+            tags=["live", "memory", "aircraft" if aircraft else "shipping", *(["military"] if aircraft else []), *area.tags],
+            plain=_PLAIN_MEM.format(noun=noun, label=area.label)))
+    return out
+
+
+LIVE_SERIES: list[Series] = [*_series(), *_memory_series()]

@@ -199,6 +199,30 @@ Zoomed-in tiles refetch every minute where objects moved (positions and timestam
 unchanged-tile skip. Knobs if the bucket still runs hot: `flags.TILE_DEG` (smaller tiles = fewer wasted rows per view, more files per cycle),
 `SNAPSHOT_SECONDS`, and the CDN window `SNAPSHOT_CACHE`.
 
+### Live memory: baselines and anomalies (`live/memory/`)
+
+What the sensors normally show, and when they do not: Ohmega's own derivation (provenance `ohmega_derived`) from the same feeds, forward-only
+(nothing before the service started is invented). Raw detail lives briefly on the server; condensed insight is what leaves it. Every threshold
+is in `live/memory/flags.py` with its reason.
+
+| Step | What | Where |
+|---|---|---|
+| Sample | the stream service reads the vessel and aircraft snapshot documents every 5 min and counts objects per 1-degree cell (the coverage grid's ids), per named area (the chokepoint, aircraft-region and fire-watch boxes of `live/regions.py`) and for the world, by class: ships tanker / cargo / passenger / fishing / military / other, aircraft civil / military / support (tankers and surveillance, inside military), plus where AIS was heard in the last 10 min. FIRMS runs fold the heat document into the same places (`fire.count`, `fire.frp` = the cells' strongest readings summed: an intensity index, since the document keeps one peak per cell), IODA / USGS runs count ongoing outages and the past day's quakes. An hour's value is the MEAN of its samples. Counts only: no id, name or track | `memory/sampler.py`, hooked in `stream.build_docs` and `runner.run` |
+| Hours on disk | `live_store/memory/hours/<YYYY-MM-DDTHH>.<source>.json.gz`, one file per hour and source, kept 60 days then deleted | `memory/hours.py` |
+| Baselines | per place and class, per hour of the week (168 slots): the last 6 weeks of that slot as 16-bit counts; the normal is the MEDIAN of the slot and its two neighbouring hours, spread = MAD (`1.4826 * MAD`, floored at `0.5 * sqrt(median)` and at 1 object). Fires: one slot, the last 56 observations. A slot with fewer than 3 weeks falls back to trailing days (same hour, any weekday) and is marked LEARNING; with fewer than 9 pooled values the place is not scored. A place never seen in a layer old enough to know has the zero normal. Persisted per layer as `baseline_<layer>.bin.gz` (about 4 MB for 17,000 ship places measured on synthetic data; 34 MB in memory), places idle for 21 days are forgotten | `memory/baseline.py`, `memory/robust.py` |
+| Detect | robust z >= 3.5 (6 while learning) opens a run, it goes on while z >= 2 in the same direction, and is PUBLISHED once it has lasted 3 hourly observations (fires: 2 runs). An incident's values do not enter the baseline for the first 72 h | `memory/detect.py` |
+| Screen | a "below normal" is dropped when the rest of the place's traffic fell too (a receiver or feed gap, not ships vanishing), the place's AIS coverage (share of its 24 h-covered cells heard) is under half, the normal was under 3 objects, or the whole world layer dipped. Fires are reported only above normal (cloud and satellite passes make fires "fall" for no reason on the ground). Counts of what was screened: `newsroom live memory status` | `memory/detect.py` |
+| Publish | `live_anomalies` (migration 011, anon select only; active rows plus 14 days of closed ones), neighbouring flagged cells merged into one event and cells inside a flagged area folded into it, strongest 40. The append-only record is `memory/anomalies/log.jsonl`; the current picture `memory/anomalies/current.json` | `memory/anomalies.py` |
+| Daily rollups | a completed UTC day with at least 18 observed hours becomes `live_mem_<gate or region>_<slug>_<ships, tankers, navy, mil_air>` instrument series (the mean number present), published to `live_stats` as kind `presence` | `memory/daily.py`, `instruments/live_series.py` |
+| Brain | `OHMEGA LIVE ANOMALIES` evidence block per theater (countries it stands behind, like the grid block) and across the world sweep; each daily section stores a `live_rollup` (what was normal and abnormal in the places we watch there) and appends it to `memory/anomalies/theater_days.jsonl` | `memory/desk.py`, `intel/sensing.py`, `intel/daily.py` |
+
+The tick (`newsroom live memory tick`; also run at the end of every timer run, a no-op until an hour has settled) is the only writer of baselines
+and state, serialised by a lock file and resumable from its cursor. Space, measured on a synthetic world hour of 17,550 place-class entries: about
+30 KB per hour file, so about 44 MB for the 60 days. The site shows rings on /live (layer "Anomalies", subtle, on by default), an "Unusual right now"
+list, "Unusual in this theater" on dailies and dossiers, and serves `/api/v1/anomalies` and the MCP tool `get_live_anomalies`.
+Honest limits: the first weeks everything is learning; ship and aircraft counts are what volunteer receivers hear, and the screening is a statistical
+proxy for a coverage gap, not a proof of one; thresholds were set from first principles, not tuned on real data yet.
+
 **What the site does with them.** The map (`sites/ohmega-monster/components/live/`) shows ships and aircraft as a soft heat glow far out (fed by
 `points`), dots from zoom 4 (when it starts fetching the tiles under the view) and small heading-oriented icons past zoom 6.5, dead-reckoned between
 snapshots (paused when the tab is hidden, the map is off screen or the user prefers reduced motion). Class filters work from the points; speed, notable, flag and name

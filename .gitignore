@@ -282,6 +282,7 @@ backend/pulse_store/
 /.algent-data/
 backend/intel_store/
 backend/instruments_store/
+backend/live_store/
 backend/statements_store/
 backend/geoledger_store/
 backend/library_store/

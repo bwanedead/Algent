@@ -19,6 +19,7 @@ from algent_backend.publishing.published_db import _run
 
 from . import flags, store
 from .contracts import LiveEvent
+from .memory.areas import daily_series
 from .regions import GATES, REGIONS, FIRE_BOXES
 
 _EVENT = """
@@ -54,6 +55,9 @@ def _where() -> dict[str, tuple[str, str, float, float]]:
         lat, lon = (r.box[0] + r.box[2]) / 2, (r.box[1] + r.box[3]) / 2
         for sid, kind in zip(mil_ids(r.slug), ("aircraft", "aircraft_support")):
             out[sid] = (kind, r.slug, lat, lon)
+    for sid, area, _name in daily_series():           # live memory's daily means: kind "presence" (not a chokepoint tile)
+        lat, lon = (area.box[0] + area.box[2]) / 2, (area.box[1] + area.box[3]) / 2
+        out[sid] = ("presence", area.id, lat, lon)
     for b in FIRE_BOXES:
         out[fire_id(b.slug)] = ("fires", b.slug, (b.box[0] + b.box[2]) / 2, (b.box[1] + b.box[3]) / 2)
     return out

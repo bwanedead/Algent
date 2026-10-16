@@ -13,7 +13,7 @@ from typing import Any, Callable
 
 from algent_backend import polite_http
 
-from . import energy, headlines, snapshots
+from . import energy, headlines, memory, snapshots
 from . import publish as live_publish
 from . import store
 from .contracts import Ctx, NeedsKey
@@ -55,6 +55,9 @@ def run(names: list[str] | None = None, *, get: Callable[..., str] | None = None
             rows.append({"feed": n, "status": "error", "note": msg})
             continue
         store.write_events(n, res.events)
+        memory.record_events(n, res.events, now.timestamp())             # live memory: outage / quake counts of the hour
+        if "fires" in res.docs:
+            memory.record_fires(res.docs["fires"], now.timestamp())      # ... and the fire picture
         fresh[n] = res.events
         stats += res.stats
         docs.update(res.docs)
@@ -74,6 +77,10 @@ def run(names: list[str] | None = None, *, get: Callable[..., str] | None = None
         out["publish"] = live_publish.publish(fresh, today=now.date(), connect=connect)
         if out["publish"].get("db"):
             out["world"] = live_publish.publish_world(connect=connect)
+    if publish:                           # live memory: settle finished hours into baselines, anomalies and daily rollups (a no-op until an hour has ended)
+        from .memory import tick as memory_tick
+
+        out["memory"] = memory_tick.tick(now.timestamp(), connect=connect)
     return out
 
 

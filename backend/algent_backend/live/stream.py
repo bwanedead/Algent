@@ -7,6 +7,8 @@ The stream service (``newsroom live ais``, systemd unit ``ohmega-ais``) — ever
     the sky board by ICAO address, freshest position winning;
   * every ``SNAPSHOT_SECONDS`` the world ``points`` (compact real positions for the far-out glow; the old ``density`` grid is still written, unused), the object ``tiles/`` (+ index) and ``summary`` (and, until the site no longer
     needs them, the full ``vessels`` / ``aircraft``: ``flags.PUBLISH_FULL_SNAPSHOT``) to the public Storage bucket,
+    every ``memory.flags.SAMPLE_SECONDS`` a count of what is on the boards per cell / area / class, folded into an hourly mean on disk
+    (live memory, ``live/memory/``: baselines and anomalies are computed from it by the timer runner's tick),
     and every ``PERSIST_SECONDS`` the short-trail shards (``tracks/v<k>``, ``tracks/a<k>``), the receiver-coverage grid and the local
     saves of the MMSI static memory (so a restart does not forget every ship's type).
 
@@ -29,15 +31,18 @@ from .board import VesselBoard
 from .contracts import iso
 from .feeds import ais
 from .ingest import digitraffic, kystverket, opensky
+from .memory import Sampler
 from .sky import SkyBoard
 
 
-def build_docs(board: VesselBoard, sky: SkyBoard, now: float, *, tracks: bool = False) -> dict[str, Any]:
+def build_docs(board: VesselBoard, sky: SkyBoard, now: float, *, tracks: bool = False, sampler: Sampler | None = None) -> dict[str, Any]:
     """The documents of one cycle: vessels, aircraft, summary (and the trail shards when ``tracks``). Also refreshes the local
     ``gates_now`` document the timer runner's summary reads. Everything is built from the boards' current state."""
     at = datetime.fromtimestamp(now, tz=timezone.utc)
     vessels, gates = board.snapshot(now)
     aircraft = sky.snapshot(now)
+    if sampler is not None:           # live memory: an hourly mean of what is on the boards (live/memory/); counts only, never raises
+        sampler.observe(vessels, aircraft, board.coverage.seen.keys(), now)
     store.write_doc("gates_now", {"as_of": iso(at), "gates": gates})
     docs: dict[str, Any] = {"vessels": vessels, "aircraft": aircraft,
                             "summary": headlines.build(at, extra_fresh={"ships": vessels["as_of"], "aircraft": aircraft["as_of"]})}
@@ -73,14 +78,14 @@ def _save_memory(static: dict, seen: dict) -> None:
 
 
 async def _cycle_loop(board: VesselBoard, sky: SkyBoard, stop_at: float | None,
-                      get: Callable[..., str] = polite_http.get) -> None:
+                      get: Callable[..., str] = polite_http.get, sampler: Sampler | None = None) -> None:
     last_tracks = 0.0
     while stop_at is None or time.monotonic() < stop_at:
         started = time.time()
         try:
             await asyncio.to_thread(sky.poll, get, started)
             with_tracks = started - last_tracks >= flags.PERSIST_SECONDS
-            docs = build_docs(board, sky, time.time(), tracks=with_tracks)
+            docs = build_docs(board, sky, time.time(), tracks=with_tracks, sampler=sampler)
             res = await asyncio.to_thread(snapshots.publish, docs)
             if with_tracks:
                 last_tracks = started
@@ -97,7 +102,7 @@ async def run(key: str = "", *, max_seconds: float | None = None) -> None:
     board = VesselBoard(static=StaticMemory.load(_static_path()), coverage=Coverage.load(_coverage_path()))
     sky = SkyBoard()
     stop_at = None if max_seconds is None else time.monotonic() + max_seconds
-    tasks = [_cycle_loop(board, sky, stop_at)]
+    tasks = [_cycle_loop(board, sky, stop_at, sampler=Sampler())]
     if key:
         tasks.append(ais.serve(key, max_seconds=max_seconds, counter=ais.load_counter(), board=board))
     if flags.OPENSKY_ENABLED:
