@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { ActorFlag, ordinal, rankText, ScaleBar } from "@/components/actors/ActorParts";
 import Crumbs, { ACTORS_CRUMB, INTEL_CRUMB } from "@/components/Crumbs";
+import GridImpact from "@/components/GridImpact";
 import { Anchor, Overflow, Section } from "@/components/dossier/parts";
 import { ActorDevelopments, ActorOnRecord, InvolvedIn, RelatedActors } from "@/components/entities/EntityLinks";
 import PulseTile from "@/components/PulseTile";
@@ -11,6 +12,7 @@ import { actor, actorIds, CREDIT_SOURCE_ORDER, fieldOf, fmt, GROUPS, type Actor,
 import { dayLabel } from "@/lib/dossier-view";
 import { actorContext } from "@/lib/entities";
 import { countryName } from "@/lib/flags";
+import { getGrid } from "@/lib/geoledger";
 import { latestSnapshot } from "@/lib/intel";
 import { toWallPulse } from "@/lib/pulse-wall";
 
@@ -140,6 +142,7 @@ const ANCHOR: Record<GroupId, string> = { people: "people", economy: "economy", 
 /** A state with no power profile yet but a place in the news: the same linked sections, without the numbers. */
 async function ActorStub({ iso }: { iso: string }) {
   const ctx = await actorContext(iso);
+  const grid = await getGrid(iso);
   if (!ctx) notFound();
   return (
     <div className="intel-page th-page">
@@ -151,6 +154,7 @@ async function ActorStub({ iso }: { iso: string }) {
       </p>
       <h1 className="th-claim">{ctx.name}: where it appears in the desk&apos;s reporting</h1>
       <p className="th-note">There is no power profile for {ctx.name} yet (economy, energy, military). Everything below comes from the theaters, statements and daily reports that name it.</p>
+      {grid && <GridImpact grid={grid} name={ctx.name} />}
       <InvolvedIn name={ctx.name} theaters={ctx.theaters} />
       <ActorOnRecord name={ctx.name} said={ctx.said} about={ctx.saidAbout} />
       <ActorDevelopments name={ctx.name} items={ctx.developments} />
@@ -166,6 +170,7 @@ export default async function ActorPage({ params }: { params: Params }) {
     return <ActorStub iso={params.iso} />;
   }
   const ctx = await actorContext(a.iso2);
+  const grid = await getGrid(a.iso2);
   const snap = await latestSnapshot();
   const lookup = new Map((snap?.situations ?? []).flatMap((s) => s.pulses.map((p) => [p.id, toWallPulse(p, s.title)] as const)));
   const pulses = a.involved.pulses.map((p) => lookup.get(p.id)).filter((p): p is NonNullable<typeof p> => !!p);
@@ -239,6 +244,7 @@ export default async function ActorPage({ params }: { params: Params }) {
       )}
       <p className="th-note">Bars show the share of states this actor is ahead of. Rank is among states, each at its latest year.</p>
 
+      {grid && <GridImpact grid={grid} name={a.name} />}
       {ctx && <InvolvedIn name={a.name} theaters={ctx.theaters} />}
       {ctx && ctx.said.length > 0 && <ActorOnRecord name={a.name} said={ctx.said} about={ctx.saidAbout} />}
       {ctx && <ActorDevelopments name={a.name} items={ctx.developments} />}

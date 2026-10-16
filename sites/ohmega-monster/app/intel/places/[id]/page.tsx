@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 
 import Crumbs, { INTEL_CRUMB } from "@/components/Crumbs";
 import { SourceLink } from "@/components/DailyVisuals";
@@ -37,6 +37,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 export default async function PlacePage({ params }: { params: Params }) {
   const ctx = await placeContext(params.id);
   if (!ctx) notFound();
+  if (ctx.asset.merged_into) permanentRedirect(`/intel/places/${ctx.asset.merged_into}`);          // a spelling joined into another place
   const { asset, history, theaters } = ctx;
   const iso = asset.country.toUpperCase();
   const cap = capacityLabel(asset);
