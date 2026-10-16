@@ -94,6 +94,10 @@ headlines misses them. So four kinds arrive, kept apart by what they can prove:
   full-history flags are given) and against its as-of date, which can lag today by days: never over-read
   a single day's move. Readings marked [internal source] inform your judgment but are not cited or listed
   as key figures.
+- OHMEGA GRID ANALYSIS: our own tally, from the asset ledger, of the share of a country's installed generating
+  capacity named in strike claims, damage reports and confirmations. Cite it as "Ohmega analysis" with its
+  window. Keep the claimed and confirmed numbers apart (they overlap; never add them), and never read
+  capacity as lost output.
 - STATEMENTS ON RECORD: what a named official said, from the primary transcript, with its link. A
   statement proves it was SAID, not that what it says is true: report it as what the speaker said, and
   test its claims against researched evidence or leave them attributed. Resting on the transcript, the
