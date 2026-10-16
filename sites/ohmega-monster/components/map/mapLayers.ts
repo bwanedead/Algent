@@ -8,7 +8,7 @@
 import type { FeatureCollection, Props } from "./geo";
 
 /** What a popup shows: the same plain detail the lists and cards show. `url` is opened only when http(s). */
-export type PopupInfo = { kind?: string; title: string; when?: string; text?: string; lines?: string[]; url?: string; source?: string };
+export type PopupInfo = { kind?: string; title: string; when?: string; text?: string; lines?: string[]; url?: string; source?: string; /** A page on this site about the thing (shown as a "More" link). */ href?: string };
 
 export type LayerKind =
   | "area" // polygons: translucent fill + outline (countries in an outage, disputed territory)
@@ -170,6 +170,15 @@ export function popupNode(info: PopupInfo): HTMLElement {
   if (info.when) el("p", "lm-pop-when", info.when);
   if (info.text) el("p", "lm-pop-text", info.text);
   for (const line of info.lines ?? []) el("p", "lm-pop-line", line);
+  if (info.href && /^\/[\w./-]*$/.test(info.href)) {
+    const p = document.createElement("p");
+    p.className = "lm-pop-src";
+    const a = document.createElement("a");
+    a.href = info.href;
+    a.textContent = "Open the place page →";
+    p.appendChild(a);
+    root.appendChild(p);
+  }
   if (info.url && /^https?:\/\//.test(info.url)) {
     const p = document.createElement("p");
     p.className = "lm-pop-src";

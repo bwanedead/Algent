@@ -111,6 +111,11 @@ export function ActorDevelopments({ name, items }: { name: string; items: ActorC
             <span className="en-when">{dayLabel(d.date)}</span>
             <Link href={d.href}>{d.headline}</Link>
             <span className="geo-muted"> · {d.theater}</span>
+            {d.event && (
+              <Link href={d.event} className="en-ev" title="This development on its own page" aria-label={`Open on its own page: ${d.headline}`}>
+                ↗
+              </Link>
+            )}
           </li>
         ))}
       </ul>

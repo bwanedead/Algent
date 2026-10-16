@@ -1,8 +1,13 @@
+import Link from "next/link";
+
+import LinkedText from "@/components/entities/LinkedText";
 import { RELATION_KINDS } from "@/components/IntelViz";
 import Popover from "@/components/Popover";
 import { SourceLink } from "@/components/DailyVisuals";
 import type { Actor, Relation, Statement } from "@/lib/dossier";
 import { byWeight, dayLabel } from "@/lib/dossier-view";
+import { isoForName } from "@/lib/countries";
+import { textLinker } from "@/lib/entities";
 import { kindOf, layoutNetwork, NET_H, NET_W, type RelationKind } from "@/lib/dossier-network";
 
 import { Overflow, Section } from "./parts";
@@ -20,12 +25,19 @@ const SENTENCE_VERB: Record<RelationKind, string> = {
   supports: "supports", negotiates: "negotiates with", deters: "deters", other: "acts against",
 };
 
-function RelationRow({ r }: { r: Relation }) {
+/** An actor name, linked to its state page when it is one. */
+function Who({ name, iso }: { name: string; iso: string | null }) {
+  return iso ? <Link href={`/intel/actors/${iso}`} className="en-inl">{name}</Link> : <>{name}</>;
+}
+
+type IsoOf = (name: string) => string | null;
+
+function RelationRow({ r, isoOf }: { r: Relation; isoOf: IsoOf }) {
   const k = kindOf(r.kind);
   return (
     <li className="th-rel">
       <span className="th-rel-line">
-        <b>{r.source}</b> <span className={`th-rel-kind intel-k-${k}`}>{verb(k)}</span> <b>{r.target}</b>
+        <b><Who name={r.source} iso={isoOf(r.source)} /></b> <span className={`th-rel-kind intel-k-${k}`}>{verb(k)}</span> <b><Who name={r.target} iso={isoOf(r.target)} /></b>
         <span className="th-rel-n" title={`Reported ${r.count} time${r.count === 1 ? "" : "s"}`}>
           ×{r.count}
         </span>
@@ -36,7 +48,7 @@ function RelationRow({ r }: { r: Relation }) {
   );
 }
 
-function RelationTable({ relations, actors }: { relations: Relation[]; actors: Actor[] }) {
+function RelationTable({ relations, actors, isoOf }: { relations: Relation[]; actors: Actor[]; isoOf: IsoOf }) {
   return (
     <div className="geo-pd">
       <p className="geo-pd-title">Every relation</p>
@@ -56,9 +68,9 @@ function RelationTable({ relations, actors }: { relations: Relation[]; actors: A
             const k = kindOf(r.kind);
             return (
               <tr key={i} title={r.note || undefined}>
-                <td>{r.source}</td>
+                <td><Who name={r.source} iso={isoOf(r.source)} /></td>
                 <td className={`intel-k-${k}`}>{verb(k)}</td>
-                <td>{r.target}</td>
+                <td><Who name={r.target} iso={isoOf(r.target)} /></td>
                 <td className="th-r">{r.count}</td>
                 <td>{r.last_date ? dayLabel(r.last_date) : ""}</td>
               </tr>
@@ -105,14 +117,14 @@ function Statements({ items }: { items: Statement[] }) {
         return s.quote ? (
           <figure key={i} className="geo-quote">
             <blockquote>
-              <p>“{s.said}”</p>
+              <p>“<LinkedText text={s.said} />”</p>
             </blockquote>
             {cap}
           </figure>
         ) : (
           <figure key={i} className="geo-quote geo-quote-para">
             <p>
-              <span className="geo-strong">{s.who || "A source"}</span> said that {s.said}
+              <span className="geo-strong">{s.who || "A source"}</span> said that <LinkedText text={s.said} />
             </p>
             {cap}
           </figure>
@@ -122,10 +134,12 @@ function Statements({ items }: { items: Statement[] }) {
   );
 }
 
-export default function ActorNetwork({ actors, relations, statements }: { actors: Actor[]; relations: Relation[]; statements: Statement[] }) {
+export default async function ActorNetwork({ actors, relations, statements }: { actors: Actor[]; relations: Relation[]; statements: Statement[] }) {
   if (relations.length === 0 && actors.length === 0) return null;
   const ranked = [...relations].sort(byWeight);
   const net = layoutNetwork(actors, relations);
+  const linker = await textLinker();
+  const isoOf: IsoOf = (name) => isoForName(name, linker);
   const used = Array.from(new Set(net.edges.map((e) => e.kind)));
   const top = ranked[0];
   const lead = top
@@ -150,15 +164,25 @@ export default function ActorNetwork({ actors, relations, statements }: { actors
                 <title>{`${e.rel.source} ${verb(e.kind)} ${e.rel.target}: ${e.rel.count} report${e.rel.count === 1 ? "" : "s"}${e.rel.note ? `. ${e.rel.note}` : ""}`}</title>
               </path>
             ))}
-            {net.nodes.map((n) => (
-              <g key={n.name}>
-                <title>{`${n.name}: ${n.mentions} mention${n.mentions === 1 ? "" : "s"}`}</title>
-                <circle cx={n.x} cy={n.y} r={n.r} className="th-node" />
-                <text x={n.lx} y={n.ly} textAnchor={n.anchor} className="th-node-label">
-                  {n.label}
-                </text>
-              </g>
-            ))}
+            {net.nodes.map((n) => {
+              const iso = isoOf(n.name);
+              const node = (
+                <g>
+                  <title>{`${n.name}: ${n.mentions} mention${n.mentions === 1 ? "" : "s"}${iso ? ". Open its page." : ""}`}</title>
+                  <circle cx={n.x} cy={n.y} r={n.r} className="th-node" />
+                  <text x={n.lx} y={n.ly} textAnchor={n.anchor} className="th-node-label" textDecoration={iso ? "underline dotted" : undefined}>
+                    {n.label}
+                  </text>
+                </g>
+              );
+              return iso ? (
+                <a key={n.name} href={`/intel/actors/${iso}`}>
+                  {node}
+                </a>
+              ) : (
+                <g key={n.name}>{node}</g>
+              );
+            })}
           </svg>
           <figcaption>
             <ul className="th-legend" aria-label="Arrow colours">
@@ -189,7 +213,7 @@ export default function ActorNetwork({ actors, relations, statements }: { actors
       {ranked.length > 0 && (
         <ul className={net.nodes.length >= 2 ? "th-rels" : "th-rels is-solo"} aria-label="Relations, most reported first">
           {ranked.slice(0, 6).map((r, i) => (
-            <RelationRow key={i} r={r} />
+            <RelationRow key={i} r={r} isoOf={isoOf} />
           ))}
         </ul>
       )}
@@ -197,7 +221,7 @@ export default function ActorNetwork({ actors, relations, statements }: { actors
       <p className="th-foot">
         {ranked.length > 0 && (
           <Popover label="Relations as a table" wide triggerClassName="th-link-btn xt" trigger={<>All {ranked.length} relation{ranked.length === 1 ? "" : "s"} as a table ›</>}>
-            <RelationTable relations={ranked} actors={actors} />
+            <RelationTable relations={ranked} actors={actors} isoOf={isoOf} />
           </Popover>
         )}
         {statements.length > 0 && (

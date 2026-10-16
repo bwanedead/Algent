@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { SourceLink } from "@/components/DailyVisuals";
 import { shortDay } from "@/lib/daily";
 import type { DailyAssetEvent } from "@/lib/daily";
@@ -10,6 +12,7 @@ import { statusTone, STATUS_LABEL, STATUS_MEANING, TYPE_LABEL, type GeoLogRow } 
 
 export type LogLine = {
   key: string;
+  assetId: string;
   date: string;
   name: string;
   type: GeoLogRow["type"];
@@ -24,8 +27,8 @@ export type LogLine = {
 export function logLines(week: GeoLogRow[], own: DailyAssetEvent[]): LogLine[] {
   const rows: LogLine[] =
     week.length > 0
-      ? week.map((e) => ({ key: e.id, date: e.occurred_on, name: e.name, type: e.type, status: e.status, claimant: e.claimant, confidence: e.confidence, sources: e.sources, note: e.note }))
-      : own.map((e, i) => ({ key: `${e.asset_id}-${i}`, date: e.date, name: e.name, type: e.type, status: e.status, claimant: e.claimant, confidence: e.confidence, sources: e.sources, note: e.note }));
+      ? week.map((e) => ({ key: e.id, assetId: e.asset_id, date: e.occurred_on, name: e.name, type: e.type, status: e.status, claimant: e.claimant, confidence: e.confidence, sources: e.sources, note: e.note }))
+      : own.map((e, i) => ({ key: `${e.asset_id}-${i}`, assetId: e.asset_id, date: e.date, name: e.name, type: e.type, status: e.status, claimant: e.claimant, confidence: e.confidence, sources: e.sources, note: e.note }));
   return rows.sort((a, b) => b.date.localeCompare(a.date) || a.name.localeCompare(b.name));
 }
 
@@ -43,7 +46,7 @@ export default function AssetStatusLog({ lines }: { lines: LogLine[] }) {
             <span>
               <span className="geo-ctx-what">
                 <span aria-hidden="true" style={{ color: statusTone(l.status) }}>● </span>
-                {l.name}
+                <Link href={`/intel/places/${l.assetId}`} className="en-inl">{l.name}</Link>
               </span>{" "}
               <span className="geo-muted">
                 ({TYPE_LABEL[l.type].toLowerCase()}) · <b className="geo-strong" title={STATUS_MEANING[l.status]}>{STATUS_LABEL[l.status]}</b> · said by {l.claimant}

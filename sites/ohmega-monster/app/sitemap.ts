@@ -5,6 +5,7 @@ import { getAllMeta } from "@/lib/articles";
 import { allDailyDates } from "@/lib/daily";
 import { dossierIds } from "@/lib/dossier";
 import { allBriefSlugs } from "@/lib/intel";
+import { indexedPlaceIds } from "@/lib/places";
 import { SITE_URL } from "@/lib/site";
 
 // A self-populating site needs machines (indexers) to notice new articles without being told.
@@ -23,6 +24,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/intel/actors`, lastModified: new Date() },
     ...(await actorIds()).map((iso) => ({ url: `${SITE_URL}/intel/actors/${iso}`, lastModified: new Date() })),
     { url: `${SITE_URL}/intel/record`, lastModified: new Date() },
+    { url: `${SITE_URL}/intel/graph`, lastModified: new Date() },
+    ...(await indexedPlaceIds()).map((id) => ({ url: `${SITE_URL}/intel/places/${id}`, lastModified: new Date() })),
     { url: `${SITE_URL}/radar`, lastModified: new Date() },
     ...(await allBriefSlugs()).map((slug) => ({ url: `${SITE_URL}/intel/briefs/${slug}` })),
     { url: `${SITE_URL}/intel/theaters`, lastModified: new Date() },

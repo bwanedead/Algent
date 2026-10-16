@@ -1,3 +1,6 @@
+import Link from "next/link";
+
+import LinkedText from "@/components/entities/LinkedText";
 import Popover from "@/components/Popover";
 import PulseTile from "@/components/PulseTile";
 import type { DailyDevelopment, DailyPulse, DailyStatement, KeyFigure, TheaterMap } from "@/lib/daily";
@@ -255,14 +258,14 @@ function Statement({ s }: { s: DailyStatement }) {
   return s.quote ? (
     <figure className="geo-quote">
       <blockquote>
-        <p>“{s.said}”</p>
+        <p>“<LinkedText text={s.said} />”</p>
       </blockquote>
       {who}
     </figure>
   ) : (
     <figure className="geo-quote geo-quote-para">
       <p>
-        <span className="geo-strong">{s.who || "A source"}</span> said that {s.said}
+        <span className="geo-strong">{s.who || "A source"}</span> said that <LinkedText text={s.said} />
       </p>
       {who}
     </figure>
@@ -270,7 +273,7 @@ function Statement({ s }: { s: DailyStatement }) {
 }
 
 /** Everything about one development, for the popover. */
-function DevelopmentDetail({ d }: { d: DailyDevelopment }) {
+export function DevelopmentDetail({ d, href }: { d: DailyDevelopment; href?: string }) {
   const verified = d.verification === "researched";
   const where = d.where || [d.place?.name, d.place?.country].filter(Boolean).join(", ");
   return (
@@ -281,13 +284,13 @@ function DevelopmentDetail({ d }: { d: DailyDevelopment }) {
         <span>{verified ? "Researched" : "Reported, not independently checked"}</span>
         {[d.when, where].filter(Boolean).length > 0 && <span className="geo-micro"> · {[d.when, where].filter(Boolean).join(" · ")}</span>}
       </p>
-      {d.detail && <p className="geo-pd-text">{d.detail}</p>}
+      {d.detail && <p className="geo-pd-text"><LinkedText text={d.detail} /></p>}
       {d.statements.map((s, i) => (
         <Statement key={i} s={s} />
       ))}
       {d.significance && (
         <p className="geo-pd-text">
-          <span className="geo-micro">Why it matters</span> {d.significance}
+          <span className="geo-micro">Why it matters</span> <LinkedText text={d.significance} />
         </p>
       )}
       {d.sources.length > 0 && (
@@ -297,13 +300,21 @@ function DevelopmentDetail({ d }: { d: DailyDevelopment }) {
           ))}
         </p>
       )}
+      {href && (
+        <p className="geo-pd-foot">
+          <Link href={href} className="xt" title="This development on its own page, with its place, actors and theater">
+            Open on its own page ↗
+          </Link>
+        </p>
+      )}
     </div>
   );
 }
 
 /** Developments as a vertical timeline, newest day first: one line each, detail in a popover. The mark is
  *  solid when researched, hollow when reported, and carries the map's number when the map shows it. */
-export function DevelopmentTimeline({ developments, map, reportDate, range }: { developments: DailyDevelopment[]; map: TheaterMap | null; reportDate: string; range?: [number, number] }) {
+/** `anchor` gives each development a permalink fragment (`<anchor>-d<n>`); `eventHref` the path of its own page (a small arrow after it). */
+export function DevelopmentTimeline({ developments, map, reportDate, range, anchor, eventHref }: { developments: DailyDevelopment[]; map: TheaterMap | null; reportDate: string; range?: [number, number]; anchor?: string; eventHref?: (index: number) => string }) {
   if (developments.length === 0) return null;
   const mapped = mappedNumbers(map, developments.length); // numbers always index the FULL list, so a slice keeps the map's marks
   const rows = developments
@@ -320,7 +331,7 @@ export function DevelopmentTimeline({ developments, map, reportDate, range }: { 
         const verified = d.verification === "researched";
         const n = mapped.get(i) ?? null;
         return (
-          <li key={i} className="geo-ev">
+          <li key={i} id={anchor ? `${anchor}-d${i + 1}` : undefined} className="geo-ev">
             <span className="geo-ev-day">{label}</span>
             <span className={`geo-ev-mark ${verified ? "is-solid" : "is-hollow"}${n !== null ? " has-n" : ""}`} title={verified ? "Researched" : "Reported, not independently checked"}>
               {n ?? ""}
@@ -337,7 +348,7 @@ export function DevelopmentTimeline({ developments, map, reportDate, range }: { 
                 </>
               }
             >
-              <DevelopmentDetail d={d} />
+              <DevelopmentDetail d={d} href={eventHref?.(i)} />
             </Popover>
           </li>
         );

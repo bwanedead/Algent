@@ -10,3 +10,7 @@
 .en-chip { white-space: nowrap; color: var(--link-accent); text-underline-offset: 3px; }
 .en-chip:hover { color: var(--link-accent-hover); }
 .en-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.en-inl { color: inherit; text-decoration: underline dotted; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.en-inl:hover { color: var(--link-accent); text-decoration-style: solid; }
+.en-ev { margin-left: 6px; color: var(--muted); font-size: 12px; text-decoration: none; }
+.en-ev:hover { color: var(--link-accent); }

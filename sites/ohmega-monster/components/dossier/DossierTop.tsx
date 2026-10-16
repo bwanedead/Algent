@@ -1,5 +1,6 @@
 import Crumbs, { INTEL_CRUMB, THEATERS_CRUMB } from "@/components/Crumbs";
 import { CoverSpark } from "@/components/DailyVisuals";
+import LinkedText from "@/components/entities/LinkedText";
 import Popover from "@/components/Popover";
 import { headlineOf, isCut } from "@/lib/daily";
 import type { Dossier } from "@/lib/dossier";
@@ -95,7 +96,7 @@ export function DossierPrimer({ primer }: { primer: Dossier["primer"] }) {
     <Section id="background" title="Background in 60 seconds" aside={primer.built_at ? <span className="th-key">written {dayLabel(isoDay(primer.built_at) || primer.built_at)}</span> : undefined}>
       <div className="th-primer">
         {lead.map((p, i) => (
-          <p key={i}>{p}</p>
+          <p key={i}><LinkedText text={p} /></p>
         ))}
       </div>
       {rest && (
@@ -107,7 +108,7 @@ export function DossierPrimer({ primer }: { primer: Dossier["primer"] }) {
               .filter(Boolean)
               .map((p, i) => (
                 <p key={i} className="geo-pd-text">
-                  {p}
+                  <LinkedText text={p} />
                 </p>
               ))}
           </div>
