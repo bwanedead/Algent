@@ -6,9 +6,9 @@ import { splitHint } from "@/lib/visual";
 
 import "./doors.css";
 
-// A grid of doors into the site: a glyph, one big numeral (or a short hint) and a short title. Used by Home and by the Intelligence
-// directory. Each door is one whole link, so it is easy to hit on a phone. `lines` adds the one-line description under the title
-// (the directory shows it; Home does not: the glyph, the numeral and the title are the whole message).
+// A compact, hairline-ruled index of the site's doors: glyph, title, and one tabular numeral (or a short hint) on the right. Used by
+// Home and by the Intelligence directory. Each row is one whole link (a full-width target, easy to hit on a phone). `lines` adds
+// the one-line description under the title (the directory shows it; Home does not).
 const GLYPH: Record<string, GlyphName> = {
   "/geopolitics": "globe",
   "/live": "live",
@@ -27,19 +27,21 @@ export default function Doors({ doors, label, lines = true }: { doors: Door[]; l
     <ul className="doors" aria-label={label}>
       {doors.map((d) => {
         const { n, rest } = splitHint(d.hint);
+        const note = n ? rest : d.hint;
         return (
           <li key={d.href}>
-            <Link href={d.href} className="vl-card door">
-              <span className="door-top">
-                <span className="vl-chip">
-                  <Glyph name={GLYPH[d.href] ?? "event"} size={20} />
-                </span>
-                {n ? <span className="vl-num door-n">{n}</span> : null}
-                <span className="door-go" aria-hidden="true">→</span>
+            <Link href={d.href} className="door">
+              <span className="vl-chip door-glyph">
+                <Glyph name={GLYPH[d.href] ?? "event"} size={18} />
               </span>
-              <span className="door-title">{d.title}</span>
-              {n ? rest ? <span className="vl-label door-rest">{rest}</span> : null : d.hint ? <span className="vl-label door-rest">{d.hint}</span> : null}
-              {lines && <span className="door-line">{d.line}</span>}
+              <span className="door-text">
+                <span className="door-title">{d.title}</span>
+                {lines && <span className="door-line">{d.line}</span>}
+              </span>
+              <span className="door-meta">
+                {n ? <span className="door-n">{n}</span> : null}
+                {note ? <span className="vl-label door-rest">{note}</span> : null}
+              </span>
             </Link>
           </li>
         );

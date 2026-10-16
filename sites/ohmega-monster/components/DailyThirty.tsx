@@ -38,7 +38,7 @@ export default function DailyThirty({ report }: { report: Daily }) {
             <li key={t.theater_id + i} className={`vl-cat-${cat}`}>
               <Link href={`#${anchor}`} className="geo-thirty-link" title={t.name}>
                 <span className="vl-chip">
-                  <Glyph name={cat} size={18} />
+                  <Glyph name={cat} size={16} />
                 </span>
                 <span className="geo-thirty-text">
                   <span className="geo-thirty-meta">

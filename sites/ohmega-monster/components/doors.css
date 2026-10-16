@@ -1,16 +1,16 @@
-/* Doors (Doors.tsx): visual cards that route deeper. Built on the shared card (app/visual.css): a glyph chip, a big numeral, a short title. */
-.doors { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: var(--vl-gap, 14px); margin: 0; padding: 0; list-style: none; }
-.doors > li { min-width: 0; }
-.door { display: flex; flex-direction: column; gap: 6px; height: 100%; padding: 14px; }
-.door-top { display: flex; align-items: center; gap: 12px; }
-.door-n { margin-left: auto; }
-.door-go { color: var(--faint); transition: color 120ms ease, transform 120ms ease; }
-.door-n + .door-go { margin-left: 2px; }
-.door-top > .vl-chip + .door-go { margin-left: auto; }
-.door:hover .door-go, .door:focus-visible .door-go { color: var(--accent); transform: translateX(2px); }
-.door-title { color: var(--strong); font-size: 15px; font-weight: 600; line-height: 22px; letter-spacing: -0.01em; }
-.door-rest { text-transform: none; letter-spacing: 0.02em; font-size: 11px; line-height: 16px; }
-.door-line { color: var(--muted); font-size: 12px; line-height: 18px; }
-@media (max-width: 700px) { .doors { gap: 10px; grid-template-columns: repeat(2, minmax(0, 1fr)); } .door { padding: 12px; } }
-@media (max-width: 340px) { .doors { grid-template-columns: 1fr; } }
-@media (prefers-reduced-motion: reduce) { .door-go { transition: none; } }
+/* Doors (Doors.tsx): a compact index of rows that route deeper. Hairline rules between rows, no boxes: glyph, title, one numeral. */
+.doors { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: calc(var(--line) * 1.5); margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--rule-strong); }
+.doors > li { min-width: 0; border-bottom: 1px solid var(--rule); }
+.door { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; align-items: center; gap: 0 12px; padding: 9px 6px; color: var(--text); text-decoration: none; transition: background-color 100ms linear; }
+.door:hover, .door:focus-visible { background: var(--vl-hover); }
+.door:focus-visible { outline: 1px solid var(--link-accent); outline-offset: -1px; }
+.door-glyph { color: var(--muted); }
+.door:hover .door-glyph, .door:focus-visible .door-glyph { color: var(--accent); }
+.door-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.door-title { color: var(--strong); font-family: var(--vl-sans); font-size: 14px; font-weight: 600; line-height: 20px; letter-spacing: -0.005em; }
+.door:hover .door-title, .door:focus-visible .door-title { text-decoration: underline; text-decoration-color: var(--link-accent); text-underline-offset: 3px; }
+.door-line { color: var(--muted); font-size: 11px; line-height: 16px; }
+.door-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; text-align: right; }
+.door-n { color: var(--strong); font-size: 16px; font-weight: 600; line-height: 18px; font-variant-numeric: tabular-nums; }
+.door-rest { text-transform: none; letter-spacing: 0.02em; font-size: 10px; line-height: 14px; max-width: 22ch; }
+@media (max-width: 700px) { .doors { grid-template-columns: minmax(0, 1fr); } }
