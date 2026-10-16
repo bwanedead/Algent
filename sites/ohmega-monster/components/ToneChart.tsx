@@ -17,7 +17,7 @@ function Dyad({ t }: { t: ToneSeries }) {
   return (
     <div className="tone-cell">
       <p className="tone-title">
-        <IsoFlags codes={[t.iso2, t.about_iso2].filter(Boolean)} />
+        <IsoFlags codes={[t.iso2, t.about_iso2].filter(Boolean)} link />
         {t.affiliation} → {t.about} <span className="rec-muted">· {t.n} statements</span>
       </p>
       <svg className="tone-svg" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Tone of ${t.affiliation} toward ${t.about}, ${dayLabel(t.points[0].date)} to ${dayLabel(t.points[t.points.length - 1].date)}, on a scale from hostile to conciliatory`}>

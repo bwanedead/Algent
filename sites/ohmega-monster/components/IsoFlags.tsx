@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { countryName, flagImageUrl } from "@/lib/flags";
 
 import "./pulse-tile.css";
@@ -8,7 +10,7 @@ import "./pulse-tile.css";
  * "SA"). Renders nothing for an empty list, unless `unknown` is set: then a neutral outlined flag stands
  * in (never an empty gap), titled with that text (the organisation if known, else "Country not specified").
  */
-export default function IsoFlags({ codes, className = "isof", unknown }: { codes: string[]; className?: string; unknown?: string }) {
+export default function IsoFlags({ codes, className = "isof", unknown, link = false }: { codes: string[]; className?: string; unknown?: string; link?: boolean }) {
   const list = codes.filter((c) => /^[A-Za-z]{2}$/.test(c));
   if (list.length === 0) {
     if (unknown === undefined) return null;
@@ -26,8 +28,15 @@ export default function IsoFlags({ codes, className = "isof", unknown }: { codes
     <span className={className} title={list.map(countryName).join(" · ")}>
       {list.map((c, i) => {
         const name = countryName(c);
-        return (
-          <img key={`${c}-${i}`} className="isof-img" src={flagImageUrl(c, 20)} srcSet={`${flagImageUrl(c, 40)} 2x`} width={16} height={12} alt={name} title={name} loading="eager" decoding="async" />
+        const img = (
+          <img key={link ? undefined : `${c}-${i}`} className="isof-img" src={flagImageUrl(c, 20)} srcSet={`${flagImageUrl(c, 40)} 2x`} width={16} height={12} alt={name} title={name} loading="eager" decoding="async" />
+        );
+        return link ? (
+          <Link key={`${c}-${i}`} href={`/intel/actors/${c.toUpperCase()}`} className="isof-link" title={`${name}: open its page`}>
+            {img}
+          </Link>
+        ) : (
+          img
         );
       })}
     </span>

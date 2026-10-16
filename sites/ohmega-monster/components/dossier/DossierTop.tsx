@@ -1,5 +1,4 @@
-import Link from "next/link";
-
+import Crumbs, { INTEL_CRUMB, THEATERS_CRUMB } from "@/components/Crumbs";
 import { CoverSpark } from "@/components/DailyVisuals";
 import Popover from "@/components/Popover";
 import { headlineOf, isCut } from "@/lib/daily";
@@ -27,9 +26,7 @@ export function DossierTop({ d }: { d: Dossier }) {
   const asOf = cur?.date ? dayLabel(isoDay(cur.date) || cur.date) : "";
   return (
     <header className="th-head">
-      <nav className="th-crumb" aria-label="Breadcrumb">
-        <Link href="/intel/theaters">All theaters</Link>
-      </nav>
+      <Crumbs trail={[INTEL_CRUMB, THEATERS_CRUMB]} />
       <p className="th-kicker">
         <span>{d.name}</span>
         {d.domain && <span className="th-domain">{d.domain}</span>}

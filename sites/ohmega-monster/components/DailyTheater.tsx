@@ -87,6 +87,7 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
             {dossierHref ? (
               <Link href={dossierHref} className="th-dlink" title="Open this theater's dossier: background, actors, record, outlook">
                 {t.name}
+                <span className="th-dlink-go"> · dossier →</span>
               </Link>
             ) : (
               t.name

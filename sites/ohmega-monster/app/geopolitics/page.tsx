@@ -25,7 +25,7 @@ export default async function GeopoliticsPage() {
       </div>
       <p className="intel-empty">No daily report has been published yet. Check back soon.</p>
       <p className="geo-xlink">
-        <Link href="/intel">Intelligence board: Pulses, Theaters and Briefs →</Link>
+        <Link href="/intel">Intelligence: theaters, actors, briefs and the record →</Link>
       </p>
     </div>
   );

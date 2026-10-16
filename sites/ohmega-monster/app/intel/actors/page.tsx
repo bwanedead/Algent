@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-
 import ActorTable, { type TableRow } from "@/components/actors/ActorTable";
 import { COMPARE_METRICS, headline } from "@/components/actors/ActorParts";
+import Crumbs, { INTEL_CRUMB } from "@/components/Crumbs";
 import { allActors, fmt } from "@/lib/actors";
 
 import "@/app/geopolitics/geopolitics.css";
@@ -45,9 +44,7 @@ export default async function ActorsIndexPage() {
   const asOf = actors.map((a) => a.data_as_of).sort().pop() ?? "";
   return (
     <div className="intel-page th-page">
-      <nav className="th-crumb" aria-label="Breadcrumb">
-        <Link href="/intel">Situation room</Link>
-      </nav>
+      <Crumbs trail={[INTEL_CRUMB]} />
       <p className="th-kicker">
         <span>Actors</span>
       </p>

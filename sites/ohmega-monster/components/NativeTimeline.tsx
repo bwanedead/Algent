@@ -109,7 +109,7 @@ function EventRow({ row, laneIndex, laneLabel, dim }: { row: Extract<Row, { kind
         <p className="nt-meta">
           <span className="nt-kind">{KIND_LABEL[e.kind]}</span>
           {laneLabel && <span className="nt-lane">{laneLabel}</span>}
-          <IsoFlags codes={e.actors} />
+          <IsoFlags codes={e.actors} link />
         </p>
         <p className="nt-title">{e.title}</p>
         {e.detail && <p className="nt-detail">{e.detail}</p>}

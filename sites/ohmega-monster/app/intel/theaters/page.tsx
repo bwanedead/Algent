@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import Crumbs, { INTEL_CRUMB } from "@/components/Crumbs";
 import { TheaterGroup, type TheaterRow } from "@/components/dossier/TheaterRows";
 import { dossier, dossierList } from "@/lib/dossier";
 import { isoDay } from "@/lib/dossier-view";
@@ -64,9 +65,7 @@ export default async function TheatersIndexPage() {
 
   return (
     <div className="intel-page th-page">
-      <nav className="th-crumb" aria-label="Breadcrumb">
-        <Link href="/intel">Situation room</Link>
-      </nav>
+      <Crumbs trail={[INTEL_CRUMB]} />
       <p className="th-kicker">
         <span>Theater dossiers</span>
       </p>

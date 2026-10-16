@@ -22,7 +22,7 @@ export default function DailySweepBlock({ sweep }: { sweep: DailySweep }) {
             {r.items.map((i, k) => (
               <li key={k} className="geo-sw-item">
                 <span className="geo-sw-flags">
-                  <IsoFlags codes={i.countries} />
+                  <IsoFlags codes={i.countries} link />
                 </span>
                 <span className="geo-sw-line">
                   {i.spotlight && (

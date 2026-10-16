@@ -1,0 +1,12 @@
+/* Entity-graph blocks (EntityLinks.tsx): rows of linked countries and theaters, quiet like the dossier lists. */
+.en-rows { margin: 0; padding: 0; list-style: none; }
+.en-rows li { padding: 3px 0; font-size: 13px; line-height: 20px; overflow-wrap: anywhere; }
+.en-rows a { color: var(--link-accent); text-underline-offset: 3px; }
+.en-rows a:hover { color: var(--link-accent-hover); }
+.en-dir { display: inline-block; width: 1.4em; color: var(--muted); font-size: 11px; }
+.en-dir.is-moving { color: var(--accent); }
+.en-when { display: inline-block; min-width: 4.5em; color: var(--muted); font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; }
+.en-chips { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; }
+.en-chip { white-space: nowrap; color: var(--link-accent); text-underline-offset: 3px; }
+.en-chip:hover { color: var(--link-accent-hover); }
+.en-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

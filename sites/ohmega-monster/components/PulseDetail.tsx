@@ -69,7 +69,7 @@ export default function PulseDetail({
     <div className={`pd intel-band-${p.band}`}>
       <div className="pd-head">
         <h2 className="pd-title">
-          <IsoFlags codes={p.actors_iso2} />
+          <IsoFlags codes={p.actors_iso2} link />
           {p.title}
         </h2>
         {p.situation && <span className="intel-micro">{p.situation}</span>}
