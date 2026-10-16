@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import math
 import textwrap
+from collections.abc import Callable
 from xml.sax.saxutils import escape
 
 from . import geo
@@ -20,36 +21,36 @@ W = 640
 _FONT = 'font-family="Helvetica,Arial,sans-serif"'
 
 
-def _svg(w: int, h: int, body: str, label: str) -> str:
+def svg_doc(w: int, h: int, body: str, label: str) -> str:
     return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}" role="img" '
             f'aria-label="{escape(label, {chr(34): "&quot;"})}"><rect width="{w}" height="{h}" fill="{PAPER}"/>{body}</svg>')
 
 
-def _text(x: float, y: float, s: str, size: int = 13, fill: str = INK, weight: str = "400", anchor: str = "start") -> str:
+def text_el(x: float, y: float, s: str, size: int = 13, fill: str = INK, weight: str = "400", anchor: str = "start") -> str:
     return f'<text x="{x:g}" y="{y:g}" font-size="{size}" fill="{fill}" font-weight="{weight}" text-anchor="{anchor}" {_FONT}>{escape(s)}</text>'
 
 
 def timeline_svg(tl: Timeline) -> str:
     """Vertical spine, a dot and a card per event, in order. Spacing is even: the interactive form has the time scale."""
     x_date, x_spine, x_text = 18, 112, 132
-    y, parts = 54.0, [_text(18, 26, tl.title, 17, weight="700")]
+    y, parts = 54.0, [text_el(18, 26, tl.title, 17, weight="700")]
     top = y
     for e in tl.events:
         title = textwrap.wrap(e.title, 58) or [""]
         detail = textwrap.wrap(e.detail, 70)[:3]
         parts.append(f'<circle cx="{x_spine}" cy="{y - 4:g}" r="5" fill="{PAPER}" stroke="{INK}" stroke-width="2"/>')
-        parts.append(_text(x_date, y, e.date[5:] if len(e.date) == 10 else e.date, 12, MUTED))
-        parts.append(_text(x_text, y, title[0], 14, weight="700"))
+        parts.append(text_el(x_date, y, e.date[5:] if len(e.date) == 10 else e.date, 12, MUTED))
+        parts.append(text_el(x_text, y, title[0], 14, weight="700"))
         y += 16
         for line in title[1:] + detail:
-            parts.append(_text(x_text, y, line, 12, MUTED if line in detail else INK))
+            parts.append(text_el(x_text, y, line, 12, MUTED if line in detail else INK))
             y += 15
         y += 14
     parts.insert(1, f'<line x1="{x_spine}" y1="{top - 4:g}" x2="{x_spine}" y2="{y - 24:g}" stroke="{RULE}" stroke-width="2"/>')
-    return _svg(W, int(y + 8), "".join(parts), f"Timeline: {tl.title}")
+    return svg_doc(W, int(y + 8), "".join(parts), f"Timeline: {tl.title}")
 
 
-def _land(frame: list[float], px) -> str:
+def land(frame: list[float], px) -> str:
     countries = geo.load() or []
     w, s, e, n = frame
     out = []
@@ -63,24 +64,29 @@ def _land(frame: list[float], px) -> str:
     return "".join(out)
 
 
-def mapstory_svg(story: MapStory) -> str:
-    """Every feature of the story on one frame, each as of the last step that shows it."""
-    if len(story.bounds) != 4:
-        return _svg(W, 60, _text(18, 34, story.title, 15, weight="700"), f"Map story: {story.title}")
-    w, s, e, n = story.bounds
+def map_frame(bounds: list[float]) -> tuple[int, float, Callable[[float, float], tuple[float, float]]]:
+    """(height, pixels per degree, lon/lat -> x/y) of a still that fits ``bounds`` [west, south, east, north] into ``W`` wide."""
+    w, s, e, n = bounds
     height = int(min(520, max(240, W * (n - s) / max(e - w, 1e-6))))
-    kx, ky = W / max(e - w, 1e-6), height / max(n - s, 1e-6)
-    k = min(kx, ky)
+    k = min(W / max(e - w, 1e-6), height / max(n - s, 1e-6))
     ox, oy = (W - (e - w) * k) / 2, (height - (n - s) * k) / 2
 
     def px(lon: float, lat: float) -> tuple[float, float]:
         return ox + (lon - w) * k, oy + (n - lat) * k
 
+    return height, k, px
+
+
+def mapstory_svg(story: MapStory) -> str:
+    """Every feature of the story on one frame, each as of the last step that shows it."""
+    if len(story.bounds) != 4:
+        return svg_doc(W, 60, text_el(18, 34, story.title, 15, weight="700"), f"Map story: {story.title}")
+    height, k, px = map_frame(story.bounds)
     last: dict[str, tuple[int, object]] = {}
     for i, st in enumerate(story.steps, 1):
         for f in st.show:
             last[f.id] = (i, f)
-    body = [f'<clipPath id="c"><rect width="{W}" height="{height}"/></clipPath><g clip-path="url(#c)">', _land(story.bounds, px)]
+    body = [f'<clipPath id="c"><rect width="{W}" height="{height}"/></clipPath><g clip-path="url(#c)">', land(story.bounds, px)]
     marks = []
     for _, f in last.values():
         col = TONE.get(f.tone, TONE["accent"])
@@ -105,8 +111,8 @@ def mapstory_svg(story: MapStory) -> str:
             marks.append((f, (x, y), col))
     for f, (x, y), col in marks:
         if f.label:
-            body.append(_text(x + 8, y - 7, f.label, 11, INK, "700").replace("<text", '<text stroke="#f4f1ea" stroke-width="3" paint-order="stroke"', 1))
+            body.append(text_el(x + 8, y - 7, f.label, 11, INK, "700").replace("<text", '<text stroke="#f4f1ea" stroke-width="3" paint-order="stroke"', 1))
     body.append("</g>")
     cap = textwrap.wrap(story.caption, 90)[:2]
-    foot = "".join(_text(18, height + 22 + 16 * j, line, 12, MUTED) for j, line in enumerate(cap))
-    return _svg(W, height + 28 + 16 * len(cap), "".join(body) + foot, f"Map: {story.title}")
+    foot = "".join(text_el(18, height + 22 + 16 * j, line, 12, MUTED) for j, line in enumerate(cap))
+    return svg_doc(W, height + 28 + 16 * len(cap), "".join(body) + foot, f"Map: {story.title}")

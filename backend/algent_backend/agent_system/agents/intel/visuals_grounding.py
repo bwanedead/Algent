@@ -88,3 +88,16 @@ def mentions_place(text: str, place: str) -> bool:
 
 def word_count(text: str) -> int:
     return len((text or "").split())
+
+
+def mentions_entity(text: str, name: str) -> bool:
+    """Is the named actor one a cited fact speaks of? ``mentions_place`` for a distinctive word of the name; a name of
+    generic words only ("the Gulf") by the whole name; failing that, an acronym of the name ("US", "EU", "IRGC") as a
+    whole, upper-case word. Used for the ends of a network edge or a flow, where "the United States" or "US" are both how a fact may say it."""
+    if mentions_place(text, name):
+        return True
+    bare = re.sub(r"^the\s+", "", (name or "").strip(), flags=re.I)
+    words = re.findall(r"[^\W\d_]{3,}", bare.lower())
+    if words and all(w in _GENERIC_PLACE for w in words):        # a name of generic words only ("the Gulf"): the whole name
+        return bool(re.search(r"\b" + re.escape(bare.lower()) + r"\b", (text or "").lower()))
+    return any(re.search(rf"\b{re.escape(w)}\b", text or "") for w in re.findall(r"\b[A-Z]{2,5}\b", name or ""))
