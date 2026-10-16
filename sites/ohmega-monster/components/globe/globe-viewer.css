@@ -42,3 +42,27 @@
 .gv-legend-note { margin: 0 0 6px; line-height: 1.35; }
 .gv-legend ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 3px; color: var(--text, inherit); }
 .gv-asof { color: var(--muted); font-size: 12px; }
+/* Selection and theater dots. */
+.gv-outline { stroke: var(--accent); }
+.gv-dot { fill: var(--accent); fill-opacity: 0.85; stroke: var(--bg); }
+.gv-dot-steady { fill: var(--muted); }
+.gv-dot-easing { fill: var(--link-accent); }
+.gv-dot-unclear { fill: var(--muted); fill-opacity: 0.45; }
+.gv-dot.is-picked { stroke: var(--strong); stroke-width: 2px; }
+/* The side panel: a hairline card down the right edge (a bottom sheet on a phone). */
+.gv-panel { position: absolute; top: 56px; right: 10px; bottom: 36px; width: min(320px, calc(100% - 20px)); overflow-y: auto; padding: 14px 14px 12px; border: 1px solid var(--rule-strong); background: color-mix(in srgb, var(--bg) 94%, transparent); cursor: auto; user-select: text; -webkit-user-select: text; font-size: 13px; line-height: 1.45; }
+.gv-close { position: absolute; top: 4px; right: 6px; appearance: none; border: 0; background: transparent; color: var(--link-accent); font-size: 22px; line-height: 1; padding: 4px 8px; cursor: pointer; }
+.gv-close:hover { color: var(--link-accent-hover); }
+.gv-panel-kind { margin: 0 0 4px; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.gv-panel-name { margin: 0 24px 10px 0; font-size: 18px; line-height: 1.25; color: var(--strong); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.gv-panel-head { margin: 0 0 10px; }
+.gv-panel-date, .gv-panel-none { color: var(--muted); font-size: 12px; }
+.gv-panel-none { margin: 0 0 10px; }
+.gv-panel-sub { margin: 12px 0 4px; padding-top: 8px; border-top: 1px solid var(--rule); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.gv-panel-list { margin: 0 0 10px; padding: 0; list-style: none; display: grid; gap: 4px; }
+.gv-panel-links { margin: 12px 0 0; }
+.gv-panel-flags { margin: 0 0 8px; }
+@media (max-width: 640px) {
+  .gv-panel { top: auto; left: 10px; right: 10px; bottom: 10px; width: auto; max-height: 46%; }
+  .gv-legend { display: none; }
+}
