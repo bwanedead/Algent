@@ -1,0 +1,27 @@
+/* Doors (Doors.tsx): quiet cards that route deeper. Hairline borders, no fills, the accent only on hover. */
+.doors { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.door {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  height: 100%;
+  padding: 14px 36px 14px 14px;
+  border: 1px solid var(--rule);
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 120ms ease;
+}
+.door:hover, .door:focus-visible { border-color: var(--accent-dim); }
+.door:focus-visible { outline: 2px solid var(--link-accent); outline-offset: 2px; }
+.door-title { color: var(--strong); font-size: 15px; line-height: 22px; letter-spacing: -0.01em; }
+.door-line { color: var(--muted); font-size: 12px; line-height: 18px; }
+.door-hint { margin-top: auto; padding-top: 6px; color: var(--accent); font-size: 11px; line-height: 16px; letter-spacing: 0.06em; text-transform: uppercase; }
+.door-go { position: absolute; top: 14px; right: 14px; color: var(--faint); transition: color 120ms ease, transform 120ms ease; }
+.door:hover .door-go, .door:focus-visible .door-go { color: var(--accent); transform: translateX(2px); }
+@media (max-width: 700px) {
+  .doors { gap: 8px; }
+  .door { padding: 12px 28px 12px 12px; }
+}
+@media (max-width: 520px) { .doors { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .door, .door-go { transition: none; } }

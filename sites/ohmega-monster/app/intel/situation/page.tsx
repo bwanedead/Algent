@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import Crumbs, { INTEL_CRUMB } from "@/components/Crumbs";
 import SituationCoverage from "@/components/SituationCoverage";
 import SituationForecasts from "@/components/SituationForecasts";
 import SituationMoves from "@/components/SituationMoves";
@@ -10,11 +11,13 @@ import { actorIds } from "@/lib/actors";
 import { dossierList } from "@/lib/dossier";
 import { situationRoom } from "@/lib/situation";
 
-import "./intel.css";
+import "../intel.css";
+import "../theaters/theaters.css";
 
 export const metadata: Metadata = {
   title: "Situation Room",
   description: "What changed, and how well we are calling it: the biggest Pulse moves, rising coverage, forecasts due and the track record.",
+  alternates: { canonical: "/intel/situation" },
 };
 
 // The Situation Room: what changed, and how well are we calling it. It deliberately does not repeat
@@ -27,6 +30,7 @@ export default async function IntelPage() {
   const actors = (await actorIds()).length;
   return (
     <div className="intel-page sit-page">
+      <Crumbs trail={[INTEL_CRUMB]} />
       <SituationVisitProvider>
         <div className="intel-strip sit-strip" role="group" aria-label="Status">
           <span className="intel-strip-title">Situation room</span>

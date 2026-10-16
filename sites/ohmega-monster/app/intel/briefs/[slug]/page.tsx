@@ -8,6 +8,7 @@ import PulseTile from "@/components/PulseTile";
 import { SpectrumLegend } from "@/components/PulseSpectrum";
 import { ActorMap, EscalationChips, ProbBar, RELATION_KINDS } from "@/components/IntelViz";
 import { allBriefSlugs, brief as loadBrief, type ChangeKind, type Effect, findPulse, latestSnapshot, type Plausibility, safeUrl, type Snapshot } from "@/lib/intel";
+import { dossierIds } from "@/lib/dossier";
 import { toWallPulse, type WallPulse } from "@/lib/pulse-wall";
 
 type Params = { slug: string };
@@ -87,15 +88,22 @@ export default async function BriefPage({ params }: { params: Params }) {
   const sorted = [...b.timeline].sort((x, y) => x.date.localeCompare(y.date));
   const snap = await latestSnapshot();
   const hasPrevious = b.changes.length > 0;
+  const hasDossier = (await dossierIds()).includes(b.theater_id);
 
   return (
     <article className="intel-page intel-brief">
-      <Link href="/intel" className="intel-back">
-        ← Intelligence
+      <Link href="/intel/briefs" className="intel-back">
+        ← All briefs
       </Link>
       <header className="intel-brief-head">
         <p className="intel-micro">
-          Brief{b.theater_name ? ` · ${b.theater_name}` : ""}
+          Brief
+          {b.theater_name && (
+            <>
+              {" · "}
+              {hasDossier ? <Link href={`/intel/theaters/${b.theater_id}`} className="xt">{b.theater_name}</Link> : b.theater_name}
+            </>
+          )}
           {b.as_of ? ` · as of ${b.as_of.slice(0, 10)}` : ""}
           {b.researched ? " · researched" : " · from reports only"}
         </p>

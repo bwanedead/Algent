@@ -205,7 +205,7 @@ export async function changesOp(a: Args): Promise<ApiResult> {
   return {
     data: { window_days: doc.window_days ?? null, events: p.items, total: p.total },
     as_of: str(doc.as_of) || null,
-    cite_as: abs("/intel"),
+    cite_as: abs("/intel/situation"),
     source: "ohmega.changes/1",
     next_cursor: p.next_cursor,
   };
@@ -220,7 +220,7 @@ export async function forecastsOp(a: Args): Promise<ApiResult> {
   return {
     data: { scorecard: isObj(doc.scorecard) ? (doc.scorecard as Obj) : null, forecasts: p.items, total: p.total },
     as_of: str(doc.as_of) || null,
-    cite_as: abs("/intel"),
+    cite_as: abs("/intel/situation"),
     source: "ohmega.forecasts/1",
     next_cursor: p.next_cursor,
     note: "Forecasts are probabilities (percent), scored publicly (Brier: lower is better, 0.25 is a coin flip). Misses stay in the record.",
