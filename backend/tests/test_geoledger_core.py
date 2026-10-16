@@ -186,7 +186,7 @@ def test_publish_sends_only_what_is_new_and_carries_the_latest_status(tmp_path) 
     asset_rows = next(rows for sql, rows in log if sql.startswith("insert into geo_assets"))
     z = next(row for row in asset_rows if row[0] == "wri-1")
     assert z[8] == 2175.0 and z[9] == "Coal" and z[14:18] == ("claimed_struck", "2026-10-03", "Russian MoD", 1)
-    assert load_marker(tmp_path) == {"assets": 2, "events": 1}
+    assert load_marker(tmp_path) == {"assets": 2, "events": 1, "merges": 0}
     again: list = []
     assert publish.publish(led, connect=lambda: _Conn(again))["note"] == "nothing new" and again == []
     led.add_events([_ev("wri-1", "2026-10-04", "reported_damaged", "Ukrenergo")])        # a new event refreshes the asset row too
@@ -199,7 +199,7 @@ def test_publish_is_a_noop_without_a_database(tmp_path, monkeypatch) -> None:
     monkeypatch.delenv("DATABASE_URL", raising=False)
     led = Ledger(tmp_path)
     led.add_assets([_plant("wri-1", "Zmiivska")])
-    assert publish.publish(led)["db"] is False and load_marker(tmp_path) == {"assets": 0, "events": 0}
+    assert publish.publish(led)["db"] is False and load_marker(tmp_path) == {"assets": 0, "events": 0, "merges": 0}
 
 
 def test_a_failed_publish_does_not_move_the_watermark(tmp_path) -> None:
@@ -246,15 +246,17 @@ def test_the_site_reads_and_the_publisher_writes_only_columns_the_migration_defi
     import re
 
     sql = next(p for p in available() if p.stem == "009_geoledger").read_text(encoding="utf-8")
+    sql010 = next(p for p in available() if p.stem == "010_geo_grid").read_text(encoding="utf-8")
     ts = _site("lib", "geoledger.ts")
     for table, const, writer in (("geo_assets", "ASSET_COLS", publish._ASSET), ("geo_asset_events", "EVENT_COLS", publish._EVENT)):
         have = set(_table_columns(sql, table))
+        have |= set(re.findall(rf"alter table {table} add column (\w+)", sql010))
         read = re.search(rf'const {const} = "([^"]+)"', ts).group(1).split(",")
         wrote = [c.strip() for c in re.search(r"\((.*?)\)\s*values", writer, re.S).group(1).split(",")]
         assert set(read) <= have, set(read) - have
         assert set(wrote) <= have, set(wrote) - have
-    assert len(re.search(r"values \((.*?)\)\non conflict", publish._ASSET, re.S).group(1).split(",")) == 18      # a placeholder per column
-    assert len(publish.asset_row(_plant("wri-1", "Zmiivska"), None, 0)) == 18
+    assert len(re.search(r"values \((.*?)\)\non conflict", publish._ASSET, re.S).group(1).split(",")) == 19      # a placeholder per column
+    assert len(publish.asset_row(_plant("wri-1", "Zmiivska"), None, 0)) == 19
 
 
 def test_the_site_vocabulary_matches_the_backend_vocabulary() -> None:

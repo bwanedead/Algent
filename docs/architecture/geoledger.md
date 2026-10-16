@@ -102,6 +102,38 @@ Migration `009_geoledger.sql`: `geo_assets` (with the latest status denormalised
   [--note T]`, or `geoledger.ingest.add_event(ledger, ...)`: refused without a valid asset, status, claimant, day and an
   http(s) source. `newsroom geo find NAME` shows what a name would match; `newsroom geo show ASSET_ID` its history.
 
+## Aliases and merges (`alias.py`, `alias_data.py`, `Ledger.merge`)
+
+`alias.find` fronts `match.find` (extraction and `newsroom geo find` both use it): plant-kind words are equivalent in every
+spelling (CHP = TEC = TETs = ТЕЦ; TPP = TES = ТЕС; HPP = GES = ГЕС; NPP = AES = АЕС) with the unit number kept and the kind a
+guard (Dnipro HPP is not Dnipro CHP); `CHP5` splits to CHP and 5; curated groups (`alias_data.CURATED`: "Trypilska TES" =
+"Trypillya TPP", "Darnytska CHP" = "Kyiv CHP-4", ZNPP...) add the other spellings of a plant; a unit-only name ("ТЕЦ-5") is
+qualified by the text's place ("Kyiv CHP-5") or resolves only when exactly one plant of that kind and number exists in the
+country. A wrong curated entry merges two plants, so entries are naming facts only.
+
+`newsroom geo merge DUP INTO` joins a duplicate that got through. Append-only: `merges.jsonl` records the decision, `INTO`
+gains the duplicate's names (a new revision), and the view reads the duplicate's events under `INTO` (the event lines are not
+rewritten; a rediscovered claim is deduped by asset, day, status and claimant). Publishing marks the duplicate's row
+`merged_into` (migration 010), repoints its events, and the site hides it and redirects its place page.
+
+## Grid impact (`grid.py`, original intelligence, `ohmega_derived`)
+
+Per country, ledger capacity (WRI/OSM `capacity_mw`, fuel grouped thermal/CHP, hydro, nuclear, renewables, other) crossed with
+the status events of its power plants over 7 and 30 days: installed MW, and MW and share of installed for **claimed struck**,
+**reported damaged**, **confirmed damaged or destroyed** and **restored**, each split by fuel. Claimed and confirmed are
+separate tallies that overlap (never added); `buckets` counts each affected plant once at the firmest thing said about it
+(what the bar draws); a 30-day series of the 7-day figures serves charts. Caveats travel with every document: coverage gaps
+(plants without capacity are listed but add no MW), capacity is nameplate not output, status is not outage duration.
+
+- `newsroom geo grid ISO [--as-of D] [--publish]`; `geo publish` and the daily's ledger step upsert one `geo_grid` row per
+  country with plant events in the last 30 days (migration 010, `anon` read-only).
+- REST `GET /api/v1/grid/{iso}`, MCP `get_grid_impact`.
+- The daily's writer is handed one line per country the theater stands behind (`sensing._grid_block`, block "OHMEGA GRID
+  ANALYSIS", cited as "Ohmega analysis"); computed from the local ledger, so only what the ledger holds.
+- Site: `components/GridImpact.tsx` on the actor page and under each theater's map: big shares (claimed hatched, confirmed
+  solid), a bar per fuel on one scale with struck/damaged segments, a freshness dot, and a tap-open list of the plants named
+  (linked to their place pages).
+
 ## Known limits
 
 - WRI coordinates are the database's; OSM coordinates can be a polygon's centre. Both stay `approximate`.

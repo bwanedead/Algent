@@ -79,7 +79,8 @@ class Evidence:
     instrument_urls: set[str] = field(default_factory=set)      # public-display sources only
     statement_urls: set[str] = field(default_factory=set)
     live: str = ""                                          # LIVE EVENTS block (outages, quakes ... touching the theater's countries)
-    live_urls: set[str] = field(default_factory=set)        # the public dashboards those lines cite
+    live_urls: set[str] = field(default_factory=set)        # the public pages those lines cite (live dashboards, the grid-impact panel)
+    grid: str = ""                                          # OHMEGA GRID ANALYSIS block (our own rollup of struck capacity per country)
     n_live: int = 0
     shown: list[Statement] = field(default_factory=list)     # the statements in the block, in the order shown
     tags: list[str] = field(default_factory=list)
@@ -96,7 +97,7 @@ class Evidence:
 
     def render(self) -> str:
         """The blocks for a writer's task text ('' when there are none), ending in a blank line."""
-        parts = [p for p in (self.instruments, self.live, self.statements, *self.histories) if p]
+        parts = [p for p in (self.instruments, self.live, self.grid, self.statements, *self.histories) if p]
         return "\n\n".join(parts) + "\n\n" if parts else ""
 
 
@@ -216,6 +217,33 @@ def _live_block(theater: Theater, actors: Any) -> tuple[str, set[str], int]:
         return {n for n in names if _find(words, _words(n), text)}
 
     return desk.for_theater(lambda find: corroborated(find, theater, actors), find_in)
+
+
+# ── grid impact ───────────────────────────────────────────────────────────────────────────────
+GRID_SITE = "https://www.ohmega.monster/intel/actors/"
+
+
+def _grid_block(theater: Theater, actors: Any, as_of: str) -> tuple[str, set[str]]:
+    """Ohmega's own grid-impact rollup (``geoledger.grid``) for the countries the theater stands behind, one line each.
+    Derived from the asset ledger, so it is cited as "Ohmega analysis"; empty when the ledger holds nothing for them. Never raises."""
+    try:
+        from algent_backend.actors import registry
+        from algent_backend.geoledger import grid
+
+        countries = {c.name: c.iso2 for c in registry.load().values()}
+        names = corroborated(lambda text: {n for n in countries if _find(_words(text), _words(n), text)}, theater, actors)
+        lines, urls = [], set()
+        for iso in sorted({countries[n] for n in names}):
+            if text := grid.evidence_line(iso, as_of):
+                lines.append(f"- {text} {GRID_SITE}{iso}")
+                urls.add(f"{GRID_SITE}{iso}")
+        if not lines:
+            return "", set()
+        head = ("OHMEGA GRID ANALYSIS — computed by Ohmega (no model) from its asset ledger and WRI capacity; cite it as "
+                "\"Ohmega analysis\". Claimed and confirmed are separate tallies:")
+        return "\n".join([head, *lines]), urls
+    except Exception:  # noqa: BLE001 - an aid to the writer, never its gate
+        return "", set()
 
 
 # ── statements ────────────────────────────────────────────────────────────────────────────────
@@ -364,6 +392,8 @@ def for_theater(theater: Theater, *, as_of: str | date, actors: list[str] | tupl
             theater, actors, day, days=statement_days, limit=statement_limit, history_days=history_days)
         ev.n_statements = len(ev.shown)
         ev.live, ev.live_urls, ev.n_live = _live_block(theater, actors)
+        ev.grid, grid_urls = _grid_block(theater, actors, day.isoformat())
+        ev.live_urls = ev.live_urls | grid_urls
     except Exception as exc:  # noqa: BLE001 - sensing is an aid; a broken store must not cost the report
         return Evidence(error=f"{type(exc).__name__}: {str(exc)[:160]}")
     return ev

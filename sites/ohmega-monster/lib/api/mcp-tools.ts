@@ -1,7 +1,7 @@
 import { ASSET_STATUSES, ASSET_TYPES } from "@/lib/geoledger-shared";
 
 import { LICENSE } from "./envelope";
-import { assetOp, assetsOp } from "./ops-assets";
+import { assetOp, assetsOp, gridOp } from "./ops-assets";
 import { searchOp } from "./ops-content";
 import { instrumentOp, instrumentsOp, liveEventsOp } from "./ops-data";
 import { dailyOp, pulseOp, pulsesOp, statementsOp, theaterOp, theatersOp } from "./ops-desk";
@@ -177,6 +177,14 @@ export const TOOLS: Tool[] = [
       cursor: cursor_,
     }),
     run: (a) => (a.id ? assetOp(a) : assetsOp(a)),
+  },
+  {
+    name: "get_grid_impact",
+    title: "Grid-impact rollup",
+    description:
+      "Ohmega's own analysis of how much of a country's installed generating capacity has been claimed struck, reported damaged, confirmed damaged or destroyed, and restored over 7 and 30 days, by fuel, with the affected plants. Claimed and confirmed are separate tallies that overlap: never add them. Capacity is nameplate, not lost output.",
+    inputSchema: schema({ iso: str_("ISO alpha-2 code, e.g. UA.") }, ["iso"]),
+    run: (a) => gridOp(a),
   },
   {
     name: "get_instrument",

@@ -1,4 +1,4 @@
-import { ASSET_STATUSES, ASSET_TYPES, assetHistory, getAsset, queryAssets, STATUS_LABEL, type GeoAsset } from "@/lib/geoledger";
+import { ASSET_STATUSES, ASSET_TYPES, assetHistory, getAsset, getGrid, queryAssets, STATUS_LABEL, type GeoAsset } from "@/lib/geoledger";
 
 import { apiUrl } from "./ops-desk";
 import { abs, badRequest, enumParam, idParam, limitParam, newest, notFound, paginate, type ApiResult, type Args } from "./util";
@@ -64,6 +64,33 @@ export async function assetsOp(a: Args): Promise<ApiResult> {
     source: "geo_assets",
     next_cursor: p.next_cursor,
     note: NOTE,
+  };
+}
+
+export async function gridOp(a: Args): Promise<ApiResult> {
+  const iso = (a.iso ?? "").trim().toUpperCase();
+  if (!/^[A-Z]{2}$/.test(iso)) throw badRequest("iso must be an ISO 3166-1 alpha-2 code, e.g. UA");
+  const g = await getGrid(iso);
+  if (!g) throw notFound(`grid-impact rollup for ${iso} (published only for countries with power-plant status events in the last 30 days)`);
+  return {
+    data: {
+      iso: g.iso,
+      provenance: g.provenance,
+      method: g.method,
+      summary: g.line || null,
+      installed: g.installed,
+      windows: g.windows,
+      series: g.series,
+      last_event_on: g.last_event_on || null,
+      caveats: g.caveats,
+    },
+    as_of: g.as_of,
+    cite_as: abs(`/intel/actors/${iso}`),
+    source: "geo_grid",
+    note:
+      "Ohmega analysis (provenance ohmega_derived): installed capacity from the WRI Global Power Plant Database (CC BY 4.0) and OpenStreetMap contributors (ODbL), crossed with the dated status events of /assets. " +
+      "claimed = a party says it struck; reported = damage reported by owner, authorities or media; confirmed = confirmed damaged or destroyed; restored = latest word is restored. " +
+      "Claimed and confirmed overlap and must not be added. share = MW / installed MW the ledger knows. Capacity is nameplate, not output; a status is not an outage duration.",
   };
 }
 

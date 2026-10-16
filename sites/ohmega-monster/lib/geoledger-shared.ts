@@ -33,6 +33,8 @@ export type GeoAsset = {
   status_on: string | null;
   status_by: string | null;
   events: number;
+  /** Set when `newsroom geo merge` joined this spelling of a place into another; readers show the target. */
+  merged_into: string | null;
 };
 
 export type GeoEvent = {
@@ -143,3 +145,40 @@ export const asStatus = (v: unknown): AssetStatus | null => (typeof v === "strin
 export const asType = (v: unknown): AssetType => (typeof v === "string" && (TYPES as string[]).includes(v) ? (v as AssetType) : "other");
 export const ASSET_TYPES: readonly AssetType[] = TYPES;
 export const ASSET_STATUSES: readonly AssetStatus[] = STATUSES;
+
+// ---- Grid impact (backend `geoledger/grid.py`, table `geo_grid`): Ohmega's own rollup of how much of a country's installed
+// generating capacity has been CLAIMED struck, REPORTED damaged, CONFIRMED damaged or destroyed, and RESTORED. Claimed and
+// confirmed overlap and are never added; capacity is nameplate, not output. Provenance: ohmega_derived.
+
+export const GRID_FUELS = ["thermal", "hydro", "nuclear", "renewables", "other"] as const;
+export type GridFuel = (typeof GRID_FUELS)[number];
+export const FUEL_LABEL: Record<GridFuel, string> = { thermal: "Thermal & CHP", hydro: "Hydro", nuclear: "Nuclear", renewables: "Renewables", other: "Other" };
+export type GridStance = "claimed" | "reported" | "confirmed" | "restored";
+export type FuelMw = Record<GridFuel, number>;
+export type GridTally = { plants: number; mw: number; share: number | null; no_capacity: number; by_fuel: FuelMw };
+export type GridAffected = {
+  id: string; name: string; fuel: string; fuel_class: GridFuel; mw: number | null; stances: GridStance[]; bucket: GridStance | "";
+  latest_status: string; latest_on: string; claimants: string[];
+};
+export type GridWindow = Record<GridStance, GridTally> & {
+  days: number; buckets: Record<GridStance, FuelMw>; plants_affected: number; affected: GridAffected[];
+};
+export type GridDoc = {
+  iso: string; as_of: string; provenance: "ohmega_derived"; method: string; line: string; last_event_on: string; caveats: string[];
+  installed: { mw: number; by_fuel: FuelMw; plants: number; plants_with_capacity: number };
+  windows: Record<string, GridWindow>;
+  series: { day: string; claimed_mw: number; confirmed_mw: number; claimed_share: number | null; confirmed_share: number | null }[];
+};
+
+export const mwLabel = (mw: number): string => (mw >= 1000 ? `${(mw / 1000).toFixed(mw >= 10000 ? 0 : 1)} GW` : `${Math.round(mw)} MW`);
+export const pctLabel = (share: number | null): string => {
+  if (share === null) return "n/a";
+  const p = share * 100;
+  return p > 0 && p < 1 ? "<1%" : p >= 10 ? `${Math.round(p)}%` : `${p.toFixed(1).replace(/\.0$/, "")}%`;
+};
+
+/** Whole days between a YYYY-MM-DD and `now` (never negative); null when the day is missing. */
+export function ageDays(day: string, now: Date = new Date()): number | null {
+  const t = Date.parse(`${day}T12:00:00Z`);
+  return Number.isFinite(t) ? Math.max(0, Math.floor((now.getTime() - t) / 86400000)) : null;
+}
