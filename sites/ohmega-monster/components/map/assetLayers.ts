@@ -35,7 +35,8 @@ export const ASSET_KEY: { color: string; label: string }[] = [
   { color: TONE.neutral, label: "nothing on record" },
 ];
 
-export function assetLayer(assets: GeoAsset[], log: GeoLogRow[], now: Date = new Date()): LayerSpec | null {
+/** `links: false` on a place's own page, where a link to itself would be noise. */
+export function assetLayer(assets: GeoAsset[], log: GeoLogRow[], now: Date = new Date(), links = true): LayerSpec | null {
   const history = new Map<string, GeoLogRow[]>();
   for (const e of log) history.set(e.asset_id, [...(history.get(e.asset_id) ?? []), e]);
 
@@ -48,6 +49,7 @@ export function assetLayer(assets: GeoAsset[], log: GeoLogRow[], now: Date = new
       const hit = a.status !== null;
       return pointFeature([a.lon as number, a.lat as number], {
         id: `as-${a.id}`,
+        page: links ? `/intel/places/${a.id}` : "",
         ev: a.events,
         g: TYPE_GLYPH[a.type],
         col: hit ? statusTone(a.status) : TONE.neutral,
@@ -83,6 +85,7 @@ export function assetLayer(assets: GeoAsset[], log: GeoLogRow[], now: Date = new
         when: String(p.when ?? "") || "No status on record",
         lines,
         url: String(p.url ?? ""),
+        href: String(p.page ?? ""),
         source: p.url ? `Latest status source (${host(String(p.url))})` : String(p.credit ?? ""),
       };
     },

@@ -1,0 +1,40 @@
+/* Relationship browser (RelationshipGraph.tsx): the network on the left, the focused node's connections on the right; stacked on a phone. */
+.rg { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 16px; margin-top: 14px; --rg-rising: #d6451a; --rg-steady: #6b7280; --rg-easing: #2f8f5b; --rg-unclear: #a3a3a3; }
+.rg-stage { position: relative; border: 1px solid var(--rule-strong); background: var(--panel); min-height: 320px; }
+.rg-svg { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; max-height: 78vh; touch-action: none; cursor: grab; user-select: none; }
+.rg-edge { stroke: var(--muted); stroke-opacity: 0.28; }
+.rg-edge.is-on { stroke: var(--strong); stroke-opacity: 0.8; }
+.rg-edge.is-dim { stroke-opacity: 0.08; }
+.rg-peer { stroke: var(--accent); stroke-opacity: 0.55; stroke-dasharray: 4 3; stroke-width: 1.2; }
+.rg-node { cursor: pointer; outline: none; }
+.rg-node circle, .rg-node rect { stroke: var(--panel); stroke-width: 1.5; }
+.rg-node.is-a circle { fill: var(--strong); fill-opacity: 0.78; }
+.rg-node.is-t rect { fill: var(--rg-unclear); }
+.rg-node.is-rising rect { fill: var(--rg-rising); }
+.rg-node.is-steady rect { fill: var(--rg-steady); }
+.rg-node.is-easing rect { fill: var(--rg-easing); }
+.rg-node.is-dim { opacity: 0.18; }
+.rg-node.is-sel circle, .rg-node.is-sel rect, .rg-node:focus-visible circle, .rg-node:focus-visible rect { stroke: var(--accent); stroke-width: 3; }
+.rg-label { fill: var(--strong); font-size: 10px; paint-order: stroke; stroke: var(--panel); stroke-width: 3px; stroke-linejoin: round; pointer-events: none; }
+.rg-tools { position: absolute; top: 8px; right: 8px; display: flex; flex-direction: column; gap: 4px; }
+.rg-tools button { width: 34px; height: 34px; border: 1px solid var(--rule-strong); background: var(--panel); color: var(--strong); font-size: 18px; line-height: 1; cursor: pointer; }
+.rg-key { position: absolute; left: 8px; bottom: 8px; display: flex; flex-wrap: wrap; gap: 2px 12px; margin: 0; padding: 0; list-style: none; max-width: calc(100% - 60px); color: var(--muted); font-size: 11px; }
+.rg-sw { display: inline-block; width: 9px; height: 9px; margin-right: 4px; vertical-align: -1px; background: var(--rg-unclear); }
+.rg-sw.is-a { border-radius: 50%; background: var(--strong); opacity: 0.78; }
+.rg-sw.is-rising { background: var(--rg-rising); }
+.rg-sw.is-steady { background: var(--rg-steady); }
+.rg-sw.is-easing { background: var(--rg-easing); }
+.rg-panel { font-size: 13px; line-height: 20px; overflow-wrap: anywhere; }
+.rg-panel h2 { margin: 0 0 4px; font-size: 16px; color: var(--strong); }
+.rg-panel h3 { margin: 12px 0 4px; color: var(--muted); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; font-weight: 500; }
+.rg-panel ul { margin: 0; padding: 0; list-style: none; max-height: 40vh; overflow: auto; }
+.rg-panel li { padding: 2px 0; }
+.rg-sub { margin: 0 0 6px; color: var(--muted); font-size: 12px; }
+.rg-pick { padding: 0; border: 0; background: none; color: var(--link-accent); font: inherit; text-align: left; text-decoration: underline dotted; text-underline-offset: 3px; cursor: pointer; }
+.rg-go { margin-left: 6px; color: var(--muted); text-decoration: none; }
+.rg-via { color: var(--muted); font-size: 12px; }
+@media (max-width: 760px) {
+  .rg { grid-template-columns: minmax(0, 1fr); }
+  .rg-svg { aspect-ratio: 1 / 1; }
+  .rg-panel ul { max-height: none; }
+}

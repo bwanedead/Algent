@@ -1,5 +1,6 @@
 import type { DailySweep } from "@/lib/daily";
 
+import LinkedText from "./entities/LinkedText";
 import IsoFlags from "./IsoFlags";
 import { SourceLink } from "./DailyVisuals";
 
@@ -30,7 +31,7 @@ export default function DailySweepBlock({ sweep }: { sweep: DailySweep }) {
                       Spotlight
                     </span>
                   )}
-                  {i.text}
+                  <LinkedText text={i.text} />
                   {i.sources.slice(0, SOURCES_SHOWN).map((u) => (
                     <span key={u}>
                       {" "}

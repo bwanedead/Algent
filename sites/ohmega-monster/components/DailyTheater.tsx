@@ -3,12 +3,14 @@ import Link from "next/link";
 import type { DailyChangeKind, DailyTheater } from "@/lib/daily";
 import { claimOf, headlineOf, shortDay, splitLead } from "@/lib/daily";
 import { dossierPath } from "@/lib/dossier";
+import { eventPath } from "@/lib/entities";
 import type { TheaterInfra } from "@/lib/geoledger";
 import { GLOSSARY } from "@/lib/glossary";
 import type { Direction, Snapshot } from "@/lib/intel";
 
 import AssetStatusLog, { logLines } from "./AssetStatusLog";
 import DailyFigure from "./DailyFigure";
+import LinkedText from "./entities/LinkedText";
 import Expander from "./Expander";
 import OnRecordBlock from "./OnRecord";
 import Term from "./Term";
@@ -46,8 +48,8 @@ function ContextList({ t }: { t: DailyTheater }) {
         <li key={k}>
           <span className="geo-micro geo-ctx-when">{/^\d{4}-\d{2}-\d{2}$/.test(c.when) ? shortDay(c.when) + " " + c.when.slice(0, 4) : c.when || "Earlier"}</span>
           <span>
-            <span className="geo-ctx-what">{c.what}</span>
-            {c.why_relevant && <span className="geo-muted"> {c.why_relevant}</span>}
+            <span className="geo-ctx-what"><LinkedText text={c.what} /></span>
+            {c.why_relevant && <span className="geo-muted"> <LinkedText text={c.why_relevant} /></span>}
             {c.source && (
               <>
                 {" "}
@@ -63,7 +65,7 @@ function ContextList({ t }: { t: DailyTheater }) {
 
 const NO_INFRA: TheaterInfra = { assets: [], log: [] };
 
-export default function DailyTheaterSection({ t, id, date, snap, dossiers, first = false, tag = "", update = false, background = "", infra = NO_INFRA }: { t: DailyTheater; id: string; date: string; snap: Snapshot | null; dossiers: ReadonlySet<string>; first?: boolean; tag?: string; update?: boolean; background?: string; infra?: TheaterInfra }) {
+export default function DailyTheaterSection({ t, id, date, snap, dossiers, first = false, tag = "", update = false, background = "", infra = NO_INFRA, events = false }: { t: DailyTheater; id: string; date: string; snap: Snapshot | null; dossiers: ReadonlySet<string>; first?: boolean; tag?: string; update?: boolean; background?: string; infra?: TheaterInfra; events?: boolean }) {
   const statusLog = logLines(infra.log, t.asset_events);
   const dir = DIR[t.escalation.direction];
   const claim = headlineOf(t.headline, t.bottom_line, 150) || claimOf(t.since_yesterday[0]?.what ?? "", 150) || t.name;
@@ -76,6 +78,7 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
   const hasMap = t.map !== null;
   const hasFigs = t.key_figures.length > 0;
   const dossierHref = dossierPath(t.theater_id, dossiers);
+  const eventOf = events && !update ? (n: number) => eventPath(date, t.theater_id, n) : undefined;
 
   return (
     <section id={id} className={`geo-theater${update ? " is-update" : ""}`} aria-labelledby={`${id}-claim`}>
@@ -104,7 +107,7 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
         <h2 id={`${id}-claim`} className="geo-claim">
           {claim}
         </h2>
-        {(t.saga || background) && !update && <p className="geo-saga">{t.saga || background}</p>}
+        {(t.saga || background) && !update && <p className="geo-saga"><LinkedText text={t.saga || background} /></p>}
       </header>
 
       <LiveNowStrip scope={id} bbox={t.map?.bbox} />
@@ -120,11 +123,11 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
         </div>
       )}
 
-      <DevelopmentTimeline developments={t.developments} map={t.map} reportDate={date} range={[0, TOP_SHOWN]} />
+      <DevelopmentTimeline developments={t.developments} map={t.map} reportDate={date} range={[0, TOP_SHOWN]} anchor={id} eventHref={eventOf} />
 
       <div className="geo-exps">
         <Expander label="Assessment and what changed" hint="the full read, since yesterday">
-          <p className="geo-pd-text">{t.bottom_line}</p>
+          <p className="geo-pd-text"><LinkedText text={t.bottom_line} /></p>
           {t.since_yesterday.length > 0 && (
             <div className="geo-since">
               {changed.length > 0 && (
@@ -140,7 +143,7 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
                         <span className="geo-sr">{ch.label}: </span>
                         <span>
                           {lead && <b className="geo-strong">{lead} </b>}
-                          {claimOf(tail, 130)}
+                          <LinkedText text={claimOf(tail, 130)} />
                         </span>
                       </li>
                     );
@@ -158,7 +161,7 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
 
         {t.developments.length > TOP_SHOWN && (
           <Expander label="More developments" count={t.developments.length - TOP_SHOWN}>
-            <DevelopmentTimeline developments={t.developments} map={t.map} reportDate={date} range={[TOP_SHOWN, t.developments.length]} />
+            <DevelopmentTimeline developments={t.developments} map={t.map} reportDate={date} range={[TOP_SHOWN, t.developments.length]} anchor={id} eventHref={eventOf} />
           </Expander>
         )}
 
@@ -191,7 +194,7 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
           <Expander label="Outlook, watch list and background">
             {t.outlook && (
               <p className="geo-next-outlook">
-                <span className="geo-micro">Outlook</span> {t.outlook}
+                <span className="geo-micro">Outlook</span> <LinkedText text={t.outlook} />
               </p>
             )}
             {t.watch_next.length > 0 && (
@@ -199,7 +202,7 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
                 <span className="geo-micro">Watch for</span>
                 <ul className="geo-plain">
                   {t.watch_next.map((w, k) => (
-                    <li key={k}>{w}</li>
+                    <li key={k}><LinkedText text={w} /></li>
                   ))}
                 </ul>
               </div>

@@ -3,6 +3,7 @@ import { cache } from "react";
 import { allActors, type Actor } from "./actors";
 import { allDailyDates, daily, headlineOf, theaterAnchor, type Daily } from "./daily";
 import { dossierList } from "./dossier";
+import { buildLinker, type Linker } from "./countries";
 import { countryName } from "./flags";
 import { maxBand, type Band, type Direction } from "./intel";
 import { recordLedger } from "./record";
@@ -31,7 +32,7 @@ export type InvolvedTheater = TheaterRef & { mentions: number };
 export type ActorRef = { iso2: string; name: string };
 export type RelatedActor = ActorRef & { via: { id: string; name: string }[] };
 export type RelatedTheater = TheaterRef & { shared: ActorRef[] };
-export type Development = { date: string; theater: string; theaterId: string; headline: string; when: string; href: string };
+export type Development = { date: string; theater: string; theaterId: string; headline: string; when: string; href: string; /** The development's own page; "" when the day has the theater twice. */ event: string };
 export type ActorContext = {
   name: string;
   theaters: InvolvedTheater[];
@@ -46,7 +47,7 @@ export type ActorContext = {
 const DIRECTION_RANK: Record<Direction, number> = { rising: 0, unclear: 2, steady: 1, easing: 3 };
 const norm = (s: string) => s.trim().toLowerCase();
 
-type Index = {
+export type Index = {
   actors: Map<string, Actor>;
   refs: Map<string, TheaterRef>;
   dailies: Daily[];
@@ -62,7 +63,7 @@ function tie(ties: Index["ties"], theater: string, iso: string, w: number) {
 }
 
 /** One load per request of everything the links are computed from. */
-const entityIndex = cache(async (): Promise<Index> => {
+export const entityIndex = cache(async (): Promise<Index> => {
   const [actorList, items, dates] = await Promise.all([allActors(), dossierList(), allDailyDates(DAILY_DOMAIN)]);
   const dailies = (await Promise.all(dates.slice(0, DAILIES_READ).map((d) => daily(DAILY_DOMAIN, d)))).filter((d): d is Daily => d !== null);
   const refs = new Map<string, TheaterRef>();
@@ -98,8 +99,9 @@ function developmentsFor(idx: Index, iso: string): Development[] {
   const out: Development[] = [];
   for (const d of idx.dailies)
     d.theaters.forEach((t, i) => {
-      for (const dev of t.developments) {
-        if (!dev.actors.some(named) && !(dev.place && named(dev.place.country))) continue;
+      const unique = d.theaters.filter((o) => o.theater_id === t.theater_id).length === 1;
+      t.developments.forEach((dev, n) => {
+        if (!dev.actors.some(named) && !(dev.place && named(dev.place.country))) return;
         out.push({
           date: d.date,
           theater: t.name,
@@ -107,8 +109,9 @@ function developmentsFor(idx: Index, iso: string): Development[] {
           headline: headlineOf(dev.headline, dev.detail, 150) || dev.headline,
           when: dev.when,
           href: `/geopolitics/${d.date}#${theaterAnchor(t, i)}`,
+          event: unique ? eventPath(d.date, t.theater_id, n) : "",
         });
-      }
+      });
     });
   return out.sort((a, b) => b.date.localeCompare(a.date)).slice(0, DEVELOPMENTS_SHOWN);
 }
@@ -151,6 +154,54 @@ export async function relatedTheaters(theaterId: string): Promise<RelatedTheater
     if (shared.length > 0) out.push({ ...refOf(idx, id), shared: shared.map((iso) => ({ iso2: iso, name: actorName(idx, iso) })) });
   }
   return out.sort((a, b) => b.shared.length - a.shared.length || DIRECTION_RANK[a.direction] - DIRECTION_RANK[b.direction] || a.name.localeCompare(b.name));
+}
+
+/** The page of one development: the day, the theater and its 1-based position in that theater's section. */
+export const eventPath = (date: string, theaterId: string, index: number): string => `/intel/events/${date}/${theaterId}/${index + 1}`;
+
+/** A theater by id: from the dossier index, else as a recent report named it (not linked). */
+export async function theaterRef(id: string): Promise<TheaterRef> {
+  return refOf(await entityIndex(), id);
+}
+
+/** Every state that has a page worth landing on: a profile, or a place in some theater. */
+export const linkableActors = cache(async (): Promise<ReadonlySet<string>> => {
+  const idx = await entityIndex();
+  const out = new Set(idx.actors.keys());
+  for (const m of Array.from(idx.ties.values())) for (const iso of Array.from(m.keys())) out.add(iso);
+  return out;
+});
+
+/** The matcher that turns country names in prose into links (one build per request). */
+export const textLinker = cache(async (): Promise<Linker | null> => buildLinker(await linkableActors()));
+
+export type GraphActor = { iso2: string; name: string; weight: number };
+export type GraphTheater = TheaterRef & { weight: number };
+export type EntityGraph = { actors: GraphActor[]; theaters: GraphTheater[]; links: { iso2: string; theater: string; w: number }[] };
+
+const GRAPH_THEATERS = 40;
+const GRAPH_ACTORS = 70;
+
+/** The actor-theater web for the browser: the busiest theaters and the states most tied to them. */
+export async function entityGraph(): Promise<EntityGraph> {
+  const idx = await entityIndex();
+  const total = (id: string) => Array.from(idx.ties.get(id)?.values() ?? []).reduce((a, b) => a + b, 0);
+  const theaters = Array.from(idx.ties.keys())
+    .filter((id) => idx.refs.has(id))
+    .map((id) => ({ ...refOf(idx, id), weight: total(id) }))
+    .sort((a, b) => b.weight - a.weight)
+    .slice(0, GRAPH_THEATERS);
+  const keep = new Set(theaters.map((t) => t.id));
+  const byActor = new Map<string, number>();
+  for (const t of theaters) for (const [iso, w] of Array.from(idx.ties.get(t.id) ?? [])) byActor.set(iso, (byActor.get(iso) ?? 0) + w);
+  const actors = Array.from(byActor, ([iso2, weight]) => ({ iso2, name: actorName(idx, iso2), weight }))
+    .sort((a, b) => b.weight - a.weight)
+    .slice(0, GRAPH_ACTORS);
+  const shown = new Set(actors.map((a) => a.iso2));
+  const links = Array.from(idx.ties).flatMap(([theater, m]) =>
+    keep.has(theater) ? Array.from(m).filter(([iso]) => shown.has(iso)).map(([iso2, w]) => ({ iso2, theater, w })) : [],
+  );
+  return { actors, theaters, links };
 }
 
 /** The states a theater involves (profiled or not), most tied first. */

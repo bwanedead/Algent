@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Fragment, type ReactNode } from "react";
 
+import LinkedText from "@/components/entities/LinkedText";
 import Popover from "@/components/Popover";
 import Term from "@/components/Term";
 import type { Daily } from "@/lib/daily";
@@ -40,7 +41,7 @@ function TheDay({ items }: { items: string[] }) {
             <p className="geo-pd-title">The day</p>
             <ul className="geo-plain">
               {items.map((s, i) => (
-                <li key={i}>{s}</li>
+                <li key={i}><LinkedText text={s} /></li>
               ))}
             </ul>
           </div>
@@ -98,7 +99,7 @@ function Across({ report }: { report: Daily }) {
                 >
                   <div className="geo-pd">
                     <p className="geo-pd-title">{c.theaters.map(shortTheater).join(mutual ? " ↔ " : " → ")}</p>
-                    <p className="geo-pd-text">{text}</p>
+                    <p className="geo-pd-text"><LinkedText text={text} /></p>
                   </div>
                 </Popover>
               ) : (
@@ -177,7 +178,7 @@ export default async function DailyReport({ report, title, mark }: { report: Dai
           {t.spotlight && <p className="geo-spotlight-label geo-micro">
               <Term id="spotlight">Spotlight</Term> · an under-covered story, researched in full
             </p>}
-          <DailyTheaterSection t={t} id={theaterAnchor(t, i)} date={report.date} snap={snap} dossiers={dossiers} first={i === 0} tag={editionTag(report, t.edition)} background={background[t.theater_id] ?? ""} infra={infra[t.theater_id]} />
+          <DailyTheaterSection t={t} id={theaterAnchor(t, i)} date={report.date} snap={snap} dossiers={dossiers} first={i === 0} tag={editionTag(report, t.edition)} background={background[t.theater_id] ?? ""} infra={infra[t.theater_id]} events={report.theaters.filter((x) => x.theater_id === t.theater_id).length === 1} />
           {t.updates.map((u, k) => (
             <DailyTheaterSection key={`${u.theater_id}-u${k}`} t={u} id={`${theaterAnchor(t, i)}-update-${k + 1}`} date={report.date} snap={snap} dossiers={dossiers} tag={editionTag(report, u.edition)} update infra={infra[t.theater_id]} />
           ))}
