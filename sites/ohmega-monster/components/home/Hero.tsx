@@ -60,7 +60,9 @@ export function Masthead({ report }: { report: Daily | null }) {
         )}
       </div>
       <div className="hm-globe">
-        <GlobeSpinner cycle decorative size={120} />
+        <Link href="/globe" className="globe-link" aria-label="Open the interactive globe" title="Open the interactive globe">
+          <GlobeSpinner cycle decorative size={120} />
+        </Link>
       </div>
     </section>
   );

@@ -27,6 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/intel/graph`, lastModified: new Date() },
     ...(await indexedPlaceIds()).map((id) => ({ url: `${SITE_URL}/intel/places/${id}`, lastModified: new Date() })),
     { url: `${SITE_URL}/radar`, lastModified: new Date() },
+    { url: `${SITE_URL}/globe`, lastModified: new Date() },
     ...(await allBriefSlugs()).map((slug) => ({ url: `${SITE_URL}/intel/briefs/${slug}` })),
     { url: `${SITE_URL}/intel/theaters`, lastModified: new Date() },
     ...(await dossierIds()).map((id) => ({ url: `${SITE_URL}/intel/theaters/${id}`, lastModified: new Date() })),
