@@ -18,6 +18,7 @@ import OnRecordBlock from "./OnRecord";
 import Term from "./Term";
 import { DevelopmentTimeline, KeyFigures, PulseTiles, SourceLink } from "./DailyVisuals";
 import LiveNowStrip from "./live/LiveNowStrip";
+import UnusualHere from "./live/UnusualHere";
 import GeoMap from "./map/GeoMap";
 import TheaterNumbersPanel from "./numbers/TheaterNumbers";
 import "@/app/intel/theaters/theaters.css";
@@ -113,6 +114,7 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
       </header>
 
       <LiveNowStrip scope={id} bbox={t.map?.bbox} />
+      <UnusualHere rows={t.unusual} asOf={shortDay(date)} />
 
       {t.visuals.map((v) => (
         <DailyFigure key={v.id} v={v} />

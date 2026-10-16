@@ -17,6 +17,7 @@ export type LayerKind =
   | "heat" // a heat surface that resolves into dots when zoomed in
   | "icons" // heading-rotated icon images (ships, aircraft: the same arrows /live draws); `cluster` merges dense ones into counted bubbles
   | "numbered" // circles carrying a number, solid when researched and hollow when reported (the daily's marks)
+  | "rings" // thin unfilled rings coloured per feature by `col` (places flagged as unusual); radius `r` in px
   | "assets"; // infrastructure: a small disc per place coloured by `col`, faded by `op`, with its type's letter `g`
 
 export type LayerSpec = {
@@ -44,7 +45,7 @@ export type LayerSpec = {
 };
 
 export const FONT = ["Noto Sans Bold"]; // served by the OpenFreeMap glyph server for both styles
-const ORDER: Record<LayerKind, number> = { area: 0, heat: 1, line: 2, dots: 3, assets: 3.2, icons: 3.5, numbered: 4 };
+const ORDER: Record<LayerKind, number> = { area: 0, heat: 1, line: 2, rings: 2.5, dots: 3, assets: 3.2, icons: 3.5, numbered: 4 };
 export const inDrawOrder = (specs: LayerSpec[]) => [...specs].sort((a, b) => ORDER[a.kind] - ORDER[b.kind]);
 
 const sourceId = (g: string) => `lm-${g}`;
@@ -117,6 +118,11 @@ export function installLayer(map: any, spec: LayerSpec): { all: string[]; click:
         "icon-image": ["get", "ic"], "icon-rotate": ["get", "h"], "icon-rotation-alignment": "map", "icon-allow-overlap": true, "icon-ignore-placement": true,
         "icon-size": spec.subtle ? ["interpolate", ["linear"], ["zoom"], 3, 0.38, 7, 0.48, 14, 0.7] : ["interpolate", ["linear"], ["zoom"], 3, 0.6, 7, 0.75, 14, 1.1] },
         ...(spec.subtle ? { paint: { "icon-opacity": 0.65 } } : {}) }, true);
+      break;
+    case "rings":
+      // A thin outer echo and a thin ring: present but quiet, so they never compete with the layers they annotate.
+      add({ id: id("echo"), type: "circle", paint: { "circle-radius": ["+", ["coalesce", ["get", "r"], 9], 5], "circle-color": "rgba(0,0,0,0)", "circle-stroke-color": ["get", "col"], "circle-stroke-opacity": 0.28, "circle-stroke-width": 0.8 } });
+      add({ id: id("ring"), type: "circle", paint: { "circle-radius": ["coalesce", ["get", "r"], 9], "circle-color": "rgba(0,0,0,0)", "circle-stroke-color": ["get", "col"], "circle-stroke-opacity": 0.85, "circle-stroke-width": 1.4 } }, true);
       break;
     case "assets": {
       // A status on record (ev > 0) draws larger and always carries its letter; a place that merely exists is a quiet dot whose letter

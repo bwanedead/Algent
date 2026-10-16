@@ -6,6 +6,9 @@
     newsroom live status                                 per feed: key situation, last success, error
     newsroom live schedule                               "<feed> <minutes>" lines the installer turns into timers
     newsroom live publish                                push the current events and stats to the site database
+    newsroom live memory tick [--no-publish]             settle finished hours: baselines, anomalies, daily rollups
+    newsroom live memory status                          hours on disk, baseline sizes/maturity, open anomalies, screened artefacts
+    newsroom live memory anomalies                       the current anomalies (the picture the site and the dailies read)
 
 Free; no model. See ``live/`` and docs/guides/worker-server.md (Live feeds).
 """
@@ -29,6 +32,13 @@ def add_parser(sub: Any) -> None:
     verbs.add_parser("status", help="feeds, keys and last success").set_defaults(handler=run_status)
     verbs.add_parser("schedule", help="feed cadences in minutes").set_defaults(handler=run_schedule)
     verbs.add_parser("publish", help="push current events + stats to the site database").set_defaults(handler=run_publish)
+    m = verbs.add_parser("memory", help="live memory: baselines and anomalies from the live feeds")
+    mverbs = m.add_subparsers(dest="memory_cmd", required=True)
+    t = mverbs.add_parser("tick", help="process finished hours (baselines, anomalies, daily rollups, publish)")
+    t.add_argument("--no-publish", action="store_true", help="skip the site database upload")
+    t.set_defaults(handler=run_memory_tick)
+    mverbs.add_parser("status", help="what memory holds").set_defaults(handler=run_memory_status)
+    mverbs.add_parser("anomalies", help="the current anomalies").set_defaults(handler=run_memory_anomalies)
 
 
 def _emit(doc: Any) -> int:
@@ -67,3 +77,21 @@ def run_publish(_args: Any) -> int:
 
     feeds = {p.stem: store.read_events(p.stem) for p in sorted((store.root() / "events").glob("*.json"))}
     return _emit({"live": publish.publish(feeds), "world": publish.publish_world(force=True)})
+
+
+def run_memory_tick(args: Any) -> int:
+    from algent_backend.live.memory import tick
+
+    return _emit(tick.tick(publish=not args.no_publish))
+
+
+def run_memory_status(_args: Any) -> int:
+    from algent_backend.live.memory import tick
+
+    return _emit(tick.status())
+
+
+def run_memory_anomalies(_args: Any) -> int:
+    from algent_backend.live.memory.anomalies import read_current
+
+    return _emit([a.model_dump() for a in read_current()])

@@ -5,18 +5,19 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Bounds, LngLat } from "@/components/map/geo";
 import LiveMap, { type MapStatus } from "@/components/map/LiveMap";
 import {
-  ago, compact, fetchSnapshot, KIND_LABEL, shipTiles,
-  type CoverageDoc, type FiresDoc, type Headline, type LiveEvent, type LiveStat, type LiveWorld, type Summary,
+  ago, ANOMALY_COLOR, compact, fetchSnapshot, KIND_LABEL, shipTiles, strongest,
+  type CoverageDoc, type FiresDoc, type Headline, type LiveAnomaly, type LiveEvent, type LiveStat, type LiveWorld, type Summary,
 } from "@/lib/live-shared";
 
 import ChokepointTiles from "./ChokepointTiles";
 import { AIR_KINDS, NO_FILTER, passes, regionName, SHIP_CLASSES, type Entity } from "./entities";
 import Headlines from "./Headlines";
 import LayerPanel, { type FilterState, type PanelRow } from "./LayerPanel";
-import { eventItem, gateItems, type Layer } from "./liveItems";
-import { COLOR, GROUPS, liveLayers, WORLD_BOUNDS } from "./liveLayers";
+import { eventItem, gateItems } from "./liveItems";
+import { anomalyRings, COLOR, GROUPS, liveLayers, WORLD_BOUNDS } from "./liveLayers";
 import LiveWorldStatic from "./LiveWorldStatic";
 import { Tracks } from "./TrackLayers";
+import UnusualStrip from "./UnusualStrip";
 import { loadTrails, type Trail } from "./trails";
 import { useLiveEntities } from "./useLiveEntities";
 
@@ -44,7 +45,7 @@ const HEADLINE_TOGGLE: Record<Headline["layer"], string> = { outage: "outage", q
 
 type Focus = { nonce: number; bounds?: Bounds; center?: LngLat; zoom?: number };
 
-export default function LiveWorldMap({ world, events, stats, summary: summary0 }: { world: LiveWorld | null; events: LiveEvent[]; stats: LiveStat[]; summary: Summary | null }) {
+export default function LiveWorldMap({ world, events, stats, summary: summary0, anomalies }: { world: LiveWorld | null; events: LiveEvent[]; stats: LiveStat[]; summary: Summary | null; anomalies: LiveAnomaly[] }) {
   const [summary, setSummary] = useState<Summary | null>(summary0);
   const [fires, setFires] = useState<FiresDoc | null>(null);
   const [coverage, setCoverage] = useState<CoverageDoc | null>(null);
@@ -151,8 +152,11 @@ export default function LiveWorldMap({ world, events, stats, summary: summary0 }
   const gatesKey = JSON.stringify(Object.entries(gates ?? {}).map(([k, g]) => [k, g.in_strait ?? null]));
   const stableGates = useMemo(() => gates, [gatesKey]); // eslint-disable-line react-hooks/exhaustive-deps -- relabel only when a count changes
   const items = useMemo(() => [...events.filter((e) => e.ends_at === null || e.kind !== "outage").map(eventItem), ...gateItems(stableGates)], [events, stableGates]);
-  const layers = useMemo(() => liveLayers(items, world, fires, stableGates), [items, world, fires, stableGates]);
-  const hidden = useMemo(() => Array.from(off).filter((k) => !k.includes(".")).flatMap((l) => GROUPS[l as Layer] ?? []), [off]);
+  const rings = useMemo(() => anomalyRings(anomalies), [anomalies]);
+  const layers = useMemo(() => [...liveLayers(items, world, fires, stableGates), ...(rings ? [rings] : [])], [items, world, fires, stableGates, rings]);
+  const hidden = useMemo(() => Array.from(off).filter((k) => !k.includes(".")).flatMap((l) => GROUPS[l as keyof typeof GROUPS] ?? []), [off]);
+  const unusual = useMemo(() => strongest(anomalies), [anomalies]);
+  const nUnusual = anomalies.filter((a) => a.active).length;
   const shownItems = items.filter((i) => !off.has(i.layer));
   const current = items.find((i) => i.id === sel) ?? null;
 
@@ -170,6 +174,7 @@ export default function LiveWorldMap({ world, events, stats, summary: summary0 }
     { key: "quake", label: KIND_LABEL.quake, color: COLOR.quake, count: nQuakes, fresh: when(summary?.fresh.quake) },
     { key: "outage", label: KIND_LABEL.outage, color: COLOR.outage, count: nOutages, fresh: when(summary?.fresh.outage) },
     { key: "gates", label: "Chokepoints", color: COLOR.gates, count: Object.keys(gates ?? {}).length, fresh: "" },
+    ...(anomalies.length > 0 ? [{ key: "anomalies", label: "Anomalies", color: ANOMALY_COLOR.above, count: nUnusual, fresh: "" }] : []),
   ];
   const flags = useMemo(() => {
     if (mode !== "full") return topFlags.map(([code, c]) => ({ code, label: regionName(code), n: c }));
@@ -218,6 +223,13 @@ export default function LiveWorldMap({ world, events, stats, summary: summary0 }
     if (items.some((i) => i.id === h.id)) setSel(h.id);
     toMap();
   };
+  const pickAnomaly = (a: LiveAnomaly) => {
+    if (a.lat === null || a.lon === null) return;
+    if (off.has("anomalies")) toggle("anomalies");
+    setGate(null);
+    setFocus({ nonce: ++nonce.current, center: [a.lon, a.lat], zoom: a.place_kind === "cell" ? 6 : 5 });
+    toMap();
+  };
   const pickEntity = (e: Entity) => {
     setFocus({ nonce: ++nonce.current, center: tracks.position(e), zoom: 9 });
     tracks.select(e);
@@ -230,6 +242,8 @@ export default function LiveWorldMap({ world, events, stats, summary: summary0 }
   return (
     <div className="live-map-wrap" ref={wrap}>
       <Headlines items={summary?.headlines ?? []} asOf={summary?.as_of ?? ""} now={now} onPick={pick} />
+
+      <UnusualStrip rows={unusual} onPick={pickAnomaly} />
 
       <LayerPanel
         rows={rows} off={off} onToggle={toggle}

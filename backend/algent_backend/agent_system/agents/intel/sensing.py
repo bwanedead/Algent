@@ -81,7 +81,10 @@ class Evidence:
     live: str = ""                                          # LIVE EVENTS block (outages, quakes ... touching the theater's countries)
     live_urls: set[str] = field(default_factory=set)        # the public pages those lines cite (live dashboards, the grid-impact panel)
     grid: str = ""                                          # OHMEGA GRID ANALYSIS block (our own rollup of struck capacity per country)
+    anomalies: str = ""                                     # OHMEGA LIVE ANOMALIES block (live/memory: places outside Ohmega's own learned normal)
+    anomaly_rollup: dict[str, Any] = field(default_factory=dict)   # what was normal / abnormal in the theater's watched places (the compounding record)
     n_live: int = 0
+    n_anomalies: int = 0
     shown: list[Statement] = field(default_factory=list)     # the statements in the block, in the order shown
     tags: list[str] = field(default_factory=list)
     terms: list[str] = field(default_factory=list)
@@ -97,7 +100,7 @@ class Evidence:
 
     def render(self) -> str:
         """The blocks for a writer's task text ('' when there are none), ending in a blank line."""
-        parts = [p for p in (self.instruments, self.live, self.grid, self.statements, *self.histories) if p]
+        parts = [p for p in (self.instruments, self.live, self.grid, self.anomalies, self.statements, *self.histories) if p]
         return "\n\n".join(parts) + "\n\n" if parts else ""
 
 
@@ -244,6 +247,23 @@ def _grid_block(theater: Theater, actors: Any, as_of: str) -> tuple[str, set[str
         return "\n".join([head, *lines]), urls
     except Exception:  # noqa: BLE001 - an aid to the writer, never its gate
         return "", set()
+
+
+# ── live anomalies ────────────────────────────────────────────────────────────────────────────
+def _anomaly_block(theater: Theater, actors: Any, as_of: str) -> tuple[str, set[str], int, dict[str, Any]]:
+    """Ohmega's own live-memory anomalies (``live/memory``) in the countries the theater stands behind, plus the day's normal / abnormal
+    rollup of the places we watch there. Derived by Ohmega from sensor feeds, so cited as "Ohmega analysis". Never raises."""
+    try:
+        from algent_backend.live.memory import desk
+
+        def find_in(text: str, names: set[str]) -> set[str]:
+            words = _words(text)
+            return {n for n in names if _find(words, _words(n), text)}
+
+        text, urls, n, stood = desk.for_theater(lambda find: corroborated(find, theater, actors), find_in)
+        return text, urls, n, desk.theater_rollup(stood, as_of) if stood else {}
+    except Exception:  # noqa: BLE001 - an aid to the writer, never its gate
+        return "", set(), 0, {}
 
 
 # ── statements ────────────────────────────────────────────────────────────────────────────────
@@ -394,6 +414,8 @@ def for_theater(theater: Theater, *, as_of: str | date, actors: list[str] | tupl
         ev.live, ev.live_urls, ev.n_live = _live_block(theater, actors)
         ev.grid, grid_urls = _grid_block(theater, actors, day.isoformat())
         ev.live_urls = ev.live_urls | grid_urls
+        ev.anomalies, anomaly_urls, ev.n_anomalies, ev.anomaly_rollup = _anomaly_block(theater, actors, day.isoformat())
+        ev.live_urls = ev.live_urls | anomaly_urls
     except Exception as exc:  # noqa: BLE001 - sensing is an aid; a broken store must not cost the report
         return Evidence(error=f"{type(exc).__name__}: {str(exc)[:160]}")
     return ev
@@ -443,8 +465,11 @@ def across_theaters(*, as_of: str | date, days: int = CROSS_DAYS) -> Evidence:
         from algent_backend.live import desk
 
         live, live_urls, n_live = desk.block(desk.country_names())          # severest current events anywhere
+        from algent_backend.live.memory import desk as memory_desk
+
+        odd, odd_urls, n_odd = memory_desk.block_all()                      # strongest departures from Ohmega's learned normal anywhere
         return Evidence(instruments=evidence.render_block(rows, as_of=day), statements=statements_block(shown, days),
-                        live=live, live_urls=live_urls, n_live=n_live, n_instruments=len(rows), n_statements=len(shown), shown=shown,
+                        live=live, live_urls=live_urls | odd_urls, n_live=n_live, anomalies=odd, n_anomalies=n_odd, n_instruments=len(rows), n_statements=len(shown), shown=shown,
                         instrument_urls={r["source_url"] for r in rows if r["public_display"]},
                         statement_urls={s.source_url for s in shown})
     except Exception as exc:  # noqa: BLE001
@@ -456,6 +481,8 @@ def summary_for_report(ev: Evidence) -> dict[str, Any]:
     out: dict[str, Any] = {"instruments": ev.n_instruments, "statements": ev.n_statements}
     if ev.n_live:
         out["live"] = ev.n_live
+    if ev.n_anomalies:
+        out["anomalies"] = ev.n_anomalies
     if ev.error:
         out["error"] = ev.error
     return out

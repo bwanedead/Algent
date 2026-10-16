@@ -17,6 +17,8 @@ import { RelatedTheaters, StatesInvolved } from "@/components/entities/EntityLin
 import { dossier, dossierIds } from "@/lib/dossier";
 import { relatedTheaters, theaterStates } from "@/lib/entities";
 import { latestSnapshot } from "@/lib/intel";
+import { anomaliesIn, toUnusual } from "@/lib/live";
+import UnusualHere from "@/components/live/UnusualHere";
 
 import "@/app/geopolitics/geopolitics.css";
 import "../theaters.css";
@@ -48,11 +50,12 @@ export default async function TheaterDossierPage({ params }: { params: Params })
   const snap = await latestSnapshot();
   const known = new Set(await dossierIds());
   const involved = await actorsForTheater(d.theater_id);
-  const [states, related] = await Promise.all([theaterStates(d.theater_id), relatedTheaters(d.theater_id)]);
+  const [states, related, unusual] = await Promise.all([theaterStates(d.theater_id), relatedTheaters(d.theater_id), anomaliesIn(d.map?.bbox)]);
   const first = d.timeline.map((t) => t.date).filter(Boolean).sort()[0] ?? "";
   return (
     <div className="intel-page th-page">
       <DossierTop d={d} />
+      <UnusualHere rows={unusual.map(toUnusual)} asOf="now" />
       <DossierLineage d={d} />
 
       {(d.pulses.length > 0 || d.map) && (

@@ -98,6 +98,11 @@ headlines misses them. So four kinds arrive, kept apart by what they can prove:
   capacity named in strike claims, damage reports and confirmations. Cite it as "Ohmega analysis" with its
   window. Keep the claimed and confirmed numbers apart (they overlap; never add them), and never read
   capacity as lost output.
+- OHMEGA LIVE ANOMALIES: places where live ship, aircraft or satellite-fire counts sit far outside Ohmega's own learned normal for that
+  hour of the week, each with how far, for how long and how confident. They are our own derivation, so cite them as "Ohmega analysis"
+  and never as something a source reported. They show that a pattern departs from normal, not why: a closed port, a rerouting, an
+  exercise and a sensor gap we could not screen out all look alike, so state the departure and keep the cause attributed or open. One
+  marked LEARNING rests on a young baseline: say so or leave it out. A place with no line is not proof it is normal, only that we flagged nothing.
 - STATEMENTS ON RECORD: what a named official said, from the primary transcript, with its link. A
   statement proves it was SAID, not that what it says is true: report it as what the speaker said, and
   test its claims against researched evidence or leave them attributed. Resting on the transcript, the
@@ -692,6 +697,11 @@ def _cover(run: _Run, theater: Theater, heat: dict, *, propose: bool = True, pre
     section, draft = finish_section(raw, inputs, tid=tid, countries=run.countries, store=store, now=run.now,
                                     as_of=as_of, brief=latest_brief)
     section["edition"] = run.edition
+    if sensed.anomaly_rollup:                       # what was normal / abnormal in the places we watch here: kept with the day and appended to the record
+        from algent_backend.live.memory import desk as memory_desk
+
+        section["live_rollup"] = sensed.anomaly_rollup
+        memory_desk.record_theater_day(tid, sensed.anomaly_rollup)
     row["proposals"] = [{"theater": theater.name, **p.model_dump()} for p in draft.pulse_proposals]
     row["proposals_logged"] = (record_proposals(store, draft.pulse_proposals, theater=theater, domain=run.domain,
                                                 as_of=as_of) if propose else 0)

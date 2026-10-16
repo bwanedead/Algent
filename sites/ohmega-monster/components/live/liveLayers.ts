@@ -3,7 +3,7 @@
 // resolves into small dots (notable fires get a ringed dot), chokepoints a thin dashed counting line with a short live label.
 // Ships and aircraft are drawn by TrackLayers.ts. Country polygons come from the backend's `live/world.json` (unprojected).
 
-import type { FiresDoc, GateNow, LiveWorld } from "@/lib/live-shared";
+import { ANOMALY_COLOR, type FiresDoc, type GateNow, type LiveAnomaly, type LiveWorld } from "@/lib/live-shared";
 import { collection, pointFeature, ringFeatures, pathRings, type Bounds, type Feature, type LngLat } from "@/components/map/geo";
 import type { LayerSpec } from "@/components/map/mapLayers";
 
@@ -12,7 +12,25 @@ import type { Item, Layer } from "./liveItems";
 export const COLOR = { outage: "#c4574a", quake: "#d9a521", fire: "#ea6a22", gates: "#2a8f9c" } as const;
 
 /** The map groups each toggle controls (an outage can draw as a fill and, unmatched, as a point). Aircraft regions are list-only. */
-export const GROUPS: Record<Layer, string[]> = { outage: ["outage", "outage-pt"], quake: ["quake"], aircraft: [], fire: ["fire", "fire-note"], gates: ["gates"] };
+export const GROUPS: Record<Layer | "anomalies", string[]> = { outage: ["outage", "outage-pt"], quake: ["quake"], aircraft: [], fire: ["fire", "fire-note"], gates: ["gates"], anomalies: ["anomalies"] };
+
+/** Places flagged as outside their learned normal (backend `live/memory`): a thin ring per still-going anomaly, warm above normal and cool below, a touch
+ *  larger when more confident. Drawn over the other layers without changing them; the popup says what it is and what it is not. */
+export function anomalyRings(anoms: LiveAnomaly[]): LayerSpec | null {
+  const features = anoms
+    .filter((a) => a.active && a.lat !== null && a.lon !== null)
+    .map((a) => pointFeature([a.lon as number, a.lat as number], { id: `anomaly:${a.id}`, title: a.sentence, col: ANOMALY_COLOR[a.direction], r: 8 + Math.round(6 * a.confidence), conf: Math.round(a.confidence * 100), learn: a.learning }));
+  if (features.length === 0) return null;
+  return {
+    group: "anomalies", kind: "rings", color: ANOMALY_COLOR.above, data: collection(features),
+    popup: (p) => ({
+      kind: "Unusual · Ohmega analysis",
+      title: String(p.title),
+      text: `Counted by Ohmega from public live feeds and compared with its own learned normal for this place and hour of the week (confidence ${p.conf}%${p.learn ? ", young baseline" : ""}). It shows the pattern departs from normal, not why: a closed port, a rerouting and a sensor gap we could not screen out look alike.`,
+      source: "Ohmega, from live ship, aircraft and satellite feeds",
+    }),
+  };
+}
 
 export const WORLD_BOUNDS: Bounds = [-170, -50, 180, 78];
 
