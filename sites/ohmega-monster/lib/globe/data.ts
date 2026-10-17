@@ -26,3 +26,16 @@ export type GlobeData = {
   countries: Record<string, CountryInfo>;
   theaters: GlobeTheater[];
 };
+
+/** One stat row of the country panel. `pos` (0..1) places the value on a log track where the tick at 0.5 is the world median (a decade
+ *  either side spans the track); null when there is no median to compare with. */
+export type PanelStat = { id: string; label: string; text: string; year: number; pos: number | null; median: string };
+
+/** What /api/globe/country/[iso] returns: the supplemental stats and counts for one country (fetched when it is picked). */
+export type CountryPanel = {
+  iso: string;
+  stats: PanelStat[];
+  counts: { theaters: number; statements7d: number; sanctions30d: number; calendar: number; anomalies: number };
+  grid: { line: string; asOf: string } | null;
+  leaders: { head_of_state: string; head_of_government: string };
+};
