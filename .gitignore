@@ -291,3 +291,4 @@ backend/actors_store/
 backend/sanctions_store/
 backend/maritime_store/
 backend/calendar_store/
+backend/markets_store/
