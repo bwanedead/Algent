@@ -221,6 +221,9 @@ export type DailySweep = {
   /** The item nominated for a full section; `section` says whether this report carries it (research was on). */
   spotlight: { theater_id: string; name: string; text: string; region: string; countries: string[]; sources: string[]; section: boolean } | null;
 };
+/** "Where we disagree with the market" (backend markets/desk.py): our own forecasts set against Polymarket prices, attached mechanically after the writers. Older reports: null. */
+export type MarketViewLine = { question: string; ours: number; market: number; made_at: string; url: string; text: string };
+export type MarketView = { note: string; page: string; lines: MarketViewLine[] };
 export type Daily = {
   domain: string;
   date: string;
@@ -235,6 +238,7 @@ export type Daily = {
   watch: DailyWatch[];
   quiet: DailyQuiet[];
   sweep: DailySweep | null;
+  market_view: MarketView | null;
 };
 
 // ---- defensive coercion helpers -------------------------------------------------------------
@@ -647,6 +651,15 @@ function parseSweep(raw: unknown): DailySweep | null {
   return regions.length > 0 || spotlight ? { regions, spotlight } : null;
 }
 
+function parseMarketView(raw: unknown): MarketView | null {
+  if (!isObj(raw)) return null;
+  const lines = arr(raw.lines)
+    .filter(isObj)
+    .map((l) => ({ question: str(l.question), ours: Number(l.ours), market: Number(l.market), made_at: str(l.made_at), url: httpUrls([l.url])[0] ?? "", text: str(l.text) }))
+    .filter((l) => l.question && Number.isFinite(l.ours) && Number.isFinite(l.market));
+  return lines.length > 0 ? { note: str(raw.note), page: str(raw.page) === "/intel/track-record" ? "/intel/track-record" : "", lines } : null;
+}
+
 function parseDaily(raw: unknown, domain: string, date: string): Daily | null {
   if (!isObj(raw)) return null;
   const summary = isObj(raw.summary) ? raw.summary : {};
@@ -672,6 +685,7 @@ function parseDaily(raw: unknown, domain: string, date: string): Daily | null {
       .map((q) => ({ theater_id: str(q.theater_id), name: str(q.name), last_novel: str(q.last_novel), countries: strs(q.countries) }))
       .filter((q) => q.name),
     sweep: parseSweep(raw.sweep),
+    market_view: parseMarketView(raw.market_view),
   };
 }
 

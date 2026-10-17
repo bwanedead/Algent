@@ -48,6 +48,7 @@ from typing import Any
 from algent_backend.geoledger import ask as geo_ask
 from algent_backend.geoledger import ingest as geo_ingest
 from algent_backend.lookahead import extract as calendar_extract
+from algent_backend.markets import desk as markets_desk
 
 from . import brief as br
 from . import primers as primers_mod
@@ -942,6 +943,8 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
         record["geoledger_run"] = geo_run
     if calendar_run and calendar_run.get("found"):
         record["calendar_run"] = calendar_run
+    if market_view := markets_desk.daily_view():           # additive, mechanical, attached AFTER the writers: they never saw a market price
+        record["market_view"] = market_view
     if swept is not None and (swept.regions or swept.spotlight):
         record["sweep"] = swept.record()                   # additive: older readers ignore the key
     path = daily_dir(domain) / f"{as_of}.json"

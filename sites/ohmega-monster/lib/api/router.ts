@@ -6,6 +6,7 @@ import { articleOp, articlesOp, searchOp } from "./ops-content";
 import { anomaliesOp, instrumentOp, instrumentsOp, liveEventsOp } from "./ops-data";
 import { calendarOp, sanctionsOp } from "./ops-forward";
 import { maritimeOp } from "./ops-maritime";
+import { trackRecordOp } from "./ops-track";
 import { KIND_ORDER as MARITIME_KINDS } from "@/lib/maritime-shared";
 import { KINDS } from "@/lib/calendar-shared";
 import {
@@ -202,6 +203,12 @@ export const ROUTES: Route[] = [
       { name: "since", description: SINCE, example: "2026-10-01" },
     ],
     run: (_p, q) => maritimeOp(q),
+  },
+  {
+    path: "/track-record",
+    summary:
+      "Ohmega's reality check: its own probability forecasts on Polymarket markets (made blind to the price, stored immutably) scored against the market's price at the same moment. Brier score and log loss for both, calibration, open paper positions, resolved markets including the misses. PAPER ONLY, not financial advice.",
+    run: () => trackRecordOp(),
   },
   {
     path: "/assets",

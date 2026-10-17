@@ -1,0 +1,47 @@
+/* Track record (backend `markets/`): paper-traded forecasts vs Polymarket. Hairline rules, monospace figures. */
+
+.tr-paper { margin: 0 0 14px; padding: 8px 12px; border: 1px solid var(--accent-dim); border-left-width: 3px; color: var(--strong); font-size: 13px; line-height: 20px; }
+.tr-paper b { color: var(--accent); letter-spacing: 0.06em; text-transform: uppercase; font-size: 11px; margin-right: 6px; }
+
+.tr-verdict { margin: 0 0 14px; font-size: 14px; line-height: 22px; color: var(--strong); overflow-wrap: anywhere; }
+.tr-verdict.is-early { color: var(--muted); }
+
+.tr-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); margin: 0 0 18px; padding: 0; list-style: none; border-left: 1px solid var(--rule); border-top: 1px solid var(--rule); }
+.tr-stats > li { padding: 8px 10px; border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); min-width: 0; }
+.tr-stat-n { display: block; color: var(--strong); font-size: 20px; line-height: 26px; font-variant-numeric: tabular-nums; }
+.tr-stat-l { display: block; color: var(--muted); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+.tr-good { color: var(--band-calm, #6fae7e) !important; }
+.tr-bad { color: var(--band-critical, #e0594f) !important; }
+
+.tr-h2 { margin: 22px 0 6px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.tr-note { margin: 0 0 8px; color: var(--muted); font-size: 12px; line-height: 18px; overflow-wrap: anywhere; }
+
+.tr-figs { display: flex; flex-wrap: wrap; gap: 16px 28px; align-items: flex-start; }
+.tr-fig { margin: 0; flex: 1 1 260px; min-width: 0; max-width: 460px; }
+.tr-svg { width: 100%; height: auto; display: block; overflow: visible; }
+.tr-grid { stroke: var(--rule); stroke-width: 1; }
+.tr-diag { stroke: var(--rule-strong); stroke-width: 1; stroke-dasharray: 3 3; }
+.tr-tick { fill: var(--muted); font-size: 9px; font-variant-numeric: tabular-nums; }
+.tr-axis { fill: var(--muted); font-size: 9px; letter-spacing: 0.04em; }
+.tr-pt-ours { fill: var(--accent); fill-opacity: 0.85; stroke: var(--bg); stroke-width: 1; }
+.tr-pt-market { fill: none; stroke: var(--link-accent); stroke-width: 1.5; }
+.tr-line { stroke-width: 2; }
+.tr-ahead { stroke: var(--band-calm, #6fae7e); }
+.tr-behind { stroke: var(--band-critical, #e0594f); }
+.tr-cap { margin-top: 4px; color: var(--muted); font-size: 11px; line-height: 16px; }
+.tr-key { display: inline-block; width: 9px; height: 9px; border-radius: 50%; vertical-align: -1px; }
+.tr-key-ours { background: var(--accent); }
+.tr-key-market { border: 1.5px solid var(--link-accent); margin-left: 6px; }
+.tr-empty { margin: 0; color: var(--muted); font-size: 12px; }
+
+.tr-table { width: 100%; border-collapse: collapse; font-size: 12px; font-variant-numeric: tabular-nums; }
+.tr-table th { text-align: left; color: var(--muted); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; padding: 4px 8px 4px 0; border-bottom: 1px solid var(--rule-strong); white-space: nowrap; }
+.tr-table td { padding: 5px 8px 5px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.tr-table td.n, .tr-table th.n { text-align: right; }
+.tr-table .q { min-width: 200px; max-width: 520px; color: var(--strong); overflow-wrap: anywhere; }
+.tr-table tr.is-miss td { background: color-mix(in srgb, var(--band-critical, #e0594f) 8%, transparent); }
+.tr-scroll { overflow-x: auto; max-width: 100%; }
+.tr-why { display: block; margin-top: 2px; color: var(--muted); font-size: 11px; line-height: 16px; font-weight: 400; }
+.tr-tag { display: inline-block; padding: 0 5px; border: 1px solid var(--rule-strong); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.tr-tag.is-miss { border-color: var(--band-critical, #e0594f); color: var(--band-critical, #e0594f); }
+.tr-tag.is-hit { border-color: var(--band-calm, #6fae7e); color: var(--band-calm, #6fae7e); }
