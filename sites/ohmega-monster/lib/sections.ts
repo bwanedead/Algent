@@ -11,6 +11,7 @@ import { maritimeEvents } from "./maritime";
 import { getMenus } from "./radar";
 import { recordLedger } from "./record";
 import { recentSanctions } from "./sanctions";
+import { trackRecord } from "./track-record";
 
 // The site's sections as doors: one line saying what is behind each, plus a small live hint read from the
 // published data ("12 theaters · 3 escalating"). Home and the Intelligence directory share this, so the two
@@ -22,7 +23,7 @@ export type Door = { href: string; title: string; line: string; hint: string };
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
 const hints = cache(async () => {
-  const [daily, theaters, actors, ledger, snap, articles, menus, live, upcoming, sanctions, maritime] = await Promise.all([
+  const [daily, theaters, actors, ledger, snap, articles, menus, live, upcoming, sanctions, maritime, track] = await Promise.all([
     latestDaily("geopolitics"),
     dossierList(),
     actorIds(),
@@ -34,6 +35,7 @@ const hints = cache(async () => {
     calendarItems(30),
     recentSanctions(30),
     maritimeEvents(300),
+    trackRecord(),
   ]);
   const ahead30 = upcoming.filter((r) => r.on_date <= addDays(todayIso(), 30));
   const active = theaters.filter((t) => !t.merged_into);
@@ -52,6 +54,7 @@ const hints = cache(async () => {
     live: live && live.headlines.length > 0 ? `${plural(live.headlines.length, "signal")} now` : "",
     calendar: ahead30.length > 0 ? `${plural(ahead30.length, "date")} · next 30 days` : "",
     maritime: maritime.length > 0 ? `${plural(maritime.filter((m) => m.ended_at === null).length, "event")} going · last 30 days` : "",
+    track: track ? `${plural(track.scores.compared, "market")} compared · ${plural(track.markets.open, "open market")}` : "",
     sanctions: sanctions.length > 0 ? `${plural(sanctions.filter((s) => s.action === "designated").length, "addition")} · last 30 days` : "",
   };
 });
@@ -78,6 +81,7 @@ export async function toolDoors(): Promise<Door[]> {
     { href: "/intel/sanctions", title: "Sanctions", line: "Who was added to or removed from the US, UK and EU lists.", hint: h.sanctions },
     { href: "/intel/maritime", title: "Maritime", line: "Ships that went dark, met at sea, changed identity or matched a sanctions list.", hint: h.maritime },
     { href: "/intel/forecasts", title: "Forecasts", line: "Every open forecast on one timeline, and the track record.", hint: "" },
+    { href: "/intel/track-record", title: "Track record", line: "Our forecasts scored against Polymarket prices, misses included. Paper only.", hint: h.track },
     { href: "/intel/graph", title: "Graph", line: "States and theaters as one network: who is involved where.", hint: h.graph },
     { href: "/live", title: "Live", line: "The live map: ships, aircraft, quakes, fires and outages.", hint: h.live },
     { href: "/intel/actors", title: "Actors", line: "Population, economy, energy and military of each state.", hint: h.actors },

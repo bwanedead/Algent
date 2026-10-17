@@ -8,6 +8,7 @@
 #   ohmega-statements   every 6 h      official statement transcripts (collection only, no extraction)
 #   ohmega-sanctions    every 6 h      OFAC / UK / EU sanctions list diffs -> designation events
 #   ohmega-calendar     daily 04:40    upcoming elections, central-bank decisions, summits, OPEC+, extracted deadlines
+#   ohmega-markets      every 4 h      Polymarket mirror (read-only): relevant markets, prices, resolutions; paper track record
 #   ohmega-backup       daily 06:15    stores -> private algent-data archive
 #   ohmega-live-<feed>  every N min     free live feeds (ioda, usgs, adsb, firms; N from live/flags.py)
 #   ohmega-ais          always on        AIS chokepoint counter service (needs ALGENT_AISSTREAM_KEY; restarts always)
@@ -55,6 +56,7 @@ unit instruments "$INFRA/jobs.sh instruments"  "0/6:40"
 unit statements  "$INFRA/jobs.sh statements"   "1/6:10"
 unit sanctions   "$INFRA/jobs.sh sanctions"    "2/6:25"
 unit calendar    "$INFRA/jobs.sh calendar"     "*-*-* 04:40"
+unit markets     "$INFRA/jobs.sh markets"      "3/4:50"
 unit backup      "$INFRA/jobs.sh backup"       "*-*-* 06:15"
 unit watchdog    "$INFRA/jobs.sh watchdog"     "*:0/2"
 
@@ -96,7 +98,7 @@ done < <(cd "$HOME/Algent/backend" && .venv/bin/python -m algent_backend.cli new
 [ -n "$PAID" ] || { echo "no paid jobs listed by 'newsroom schedule times'; refusing to continue" >&2; exit 1; }
 
 sudo systemctl daemon-reload
-for t in update library instruments statements sanctions calendar backup watchdog $LIVE_TIMERS $PAID; do
+for t in update library instruments statements sanctions calendar markets backup watchdog $LIVE_TIMERS $PAID; do
     sudo systemctl enable --now "ohmega-$t.timer" >/dev/null
 done
 sudo systemctl enable --now ohmega-ais.service >/dev/null

@@ -486,6 +486,28 @@ def check_calendar() -> dict[str, Any]:
     return {"calendar": _check(WARN, "stale: " + "; ".join(bad)) if bad else _check(OK, f"all sources fresh; {n} items in the next 30 days")}
 
 
+def check_markets() -> dict[str, Any]:
+    """The Polymarket mirror: a good pass within 10 hours (the timer fires every 4). Read-only data, so stale is a warning."""
+    try:
+        from datetime import datetime, timezone
+
+        from algent_backend.markets import store
+
+        st = store.load_status()
+        if not st:
+            return {"markets": _check(OK, "no markets store on this machine (not collected here)")}
+        if not st.get("last_ok"):
+            return {"markets": _check(WARN, "never ok" + (f": {scrub(st.get('last_error', ''))}" if st.get("last_error") else ""))}
+        age = (datetime.now(timezone.utc) - datetime.fromisoformat(st["last_ok"])).total_seconds() / 3600
+        ms = store.markets().values()
+        n = sum(1 for m in ms if m.status == "open")
+    except Exception as exc:  # noqa: BLE001
+        return {"markets": _check(WARN, f"unknown: {scrub(exc)}")}
+    if age > 10:
+        return {"markets": _check(WARN, f"stale: last good pass {age:.0f} h ago")}
+    return {"markets": _check(OK, f"mirrored {age:.1f} h ago; {n} open markets, {len(store.forecasts())} forecasts (paper only)")}
+
+
 def check_basemap(probes: Probes) -> dict[str, Any]:
     """The Natural Earth basemap (untracked data) must load, or every daily map silently disappears."""
     try:
@@ -505,7 +527,7 @@ def run_checks(env: dict[str, str] | None = None, probes: Probes | None = None,
     checks: dict[str, Any] = {}
     for part in (check_keys(env), check_database(env, probes), check_search(env, probes), check_reads(probes),
                  check_harnesses(probes), check_publish(env, probes, repo), check_runner(probes),
-                 check_system(probes), check_watchdog(probes), check_schedule(probes), check_quota(probes), check_instruments(), check_live(env), check_sanctions(), check_maritime(), check_calendar(), check_basemap(probes)):
+                 check_system(probes), check_watchdog(probes), check_schedule(probes), check_quota(probes), check_instruments(), check_live(env), check_sanctions(), check_maritime(), check_calendar(), check_markets(), check_basemap(probes)):
         checks.update(part)
     counts = {s: sum(1 for c in checks.values() if c["status"] == s) for s in (OK, WARN, FAIL)}
     return {"ok": counts[FAIL] == 0, "summary": f"{counts[OK]} ok, {counts[WARN]} warn, {counts[FAIL]} fail",

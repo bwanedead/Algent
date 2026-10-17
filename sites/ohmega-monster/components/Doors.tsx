@@ -23,6 +23,7 @@ const GLYPH: Record<string, GlyphName> = {
   "/calendar": "calendar",
   "/intel/sanctions": "sanction",
   "/intel/maritime": "ship",
+  "/intel/track-record": "pulse",
 };
 
 export default function Doors({ doors, label, lines = true }: { doors: Door[]; label: string; lines?: boolean }) {

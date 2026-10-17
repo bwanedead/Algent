@@ -203,6 +203,10 @@ unchanged-tile skip. Knobs if the bucket still runs hot: `flags.TILE_DEG` (small
 
 The stream service also keeps a bounded per-vessel memory (`maritime_store/`, `ALGENT_MARITIME_STORE`) and runs the behaviour detectors every 5 min; the timer runner publishes `maritime_events` (migration 013, apply before the site build) and links events into the geoledger. Seed OSM ports on the server (`newsroom geo seed --source osm`) so the port exclusion has data. `newsroom maritime status|events|vessel|publish`, doctor check `maritime`. Design and thresholds: `docs/architecture/maritime-behaviour.md`.
 
+### Markets track record (`markets/`)
+
+The `ohmega-markets` timer (every 4 h) mirrors relevant Polymarket markets read-only, runs the paper pass and publishes `data/track-record.json`; `markets_store/` (`ALGENT_MARKETS_STORE`) holds the append-only record (back it up with the other stores). `newsroom markets forecast` is the paid, day-capped blind-forecast pass and is **run by hand** (no paid timer without the operator's say-so). Doctor check `markets`. Design, scoring math and flags: `docs/architecture/markets-track-record.md`.
+
 ### Live memory: baselines and anomalies (`live/memory/`)
 
 What the sensors normally show, and when they do not: Ohmega's own derivation (provenance `ohmega_derived`) from the same feeds, forward-only
