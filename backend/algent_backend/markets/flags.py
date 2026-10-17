@@ -52,6 +52,8 @@ REFORECAST_DAYS = 7
 #: where to spend; the forecast itself never sees the price.
 SKIP_BELOW = 0.03
 SKIP_ABOVE = 0.97
+#: A market is forecast only if the mirror has priced it this recently (a dead mirror means no price band check and no later comparison).
+PRICE_FRESH_H = 36.0
 #: Theater sections, statements and calendar lines shown to the forecaster, per market.
 EVIDENCE_SECTIONS = 3
 EVIDENCE_STATEMENTS = 6

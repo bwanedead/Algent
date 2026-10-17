@@ -3,6 +3,7 @@
 
     newsroom markets refresh                    mirror: discover relevant markets, snapshot prices, record resolutions (free)
     newsroom markets list [--theater ID] [--status S] [--limit N]   the mirrored markets with their latest price
+    newsroom markets forecast [--limit N] [--dry-run]   PAID: our blind probability for mirrored markets (day-capped)
     newsroom markets status                     last pass, counts, forecasts today and their spend
 
 Every command prints one JSON document. See ``markets/`` and docs/architecture/markets-track-record.md.
@@ -23,6 +24,10 @@ def add_parser(sub: Any) -> None:
     ls.add_argument("--status", choices=["open", "resolved", "void"])
     ls.add_argument("--limit", type=int, default=40)
     ls.set_defaults(handler=run_list)
+    fc = verbs.add_parser("forecast", help="blind forecasts for markets that need one (paid, capped per day)")
+    fc.add_argument("--limit", type=int)
+    fc.add_argument("--dry-run", action="store_true", help="list the markets that would be forecast; call nothing")
+    fc.set_defaults(handler=run_forecast)
     verbs.add_parser("status", help="what the store holds and when it last ran").set_defaults(handler=run_status)
 
 
@@ -52,6 +57,17 @@ def run_list(args: Any) -> int:
     return _emit({"count": len(rows), "markets": [{"id": m.id, "question": m.question, "p_yes": price.get(m.id), "status": m.status, "outcome": m.outcome,
                                                    "ends": m.end_date[:10], "volume": round(m.volume), "theaters": m.theaters, "countries": m.countries}
                                                   for m in rows[:args.limit]]})
+
+
+def run_forecast(args: Any) -> int:
+    from datetime import UTC, datetime
+
+    from algent_backend.markets import forecast
+
+    if args.dry_run:
+        todo = forecast.candidates(datetime.now(UTC))
+        return _emit({"candidates": len(todo), "first": [{"id": m.id, "question": m.question, "theaters": m.theaters} for m in todo[:20]]})
+    return _emit(forecast.run(limit=args.limit))
 
 
 def run_status(_args: Any) -> int:
