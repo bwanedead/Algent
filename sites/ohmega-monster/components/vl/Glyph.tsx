@@ -11,7 +11,9 @@ export type GlyphName =
   // objects
   | "country" | "theater" | "ship" | "tanker" | "aircraft" | "plant" | "event" | "fire" | "outage" | "quake" | "actor"
   // places in the site
-  | "globe" | "live" | "pulse" | "record" | "article" | "radar"
+  | "globe" | "live" | "pulse" | "record" | "article" | "radar" | "calendar" | "sanction"
+  // kinds of scheduled thing
+  | "ballot" | "bank" | "clock"
   // direction
   | "up" | "down" | "steady" | "unclear";
 
@@ -38,6 +40,11 @@ const LINE: Record<GlyphName, ReactNode> = {
   record: <path d="M4 5h16v11H9l-5 4zM8 9h8M8 12h5" />,
   article: <path d="M6 3h9l4 4v14H6zM15 3v4h4M9 12h7M9 16h7" />,
   radar: (<><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4.5" /><path d="M12 12L18 6" /></>),
+  calendar: <path d="M4 6h16v14H4zM4 10h16M8 3v5M16 3v5M8 14h2M13 14h2M8 17h2" />,
+  sanction: <path d="M12 3l8 3v6c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V6zM8 8l8 8" />,
+  ballot: <path d="M4 14h16v6H4zM7 14V9l5-3 5 3v5M10 11h4" />,
+  bank: <path d="M3 9l9-5 9 5zM5 9v8M9.5 9v8M14.5 9v8M19 9v8M3 20h18M12 12v2" />,
+  clock: <path d="M12 4a8 8 0 100 16 8 8 0 000-16zM12 8v4.5l3 2" />,
   up: <path d="M5 15l7-8 7 8" />,
   down: <path d="M5 9l7 8 7-8" />,
   steady: <path d="M5 12h14" />,

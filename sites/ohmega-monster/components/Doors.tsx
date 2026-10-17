@@ -18,6 +18,8 @@ const GLYPH: Record<string, GlyphName> = {
   "/intel/record": "record",
   "/articles": "article",
   "/radar": "radar",
+  "/calendar": "calendar",
+  "/intel/sanctions": "sanction",
   "/intel/situation": "pulse",
   "/intel/briefs": "article",
 };

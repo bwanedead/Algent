@@ -4,6 +4,7 @@ import { LICENSE } from "./envelope";
 import { assetOp, assetsOp, gridOp } from "./ops-assets";
 import { searchOp } from "./ops-content";
 import { anomaliesOp, instrumentOp, instrumentsOp, liveEventsOp } from "./ops-data";
+import { calendarOp, sanctionsOp } from "./ops-forward";
 import { dailyOp, pulseOp, pulsesOp, statementsOp, theaterOp, theatersOp } from "./ops-desk";
 import { arr, isObj, objs, type ApiResult, type Args, type Obj } from "./util";
 
@@ -176,6 +177,37 @@ export const TOOLS: Tool[] = [
       cursor: cursor_,
     }),
     run: anomaliesOp,
+  },
+  {
+    name: "get_calendar",
+    title: "What is coming",
+    description:
+      "Dated upcoming items, soonest first: elections, central-bank rate decisions (Fed, ECB, Bank of England), UN Security Council meetings, OPEC+ meetings, and deadlines or meetings Ohmega's own reports named. Each has a source URL and a confidence (high = official schedule, medium = compiled from announcements, low = extracted from our earlier reports and unconfirmed). A date is a plan, not an outcome.",
+    inputSchema: schema({
+      kind: str_("Kind of item.", { enum: ["election", "central_bank", "summit", "security_council", "opec", "deadline", "vote"] }),
+      country: str_("ISO alpha-2 code the item concerns, e.g. US."),
+      confidence: str_("Confidence.", { enum: ["high", "medium", "low"] }),
+      days: str_("Days ahead (default 45, max 240)."),
+      limit: limit_(30),
+      cursor: cursor_,
+    }),
+    run: calendarOp,
+  },
+  {
+    name: "get_sanctions",
+    title: "Sanctions designations",
+    description:
+      "Who was added to or removed from the US OFAC SDN list, the UK Sanctions List and the EU consolidated financial sanctions list, found by comparing each list with its previous copy: name, kind (person, entity, vessel, aircraft), programme, countries, date, and the list it came from. A listing is an act of the publishing government, not a finding of guilt.",
+    inputSchema: schema({
+      list: str_("Which list.", { enum: ["ofac", "uk", "eu"] }),
+      action: str_("Added or removed.", { enum: ["designated", "delisted"] }),
+      type: str_("Kind of party.", { enum: ["person", "entity", "vessel", "aircraft"] }),
+      country: str_("ISO alpha-2 code the party is tied to, e.g. RU."),
+      since: str_("Only on or after this date."),
+      limit: limit_(30),
+      cursor: cursor_,
+    }),
+    run: (a) => sanctionsOp({ ...a, source: a.list }),
   },
   {
     name: "get_assets",
