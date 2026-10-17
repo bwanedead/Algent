@@ -23,6 +23,7 @@ def add_parser(sub: Any) -> None:
     r = verbs.add_parser("refresh", help="mirror pass + paper pass + publish (free)")
     r.add_argument("--no-publish", action="store_true")
     r.set_defaults(handler=run_refresh)
+    verbs.add_parser("publish", help="push the track record to the site database").set_defaults(handler=run_publish)
     verbs.add_parser("paper", help="the paper portfolio pass").set_defaults(handler=run_paper)
     sc = verbs.add_parser("score", help="the scoreboard")
     sc.add_argument("--full", action="store_true")
@@ -47,9 +48,19 @@ def _emit(doc: Any) -> int:
 def run_refresh(args: Any) -> int:
     from algent_backend.markets import mirror, paper
 
+    from algent_backend.markets import publish
+
     report = mirror.refresh()
     report["paper"] = paper.run()
+    if not args.no_publish:
+        report["publish"] = publish.publish()
     return _emit(report)
+
+
+def run_publish(_args: Any) -> int:
+    from algent_backend.markets import publish
+
+    return _emit(publish.publish())
 
 
 def run_paper(_args: Any) -> int:
@@ -90,7 +101,12 @@ def run_forecast(args: Any) -> int:
     if args.dry_run:
         todo = forecast.candidates(datetime.now(UTC))
         return _emit({"candidates": len(todo), "first": [{"id": m.id, "question": m.question, "theaters": m.theaters} for m in todo[:20]]})
-    return _emit(forecast.run(limit=args.limit))
+    from algent_backend.markets import paper, publish
+
+    report = forecast.run(limit=args.limit)
+    report["paper"] = paper.run()
+    report["publish"] = publish.publish()
+    return _emit(report)
 
 
 def run_status(_args: Any) -> int:
