@@ -5,6 +5,8 @@ import { assetOp, assetsOp, gridOp } from "./ops-assets";
 import { articleOp, articlesOp, searchOp } from "./ops-content";
 import { anomaliesOp, instrumentOp, instrumentsOp, liveEventsOp } from "./ops-data";
 import { calendarOp, sanctionsOp } from "./ops-forward";
+import { maritimeOp } from "./ops-maritime";
+import { KIND_ORDER as MARITIME_KINDS } from "@/lib/maritime-shared";
 import { KINDS } from "@/lib/calendar-shared";
 import {
   actorOp, actorsOp, apiUrl, briefOp, changesOp, dailyOp, deskAsOf, forecastsOp, pulseOp, pulsesOp, statementsOp, theaterOp, theatersOp,
@@ -183,6 +185,23 @@ export const ROUTES: Route[] = [
       { name: "since", description: SINCE, example: "2026-10-01" },
     ],
     run: (_p, q) => sanctionsOp({ ...q, source: q.list }),
+  },
+  {
+    path: "/maritime",
+    summary:
+      "Vessel behaviour events Ohmega derived from the AIS it hears: ships that went silent where others kept being heard, ship-to-ship encounters in open water, identity changes (renames, IMO or flag changes), vessels matching a sanctions list, and long dwells over chokepoints and cable corridors. Each has a reason, a confidence and its evidence points. A pattern seen, never a finding of intent.",
+    paged: true,
+    query: [
+      { name: "kind", description: "Kind of behaviour.", enum: MARITIME_KINDS },
+      { name: "active", description: "true: still going; false: ended.", enum: ["true", "false"] },
+      { name: "flag", description: "ISO 3166-1 alpha-2 flag state of a vessel involved.", example: "PA" },
+      { name: "area", description: "Part of the name of the area, or a country the area touches.", example: "Hormuz" },
+      { name: "imo", description: "7-digit IMO number.", example: "9074729" },
+      { name: "mmsi", description: "9-digit MMSI.", example: "636092000" },
+      { name: "min_confidence", description: "Only events at or above this confidence, 0 to 1.", example: "0.5" },
+      { name: "since", description: SINCE, example: "2026-10-01" },
+    ],
+    run: (_p, q) => maritimeOp(q),
   },
   {
     path: "/assets",

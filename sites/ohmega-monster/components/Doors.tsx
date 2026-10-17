@@ -20,6 +20,7 @@ const GLYPH: Record<string, GlyphName> = {
   "/radar": "radar",
   "/calendar": "calendar",
   "/intel/sanctions": "sanction",
+  "/intel/maritime": "ship",
   "/intel/situation": "pulse",
   "/intel/briefs": "article",
 };

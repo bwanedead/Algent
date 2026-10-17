@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import EnergyPanel from "@/components/live/EnergyPanel";
 import LiveWorldMap from "@/components/live/LiveWorldMap";
+import { maritimeEvents } from "@/lib/maritime";
 import { liveAnomalies, liveEnergy, liveEvents, liveStats, liveSummary, liveWorld, whenUtc } from "@/lib/live";
 
 import "./live.css";
@@ -14,7 +16,7 @@ export const metadata: Metadata = {
 export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS; the map itself polls the snapshots every minute
 
 export default async function LivePage() {
-  const [events, stats, world, summary, energy, anomalies] = await Promise.all([liveEvents(), liveStats(), liveWorld(), liveSummary(), liveEnergy(), liveAnomalies()]);
+  const [events, stats, world, summary, energy, anomalies, maritime] = await Promise.all([liveEvents(), liveStats(), liveWorld(), liveSummary(), liveEnergy(), liveAnomalies(), maritimeEvents()]);
   const updated = events.reduce((m, e) => (e.updated_at > m ? e.updated_at : m), "");
   return (
     <div className="intel-page live-page">
@@ -27,7 +29,7 @@ export default async function LivePage() {
         Machine readings from free public feeds, refreshed every minute or so. They say that something is happening, not why.
       </p>
 
-      <LiveWorldMap world={world} events={events} stats={stats} summary={summary} anomalies={anomalies} />
+      <LiveWorldMap world={world} events={events} stats={stats} summary={summary} anomalies={anomalies} maritime={maritime} />
 
       <section aria-labelledby="live-energy">
         <h2 id="live-energy" className="live-h2">Energy</h2>
@@ -41,6 +43,7 @@ export default async function LivePage() {
           <li>Ships come from AIS radio receivers on land and coasts, so open ocean is mostly unseen: the shaded cells show where any ship was heard in the last 24 hours, and unshaded sea means no receiver, not no ships.</li>
           <li>Positions between updates are estimated from each object&apos;s last heading and speed; they snap to the real position at the next update. A trail is the last two hours at most.</li>
           <li>Rings and the &quot;Unusual right now&quot; list are Ohmega&apos;s own analysis: counts of ships, aircraft and fire detections per place compared with what that place normally holds at that hour of the week (the median of earlier weeks). They show a pattern departs from normal, not why, and gaps in receiver coverage are screened out. A baseline marked learning is still young.</li>
+          <li>The Shadow fleet layer (off by default) marks vessel behaviour Ohmega derived from the AIS it hears: a ship that went silent where others stayed visible, two ships alongside in open water, an identity change, a match to a sanctions list, a long dwell over a chokepoint or cable corridor. Each mark opens its reason, the evidence and a mini track. It is a pattern seen, not a finding of intent; ships that left receiver coverage, ports and waiting crowds are screened out. <Link href="/intel/maritime">All events</Link>.</li>
           <li>A fire hotspot is a satellite heat reading: a wildfire, an industrial flare or a strike can look the same.</li>
           <li>An internet outage does not say why: a government shutdown, a cut cable and a power failure all look alike.</li>
           <li>Sources: AIS ship positions from aisstream.io, Fintraffic (digitraffic.fi, CC 4.0 BY) and the Norwegian Coastal Administration (NLOD), ADS-B aircraft from the OpenSky Network and adsb.lol, NASA FIRMS, USGS, IODA (Georgia Tech), GIE AGSI+ and ALSI, delayed market prices. Each event links to its source.</li>

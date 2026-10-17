@@ -12,13 +12,13 @@ Base URL: https://www.ohmega.monster . Every `url` / `data_url` in the data is r
   `license`, and `next` (next page URL). Lists take `limit` and `cursor`. Endpoints under `/api/v1/`: `index`,
   `daily/{domain}/{date|latest}`, `theaters`, `theaters/{id}`, `briefs/{slug}`, `pulses`, `pulses/{id}` (with history),
   `articles`, `articles/{slug}` (markdown and graded claims with sources), `statements?actor=&since=`, `actors`,
-  `actors/{iso}`, `instruments`, `instruments/{id}`, `live/events?kind=&since=`, `anomalies?layer=&direction=&country=` (Ohmega's own analysis: where live ships, aircraft and fires depart from their learned normal), `assets?bbox=&type=&country=&status=`
+  `actors/{iso}`, `instruments`, `instruments/{id}`, `live/events?kind=&since=`, `anomalies?layer=&direction=&country=` (Ohmega's own analysis: where live ships, aircraft and fires depart from their learned normal), `maritime?kind=&flag=&area=&imo=` (Ohmega's own analysis of AIS: vessels that went dark where others stayed visible, ship-to-ship encounters, identity changes, sanctioned vessels seen, loitering over cable corridors), `assets?bbox=&type=&country=&status=`
   (geolocated infrastructure and who said what about its state), `assets/{id}` (full status history), `search?q=`,
   `changes`, `forecasts`.
 - [OpenAPI 3.1 spec](https://www.ohmega.monster/api/v1/openapi.json) and the [developer guide](https://www.ohmega.monster/developers).
 - [MCP server](https://www.ohmega.monster/api/mcp) (Streamable HTTP, stateless, read-only): tools `get_daily`,
   `list_theaters`, `get_theater`, `list_pulses`, `get_pulse`, `search`, `get_statements`, `get_live_events`,
-  `get_live_anomalies`, `get_instrument`, `get_assets`. Add it to Claude Code with `claude mcp add --transport http ohmega https://www.ohmega.monster/api/mcp`.
+  `get_live_anomalies`, `get_maritime_behaviour`, `get_instrument`, `get_assets`. Add it to Claude Code with `claude mcp add --transport http ohmega https://www.ohmega.monster/api/mcp`.
 - [Full guide](https://www.ohmega.monster/llms-full.txt): this file expanded with the data model and every endpoint.
 
 The static files below are the same documents without API logic (no paging or filters).
