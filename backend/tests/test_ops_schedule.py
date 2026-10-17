@@ -55,10 +55,11 @@ def _oplog(tmp_path) -> str:
 
 def test_jobs_and_their_times_come_from_the_flags() -> None:
     table = schedule.jobs()
-    assert set(table) == {"menu", "daily-1", "daily-2"}
+    assert set(table) == {"menu", "daily-1", "daily-2", "markets-daily"}
     assert table["menu"].utc == flags.MENU_UTC and table["daily-1"].utc == "05:30" and table["daily-2"].utc == "17:30"
     assert "--edition" in table["daily-2"].argv and table["daily-2"].argv[-1] == "2" and "--research" in table["daily-2"].argv
     assert table["menu"].argv == ("run", "--to", "menu")
+    assert table["markets-daily"].argv == ("markets", "daily") and table["markets-daily"].utc > table["daily-1"].utc
 
 
 def test_a_successful_run_is_logged_with_spend_and_link(tmp_path) -> None:

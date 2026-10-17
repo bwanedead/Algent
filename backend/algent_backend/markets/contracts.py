@@ -1,8 +1,8 @@
 """
 Market contracts. A market is binary (YES/NO) with a YES price in [0, 1] read as a probability.
 
-Everything on disk is one of four append-only line types (store.py): a Market REVISION, a price Snapshot, a Forecast and a paper
-Trade. A forecast is never edited; a position's state is a projection of its trade lines.
+Everything on disk is one of these append-only line types (store.py): a Market REVISION, a price Snapshot, a Forecast, a rule-book paper
+Trade, a trader Decision and a daily EquityPoint. Nothing is ever edited; a position's state is a projection of its lines.
 """
 
 from __future__ import annotations
@@ -89,3 +89,51 @@ def forecast_id(market_id: str, made_at: str) -> str:
 
 def trade_id(market_id: str, kind: str, at: str) -> str:
     return "tr-" + hashlib.sha1(f"{market_id}|{kind}|{at}".encode()).hexdigest()[:14]
+
+
+class Decision(BaseModel):
+    """One line of the trader's ledger: what the agent decided about one market on one day and what the book did about it.
+
+    ``action`` is the agent's call (buy_yes | buy_no | sell | hold) or ``settle`` (written by the book when a held market resolves). A buy
+    spends ``-cash_flow`` paper dollars for ``shares`` at ``price`` (the side's quote plus slippage); a sell or settle returns ``cash_flow``
+    and books ``realised`` against the cost of what left. ``clips`` records every way a mechanical guard cut the request (an empty list
+    means it was filled as asked); a hold that was clipped from a buy shows both."""
+
+    id: str
+    market_id: str
+    at: str
+    day: str
+    action: Literal["buy_yes", "buy_no", "sell", "hold", "settle"]
+    requested: float = 0.0                    # stake the agent asked for (paper dollars)
+    side: Literal["yes", "no", ""] = ""       # the side of the position acted on ("" for a hold with no position)
+    price: float = 0.0                        # per-share fill price after slippage (0 when nothing filled)
+    shares: float = 0.0
+    cash_flow: float = 0.0                    # negative = cash spent on a buy
+    realised: float = 0.0                     # sell / settle only: payout minus the cost basis of the shares that left
+    rationale: str = ""                       # the agent's own words, reader-facing
+    clips: list[str] = Field(default_factory=list)
+    ours: float | None = None                 # our blind probability of YES when the agent decided
+    market: float | None = None               # the market's YES price when the agent decided
+    forecast_id: str = ""
+    outcome: str = ""                         # settle only: yes | no | void
+    model: str = ""
+    prompt_version: str = ""
+    usd: float = 0.0                          # this line's share of the call's cost
+
+
+class EquityPoint(BaseModel):
+    """A book's value at the end of a day: cash plus open positions at their current side price. Written once per (book, day), never edited."""
+
+    book: Literal["trader", "rule"]
+    day: str
+    at: str
+    cash: float
+    holdings: float
+    equity: float
+    realised: float
+    unrealised: float
+    n_open: int
+
+
+def decision_id(market_id: str, action: str, at: str) -> str:
+    return "td-" + hashlib.sha1(f"{market_id}|{action}|{at}".encode()).hexdigest()[:14]

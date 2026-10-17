@@ -12,6 +12,7 @@ Rules (every number in ``flags.py``, with its reason):
 * SETTLE. When the market resolves the position pays 1 per share if its side won, 0 if it lost, and 0.5 on a void (50-50) resolution.
   A position is never closed early, never added to, never flipped: a later forecast does not change an open position.
 
+This is the RULE book: the mechanical baseline the agent's book (``trader.py``) is compared with. Valuation and payout are shared (``book.py``).
 The bankroll is a constant, not compounded: P&L is read against it, so a bad run cannot hide by shrinking the stake base.
 """
 
@@ -22,9 +23,8 @@ from datetime import UTC, datetime
 from typing import Any
 
 from . import flags, store
+from .book import payout, side_price
 from .contracts import Forecast, Market, Snapshot, Trade, trade_id
-
-VOID_PAYOUT = 0.5
 
 
 @dataclass
@@ -44,10 +44,6 @@ class Position:
     outcome: str = ""
     settled_at: str = ""
     marked_at: str = ""
-
-
-def side_price(p_yes: float, side: str) -> float:
-    return p_yes if side == "yes" else 1.0 - p_yes
 
 
 def kelly_stake(q: float, cost: float) -> float:
@@ -99,8 +95,7 @@ def run(*, now: datetime | None = None) -> dict[str, Any]:
         m = ms.get(mid)
         if p.status != "open" or m is None or m.status == "open":
             continue
-        payout = VOID_PAYOUT if m.outcome == "void" else (1.0 if m.outcome == p.side else 0.0)
-        value = round(p.shares * payout, 2)
+        value = round(p.shares * payout(m.outcome, p.side), 2)
         new.append(Trade(id=trade_id(mid, "settle", at), market_id=mid, kind="settle", at=at, side=p.side, price=p.price, stake=p.stake, shares=p.shares,
                          value=value, pnl=round(value - p.stake, 2), ours=p.ours, forecast_id=p.forecast_id, note=m.outcome))
         p.status = "settled"

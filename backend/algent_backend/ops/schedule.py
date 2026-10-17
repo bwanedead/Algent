@@ -1,5 +1,5 @@
 """
-``newsroom schedule run <job>`` — the unattended PAID jobs: the geopolitics daily's two editions and the menu.
+``newsroom schedule run <job>`` — the unattended PAID jobs: the geopolitics daily's two editions, the menu, and the Polymarket paper trader.
 
 The operator authorised these to run on a timer, protected by the watchdog (``ops/watchdog.py``). This wrapper is
 what each paid systemd unit starts (via ``infra/server/jobs.sh``, which holds the shared job lock first, so paid
@@ -52,6 +52,7 @@ class Job:
 def jobs() -> dict[str, Job]:
     """The paid jobs. Edition times come from the daily's own flags so there is one place to change them."""
     from algent_backend.agent_system.agents.intel import flags as intel_flags
+    from algent_backend.markets import flags as markets_flags
 
     out = {"menu": Job("menu", ("run", "--to", "menu"), flags.MENU_UTC, "newsroom menu")}
     for e in intel_flags.EDITIONS:
@@ -59,6 +60,9 @@ def jobs() -> dict[str, Job]:
         # collectors already run on timers).
         out[f"daily-{e.n}"] = Job(f"daily-{e.n}", ("intel", "daily", "--domain", "geopolitics", "--research",
                                                   "--edition", str(e.n)), e.utc, f"geopolitics daily, part {e.n} ({e.label})")
+    # The paper trader's day: refresh prices, blind forecasts, the agent's trades, marks, publish. After daily part 1 so the forecast reads
+    # today's sections; capped by markets/flags (TRADE_MAX_USD_PER_DAY, MAX_FORECAST_USD_PER_DAY).
+    out["markets-daily"] = Job("markets-daily", ("markets", "daily"), markets_flags.DAILY_UTC, "Polymarket paper trader: forecasts, trades, marks")
     return out
 
 
@@ -171,6 +175,8 @@ def _ops_log(probes: Probes, line: str) -> None:
 
 
 def _link(job: Job, day: str) -> str:
+    if job.name == "markets-daily":
+        return f"{SITE}/intel/track-record"
     return f"{SITE}/geopolitics/{day}" if job.name.startswith("daily") else "backend/runs_data/menu_latest.md"
 
 

@@ -5,7 +5,9 @@ so the record cannot be quietly improved after the fact.
     markets.jsonl     one Market REVISION per line (a changed market is a new line; the last line of an id wins)
     snapshots.jsonl   one price Snapshot per line (live passes and the CLOB history backfill)
     forecasts.jsonl   one Forecast per line: OURS, immutable once written
-    trades.jsonl      paper trades: open / mark / settle (a position is a projection of its lines)
+    trades.jsonl      the RULE book's paper trades: open / mark / settle (a position is a projection of its lines)
+    decisions.jsonl   the TRADER's ledger: every decision (buy / sell / hold / settle) with its rationale and any guard clips
+    equity.jsonl      one EquityPoint per book per day (the equity curves)
     status.json       the last pass: when, what it found, what failed
 """
 
@@ -20,7 +22,7 @@ from typing import TypeVar
 from pydantic import BaseModel
 
 from . import flags
-from .contracts import Forecast, Market, Snapshot, Trade
+from .contracts import Decision, EquityPoint, Forecast, Market, Snapshot, Trade
 
 _ENV = "ALGENT_MARKETS_STORE"
 M = TypeVar("M", bound=BaseModel)
@@ -141,6 +143,24 @@ def trades() -> list[Trade]:
 
 def append_trades(rows: list[Trade]) -> None:
     _append("trades.jsonl", rows)
+
+
+def decisions() -> list[Decision]:
+    return _read("decisions.jsonl", Decision)
+
+
+def append_decisions(rows: list[Decision]) -> None:
+    _append("decisions.jsonl", rows)
+
+
+def equity_points() -> list[EquityPoint]:
+    return _read("equity.jsonl", EquityPoint)
+
+
+def append_equity(rows: list[EquityPoint]) -> None:
+    """Append points for days a book has no point yet: a day's mark is written once and never replaced."""
+    have = {(e.book, e.day) for e in equity_points()}
+    _append("equity.jsonl", [e for e in rows if (e.book, e.day) not in have])
 
 
 # ── status ───────────────────────────────────────────────────────────────────────────────────────
