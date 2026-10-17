@@ -47,6 +47,7 @@ from typing import Any
 
 from algent_backend.geoledger import ask as geo_ask
 from algent_backend.geoledger import ingest as geo_ingest
+from algent_backend.lookahead import extract as calendar_extract
 
 from . import brief as br
 from . import primers as primers_mod
@@ -905,6 +906,7 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
         ask=lambda schema, role, task: _ask(ctx, None, model_spec, schema, role, task))
     geo_run = geo_ingest.attach(sections, as_of=as_of,      # additive: section["asset_events"]; never gates the day
                                 ask=lambda schema, role, task: _ask(ctx, None, geo_ask.extraction_spec(), schema, role, task))
+    calendar_run = calendar_extract.attach(sections, as_of=as_of)      # additive: dated deadlines into the calendar store; never gates the day
     any_research = any(r.get("researched") for r in rows)
     summary, summary_error = None, ""
     if sections:
@@ -931,6 +933,8 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
         record["visuals_run"] = visual_run
     if geo_run:
         record["geoledger_run"] = geo_run
+    if calendar_run and calendar_run.get("found"):
+        record["calendar_run"] = calendar_run
     if swept is not None and (swept.regions or swept.spotlight):
         record["sweep"] = swept.record()                   # additive: older readers ignore the key
     path = daily_dir(domain) / f"{as_of}.json"

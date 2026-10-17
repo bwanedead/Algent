@@ -83,6 +83,9 @@ class Evidence:
     grid: str = ""                                          # OHMEGA GRID ANALYSIS block (our own rollup of struck capacity per country)
     anomalies: str = ""                                     # OHMEGA LIVE ANOMALIES block (live/memory: places outside Ohmega's own learned normal)
     anomaly_rollup: dict[str, Any] = field(default_factory=dict)   # what was normal / abnormal in the theater's watched places (the compounding record)
+    coming: str = ""                                        # COMING UP block (lookahead/: dated items in the next 14 days touching the theater)
+    n_coming: int = 0
+    coming_urls: set[str] = field(default_factory=set)      # official schedule pages the COMING UP lines cite (not our own reports)
     n_live: int = 0
     n_anomalies: int = 0
     shown: list[Statement] = field(default_factory=list)     # the statements in the block, in the order shown
@@ -96,11 +99,11 @@ class Evidence:
 
     @property
     def primary_urls(self) -> set[str]:
-        return self.instrument_urls | self.statement_urls | self.live_urls
+        return self.instrument_urls | self.statement_urls | self.live_urls | self.coming_urls
 
     def render(self) -> str:
         """The blocks for a writer's task text ('' when there are none), ending in a blank line."""
-        parts = [p for p in (self.instruments, self.live, self.grid, self.anomalies, self.statements, *self.histories) if p]
+        parts = [p for p in (self.instruments, self.live, self.grid, self.anomalies, self.coming, self.statements, *self.histories) if p]
         return "\n\n".join(parts) + "\n\n" if parts else ""
 
 
@@ -247,6 +250,20 @@ def _grid_block(theater: Theater, actors: Any, as_of: str) -> tuple[str, set[str
         return "\n".join([head, *lines]), urls
     except Exception:  # noqa: BLE001 - an aid to the writer, never its gate
         return "", set()
+
+
+# ── coming up ─────────────────────────────────────────────────────────────────────────────────
+def _coming_block(theater: Theater, actors: Any, day: date) -> tuple[str, set[str], int]:
+    """The calendar's next-14-days items that name the theater or touch a country it stands behind (``lookahead``). Never raises."""
+    try:
+        from algent_backend.actors import registry
+        from algent_backend.lookahead import desk as calendar_desk
+
+        countries = {c.name: c.iso2 for c in registry.load().values()}
+        names = corroborated(lambda text: {n for n in countries if _find(_words(text), _words(n), text)}, theater, actors)
+        return calendar_desk.for_theater({countries[n] for n in names}, theater.id, day)
+    except Exception:  # noqa: BLE001 - an aid to the writer, never its gate
+        return "", set(), 0
 
 
 # ── live anomalies ────────────────────────────────────────────────────────────────────────────
@@ -416,6 +433,7 @@ def for_theater(theater: Theater, *, as_of: str | date, actors: list[str] | tupl
         ev.live_urls = ev.live_urls | grid_urls
         ev.anomalies, anomaly_urls, ev.n_anomalies, ev.anomaly_rollup = _anomaly_block(theater, actors, day.isoformat())
         ev.live_urls = ev.live_urls | anomaly_urls
+        ev.coming, ev.coming_urls, ev.n_coming = _coming_block(theater, actors, day)
     except Exception as exc:  # noqa: BLE001 - sensing is an aid; a broken store must not cost the report
         return Evidence(error=f"{type(exc).__name__}: {str(exc)[:160]}")
     return ev
@@ -483,6 +501,8 @@ def summary_for_report(ev: Evidence) -> dict[str, Any]:
         out["live"] = ev.n_live
     if ev.n_anomalies:
         out["anomalies"] = ev.n_anomalies
+    if ev.n_coming:
+        out["coming"] = ev.n_coming
     if ev.error:
         out["error"] = ev.error
     return out

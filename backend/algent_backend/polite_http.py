@@ -50,8 +50,18 @@ def _pace(url: str) -> None:
     _last_hit[host] = time.monotonic()
 
 
+def _verify(system_trust: bool) -> Any:
+    """TLS verification setting: certifi's bundle (default) or the operating system's store, for hosts whose chain ends in a
+    private government root. Verification is never switched off."""
+    if not system_trust:
+        return True
+    import ssl
+
+    return ssl.create_default_context()
+
+
 def get(url: str, params: dict[str, Any] | None = None, *, headers: dict[str, str] | None = None,
-        missing_ok: bool = False) -> str:
+        missing_ok: bool = False, system_trust: bool = False) -> str:
     """GET ``url`` and return the body text; retries transient failures, memoised per process. With ``missing_ok`` a
     404 is an answer ("no such record": a year a reporter never filed), returned as "" without retrying."""
     key = (url, tuple(sorted((params or {}).items())))
@@ -62,7 +72,7 @@ def get(url: str, params: dict[str, Any] | None = None, *, headers: dict[str, st
     for attempt in range(RETRIES + 1):
         _pace(url)
         try:
-            resp = httpx.get(url, params=params, headers=hdrs, timeout=TIMEOUT_S, follow_redirects=True)
+            resp = httpx.get(url, params=params, headers=hdrs, timeout=TIMEOUT_S, follow_redirects=True, verify=_verify(system_trust))
         except httpx.HTTPError as exc:
             last = exc
         else:
@@ -99,11 +109,7 @@ def download(url: str, dest: Path, *, headers: dict[str, str] | None = None, sys
     Never memoised. ``system_trust`` verifies against the operating system's certificate store instead of certifi's bundle (for
     hosts whose chain ends in a private government root, e.g. Treasury's); verification stays ON. Raises ``SourceError``
     (``SourceUnavailable`` on 401/403) naming the URL."""
-    verify: Any = True
-    if system_trust:
-        import ssl
-
-        verify = ssl.create_default_context()
+    verify = _verify(system_trust)
     hdrs = {"User-Agent": USER_AGENT, "Accept": "*/*", **(headers or {})}
     last: Exception | None = None
     dest.parent.mkdir(parents=True, exist_ok=True)

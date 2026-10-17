@@ -12,7 +12,7 @@ from pathlib import Path
 
 from algent_backend import polite_http
 
-from .. import countries
+from algent_backend.actors import names as countries
 from ..contracts import Entry
 from . import descendants, elements, local
 

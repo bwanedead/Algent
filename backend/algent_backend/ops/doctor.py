@@ -444,6 +444,29 @@ def check_sanctions() -> dict[str, Any]:
     return {"sanctions": _check(WARN, "stale: " + "; ".join(bad)) if bad else _check(OK, "all three lists fetched recently")}
 
 
+def check_calendar() -> dict[str, Any]:
+    """Calendar sources: each fetched within a day and a half. Sources are best-effort pages, so a stale one is a warning."""
+    try:
+        from datetime import date, datetime, timezone
+
+        from algent_backend.lookahead import store
+
+        status = store.load_status()
+        if not status:
+            return {"calendar": _check(OK, "no calendar store on this machine (not collected here)")}
+        now, bad = datetime.now(timezone.utc), []
+        for src in ("fed", "ecb", "boe", "elections", "unsc", "opec"):
+            row = status.get(src) or {}
+            if not row.get("last_ok"):
+                bad.append(f"{src} (never ok" + (f": {scrub(row.get('last_error', ''))}" if row.get("last_error") else "") + ")")
+            elif (now - datetime.fromisoformat(row["last_ok"])).total_seconds() > 36 * 3600:
+                bad.append(f"{src} (last ok {row['last_ok'][:16]}Z)")
+        n = len(store.upcoming(date.today(), 30))
+    except Exception as exc:  # noqa: BLE001
+        return {"calendar": _check(WARN, f"unknown: {scrub(exc)}")}
+    return {"calendar": _check(WARN, "stale: " + "; ".join(bad)) if bad else _check(OK, f"all sources fresh; {n} items in the next 30 days")}
+
+
 def check_basemap(probes: Probes) -> dict[str, Any]:
     """The Natural Earth basemap (untracked data) must load, or every daily map silently disappears."""
     try:
@@ -463,7 +486,7 @@ def run_checks(env: dict[str, str] | None = None, probes: Probes | None = None,
     checks: dict[str, Any] = {}
     for part in (check_keys(env), check_database(env, probes), check_search(env, probes), check_reads(probes),
                  check_harnesses(probes), check_publish(env, probes, repo), check_runner(probes),
-                 check_system(probes), check_watchdog(probes), check_schedule(probes), check_quota(probes), check_instruments(), check_live(env), check_sanctions(), check_basemap(probes)):
+                 check_system(probes), check_watchdog(probes), check_schedule(probes), check_quota(probes), check_instruments(), check_live(env), check_sanctions(), check_calendar(), check_basemap(probes)):
         checks.update(part)
     counts = {s: sum(1 for c in checks.values() if c["status"] == s) for s in (OK, WARN, FAIL)}
     return {"ok": counts[FAIL] == 0, "summary": f"{counts[OK]} ok, {counts[WARN]} warn, {counts[FAIL]} fail",

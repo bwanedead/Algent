@@ -1,4 +1,4 @@
-"""Country names a sanctions list uses -> ISO2 via the one country table (``actors.registry``); unknown names are dropped."""
+"""Country names that official lists use -> ISO2 via the one country table (``actors.registry``); unknown names are dropped."""
 
 from __future__ import annotations
 
