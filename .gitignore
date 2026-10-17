@@ -289,4 +289,5 @@ backend/library_store/
 backend/actors_store/
 .claude/settings.local.json
 backend/sanctions_store/
+backend/maritime_store/
 backend/calendar_store/

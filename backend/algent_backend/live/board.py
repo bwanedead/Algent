@@ -73,6 +73,7 @@ class VesselBoard:
         self.coverage = coverage or Coverage()               # where any AIS was heard in the last day
         self.name: dict[int, str] = {}                       # names from position metadata (only for vessels on the board)
         self.tracks = TrackStore()
+        self.watch: Any = None                               # maritime.watch.Watch: told every broadcast identity (name, IMO, type)
 
     # ── input ──────────────────────────────────────────────────────────────────────────────
     def message(self, msg: dict[str, Any], now: float) -> None:
@@ -85,10 +86,14 @@ class VesselBoard:
         st = body.get("ShipStaticData")
         if st:
             self.static.put(mmsi, st.get("Type"), st.get("Name"), st.get("Destination"), now)
+            if self.watch is not None:
+                self.watch.identity(mmsi, st.get("Name"), st.get("ImoNumber"), st.get("Type"), now)
             return
         rep = body.get("StaticDataReport")
         if rep:
             self.static.put(mmsi, (rep.get("ReportB") or {}).get("ShipType"), (rep.get("ReportA") or {}).get("Name"), None, now)
+            if self.watch is not None:
+                self.watch.identity(mmsi, (rep.get("ReportA") or {}).get("Name"), None, (rep.get("ReportB") or {}).get("ShipType"), now)
             return
         pos = (body.get("PositionReport") or body.get("StandardClassBPositionReport") or body.get("ExtendedClassBPositionReport")
                or body.get("LongRangeAisBroadcastMessage"))
@@ -117,6 +122,8 @@ class VesselBoard:
         self.v[mmsi] = [float(lat), float(lon), float(heading), speed, ts]
         if nm:
             self.name[mmsi] = nm[:24]
+            if self.watch is not None:
+                self.watch.identity(mmsi, nm, None, ship_type, ts)
         self.tracks.add(mmsi, ts, lat, lon)
         return True
 
