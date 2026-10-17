@@ -691,14 +691,16 @@ def _cover(run: _Run, theater: Theater, heat: dict, *, propose: bool = True, pre
     inputs = {"name": theater.name, "heat": heat, "pulse_names": list(table), "has_previous": previous is not None,
               "researched": bool(profiles) or not earlier.empty, "research_urls": sorted(research_urls),
               "reported_urls": sorted({u for m in theater.members for u in m.sources}),
-              "instrument_urls": sorted(sensed.instrument_urls | sensed.live_urls), "statement_urls": sorted(sensed.statement_urls),
+              "instrument_urls": sorted(sensed.instrument_urls | sensed.live_urls | sensed.coming_urls), "statement_urls": sorted(sensed.statement_urls),
               "record": record, "instrument_rows": sensed.instrument_rows}
     raw = draft.model_dump()                  # kept raw: the guards may drop what only the environment lacked
     run.drafts[tid] = {"draft": raw, "inputs": inputs}
     section, draft = finish_section(raw, inputs, tid=tid, countries=run.countries, store=store, now=run.now,
                                     as_of=as_of, brief=latest_brief)
     section["edition"] = run.edition
-    if sensed.anomaly_rollup:                       # what was normal / abnormal in the places we watch here: kept with the day and appended to the record
+    if sensed.coming_rows:                          # the dated items the writer was shown, kept with the day for the site's "Coming up" strip
+        section["coming_up"] = sensed.coming_rows
+    if sensed.anomaly_rollup:                     # what was normal / abnormal in the places we watch here: kept with the day and appended to the record
         from algent_backend.live.memory import desk as memory_desk
 
         section["live_rollup"] = sensed.anomaly_rollup

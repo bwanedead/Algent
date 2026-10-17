@@ -37,3 +37,9 @@ def for_theater(countries: set[str], theater_id: str, today: date, days: int = D
     if not hit:
         return "", set(), 0
     return ("\n".join([_HEAD.format(days=days), *map(_line, hit)]), {i.source_url for i in hit if i.source != "corpus"}, len(hit))
+
+
+def rows(countries: set[str], theater_id: str, today: date, days: int = DAYS, limit: int = LINES) -> list[dict]:
+    """The same items as compact dicts, stored on the daily's section so an archived report keeps the day's picture."""
+    return [{"date": i.date, "end_date": i.end_date, "title": i.title, "kind": i.kind, "countries": i.countries, "confidence": i.confidence,
+             "source": i.source, "url": i.source_url} for i in touching(countries, theater_id, today, days)[:limit]]

@@ -85,6 +85,7 @@ class Evidence:
     anomaly_rollup: dict[str, Any] = field(default_factory=dict)   # what was normal / abnormal in the theater's watched places (the compounding record)
     coming: str = ""                                        # COMING UP block (lookahead/: dated items in the next 14 days touching the theater)
     n_coming: int = 0
+    coming_rows: list[dict[str, Any]] = field(default_factory=list)   # the same items as compact rows, stored on the daily's section
     coming_urls: set[str] = field(default_factory=set)      # official schedule pages the COMING UP lines cite (not our own reports)
     n_live: int = 0
     n_anomalies: int = 0
@@ -253,7 +254,7 @@ def _grid_block(theater: Theater, actors: Any, as_of: str) -> tuple[str, set[str
 
 
 # ── coming up ─────────────────────────────────────────────────────────────────────────────────
-def _coming_block(theater: Theater, actors: Any, day: date) -> tuple[str, set[str], int]:
+def _coming_block(theater: Theater, actors: Any, day: date) -> tuple[str, set[str], int, list[dict]]:
     """The calendar's next-14-days items that name the theater or touch a country it stands behind (``lookahead``). Never raises."""
     try:
         from algent_backend.actors import registry
@@ -261,9 +262,10 @@ def _coming_block(theater: Theater, actors: Any, day: date) -> tuple[str, set[st
 
         countries = {c.name: c.iso2 for c in registry.load().values()}
         names = corroborated(lambda text: {n for n in countries if _find(_words(text), _words(n), text)}, theater, actors)
-        return calendar_desk.for_theater({countries[n] for n in names}, theater.id, day)
+        iso = {countries[n] for n in names}
+        return (*calendar_desk.for_theater(iso, theater.id, day), calendar_desk.rows(iso, theater.id, day))
     except Exception:  # noqa: BLE001 - an aid to the writer, never its gate
-        return "", set(), 0
+        return "", set(), 0, []
 
 
 # ── live anomalies ────────────────────────────────────────────────────────────────────────────
@@ -433,7 +435,7 @@ def for_theater(theater: Theater, *, as_of: str | date, actors: list[str] | tupl
         ev.live_urls = ev.live_urls | grid_urls
         ev.anomalies, anomaly_urls, ev.n_anomalies, ev.anomaly_rollup = _anomaly_block(theater, actors, day.isoformat())
         ev.live_urls = ev.live_urls | anomaly_urls
-        ev.coming, ev.coming_urls, ev.n_coming = _coming_block(theater, actors, day)
+        ev.coming, ev.coming_urls, ev.n_coming, ev.coming_rows = _coming_block(theater, actors, day)
     except Exception as exc:  # noqa: BLE001 - sensing is an aid; a broken store must not cost the report
         return Evidence(error=f"{type(exc).__name__}: {str(exc)[:160]}")
     return ev

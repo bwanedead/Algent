@@ -181,7 +181,8 @@ def test_sensing_carries_the_coming_up_block(cal):
     store.sync("fed", [make("central_bank", "fed", "2026-10-28", "Fed rate decision (FOMC)", "https://fed/x", countries=["US"])], TODAY)
     store.sync("boe", [make("central_bank", "boe", "2026-11-05", "Bank of England rate decision", "https://boe/x", countries=["GB"])], TODAY)
     th = Theater(id="thr_us", name="United States tariffs and the dollar", why="Washington's trade moves")
-    text, urls, n = sensing._coming_block(th, (), TODAY)
+    text, urls, n, rows = sensing._coming_block(th, (), TODAY)
     assert n == 1 and "Fed rate decision" in text and urls == {"https://fed/x"}      # the BoE date is a country this theater does not stand behind
+    assert rows[0]["title"] == "Fed rate decision (FOMC)" and rows[0]["url"] == "https://fed/x"
     ev = sensing.Evidence(coming=text, coming_urls=urls)
     assert "COMING UP" in ev.render() and "https://fed/x" in ev.primary_urls
