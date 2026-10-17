@@ -1,3 +1,4 @@
+import PageTag from "@/components/PageTag";
 import type { Metadata } from "next";
 
 import CalendarView from "@/components/calendar/CalendarView";
@@ -23,7 +24,7 @@ export default async function CalendarPage() {
   return (
     <div className="intel-page th-page">
       <p className="th-kicker">
-        <span>Calendar</span>
+        <PageTag kind="tool" detail="Calendar" />
       </p>
       <h1 className="th-claim">What&apos;s coming in the next 30 days</h1>
       <p className="th-asof">

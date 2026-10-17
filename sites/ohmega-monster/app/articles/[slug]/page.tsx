@@ -1,3 +1,4 @@
+import PageTag from "@/components/PageTag";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -80,6 +81,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
       </nav>
 
       <header className="article-header">
+        <p className="ptag-row"><PageTag kind="article" /></p>
         <h1>{a.title}</h1>
         {a.dek ? <p className="dek">{a.dek}</p> : null}
         <div className="article-meta">
