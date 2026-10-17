@@ -7,7 +7,10 @@ Markets — a reality feedback loop. Ohmega's intelligence is paper-traded again
     mirror.py       the collector: discover, snapshot prices, record resolutions
     evidence.py     the BLIND evidence a forecast sees (never the market price)
     forecast.py     one cheap structured model call per market per day -> our probability
-    paper.py        the paper portfolio: edge rule, capped Kelly sizing, daily mark-to-market, settlement
+    paper.py        the RULE book: the mechanical edge-rule baseline (capped Kelly sizing, daily mark-to-market, settlement)
+    book.py         the arithmetic both books share: positions, cash, payout, valuation, the daily equity point
+    trader.py       the TRADER: a daily agent that buys / sells / holds on top of the blind forecast (+ trader_prompt.py, trader_report.py)
+    guards.py       the trader's mechanical limits (cash, position and exposure caps, no shorting, slippage), enforced in code
     score.py        Brier / log loss of us vs the market at the same instants, calibration, P&L, hit rate
     publish.py      the track-record document the site reads
     desk.py         the short "where we disagree with the market" lines for the daily
