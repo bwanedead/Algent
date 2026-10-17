@@ -1,0 +1,5 @@
+/* PageTag: a hard-edged type label, same shape on every page; only the word changes. */
+.ptag { display: inline-flex; align-items: baseline; gap: 8px; font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+.ptag-k { padding: 1px 6px; border: 1px solid var(--rule-strong); color: var(--strong); font-weight: 600; }
+.ptag-daily .ptag-k, .ptag-theater .ptag-k, .ptag-article .ptag-k { border-color: var(--accent); color: var(--accent); }
+.ptag-d { color: var(--muted); }

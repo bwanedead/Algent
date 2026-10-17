@@ -237,3 +237,22 @@ button.th-res-btn:focus-visible { outline: 1px solid var(--accent-dim); outline-
 .th-row.is-branch { padding-left: 18px; border-left: 2px solid var(--rule-strong); }
 .th-branch-of { color: var(--muted); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
 .th-merged-list { margin: 0; padding: 0; list-style: none; font-size: 12px; line-height: 20px; color: var(--muted); }
+
+/* ---- the theater's file: Latest + the day-by-day timeline (TheaterHistory) --------------------- */
+.th-day-claim { margin: 0 0 6px; color: var(--strong); font-size: 14px; line-height: 20px; font-weight: 600; }
+.th-days { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--rule-strong); }
+.th-days > li { border-bottom: 1px solid var(--rule); }
+.th-day summary, .th-day-brief { display: grid; grid-template-columns: 112px 52px minmax(0, 1fr); gap: 0 10px; align-items: baseline; padding: 7px 4px; cursor: pointer; list-style: none; font-size: 12px; line-height: 18px; }
+.th-day-brief { cursor: default; }
+.th-day summary::-webkit-details-marker { display: none; }
+.th-day summary:hover { background: var(--vl-hover); }
+.th-day[open] summary { border-bottom: 1px dotted var(--rule); }
+.th-day-date { color: var(--muted); font-variant-numeric: tabular-nums; }
+.th-day-tag { color: var(--faint); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+.th-day-head { min-width: 0; color: var(--strong); overflow-wrap: anywhere; }
+.th-day-body { padding: 8px 4px 10px 4px; font-size: 12px; line-height: 19px; max-width: 78ch; }
+.th-day-body ul { margin: 6px 0 0; padding: 0; list-style: none; }
+.th-day-bl { margin: 0; color: var(--text); }
+.th-day-mark { color: var(--accent); display: inline-block; width: 1.2em; }
+.th-day-link { margin: 8px 0 0; font-size: 11px; }
+@media (max-width: 600px) { .th-day summary, .th-day-brief { grid-template-columns: minmax(0, 1fr) auto; } .th-day-head { grid-column: 1 / -1; } }

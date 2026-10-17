@@ -1,6 +1,7 @@
 import Crumbs, { INTEL_CRUMB, THEATERS_CRUMB } from "@/components/Crumbs";
 import { CoverSpark } from "@/components/DailyVisuals";
 import LinkedText from "@/components/entities/LinkedText";
+import PageTag from "@/components/PageTag";
 import Popover from "@/components/Popover";
 import { headlineOf, isCut } from "@/lib/daily";
 import type { Dossier } from "@/lib/dossier";
@@ -29,6 +30,7 @@ export function DossierTop({ d }: { d: Dossier }) {
     <header className="th-head">
       <Crumbs trail={[INTEL_CRUMB, THEATERS_CRUMB]} />
       <p className="th-kicker">
+        <PageTag kind="theater" detail="Living file" />
         <span>{d.name}</span>
         {d.domain && <span className="th-domain">{d.domain}</span>}
       </p>
