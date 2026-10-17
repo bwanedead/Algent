@@ -1,3 +1,4 @@
+import PageTag from "@/components/PageTag";
 import type { Metadata } from "next";
 
 import ArticleFeed from "@/components/ArticleFeed";
@@ -16,6 +17,7 @@ export default async function ArticlesPage() {
   const articles = await getAllMeta();
   return (
     <section className="index-page" aria-label="Articles">
+      <p className="ptag-row"><PageTag kind="article" detail="Deep dives" /></p>
       <h1 className="page-title">Articles</h1>
       <ArticleFeed articles={articles} />
     </section>

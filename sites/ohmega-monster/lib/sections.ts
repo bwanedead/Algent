@@ -46,7 +46,6 @@ const hints = cache(async () => {
     actors: actors.length > 0 ? plural(actors.length, "state profile") : "",
     graph: active.length > 0 && actors.length > 0 ? `${plural(actors.length, "state")} · ${plural(active.length, "theater")}` : "",
     record: ledger && ledger.count > 0 ? `${plural(ledger.statements.length, "statement")} · last ${ledger.window_days} days` : "",
-    briefs: snap && snap.briefs.length > 0 ? plural(snap.briefs.length, "brief") : "",
     pulses: pulses.length > 0 ? `${plural(pulses.length, "Pulse")}${severe > 0 ? ` · ${severe} severe or worse` : ""}` : "",
     articles: articles.length > 0 ? `${plural(articles.length, "article")} · latest ${articles[0].date}` : "",
     radar: menus[0] ? plural(menus[0].leads.length, "headline") : "",
@@ -57,36 +56,31 @@ const hints = cache(async () => {
   };
 });
 
-/** Every section of the site as a door, in the order a newcomer should meet them. */
+/** The site's front doors: the three products first (Daily, Theaters, Articles), then Live and the tools. */
 export async function homeDoors(): Promise<Door[]> {
   const h = await hints();
   return [
-    { href: "/geopolitics", title: "Geopolitics", line: "Today's report on the world's hot spots, theater by theater.", hint: h.daily },
-    { href: "/live", title: "Live map", line: "Ships, aircraft, quakes, fires and outages as they happen.", hint: h.live },
-    { href: "/calendar", title: "Calendar", line: "Elections, central-bank decisions and deadlines coming up.", hint: h.calendar },
-    { href: "/intel/theaters", title: "Theaters", line: "One living dossier for each conflict and standoff.", hint: h.theaters },
-    { href: "/intel/actors", title: "Actors", line: "The states behind the news, side by side.", hint: h.actors },
-    { href: "/pulses", title: "Pulses", line: "How tense each relationship is, from calm to critical.", hint: h.pulses },
-    { href: "/intel/record", title: "The record", line: "What leaders said, in their own words.", hint: h.record },
+    { href: "/geopolitics", title: "The Daily", line: "Today's report on the world's hot spots, theater by theater.", hint: h.daily },
+    { href: "/intel/theaters", title: "Theaters", line: "One living file for each conflict and standoff, day by day.", hint: h.theaters },
     { href: "/articles", title: "Articles", line: "Longer reporting, with the sources shown.", hint: h.articles },
-    { href: "/radar", title: "Radar", line: "Headlines as other outlets reported them, not yet verified.", hint: h.radar },
+    { href: "/live", title: "Live map", line: "Ships, aircraft, quakes, fires and outages as they happen.", hint: h.live },
+    { href: "/intel", title: "Data & tools", line: "Pulses, the record, calendar, sanctions, maritime, actors and more.", hint: "" },
   ];
 }
 
-/** The Intelligence section's directory: the depth behind the daily report. */
-export async function intelDoors(): Promise<Door[]> {
+/** Data & tools: instruments behind the three products. None of these is a publication. */
+export async function toolDoors(): Promise<Door[]> {
   const h = await hints();
   return [
-    { href: "/intel/situation", title: "Situation room", line: "What changed, and how well we are calling it.", hint: h.pulses },
-    { href: "/intel/theaters", title: "Theaters", line: "A dossier for each conflict: where it stands and where it is heading.", hint: h.theaters },
-    { href: "/intel/actors", title: "Actors", line: "Population, economy, energy and military of each state.", hint: h.actors },
-    { href: "/intel/briefs", title: "Briefs", line: "Researched deep reads of a single theater.", hint: h.briefs },
-    { href: "/intel/graph", title: "Relationships", line: "States and theaters as one network: who is involved where.", hint: h.graph },
-    { href: "/intel/record", title: "The record", line: "Statements by leaders and institutions, with transcripts.", hint: h.record },
-    { href: "/intel/sanctions", title: "Sanctions", line: "Who was added to or removed from the US, UK and EU lists.", hint: h.sanctions },
-    { href: "/intel/maritime", title: "Maritime behaviour", line: "Ships that went dark, met at sea, changed identity or matched a sanctions list.", hint: h.maritime },
-    { href: "/calendar", title: "Calendar", line: "What is scheduled in the next 30 days, with sources.", hint: h.calendar },
     { href: "/pulses", title: "Pulses", line: "Every relationship on one 0 to 100 scale.", hint: h.pulses },
-    { href: "/geopolitics", title: "Daily report", line: "The day, read theater by theater.", hint: h.daily },
+    { href: "/intel/record", title: "The record", line: "Statements by leaders and institutions, with transcripts.", hint: h.record },
+    { href: "/calendar", title: "Calendar", line: "What is scheduled in the next 30 days, with sources.", hint: h.calendar },
+    { href: "/intel/sanctions", title: "Sanctions", line: "Who was added to or removed from the US, UK and EU lists.", hint: h.sanctions },
+    { href: "/intel/maritime", title: "Maritime", line: "Ships that went dark, met at sea, changed identity or matched a sanctions list.", hint: h.maritime },
+    { href: "/intel/forecasts", title: "Forecasts", line: "Every open forecast on one timeline, and the track record.", hint: "" },
+    { href: "/intel/graph", title: "Graph", line: "States and theaters as one network: who is involved where.", hint: h.graph },
+    { href: "/live", title: "Live", line: "The live map: ships, aircraft, quakes, fires and outages.", hint: h.live },
+    { href: "/intel/actors", title: "Actors", line: "Population, economy, energy and military of each state.", hint: h.actors },
+    { href: "/headlines", title: "Headlines", line: "Other outlets' headlines, not verified by us.", hint: h.radar },
   ];
 }

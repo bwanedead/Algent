@@ -3,18 +3,17 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-// The primary navigation: every section of the site, one level, always visible (it wraps on a phone; nothing
-// hides behind a menu). "Intelligence" is the front door to the depth pages (theaters, actors, briefs, the
-// record, the situation room), so those stay one click from anywhere. The current section is marked.
+// The primary navigation, one level, always visible (it wraps on a phone; nothing hides behind a menu): the three
+// products (Daily, Theaters, Articles), the live map, and Intelligence, the door to every data tool (Pulses, the
+// record, calendar, sanctions, maritime, graph, actors, headlines). The current section is marked.
+const TOOL_PREFIXES = ["/intel", "/pulses", "/calendar", "/headlines", "/globe"];
 const LINKS: { href: string; label: string; match: (p: string) => boolean }[] = [
   { href: "/", label: "Home", match: (p) => p === "/" },
+  { href: "/geopolitics", label: "Daily", match: (p) => p.startsWith("/geopolitics") },
+  { href: "/intel/theaters", label: "Theaters", match: (p) => p.startsWith("/intel/theaters") },
   { href: "/articles", label: "Articles", match: (p) => p.startsWith("/articles") },
-  { href: "/geopolitics", label: "Geopolitics", match: (p) => p.startsWith("/geopolitics") },
   { href: "/live", label: "Live", match: (p) => p.startsWith("/live") },
-  { href: "/calendar", label: "Calendar", match: (p) => p.startsWith("/calendar") },
-  { href: "/intel", label: "Intelligence", match: (p) => p.startsWith("/intel") },
-  { href: "/pulses", label: "Pulses", match: (p) => p.startsWith("/pulses") },
-  { href: "/radar", label: "Radar", match: (p) => p.startsWith("/radar") },
+  { href: "/intel", label: "Intelligence", match: (p) => !p.startsWith("/intel/theaters") && TOOL_PREFIXES.some((x) => p.startsWith(x)) },
 ];
 
 export default function NavLinks() {

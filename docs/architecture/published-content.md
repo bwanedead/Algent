@@ -9,6 +9,22 @@ Publishing is a database write plus an object upload. The site fetches published
 (ISR), so a new article, brief, radar edition or daily report is live within minutes with no commit to `site-live`
 and no redeploy.
 
+## Products (what the site publishes)
+
+Three products, and nothing else is a publication. Every page wears a type tag (DAILY / THEATER / ARTICLE / HEADLINES / TOOL).
+
+| Product | Route | Source documents |
+|---|---|---|
+| **The Daily** | `/geopolitics`, `/geopolitics/<date>` | `daily/geopolitics/<date>.json`: one report per day, today's slice across theaters (morning and evening parts merge into it). A collapsed "Today's headlines" strip sits under the newest day. |
+| **Theaters** | `/intel/theaters`, `/intel/theaters/<id>` | `theaters/<id>.json` plus every Daily section for that theater (`lib/theater-history.ts`). The living file: state header, Latest, a day-by-day timeline (past Daily sections and dated briefs, newest first), then background, actors, record, maps. |
+| **Articles** | `/articles`, `/articles/<slug>` | `articles/<slug>.json`: deep dives. |
+
+Not products: **Headlines** (`/headlines`, formerly Radar: an unverified wire feed, `radar/<slug>.json`) and the **Data & tools** under `/intel`
+(Pulses, the record, calendar, sanctions, maritime, graph, live, actors, forecasts). Individual briefs (`/intel/briefs/<slug>`) are
+dated entries on their theater's timeline. Retired routes redirect permanently (`next.config.mjs`): `/intel/briefs` to
+`/intel/theaters`, `/intel/situation` to `/intel` (its forecasts and track record moved to `/intel/forecasts`), `/radar[/slug]` to `/headlines[/slug]`.
+The storage prefix stays `radar/`.
+
 ## Tables and bucket
 
 | Object | Holds | Public (`anon`) |

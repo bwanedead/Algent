@@ -1,3 +1,4 @@
+import PageTag from "./PageTag";
 import Link from "next/link";
 import { Fragment, type ReactNode } from "react";
 
@@ -139,7 +140,7 @@ export default async function DailyReport({ report, title, mark }: { report: Dai
     <div className="geo">
       <div className="intel-strip" role="group" aria-label="Report status">
         {mark}
-        <span className="intel-strip-title">{title} · Daily</span>
+        <span className="intel-strip-title"><PageTag kind="daily" detail={title} /></span>
         <span className="intel-strip-item">{fmtDay(report.date)}</span>
         {published && <span className="intel-strip-item">{published}</span>}
         <span className="intel-trust">

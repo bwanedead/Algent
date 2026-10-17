@@ -1,3 +1,4 @@
+import PageTag from "@/components/PageTag";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -67,7 +68,7 @@ export default async function TheatersIndexPage() {
     <div className="intel-page th-page">
       <Crumbs trail={[INTEL_CRUMB]} />
       <p className="th-kicker">
-        <span>Theater dossiers</span>
+        <PageTag kind="theater" detail="All theaters" />
       </p>
       <h1 className="th-claim">{claim}</h1>
       <p className="th-asof">

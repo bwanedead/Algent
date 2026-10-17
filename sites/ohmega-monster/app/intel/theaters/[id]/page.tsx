@@ -11,12 +11,14 @@ import DossierRecord from "@/components/dossier/DossierRecord";
 import DossierPulses from "@/components/dossier/DossierPulses";
 import DossierTimeline from "@/components/dossier/DossierTimeline";
 import { DossierPrimer, DossierTop } from "@/components/dossier/DossierTop";
+import { TheaterHistory, TheaterLatest } from "@/components/dossier/TheaterHistory";
 import { actorsForTheater } from "@/lib/actors";
 import { headlineOf } from "@/lib/daily";
 import { RelatedTheaters, StatesInvolved } from "@/components/entities/EntityLinks";
 import { dossier, dossierIds } from "@/lib/dossier";
 import { relatedTheaters, theaterStates } from "@/lib/entities";
 import { latestSnapshot } from "@/lib/intel";
+import { theaterDays } from "@/lib/theater-history";
 import { anomaliesIn, toUnusual } from "@/lib/live";
 import UnusualHere from "@/components/live/UnusualHere";
 
@@ -36,7 +38,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const d = await dossier(params.id);
   if (!d) return { title: "Theater" };
   return {
-    title: `${d.name}: dossier`,
+    title: `${d.name}: theater`,
     description: (d.current ? headlineOf(d.current.headline, d.current.bottom_line, 190) : "") || `Everything we know about ${d.name}, and where it is heading.`,
     alternates: { canonical: `/intel/theaters/${d.theater_id}`, types: { "application/json": `/api/v1/theaters/${d.theater_id}` } },
   };
@@ -50,7 +52,7 @@ export default async function TheaterDossierPage({ params }: { params: Params })
   const snap = await latestSnapshot();
   const known = new Set(await dossierIds());
   const involved = await actorsForTheater(d.theater_id);
-  const [states, related, unusual] = await Promise.all([theaterStates(d.theater_id), relatedTheaters(d.theater_id), anomaliesIn(d.map?.bbox)]);
+  const [states, related, unusual, days] = await Promise.all([theaterStates(d.theater_id), relatedTheaters(d.theater_id), anomaliesIn(d.map?.bbox), theaterDays(d.theater_id)]);
   const first = d.timeline.map((t) => t.date).filter(Boolean).sort()[0] ?? "";
   return (
     <div className="intel-page th-page">
@@ -58,10 +60,14 @@ export default async function TheaterDossierPage({ params }: { params: Params })
       <UnusualHere rows={unusual.map(toUnusual)} asOf="now" />
       <DossierLineage d={d} />
 
-      {(d.pulses.length > 0 || d.map) && (
-        <div className={`th-screen${d.pulses.length > 0 && d.map ? " is-two" : ""}`}>
+      <DossierPulses pulses={d.pulses} snap={snap} />
+
+      <TheaterLatest day={days[0]} />
+      <TheaterHistory days={days} briefs={d.briefs} />
+
+      {d.map && (
+        <div className="th-screen">
           <DossierMap d={d} />
-          <DossierPulses pulses={d.pulses} snap={snap} />
         </div>
       )}
 
