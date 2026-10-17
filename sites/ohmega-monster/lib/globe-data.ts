@@ -1,10 +1,10 @@
-import { allDailyDates, claimOf, daily, dayHref, headlineOf, theaterAnchor, type Daily } from "./daily";
+import { allDailyDates, daily, dayHref, theaterAnchor, type Daily } from "./daily";
 import { entityIndex, actorName, textLinker } from "./entities";
-import { isoForName } from "./countries";
 import { calendarItems } from "./calendar";
+import { dailyMentions } from "./globe-mentions";
 import type { CountryRow, Dir } from "./globe/channels";
 import type { CountryHeadline, CountryInfo, GlobeData, GlobeTheater } from "./globe/data";
-import { decay, THEMES, themeOf, type Theme } from "./globe/themes";
+import { decay, THEMES, type Theme } from "./globe/themes";
 import { liveAnomalies } from "./live";
 import { recentSanctions } from "./sanctions";
 
@@ -64,27 +64,9 @@ export async function globeData(): Promise<GlobeData | null> {
     if (ISO_RE.test(iso) && text && !headline.has(iso)) headline.set(iso, { text, date, href });
   };
   for (const d of dailies) { // newest first, so the first headline seen for a state is its newest
-    const built = Date.parse(d.built_at);
-    const tMs = Number.isFinite(built) ? built : Date.parse(`${d.date}T12:00:00Z`);
-    d.theaters.forEach((t, i) => {
-      if (t.kind !== "section") return;
-      const href = `${dayHref(BASE, d.date, dates)}#${theaterAnchor(t, i)}`;
-      const sectionHeadline = t.headline || claimOf(t.bottom_line, 150);
-      const named = new Set<string>();
-      for (const p of t.pulses) for (const iso of p.actors_iso2) named.add(iso);
-      for (const a of t.numbers?.actors ?? []) named.add(a.iso2.toUpperCase());
-      const sec = themeOf(t.name, sectionHeadline);
-      for (const iso of Array.from(named)) { see(iso, sec.theme, sec.base, tMs); seeHeadline(iso, sectionHeadline, d.date, href); }
-      for (const dev of t.developments) {
-        const isos = new Set<string>();
-        for (const a of dev.actors) { const iso = ISO_RE.test(a.trim().toUpperCase()) ? a.trim().toUpperCase() : isoForName(a, linker); if (iso) isos.add(iso); }
-        const place = dev.place?.country ? isoForName(dev.place.country, linker) : null;
-        if (place) isos.add(place);
-        const text = headlineOf(dev.headline, dev.detail, 150) || dev.headline;
-        const th = themeOf(t.name, dev.headline, dev.detail);
-        for (const iso of Array.from(isos)) { see(iso, th.theme, th.base, tMs); seeHeadline(iso, text, d.date, href); }
-      }
-    });
+    for (const m of dailyMentions(d, dates, linker)) {
+      for (const iso of m.isos) { see(iso, m.theme, m.base, m.tMs); seeHeadline(iso, m.text, m.date, m.href); }
+    }
   }
   for (const s of sanctions) for (const iso of s.countries) see(iso.toUpperCase(), "economy", 1, Date.parse(`${s.on_date}T12:00:00Z`));
   for (const c of calendar) {
