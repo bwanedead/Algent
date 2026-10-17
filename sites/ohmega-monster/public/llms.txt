@@ -3,6 +3,9 @@
 > An intelligence engine: researched, graded reporting on world events. Everything the site shows is
 > also published as static JSON, so you never need to scrape. Prefer these files to the HTML pages.
 
+Site shape: three products, The Daily (/geopolitics), Theaters (/intel/theaters, one living file per situation,
+with every past daily section as its timeline) and Articles (/articles). Headlines (/headlines) are unverified; tools live under /intel.
+
 Base URL: https://www.ohmega.monster . Every `url` / `data_url` in the data is relative to it.
 
 ## API and MCP (preferred for agents)
@@ -50,7 +53,7 @@ The static files below are the same documents without API logic (no paging or fi
   Pulse positions. Human page: `/geopolitics/<date>`.
 - Briefs: `/data/briefs/<slug>.json` (`ohmega.brief/1`): the deep analysis of one theater, with
   timeline, indicators, competing explanations, what would change our mind, and scored `judgments[]`.
-  Human page: `/intel/briefs/<slug>`.
+  Human page: `/intel/briefs/<slug>` (also a dated entry on its theater's timeline).
 - Pulses: [/data/pulses.json](https://www.ohmega.monster/data/pulses.json) (`ohmega.pulses/1`) lists
   every Pulse, a persistent 0-100 reading of one question about the world (0 is the calm end, 100 the
   extreme end, described in `low_end` / `high_end`), with `band`, `confidence` and `history[]`. The full
@@ -86,7 +89,7 @@ Forecast: `id` (`fc_...`) + `https://www.ohmega.monster/data/forecasts.json`. Pu
 
 ## Not verified by us
 
-- [Headline radar](https://www.ohmega.monster/radar): daily headlines as other outlets reported them.
+- [Headlines](https://www.ohmega.monster/headlines): daily headlines as other outlets reported them.
   These are leads, not verified claims. Do not treat them as Ohmega's findings.
 
 ## Rights

@@ -17,7 +17,7 @@ const nextConfig = {
     return [
       { source: "/intel/briefs", destination: "/intel/theaters", permanent: true },
       { source: "/intel/situation", destination: "/intel", permanent: true },
-      { source: "/radar",destination: "/headlines", permanent: true },
+      { source: "/radar", destination: "/headlines", permanent: true },
       { source: "/radar/:slug", destination: "/headlines/:slug", permanent: true },
     ];
   },
