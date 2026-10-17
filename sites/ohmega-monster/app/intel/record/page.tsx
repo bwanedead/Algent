@@ -1,3 +1,4 @@
+import PageTag from "@/components/PageTag";
 import type { Metadata } from "next";
 import Crumbs, { INTEL_CRUMB } from "@/components/Crumbs";
 import { SAID_NOTE } from "@/components/OnRecord";
@@ -22,6 +23,7 @@ export default async function RecordPage() {
   return (
     <div className="intel-page geo">
       <Crumbs trail={[INTEL_CRUMB]} />
+      <p className="ptag-row"><PageTag kind="tool" detail="The record" /></p>
       <h1 className="geo-headline">{ledger && ledger.statements.length > 0 ? `${ledger.statements.length} statements in the last ${ledger.window_days} days, in their own words` : "The record"}</h1>
       {!ledger || ledger.statements.length === 0 ? (
         <p className="intel-empty">No statements have been published yet. Check back soon.</p>

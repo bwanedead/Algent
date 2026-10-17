@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import DailyReport from "@/components/DailyReport";
+import DailyHeadlines from "@/components/DailyHeadlines";
 import DayKeys from "@/components/DayKeys";
 import DayNav from "@/components/DayNav";
 import GlobeSpinner from "@/components/GlobeSpinner";
@@ -21,9 +22,10 @@ export default async function GeopoliticsDay({ report }: { report: Daily }) {
       <DayKeys prev={older} next={newer} />
       <DayNav dates={dates} current={report.date} domain={DOMAIN} base={BASE} placement="top" />
       <DailyReport report={report} title="Geopolitics" mark={<Link href="/globe" className="globe-link" aria-label="Open the interactive globe" title="Open the interactive globe"><GlobeSpinner cycle decorative size={144} className="globe-mark" /></Link>} />
+      {i === 0 && <DailyHeadlines />}
       <DayNav dates={dates} current={report.date} domain={DOMAIN} base={BASE} placement="bottom" />
       <p className="geo-xlink">
-        <Link href="/intel/theaters">All theaters →</Link> · <Link href="/intel/actors">Actors →</Link> · <Link href="/intel">Intelligence: briefs, the record and more →</Link>
+        <Link href="/intel/theaters">Theaters: each one&apos;s living file →</Link> · <Link href="/intel">Data &amp; tools →</Link>
       </p>
     </div>
   );

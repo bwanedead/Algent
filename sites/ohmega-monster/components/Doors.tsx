@@ -11,18 +11,18 @@ import "./doors.css";
 // the one-line description under the title (the directory shows it; Home does not).
 const GLYPH: Record<string, GlyphName> = {
   "/geopolitics": "globe",
+  "/intel/graph": "theater",
+  "/intel/forecasts": "pulse",
   "/live": "live",
   "/intel/theaters": "theater",
   "/intel/actors": "actor",
   "/pulses": "pulse",
   "/intel/record": "record",
   "/articles": "article",
-  "/radar": "radar",
+  "/headlines": "radar",
   "/calendar": "calendar",
   "/intel/sanctions": "sanction",
   "/intel/maritime": "ship",
-  "/intel/situation": "pulse",
-  "/intel/briefs": "article",
 };
 
 export default function Doors({ doors, label, lines = true }: { doors: Door[]; label: string; lines?: boolean }) {

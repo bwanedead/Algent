@@ -1,3 +1,4 @@
+import PageTag from "@/components/PageTag";
 import type { Metadata } from "next";
 
 import Crumbs, { INTEL_CRUMB } from "@/components/Crumbs";
@@ -22,7 +23,7 @@ export default async function GraphPage() {
     <div className="intel-page th-page">
       <Crumbs trail={[INTEL_CRUMB]} />
       <p className="th-kicker">
-        <span>Relationships</span>
+        <PageTag kind="tool" detail="Graph" />
       </p>
       <h1 className="th-claim">Who is involved where</h1>
       {graph.theaters.length === 0 ? (

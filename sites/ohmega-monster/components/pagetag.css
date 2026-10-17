@@ -1,0 +1,21 @@
+/* PageTag: a hard-edged type label, same shape on every page; only the word changes. */
+.ptag { display: inline-flex; align-items: baseline; gap: 8px; font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+.ptag-k { padding: 1px 6px; border: 1px solid var(--rule-strong); color: var(--strong); font-weight: 600; }
+.ptag-daily .ptag-k, .ptag-theater .ptag-k, .ptag-article .ptag-k { border-color: var(--accent); color: var(--accent); }
+.ptag-d { color: var(--muted); }
+.ptag-row { margin: 0 0 8px; }
+
+/* DailyHeadlines: the collapsed wire strip under the Daily. */
+.dh { margin: 18px 0 0; border-top: 1px solid var(--rule-strong); border-bottom: 1px solid var(--rule); font-size: 12px; }
+.dh summary { padding: 8px 0; cursor: pointer; list-style: none; line-height: 18px; }
+.dh summary::-webkit-details-marker { display: none; }
+.dh summary::before { content: "▸ "; color: var(--muted); }
+.dh[open] summary::before { content: "▾ "; }
+.dh-k { color: var(--strong); font-weight: 600; }
+.dh-n { color: var(--strong); font-variant-numeric: tabular-nums; }
+.dh-note { color: var(--muted); }
+.dh-list { margin: 0; padding: 0 0 4px; list-style: none; }
+.dh-list li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 14px; padding: 4px 0; border-top: 1px dotted var(--rule); line-height: 18px; }
+.dh-t { min-width: 0; flex: 1 1 320px; overflow-wrap: anywhere; }
+.dh-src { color: var(--muted); font-size: 11px; }
+.dh-all { margin: 4px 0 10px; font-size: 11px; }

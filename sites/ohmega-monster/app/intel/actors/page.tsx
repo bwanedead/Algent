@@ -1,3 +1,4 @@
+import PageTag from "@/components/PageTag";
 import type { Metadata } from "next";
 import ActorTable, { type TableRow } from "@/components/actors/ActorTable";
 import { COMPARE_METRICS, headline } from "@/components/actors/ActorParts";
@@ -46,7 +47,7 @@ export default async function ActorsIndexPage() {
     <div className="intel-page th-page">
       <Crumbs trail={[INTEL_CRUMB]} />
       <p className="th-kicker">
-        <span>Actors</span>
+        <PageTag kind="tool" detail="Actors" />
       </p>
       <h1 className="th-claim">
         {biggest && spender

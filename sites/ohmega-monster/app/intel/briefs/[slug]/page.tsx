@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import PageTag from "@/components/PageTag";
 import OnRecordBlock from "@/components/OnRecord";
 import Popover from "@/components/Popover";
 import PulseTile from "@/components/PulseTile";
@@ -92,12 +93,12 @@ export default async function BriefPage({ params }: { params: Params }) {
 
   return (
     <article className="intel-page intel-brief">
-      <Link href="/intel/briefs" className="intel-back">
-        ← All briefs
+      <Link href={hasDossier ? `/intel/theaters/${b.theater_id}#history` : "/intel/theaters"} className="intel-back">
+        {hasDossier ? `← ${b.theater_name || "Theater"}: timeline` : "← All theaters"}
       </Link>
       <header className="intel-brief-head">
         <p className="intel-micro">
-          Brief
+          <PageTag kind="theater" detail="Brief" />
           {b.theater_name && (
             <>
               {" · "}

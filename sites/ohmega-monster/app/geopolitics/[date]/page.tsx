@@ -17,9 +17,9 @@ export async function generateStaticParams(): Promise<Params[]> {
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const r = await daily(DOMAIN, params.date);
-  if (!r) return { title: "Geopolitics — daily report" };
+  if (!r) return { title: "The Daily" };
   return {
-    title: `Geopolitics — ${fmtDay(r.date)}`,
+    title: `The Daily — ${fmtDay(r.date)}`,
     description: r.headline.slice(0, 200) || undefined,
     // The newest report is one page with two addresses; /geopolitics is the one to index.
     alternates: {

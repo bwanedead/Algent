@@ -1,3 +1,4 @@
+import PageTag from "@/components/PageTag";
 import type { Metadata } from "next";
 
 import PulseWall from "@/components/PulseWall";
@@ -18,6 +19,7 @@ export default async function PulsesPage() {
   const pulses: WallPulse[] = severitySorted(snap).flatMap((s) => s.pulses.map((p) => toWallPulse(p, s.title)));
   return (
     <div className="intel-page wall-page">
+      <p className="ptag-row"><PageTag kind="tool" detail="Pulses" /></p>
       <PulseWall pulses={pulses} asOf={snap?.built_at ?? ""} asOfLabel={snap?.built_at ? fmtUtc(snap.built_at) : "—"} />
     </div>
   );

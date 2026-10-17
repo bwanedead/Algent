@@ -1,3 +1,4 @@
+import PageTag from "@/components/PageTag";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -25,7 +26,7 @@ export default async function MaritimePage() {
   return (
     <div className="intel-page th-page">
       <p className="th-kicker">
-        <span>Intelligence</span> <Link href="/live" className="xt">live map →</Link>
+        <PageTag kind="tool" detail="Maritime" /> <Link href="/live" className="xt">live map →</Link>
       </p>
       <h1 className="th-claim">Maritime behaviour</h1>
       <p className="th-asof">
