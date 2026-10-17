@@ -2,10 +2,10 @@
 # The server's scheduled jobs, one entry point so systemd units stay one-liners:
 #
 #   jobs.sh library | instruments | statements | sanctions | calendar | markets | backup | watchdog | live <feed>   free
-#   jobs.sh menu | daily-1 | daily-2                                      PAID, unattended (operator-authorised)
+#   jobs.sh menu | daily-1 | daily-2 | markets-daily                       PAID, unattended (operator-authorised)
 #
 # Free work: crawl, public data series, statement transcripts without extraction, the archive backup.
-# The paid jobs are exactly three: the newsroom menu and the geopolitics daily's two editions. They go through
+# The paid jobs are exactly four: the newsroom menu, the geopolitics daily's two editions and the Polymarket paper trader's day (markets-daily). They go through
 # `newsroom schedule run`, which refuses to spend unless SCHEDULED_PAID_RUNS is on (ops/flags.py), this machine holds
 # the runner claim and no spend halt stands; it retries a transient failure once; the watchdog bounds the child.
 # Everything else that spends (articles, ad-hoc research) still runs only when the operator asks.
@@ -20,7 +20,7 @@ if [ "${1:-}" = "live" ]; then exec $PY -m algent_backend.cli newsroom live run 
 exec 9>"$HOME/.ohmega-jobs.lock"
 flock -w 3600 9
 
-case "${1:?usage: jobs.sh library|instruments|statements|sanctions|calendar|markets|backup|live|menu|daily-1|daily-2}" in
+case "${1:?usage: jobs.sh library|instruments|statements|sanctions|calendar|markets|backup|live|menu|daily-1|daily-2|markets-daily}" in
     library)     $PY -m algent_backend.cli newsroom library crawl --max 150 ;;
     instruments) $PY -m algent_backend.cli newsroom instruments fetch ;;
     statements)  $PY -m algent_backend.cli newsroom statements collect --no-extract --no-reported ;;
@@ -28,6 +28,6 @@ case "${1:?usage: jobs.sh library|instruments|statements|sanctions|calendar|mark
     calendar)    $PY -m algent_backend.cli newsroom calendar refresh ;;
     markets)     $PY -m algent_backend.cli newsroom markets refresh ;;
     backup)      $PY -c "from algent_backend.data_backup import sync; print(sync.backup(note='server nightly'))" ;;
-    menu|daily-1|daily-2) $PY -m algent_backend.cli newsroom schedule run "$1" ;;
+    menu|daily-1|daily-2|markets-daily) $PY -m algent_backend.cli newsroom schedule run "$1" ;;
     *) echo "unknown job: $1" >&2; exit 2 ;;
 esac

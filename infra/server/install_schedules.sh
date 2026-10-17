@@ -16,9 +16,10 @@
 #   ohmega-menu         daily 05:00    PAID: newsroom menu (time: MENU_UTC in ops/flags.py)
 #   ohmega-daily-1      daily 05:30    PAID: geopolitics daily, part 1 Europe/Asia (time: EDITIONS in intel/flags.py)
 #   ohmega-daily-2      daily 17:30    PAID: geopolitics daily, part 2 Americas, appended to the same report
-# The three paid timers are operator-authorised and run unattended behind the watchdog; each job checks the kill
+#   ohmega-markets-daily daily 07:30   PAID: Polymarket paper trader's day (time: DAILY_UTC in markets/flags.py)
+# The four paid timers are operator-authorised and run unattended behind the watchdog; each job checks the kill
 # switch (SCHEDULED_PAID_RUNS), the runner claim and the spend halt before it spends (ops/schedule.py). Pause:
-# `sudo systemctl disable --now ohmega-menu.timer ohmega-daily-1.timer ohmega-daily-2.timer`.
+# `sudo systemctl disable --now ohmega-menu.timer ohmega-daily-1.timer ohmega-daily-2.timer ohmega-markets-daily.timer`.
 set -euo pipefail
 INFRA="$HOME/Algent/infra/server"
 LIVE_TIMERS=""
@@ -89,7 +90,7 @@ WantedBy=multi-user.target
 EOF
 
 
-# Paid jobs: the times live in the repo's flags, not here (`newsroom schedule times` prints "<job> <HH:MM>").
+# Paid jobs (menu, daily-1, daily-2, markets-daily): the times live in the repo's flags, not here (`newsroom schedule times` prints "<job> <HH:MM>").
 PAID=""
 while read -r job hhmm; do
     unit "$job" "$INFRA/jobs.sh $job" "*-*-* $hhmm:00"
