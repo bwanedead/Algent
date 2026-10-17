@@ -1,7 +1,9 @@
 """
 ``newsroom markets`` — the Polymarket paper-trading benchmark. PAPER ONLY: no wallet, no key, no order is ever placed.
 
-    newsroom markets refresh                    mirror: discover relevant markets, snapshot prices, record resolutions (free)
+    newsroom markets refresh [--no-publish]     mirror (discover, snapshot, resolutions), then the paper pass (open, mark, settle) and publish (free)
+    newsroom markets paper                      the paper pass alone: settle resolved positions, open per the edge rule, mark to market
+    newsroom markets score [--full]             the scoreboard: us vs the market, calibration, paper P&L (--full: the whole document)
     newsroom markets list [--theater ID] [--status S] [--limit N]   the mirrored markets with their latest price
     newsroom markets forecast [--limit N] [--dry-run]   PAID: our blind probability for mirrored markets (day-capped)
     newsroom markets status                     last pass, counts, forecasts today and their spend
@@ -18,7 +20,13 @@ from typing import Any
 def add_parser(sub: Any) -> None:
     p = sub.add_parser("markets", help="Polymarket mirror, blind forecasts, paper portfolio and track record (paper only)")
     verbs = p.add_subparsers(dest="markets_cmd", required=True)
-    verbs.add_parser("refresh", help="mirror pass: discover, snapshot, record resolutions (free)").set_defaults(handler=run_refresh)
+    r = verbs.add_parser("refresh", help="mirror pass + paper pass + publish (free)")
+    r.add_argument("--no-publish", action="store_true")
+    r.set_defaults(handler=run_refresh)
+    verbs.add_parser("paper", help="the paper portfolio pass").set_defaults(handler=run_paper)
+    sc = verbs.add_parser("score", help="the scoreboard")
+    sc.add_argument("--full", action="store_true")
+    sc.set_defaults(handler=run_score)
     ls = verbs.add_parser("list", help="mirrored markets")
     ls.add_argument("--theater")
     ls.add_argument("--status", choices=["open", "resolved", "void"])
@@ -36,10 +44,25 @@ def _emit(doc: Any) -> int:
     return 0
 
 
-def run_refresh(_args: Any) -> int:
-    from algent_backend.markets import mirror
+def run_refresh(args: Any) -> int:
+    from algent_backend.markets import mirror, paper
 
-    return _emit(mirror.refresh())
+    report = mirror.refresh()
+    report["paper"] = paper.run()
+    return _emit(report)
+
+
+def run_paper(_args: Any) -> int:
+    from algent_backend.markets import paper
+
+    return _emit({"pass": paper.run(), "portfolio": paper.summary()})
+
+
+def run_score(args: Any) -> int:
+    from algent_backend.markets import score
+
+    doc = score.track_record()
+    return _emit(doc if args.full else {k: doc[k] for k in ("markets", "forecasts", "scores", "portfolio", "market_beat_us")})
 
 
 def _latest_prices() -> dict[str, float]:
