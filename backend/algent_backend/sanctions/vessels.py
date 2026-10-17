@@ -16,9 +16,13 @@ CLAIMANT = {"ofac": "US Treasury OFAC", "uk": "UK FCDO / OFSI", "eu": "EU Counci
 SOURCE_LABEL = {"ofac": "OFAC SDN list", "uk": "UK Sanctions List", "eu": "EU consolidated sanctions list"}
 
 
+def asset_key(imo: str, name: str, flag: str) -> str:
+    """The ledger id of a ship: by IMO number when known (the same ship on three lists is one asset)."""
+    return f"og-xx-vessel-imo{imo}" if imo else gc.new_asset_id(name, "vessel", flag)
+
+
 def asset_id(e: SanctionsEvent) -> str:
-    """The ledger id of the ship: by IMO number when the list gives one (the same ship on three lists is one asset)."""
-    return f"og-xx-vessel-imo{e.imo}" if e.imo else gc.new_asset_id(e.name, "vessel", e.flag)
+    return asset_key(e.imo, e.name, e.flag)
 
 
 def link(events: list[SanctionsEvent], ledger: Ledger | None = None) -> dict[str, int]:
