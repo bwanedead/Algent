@@ -33,6 +33,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...(await dossierIds()).map((id) => ({ url: `${SITE_URL}/intel/theaters/${id}`, lastModified: new Date() })),
     { url: `${SITE_URL}/pulses`, lastModified: new Date() },
     { url: `${SITE_URL}/live`, lastModified: new Date() },
+    { url: `${SITE_URL}/calendar`, lastModified: new Date() },
+    { url: `${SITE_URL}/intel/sanctions`, lastModified: new Date() },
     { url: `${SITE_URL}/developers`, lastModified: new Date() },
     { url: `${SITE_URL}/geopolitics`, lastModified: new Date() },
     ...(await allDailyDates("geopolitics")).map((d) => ({ url: `${SITE_URL}/geopolitics/${d}`, lastModified: d })),

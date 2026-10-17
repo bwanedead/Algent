@@ -25,3 +25,7 @@ How it works: download, parse (streamed), diff against the stored snapshot (`dif
 | Our own daily reports | `lookahead/extract.py` | low (`ohmega_derived`) |
 
 A source that returns nothing never withdraws its items; an item a healthy source stops listing becomes `active=false` (history stays). Extraction is mechanical: a sentence needs a trigger word (deadline, expires, vote, summit ...) AND an explicit future date; relative dates are ignored. The daily's sensing adds a `COMING UP` block (next 14 days; items naming the theater or touching a country it stands behind) and cites official pages only, never our own earlier reports.
+
+## Site and API
+
+`/calendar` (30-day density strip, Monday-first week grid, filters by kind and country; an agenda on a phone), `/intel/sanctions` (per-country strip with sparklines over a filterable table of events), a "Coming up" strip on Home and in each theater's daily section (the rows the writer was shown are stored on the section as `coming_up`, so an archived report keeps its day), and "Sanctions activity" and "Upcoming" sections on actor pages. API: `/api/v1/calendar`, `/api/v1/sanctions`; MCP tools `get_calendar`, `get_sanctions`. Apply migration 012 before deploying the site build.

@@ -11,6 +11,7 @@ const LINKS: { href: string; label: string; match: (p: string) => boolean }[] = 
   { href: "/articles", label: "Articles", match: (p) => p.startsWith("/articles") },
   { href: "/geopolitics", label: "Geopolitics", match: (p) => p.startsWith("/geopolitics") },
   { href: "/live", label: "Live", match: (p) => p.startsWith("/live") },
+  { href: "/calendar", label: "Calendar", match: (p) => p.startsWith("/calendar") },
   { href: "/intel", label: "Intelligence", match: (p) => p.startsWith("/intel") },
   { href: "/pulses", label: "Pulses", match: (p) => p.startsWith("/pulses") },
   { href: "/radar", label: "Radar", match: (p) => p.startsWith("/radar") },

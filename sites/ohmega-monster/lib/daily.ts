@@ -1,4 +1,5 @@
 import { asStatus, asType, type AssetStatus, type AssetType } from "./geoledger-shared";
+import { KINDS as CALENDAR_KINDS, type ComingRow } from "./calendar-shared";
 import type { UnusualRow } from "./live-shared";
 import { parseOnRecord, type OnRecord } from "./record-model";
 import { intelDoc, intelNames } from "./store";
@@ -198,6 +199,8 @@ export type DailyTheater = {
   asset_events: DailyAssetEvent[];
   /** The places Ohmega's live memory found outside their learned normal in this theater on the day (older reports: empty). */
   unusual: UnusualRow[];
+  /** The dated items ahead the day's writer was shown for this theater (backend `lookahead/`; older reports: empty). */
+  coming: ComingRow[];
   /** Which part of the day wrote it (1 = the morning run; older reports are all 1). See `DailyEdition`. */
   edition: number;
   /** "update": a later part's addition to a theater the morning already covered; it is nested under that section. */
@@ -569,6 +572,7 @@ function parseTheater(raw: unknown, nested = false): DailyTheater | null {
     visuals: arr(raw.visuals).map(parseVisual).filter((v): v is DailyVisual => v !== null),
     asset_events: arr(raw.asset_events).map(parseAssetEvent).filter((e): e is DailyAssetEvent => e !== null),
     unusual: parseUnusual(raw.live_rollup),
+    coming: parseComing(raw.coming_up),
     edition: Math.max(1, Math.floor(num(raw.edition) ?? 1)),
     kind: raw.kind === "update" ? "update" : "section",
     updates: nested ? [] : arr(raw.updates).map((u) => parseTheater(u, true)).filter((u): u is DailyTheater => u !== null),
@@ -589,6 +593,25 @@ function parseUnusual(raw: unknown): UnusualRow[] {
       learning: r.learning === true,
     }))
     .filter((r) => r.id && r.sentence);
+}
+
+const KIND_IDS: string[] = CALENDAR_KINDS.map((k) => k.id);
+
+/** The section's stored `coming_up` rows (backend `lookahead/desk.rows`): dated items ahead, as the compact lines the page shows. */
+function parseComing(raw: unknown): ComingRow[] {
+  return arr(raw)
+    .filter(isObj)
+    .map((r) => ({
+      date: str(r.date),
+      end_date: str(r.end_date),
+      title: str(r.title),
+      kind: (KIND_IDS.includes(str(r.kind)) ? str(r.kind) : "deadline") as ComingRow["kind"],
+      countries: strs(r.countries).filter((c) => /^[A-Za-z]{2}$/.test(c)),
+      confidence: (["high", "medium", "low"].includes(str(r.confidence)) ? str(r.confidence) : "low") as ComingRow["confidence"],
+      url: /^https?:\/\//.test(str(r.url)) ? str(r.url) : "",
+      ours: str(r.source) === "corpus",
+    }))
+    .filter((r) => /^\d{4}-\d{2}-\d{2}$/.test(r.date) && r.title);
 }
 
 function parseEdition(raw: unknown): DailyEdition | null {

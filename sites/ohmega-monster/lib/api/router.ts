@@ -4,6 +4,8 @@ import { SITE_URL } from "@/lib/site";
 import { assetOp, assetsOp, gridOp } from "./ops-assets";
 import { articleOp, articlesOp, searchOp } from "./ops-content";
 import { anomaliesOp, instrumentOp, instrumentsOp, liveEventsOp } from "./ops-data";
+import { calendarOp, sanctionsOp } from "./ops-forward";
+import { KINDS } from "@/lib/calendar-shared";
 import {
   actorOp, actorsOp, apiUrl, briefOp, changesOp, dailyOp, deskAsOf, forecastsOp, pulseOp, pulsesOp, statementsOp, theaterOp, theatersOp,
 } from "./ops-desk";
@@ -154,6 +156,33 @@ export const ROUTES: Route[] = [
       { name: "since", description: SINCE, example: "2026-10-10" },
     ],
     run: (_p, q) => anomaliesOp(q),
+  },
+  {
+    path: "/calendar",
+    summary:
+      "What is coming: dated upcoming items (elections, central-bank rate decisions, UN Security Council meetings, OPEC+ meetings, deadlines and meetings our own reports named), soonest first, each with its source and a confidence. A date is a plan, not an outcome.",
+    paged: true,
+    query: [
+      { name: "kind", description: "Kind of item.", enum: KINDS.map((k) => k.id) },
+      { name: "country", description: "ISO 3166-1 alpha-2 code the item concerns.", example: "US" },
+      { name: "confidence", description: "high = official schedule; medium = compiled from announcements; low = extracted from our own earlier reports.", enum: ["high", "medium", "low"] },
+      { name: "days", description: "How many days ahead (default 45, max 240).", example: "30" },
+    ],
+    run: (_p, q) => calendarOp(q),
+  },
+  {
+    path: "/sanctions",
+    summary:
+      "Sanctions designations and delistings on the US OFAC SDN, UK and EU lists, found by comparing each list with its previous copy: who, what kind (person, entity, vessel, aircraft), programme, countries, date and the list it came from. Newest first.",
+    paged: true,
+    query: [
+      { name: "list", description: "Which list.", enum: ["ofac", "uk", "eu"] },
+      { name: "action", description: "Added or removed.", enum: ["designated", "delisted"] },
+      { name: "type", description: "Kind of party.", enum: ["person", "entity", "vessel", "aircraft"] },
+      { name: "country", description: "ISO 3166-1 alpha-2 code the party is tied to.", example: "RU" },
+      { name: "since", description: SINCE, example: "2026-10-01" },
+    ],
+    run: (_p, q) => sanctionsOp({ ...q, source: q.list }),
   },
   {
     path: "/assets",

@@ -1,0 +1,42 @@
+/* /intel/sanctions: a country strip over a dense, hairline-ruled event table. Monospace for data, the accent only for "added". */
+
+.sx-view { display: grid; gap: 14px; }
+.sx-countries { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); margin: 0; padding: 0; list-style: none; border-left: 1px solid var(--rule); border-top: 1px solid var(--rule); }
+.sx-countries > li { border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); min-width: 0; }
+.sx-country { display: grid; grid-template-columns: auto minmax(0, 1fr) auto 64px; align-items: center; gap: 8px; width: 100%; min-height: 40px; padding: 6px 10px; border: 0; background: transparent; color: var(--text); font: inherit; font-size: 12px; text-align: left; cursor: pointer; }
+.sx-country:hover { background: var(--vl-hover); }
+.sx-country.is-on { box-shadow: inset 2px 0 0 var(--accent); background: var(--vl-surface-hi); }
+.sx-country:focus-visible { outline: 1px solid var(--link-accent); outline-offset: -1px; }
+.sx-country-n { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sx-country-c { color: var(--strong); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.sx-filters { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 14px; }
+.sx-filters label { display: flex; flex-direction: column; gap: 3px; }
+.sx-filters select { min-height: 30px; max-width: 100%; padding: 3px 8px; border: 1px solid var(--rule-strong); border-radius: var(--vl-r); background: var(--vl-surface); color: var(--text); font: inherit; font-size: 12px; }
+.sx-filters select:focus-visible { outline: 1px solid var(--link-accent); outline-offset: 2px; }
+.sx-count { margin: 0 0 6px auto; color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+
+.sx-scroll { overflow-x: auto; border-top: 1px solid var(--rule-strong); }
+.sx-table { width: 100%; border-collapse: collapse; font-size: 12px; line-height: 16px; }
+.sx-table th { padding: 6px 8px; border-bottom: 1px solid var(--rule-strong); color: var(--muted); font-size: 10px; font-weight: 400; letter-spacing: 0.1em; text-align: left; text-transform: uppercase; white-space: nowrap; }
+.sx-table td { padding: 6px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.sx-table tr:hover td { background: var(--vl-hover); }
+.sx-date { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sx-name { min-width: 180px; color: var(--strong); font-weight: 600; overflow-wrap: anywhere; }
+.sx-sub { color: var(--faint); font-size: 10px; font-weight: 400; letter-spacing: 0.03em; }
+.sx-prog { color: var(--muted); max-width: 220px; overflow-wrap: anywhere; }
+.sx-act { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+.sx-act-designated { color: var(--accent); }
+.sx-act-delisted { color: var(--muted); }
+.sx-table tr.is-removed .sx-name { font-weight: 400; }
+.sx-empty { margin: 8px 0; color: var(--muted); }
+.sx-more { justify-self: start; min-height: 32px; padding: 4px 12px; border: 1px solid var(--rule-strong); border-radius: var(--vl-r); background: transparent; color: var(--text); font: inherit; font-size: 12px; cursor: pointer; }
+.sx-more:hover { background: var(--vl-hover); }
+
+/* the short list on an actor page */
+.sx-list { margin: 8px 0 0; padding: 0; list-style: none; font-size: 12px; line-height: 18px; }
+.sx-list > li { padding: 4px 0; border-bottom: 1px solid var(--rule); color: var(--text); overflow-wrap: anywhere; }
+
+@media (max-width: 760px) {
+  .sx-table th:nth-child(6), .sx-table td:nth-child(6) { display: none; }
+}
