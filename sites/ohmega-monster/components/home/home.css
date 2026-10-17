@@ -14,11 +14,7 @@
 .hm-kicker { margin: 0; color: var(--accent); font-size: var(--vl-t-label, 10px); letter-spacing: 0.14em; text-transform: uppercase; }
 .hm-claim { max-width: 26ch; margin: 8px 0 0; color: var(--strong); font-family: var(--vl-sans); font-size: var(--vl-t-display, 32px); line-height: 1.12; font-weight: 650; letter-spacing: -0.028em; text-wrap: balance; overflow-wrap: anywhere; }
 .hm-more { display: flex; flex-wrap: wrap; gap: 4px 20px; margin: 14px 0 0; font-size: 12px; }
-.hm-globe { position: relative; display: grid; place-items: center; padding: 10px; border: 1px solid var(--rule-strong); border-radius: var(--vl-r); background: var(--vl-surface); }
-/* corner ticks: a surveyor's frame */
-.hm-globe::before, .hm-globe::after { content: ""; position: absolute; width: 8px; height: 8px; border: 0 solid var(--accent); }
-.hm-globe::before { top: -1px; left: -1px; border-width: 1px 0 0 1px; }
-.hm-globe::after { right: -1px; bottom: -1px; border-width: 0 1px 1px 0; }
+.hm-globe { display: grid; place-items: center; } /* unframed: the globe floats */
 .hm-globe .globe-spinner svg { width: clamp(104px, 14vw, 140px); height: clamp(104px, 14vw, 140px); }
 
 /* ---- at a glance: hairline-ruled cells, big tabular numerals --------------------------------------------------- */
@@ -90,7 +86,6 @@
 @media (max-width: 700px) {
   .hm-mast { grid-template-columns: minmax(0, 1fr) auto; gap: 14px; align-items: start; }
   .hm-claim { max-width: none; font-size: clamp(22px, 6.4vw, 28px); }
-  .hm-globe { padding: 6px; }
   .hm-globe .globe-spinner svg { width: 84px; height: 84px; }
   /* ranking rows: drop the heat bar and the spark; direction, flags, name and the category mark stay */
   .hm-row { grid-template-columns: 2px 48px minmax(0, 1fr) 18px 76px; gap: 0 10px; }

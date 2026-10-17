@@ -5,10 +5,11 @@
 //     top-down view. Double-click / double-tap centres on a spot (and steps in). Arrow keys rotate, + and - zoom.
 //   - Two modes. "Cycle" walks the spinner's view set (lib/globe/camera.ts VIEWS) with hard cuts, slowly. "Still" is a north-up globe
 //     centred where you left it. Any drag, click, wheel or key press cancels Cycle and keeps the point it was looking at.
-//   - Country fills by information channel (Recency, Direction, Involvement, and Unusual when there is something): the page hands in a
-//     compact per-country dataset (lib/globe-data.ts), lib/globe/channels.ts sorts each country into a colour bucket, and the
-//     fills are one clipped path per bucket. Without the country file the plain land layers stay.
-//   - Tap a country for a side panel (flag, name, newest headline naming it, its theaters, a link to its page); "Theaters" toggles dots
+//   - Country fills by information channel (default "Theme x recency": hue = dominant theme, strength = recency band; plus Recency,
+//     Direction, Involvement and Anomalies when there is something): the page hands in a compact per-country dataset
+//     (lib/globe-data.ts), lib/globe/channels.ts sorts each country into a bucket (a CSS class), and the fills are one clipped path per
+//     bucket. Edges: amber = escalating, green = easing, pulsing ring = new within 24 h. Without the country file the plain land stays.
+//   - Tap a country for a side panel (components/globe/GlobePanel.tsx: headline, stats vs world median, counts, theaters, links); "Theaters" toggles dots
 //     at theater centres sized by heat, and tapping one opens its latest daily section.
 //   - Reduced motion: starts Still, no inertia, no easing. Pauses when the tab is hidden or the globe is off screen.
 // Frames are written straight to SVG paths from requestAnimationFrame, not through React (as in GlobeSpinner).
@@ -17,17 +18,17 @@
 import Link from "next/link";
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 
-import IsoFlags from "@/components/IsoFlags";
-import { DirTick } from "@/components/vl/primitives";
-
 import { cameraAt, spun, VIEWS } from "@/lib/globe/camera";
 import { buildRings, landPath } from "@/lib/globe/clip";
 import { C, f1, paths, R } from "@/lib/globe/project";
-import { availableChannels, bucketOf, type ChannelId } from "@/lib/globe/channels";
+import { availableChannels, bucketClass, bucketCount, bucketOf, legendOf, type ChannelId } from "@/lib/globe/channels";
 import { centroidOf, countryAt, loadCountries, type Countries } from "@/lib/globe/countries";
 import type { GlobeData } from "@/lib/globe/data";
+import { bandOf } from "@/lib/globe/themes";
 import { COARSE_POLYS, GRAT, loadLand, toPolys, type Poly } from "@/lib/globe/sphere";
 import { centreOf, centredView, MAX_LAT, projectPoint, unproject, wrapLon } from "@/lib/globe/view";
+
+import GlobePanel, { type Pick } from "./GlobePanel";
 
 import "../globe-spinner.css";
 import "./globe-viewer.css";
@@ -49,26 +50,45 @@ type Camera = { lon: number; lat: number; zoom: number };
 type Goto = { lon: number; lat: number; zoom: number };
 
 const HIT_PX = 16; // a theater dot is hit within this many screen pixels
-type Pick = { kind: "country"; iso: string } | { kind: "theater"; id: string };
 type Dot = { id: string; lon: number; lat: number; r: number; dir: string };
 
-const BUCKETS = 8; // slot 0 = countries with no data on the channel, then up to seven legend buckets
+const BUCKETS = 18; // path slots: the most any channel uses (theme x 3 recency bands); countries with no data on a channel stay unfilled
 
 export default function GlobeViewer({ data }: { data: GlobeData | null }) {
   const id = useId();
   const channels = useMemo(() => availableChannels(data?.countries ?? {}), [data]);
-  const [channel, setChannel] = useState<ChannelId>(data ? "recency" : "off");
+  const [channel, setChannel] = useState<ChannelId>(data ? "theme" : "off");
+  const [now] = useState(() => Date.now()); // the recency bands age against the viewer's clock (only used once the countries have loaded client-side)
   const [geo, setGeo] = useState<Countries | null>(null);
   const [picked, setPicked] = useState<Pick | null>(null);
   const [showTheaters, setShowTheaters] = useState(false);
   const [mode, setModeState] = useState<Mode>("cycle");
   const [land, setLand] = useState<Poly[]>(COARSE_POLYS);
   const rings = useMemo(() => buildRings(land), [land]);
-  const bucketRings = useMemo(() => {
+  // Fills: one clipped path per bucket; `bucketIx` is every country's bucket (for the legend counts).
+  const { bucketRings, bucketIx } = useMemo(() => {
     const out: Poly[][] = Array.from({ length: BUCKETS }, () => []);
-    if (geo) for (const c of geo.list) out[bucketOf(channel, data?.countries[c.iso]) + 1].push(...c.fill);
+    const ix: number[] = [];
+    if (geo) for (const c of geo.list) {
+      const b = bucketOf(channel, data?.countries[c.iso], now);
+      if (b >= 0 && b < BUCKETS) { out[b].push(...c.fill); ix.push(b); }
+    }
+    return { bucketRings: out, bucketIx: ix };
+  }, [geo, data, channel, now]);
+  // Edges on the theme and recency channels: amber for escalating countries, green for easing, and a pulsing ring on whatever is under 24 h.
+  const edges = useMemo(() => {
+    const out = { rising: [] as Poly[], easing: [] as Poly[], fresh: [] as Poly[] };
+    if (!geo || !data || (channel !== "theme" && channel !== "recency")) return out;
+    for (const c of geo.list) {
+      const r = data.countries[c.iso];
+      if (!r) continue;
+      const ring = () => toPolys(c.rings.map((x) => [...x, x[0], x[1]]));
+      if (r.dir === "rising") out.rising.push(...ring());
+      else if (r.dir === "easing") out.easing.push(...ring());
+      if (bandOf(r.t, now) === 0) out.fresh.push(...ring());
+    }
     return out;
-  }, [geo, data, channel]);
+  }, [geo, data, channel, now]);
   const pickedIso = picked?.kind === "country" ? picked.iso : "";
   const pickedTheater = picked?.kind === "theater" ? picked.id : "";
   const outlinePolys = useMemo(() => {
@@ -101,6 +121,9 @@ export default function GlobeViewer({ data }: { data: GlobeData | null }) {
   const buckets = useRef<(SVGPathElement | null)[]>([]);
   const borders = useRef<SVGPathElement>(null);
   const outline = useRef<SVGPathElement>(null);
+  const edgeRise = useRef<SVGPathElement>(null);
+  const edgeEase = useRef<SVGPathElement>(null);
+  const edgeFresh = useRef<SVGPathElement>(null);
   const dots = useRef<(SVGCircleElement | null)[]>([]);
   const tag = useRef<HTMLSpanElement>(null);
 
@@ -166,10 +189,13 @@ export default function GlobeViewer({ data }: { data: GlobeData | null }) {
       matrix.current = m;
       world.current?.setAttribute("transform", c.zoom === 1 ? "" : `translate(${C} ${C}) scale(${c.zoom}) translate(${-C} ${-C})`);
       const l = paths(geo ? geo.coast : land, m, true);
-      fill.current?.setAttribute("d", geo ? "" : landPath(rings, m));
+      fill.current?.setAttribute("d", !geo || channel === "off" ? landPath(rings, m) : "");
       for (let b = 0; b < BUCKETS; b++) buckets.current[b]?.setAttribute("d", geo && bucketRings[b].length > 0 ? landPath(bucketRings[b], m) : "");
       borders.current?.setAttribute("d", geo ? paths(geo.borders, m, false).front : "");
       outline.current?.setAttribute("d", outlinePolys.length > 0 ? paths(outlinePolys, m, false).front : "");
+      edgeRise.current?.setAttribute("d", edges.rising.length > 0 ? paths(edges.rising, m, false).front : "");
+      edgeEase.current?.setAttribute("d", edges.easing.length > 0 ? paths(edges.easing, m, false).front : "");
+      edgeFresh.current?.setAttribute("d", edges.fresh.length > 0 ? paths(edges.fresh, m, false).front : "");
       markers.forEach((mk, i) => {
         const el = dots.current[i];
         if (!el) return;
@@ -223,7 +249,7 @@ export default function GlobeViewer({ data }: { data: GlobeData | null }) {
     const io = typeof IntersectionObserver !== "undefined" && box.current ? new IntersectionObserver((e) => { seen = e.some((x) => x.isIntersecting); }) : null;
     if (io && box.current) io.observe(box.current);
     return () => { cancelAnimationFrame(raf); io?.disconnect(); };
-  }, [land, rings, geo, bucketRings, outlinePolys, markers, showTheaters]);
+  }, [land, rings, geo, channel, bucketRings, edges, outlinePolys, markers, showTheaters]);
 
   // ---- input ------------------------------------------------------------------------------------------------------------------
   /** Pointer position -> unit-globe coordinates (radius 1, y up) for the current zoom. */
@@ -381,7 +407,8 @@ export default function GlobeViewer({ data }: { data: GlobeData | null }) {
     };
   }, [rotateBy, setMode, toGlobe, zoomBy]);
 
-  const legend = geo && data ? channels.find((c) => c.id === channel) : undefined;
+  const legendChannel = geo && data ? channels.find((c) => c.id === channel) : undefined;
+  const legend = useMemo(() => (legendChannel ? legendOf(channel, bucketIx) : null), [legendChannel, channel, bucketIx]);
 
   const toggleFullscreen = useCallback(() => {
     const el = box.current;
@@ -411,9 +438,12 @@ export default function GlobeViewer({ data }: { data: GlobeData | null }) {
           <path ref={far} className="gs-far" fill="none" strokeWidth={0.8} vectorEffect="non-scaling-stroke" />
           <path ref={fill} className="gs-land" fillRule="evenodd" stroke="none" />
           {Array.from({ length: BUCKETS }, (_, b) => (
-            <path key={b} ref={(el) => { buckets.current[b] = el; }} className={b === 0 ? "gv-bn" : `gv-b${b - 1}`} fillRule="evenodd" stroke="none" />
+            <path key={b} ref={(el) => { buckets.current[b] = el; }} className={b < bucketCount(channel) ? bucketClass(channel, b) : ""} fillRule="evenodd" stroke="none" />
           ))}
           <path ref={borders} className="gv-border" fill="none" strokeWidth={0.6} vectorEffect="non-scaling-stroke" />
+          <path ref={edgeEase} className="gv-edge-ease" fill="none" strokeWidth={1} vectorEffect="non-scaling-stroke" />
+          <path ref={edgeRise} className="gv-edge-rise" fill="none" strokeWidth={1.6} strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+          <path ref={edgeFresh} className="gv-edge-fresh" fill="none" strokeWidth={1} vectorEffect="non-scaling-stroke" />
           <path ref={coast} className="gs-coast" fill="none" strokeWidth={1} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
           <path ref={outline} className="gv-outline" fill="none" strokeWidth={1.6} strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
           <circle cx={C} cy={C} r={R} fill={`url(#${id}-l)`} />
@@ -448,61 +478,31 @@ export default function GlobeViewer({ data }: { data: GlobeData | null }) {
         </div>
       </div>
       {picked && data && <GlobePanel pick={picked} data={data} geo={geo} onClose={() => setPicked(null)} />}
-      {legend && legend.legend.length > 0 && (
-        <div className="gv-legend" aria-label={`${legend.label}: ${legend.note}`}>
-          <p className="gv-legend-note">{legend.note}{data ? ` As of ${data.asOf}.` : ""}</p>
+      {legendChannel && legend && legend.items.length > 0 && (
+        <div className="gv-legend" aria-label={`${legendChannel.label}: ${legendChannel.note}`}>
+          <p className="gv-legend-note">{legendChannel.note}</p>
+          {legend.hues.length > 0 && (
+            <ul className="gv-legend-hues">
+              {legend.hues.map((h) => (
+                <li key={h.label}><span className={`gv-sw ${h.cls}`} aria-hidden="true" />{h.label}<b>{h.n}</b></li>
+              ))}
+            </ul>
+          )}
           <ul>
-            {legend.legend.map((label, b) => (
-              <li key={label}><span className={`gv-sw gv-b${b}`} aria-hidden="true" />{label}</li>
+            {legend.items.map((it) => (
+              <li key={it.label}><span className={`gv-sw ${it.cls}`} aria-hidden="true" />{it.label}<b>{it.n}</b></li>
             ))}
           </ul>
+          {(channel === "theme" || channel === "recency") && (
+            <ul className="gv-legend-edges">
+              {channel === "theme" && <li><span className="gv-sw gv-sw-rise" aria-hidden="true" />Escalating theater</li>}
+              {channel === "theme" && <li><span className="gv-sw gv-sw-ease" aria-hidden="true" />Easing theater</li>}
+              <li><span className="gv-sw gv-sw-fresh" aria-hidden="true" />New in 24 hours (pulse)</li>
+            </ul>
+          )}
         </div>
       )}
       <p className="gv-hint" aria-hidden="true">Drag to turn · scroll to zoom · double-click to centre</p>
     </div>
-  );
-}
-
-// ---- the side panel -----------------------------------------------------------------------------------------------------------
-
-function GlobePanel({ pick, data, geo, onClose }: { pick: Pick; data: GlobeData; geo: Countries | null; onClose: () => void }) {
-  if (pick.kind === "theater") {
-    const t = data.theaters.find((x) => x.id === pick.id);
-    if (!t) return null;
-    return (
-      <aside className="gv-panel" aria-label={t.name}>
-        <button type="button" className="gv-close" onClick={onClose} aria-label="Close">&times;</button>
-        <p className="gv-panel-kind">Theater</p>
-        <h2 className="gv-panel-name"><DirTick direction={t.dir} /> {t.name}</h2>
-        {t.iso.length > 0 && <p className="gv-panel-flags"><IsoFlags codes={t.iso} link /></p>}
-        <p className="gv-panel-links"><Link href={t.href} className="xt">Latest report section ({t.date})</Link></p>
-      </aside>
-    );
-  }
-  const info = data.countries[pick.iso];
-  const name = info?.name ?? geo?.list.find((c) => c.iso === pick.iso)?.name ?? pick.iso;
-  return (
-    <aside className="gv-panel" aria-label={name}>
-      <button type="button" className="gv-close" onClick={onClose} aria-label="Close">&times;</button>
-      <p className="gv-panel-kind">Country</p>
-      <h2 className="gv-panel-name"><IsoFlags codes={[pick.iso]} /> {name}</h2>
-      {info?.headline ? (
-        <p className="gv-panel-head"><Link href={info.headline.href} className="xt">{info.headline.text}</Link><span className="gv-panel-date"> {info.headline.date}</span></p>
-      ) : (
-        <p className="gv-panel-none">Not named in the recent daily reports.</p>
-      )}
-      {info && info.theaters.length > 0 && (
-        <>
-          <p className="gv-panel-sub">Theaters</p>
-          <ul className="gv-panel-list">
-            {info.theaters.map((t) => (
-              <li key={t.id}><DirTick direction={t.dir} /> {t.href ? <Link href={t.href} className="xt">{t.name}</Link> : t.name}</li>
-            ))}
-          </ul>
-        </>
-      )}
-      {info && info.hot > 0 && <p className="gv-panel-none">{info.hot} live {info.hot === 1 ? "anomaly" : "anomalies"} going on now.</p>}
-      {info?.page && <p className="gv-panel-links"><Link href={`/intel/actors/${pick.iso}`} className="xt">Country profile</Link></p>}
-    </aside>
   );
 }

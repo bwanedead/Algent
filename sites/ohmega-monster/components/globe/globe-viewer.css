@@ -4,6 +4,8 @@
 .gv:focus-visible { outline: 2px solid var(--link-accent); outline-offset: 2px; }
 .gv:fullscreen { height: 100svh; border: 0; }
 .gv-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+/* Coastlines: bold monoline in the one hot accent, crisp over the fills (the fills carry the channels, the coast carries the shape). */
+.gv .gs-coast { stroke: var(--accent); stroke-width: 1.3px; }
 .gv-controls { position: absolute; top: 10px; left: 10px; right: 10px; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 8px; pointer-events: none; }
 .gv-seg { display: inline-flex; border: 1px solid var(--rule-strong); background: var(--bg); pointer-events: auto; }
 .gv-seg button { appearance: none; border: 0; border-right: 1px solid var(--rule); background: transparent; color: var(--link-accent); font: inherit; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 12px; min-width: 36px; cursor: pointer; }
@@ -15,20 +17,29 @@
 .gv-hint { position: absolute; right: 12px; bottom: 12px; margin: 0; font-size: 11px; color: var(--muted); opacity: 0.7; pointer-events: none; }
 @media (max-width: 640px) { .gv-hint { display: none; } .gv-seg button { padding: 8px 12px; } }
 .gv-seg-right { margin-left: auto; }
-/* Country fills by channel. Each bucket sets --fill; paths and legend swatches both read it. Restrained: one amber family, blue for "easing". */
-.gv-bn, .gv-b0, .gv-b1, .gv-b2, .gv-b3, .gv-b4 { fill: var(--fill); }
+
+/* Theme x recency (the default channel). Hue = the visual-language category token (app/visual.css) plus --gv-tech; strength = recency band:
+   under 24 h 78%, up to 7 days 46%, up to 30 days 22%, older: no fill. The steps are roughly a factor of 1.7 apart so each band reads
+   as its own step, not a fade. Hues are the same desaturated set the rest of the site uses, so they sit with the amber coast in both themes. */
+.gv { --gv-tech: #58b0e8; --fill: transparent; --amber: var(--accent); --blue: var(--link-accent); --ink: var(--muted); }
+:root[data-theme="paper"] .gv { --gv-tech: #14618f; }
+.gv-t-conflict { --th: var(--vl-conflict); }
+.gv-t-economy { --th: var(--vl-economy); }
+.gv-t-energy { --th: var(--vl-energy); }
+.gv-t-politics { --th: var(--vl-politics); }
+.gv-t-tech { --th: var(--gv-tech); }
+.gv-t-disaster { --th: var(--vl-disaster); }
+.gv-t-ink { --th: var(--ink); }
+.gv-th.gv-r0 { --fill: color-mix(in srgb, var(--th) 78%, transparent); }
+.gv-th.gv-r1 { --fill: color-mix(in srgb, var(--th) 46%, transparent); }
+.gv-th.gv-r2 { --fill: color-mix(in srgb, var(--th) 22%, transparent); }
+.gv-th, .gv-b0, .gv-b1, .gv-b2, .gv-b3 { fill: var(--fill); }
 .gv-sw { display: inline-block; width: 12px; height: 12px; margin-right: 8px; vertical-align: -1px; border: 1px solid var(--rule-strong); background: var(--fill); }
-.gv { --fill: transparent; --amber: var(--accent); --blue: var(--link-accent); }
-.gv-bn { --fill: color-mix(in srgb, var(--amber) 6%, transparent); }
-.gv[data-channel="off"] .gv-bn { --fill: color-mix(in srgb, var(--amber) 38%, transparent); }
-.gv[data-channel="recency"] .gv-b0 { --fill: color-mix(in srgb, var(--amber) 72%, transparent); }
-.gv[data-channel="recency"] .gv-b1 { --fill: color-mix(in srgb, var(--amber) 54%, transparent); }
-.gv[data-channel="recency"] .gv-b2 { --fill: color-mix(in srgb, var(--amber) 38%, transparent); }
-.gv[data-channel="recency"] .gv-b3 { --fill: color-mix(in srgb, var(--amber) 24%, transparent); }
-.gv[data-channel="recency"] .gv-b4 { --fill: color-mix(in srgb, var(--amber) 13%, transparent); }
+
+/* The other channels: one bucket class each (gv-b<n>). */
 .gv[data-channel="direction"] .gv-b0 { --fill: color-mix(in srgb, var(--amber) 72%, transparent); }
 .gv[data-channel="direction"] .gv-b1 { --fill: color-mix(in srgb, var(--muted) 46%, transparent); }
-.gv[data-channel="direction"] .gv-b2 { --fill: color-mix(in srgb, var(--blue) 50%, transparent); }
+.gv[data-channel="direction"] .gv-b2 { --fill: color-mix(in srgb, var(--vl-down) 55%, transparent); }
 .gv[data-channel="direction"] .gv-b3 { --fill: color-mix(in srgb, var(--muted) 18%, transparent); }
 .gv[data-channel="involvement"] .gv-b0 { --fill: color-mix(in srgb, var(--amber) 26%, transparent); }
 .gv[data-channel="involvement"] .gv-b1 { --fill: color-mix(in srgb, var(--amber) 44%, transparent); }
@@ -38,9 +49,24 @@
 .gv[data-channel="unusual"] .gv-b1 { --fill: color-mix(in srgb, var(--blue) 54%, transparent); }
 .gv[data-channel="unusual"] .gv-b2 { --fill: color-mix(in srgb, var(--blue) 76%, transparent); }
 .gv-border { stroke: var(--rule-strong); opacity: 0.85; }
-.gv-legend { position: absolute; left: 12px; bottom: 30px; max-width: min(300px, calc(100% - 24px)); padding: 8px 10px; border: 1px solid var(--rule); background: color-mix(in srgb, var(--bg) 86%, transparent); font-size: 11px; color: var(--muted); pointer-events: none; }
+
+/* Edges (theme and recency channels): escalating = amber outline, easing = muted green hairline, new in 24 h = a slow pulsing ring. */
+.gv-edge-rise { stroke: var(--amber); }
+.gv-edge-ease { stroke: var(--vl-down); opacity: 0.8; }
+.gv-edge-fresh { stroke: var(--strong); stroke-dasharray: 3 3; animation: gv-pulse 2.4s ease-in-out infinite; }
+@keyframes gv-pulse { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.85; } }
+@media (prefers-reduced-motion: reduce) { .gv-edge-fresh { animation: none; opacity: 0.6; } }
+.gv-sw-rise { background: transparent; border: 2px solid var(--amber); }
+.gv-sw-ease { background: transparent; border: 1px solid var(--vl-down); }
+.gv-sw-fresh { background: transparent; border: 1px dashed var(--strong); }
+
+.gv-legend { position: absolute; left: 12px; bottom: 30px; max-width: min(290px, calc(100% - 24px)); padding: 8px 10px; border: 1px solid var(--rule); background: color-mix(in srgb, var(--bg) 88%, transparent); font-size: 11px; color: var(--muted); pointer-events: none; }
 .gv-legend-note { margin: 0 0 6px; line-height: 1.35; }
 .gv-legend ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 3px; color: var(--text, inherit); }
+.gv-legend li { display: flex; align-items: center; }
+.gv-legend li b { margin-left: auto; padding-left: 10px; font-weight: 500; font-variant-numeric: tabular-nums; color: var(--muted); }
+.gv-legend-hues { grid-template-columns: 1fr 1fr; column-gap: 12px; padding-bottom: 6px; margin-bottom: 6px !important; border-bottom: 1px solid var(--rule); }
+.gv-legend-edges { margin-top: 6px !important; padding-top: 6px !important; border-top: 1px solid var(--rule); }
 .gv-asof { color: var(--muted); font-size: 12px; }
 /* Selection and theater dots. */
 .gv-outline { stroke: var(--accent); }
@@ -58,10 +84,24 @@
 .gv-panel-head { margin: 0 0 10px; }
 .gv-panel-date, .gv-panel-none { color: var(--muted); font-size: 12px; }
 .gv-panel-none { margin: 0 0 10px; }
+.gv-panel-lead { margin: 0 0 8px; color: var(--muted); font-size: 12px; }
 .gv-panel-sub { margin: 12px 0 4px; padding-top: 8px; border-top: 1px solid var(--rule); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.gv-panel-sub-inline { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
 .gv-panel-list { margin: 0 0 10px; padding: 0; list-style: none; display: grid; gap: 4px; }
 .gv-panel-links { margin: 12px 0 0; }
 .gv-panel-flags { margin: 0 0 8px; }
+.gv-panel-grid { margin: 0 0 8px; font-size: 12px; }
+.gv-panel-fine { margin: 6px 0 0; font-size: 11px; color: var(--muted); }
+.gv-counts { margin: 0 0 8px; padding: 0; list-style: none; display: grid; gap: 2px; font-size: 12px; color: var(--muted); }
+.gv-counts b { color: var(--strong); font-weight: 600; font-variant-numeric: tabular-nums; margin-right: 2px; }
+.gv-stats { margin: 0; padding: 0; list-style: none; display: grid; gap: 7px; }
+.gv-stats li { display: grid; grid-template-columns: 1fr auto; gap: 1px 10px; align-items: baseline; }
+.gv-stat-k { font-size: 12px; color: var(--muted); }
+.gv-stat-v { font-size: 13px; color: var(--strong); font-variant-numeric: tabular-nums; text-align: right; }
+/* the bar: a hairline track, the centre tick is the world median, the fill runs to the country's place on the log scale */
+.gv-stat-bar { grid-column: 1 / -1; position: relative; height: 4px; background: color-mix(in srgb, var(--rule) 70%, transparent); }
+.gv-stat-bar i { display: block; height: 100%; background: var(--accent); }
+.gv-stat-bar::after { content: ""; position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--strong); opacity: 0.7; }
 @media (max-width: 640px) {
   .gv-panel { top: auto; left: 10px; right: 10px; bottom: 10px; width: auto; max-height: 46%; }
   .gv-legend { display: none; }
