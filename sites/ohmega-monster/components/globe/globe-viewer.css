@@ -34,7 +34,7 @@
 .gv-th.gv-r1 { --fill: color-mix(in srgb, var(--th) 46%, transparent); }
 .gv-th.gv-r2 { --fill: color-mix(in srgb, var(--th) 22%, transparent); }
 .gv-th, .gv-b0, .gv-b1, .gv-b2, .gv-b3 { fill: var(--fill); }
-.gv-sw { display: inline-block; width: 12px; height: 12px; margin-right: 8px; vertical-align: -1px; border: 1px solid var(--rule-strong); background: var(--fill); }
+.gv-sw, .gv-bd { display: inline-block; width: 12px; height: 12px; margin-right: 8px; vertical-align: -1px; border: 1px solid var(--rule-strong); background: var(--fill); }
 
 /* The other channels: one bucket class each (gv-b<n>). */
 .gv[data-channel="direction"] .gv-b0 { --fill: color-mix(in srgb, var(--amber) 72%, transparent); }
@@ -60,13 +60,19 @@
 .gv-sw-ease { background: transparent; border: 1px solid var(--vl-down); }
 .gv-sw-fresh { background: transparent; border: 1px dashed var(--strong); }
 
-.gv-legend { position: absolute; left: 12px; bottom: 30px; max-width: min(290px, calc(100% - 24px)); padding: 8px 10px; border: 1px solid var(--rule); background: color-mix(in srgb, var(--bg) 88%, transparent); font-size: 11px; color: var(--muted); pointer-events: none; }
-.gv-legend-note { margin: 0 0 6px; line-height: 1.35; }
-.gv-legend ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 3px; color: var(--text, inherit); }
+.gv-legend { position: absolute; left: 10px; bottom: 28px; max-width: min(230px, calc(100% - 20px)); padding: 4px 8px 6px; border: 1px solid var(--rule); background: color-mix(in srgb, var(--bg) 88%, transparent); font-size: 10px; color: var(--muted); }
+.gv-legend-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.gv-legend-toggle { appearance: none; border: 0; background: transparent; color: var(--link-accent); font: inherit; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 0; cursor: pointer; }
+.gv-legend-toggle:hover { color: var(--link-accent-hover); }
+.gv-legend-toggle:focus-visible { outline: 2px solid var(--link-accent); outline-offset: 2px; }
+.gv-legend.is-min { padding: 0 8px; }
+.gv-legend-note { margin: 2px 0 5px; line-height: 1.3; }
+.gv-legend .gv-sw { width: 9px; height: 9px; margin-right: 6px; vertical-align: -1px; }
+.gv-legend ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 1px; color: var(--text, inherit); }
 .gv-legend li { display: flex; align-items: center; }
 .gv-legend li b { margin-left: auto; padding-left: 10px; font-weight: 500; font-variant-numeric: tabular-nums; color: var(--muted); }
-.gv-legend-hues { grid-template-columns: 1fr 1fr; column-gap: 12px; padding-bottom: 6px; margin-bottom: 6px !important; border-bottom: 1px solid var(--rule); }
-.gv-legend-edges { margin-top: 6px !important; padding-top: 6px !important; border-top: 1px solid var(--rule); }
+.gv-legend-hues { grid-template-columns: 1fr; padding-bottom: 4px; margin-bottom: 4px !important; border-bottom: 1px solid var(--rule); }
+.gv-legend-edges { margin-top: 4px !important; padding-top: 4px !important; border-top: 1px solid var(--rule); }
 .gv-asof { color: var(--muted); font-size: 12px; }
 /* Selection and theater dots. */
 .gv-outline { stroke: var(--accent); }
@@ -87,6 +93,17 @@
 .gv-panel-lead { margin: 0 0 8px; color: var(--muted); font-size: 12px; }
 .gv-panel-sub { margin: 12px 0 4px; padding-top: 8px; border-top: 1px solid var(--rule); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
 .gv-panel-sub-inline { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+/* Brief history: a bounded scroll box so the panel never outgrows the globe; the dot is the legend's theme colour (same classes). */
+.gv-panel-sub-first { margin-top: 0; padding-top: 0; border-top: 0; }
+.gv-briefs { max-height: min(300px, 38svh); overflow-y: auto; margin: 0 0 6px; border: 1px solid var(--rule); padding: 2px 8px 6px; overscroll-behavior: contain; }
+.gv-briefs:focus-visible { outline: 2px solid var(--link-accent); outline-offset: 1px; }
+.gv-briefs ul { margin: 0; padding: 0; list-style: none; }
+.gv-brief-day { display: block; margin: 8px 0 2px; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.gv-brief { display: flex; gap: 8px; align-items: baseline; padding: 2px 0; color: var(--strong); text-decoration: none; font-size: 12px; line-height: 1.35; }
+.gv-brief:hover .gv-brief-text { color: var(--link-accent-hover); text-decoration: underline; }
+.gv-bd { flex: none; width: 9px; height: 9px; margin: 0; border: 0; border-radius: 50%; background: var(--fill); }
+.gv-more { appearance: none; border: 0; background: transparent; color: var(--link-accent); font: inherit; font-size: 11px; padding: 6px 0 0; cursor: pointer; }
+.gv-more:hover { color: var(--link-accent-hover); }
 .gv-panel-list { margin: 0 0 10px; padding: 0; list-style: none; display: grid; gap: 4px; }
 .gv-panel-links { margin: 12px 0 0; }
 .gv-panel-flags { margin: 0 0 8px; }
@@ -104,5 +121,6 @@
 .gv-stat-bar::after { content: ""; position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--strong); opacity: 0.7; }
 @media (max-width: 640px) {
   .gv-panel { top: auto; left: 10px; right: 10px; bottom: 10px; width: auto; max-height: 46%; }
+  .gv-briefs { max-height: 28svh; }
   .gv-legend { display: none; }
 }
