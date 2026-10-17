@@ -104,6 +104,11 @@ headlines misses them. So four kinds arrive, kept apart by what they can prove:
   and never as something a source reported. They show that a pattern departs from normal, not why: a closed port, a rerouting, an
   exercise and a sensor gap we could not screen out all look alike, so state the departure and keep the cause attributed or open. One
   marked LEARNING rests on a young baseline: say so or leave it out. A place with no line is not proof it is normal, only that we flagged nothing.
+- OHMEGA MARITIME: vessel behaviour Ohmega derived from the ship positions it hears (AIS): a ship that went silent where others kept being heard,
+  two ships alongside in open water, a renamed or re-flagged identity, a vessel matching a sanctions list, a long dwell over a chokepoint or cable
+  corridor. Each line gives the reason it was flagged and a confidence. Cite them as "Ohmega analysis" and never as something a source reported.
+  They show a pattern, not intent or cargo: say what was seen and keep the explanation attributed or open. A silence is only reported where
+  coverage continued, and that is why it can be trusted; a ship with no line is not proof it behaved, only that we flagged nothing.
 - STATEMENTS ON RECORD: what a named official said, from the primary transcript, with its link. A
   statement proves it was SAID, not that what it says is true: report it as what the speaker said, and
   test its claims against researched evidence or leave them attributed. Resting on the transcript, the

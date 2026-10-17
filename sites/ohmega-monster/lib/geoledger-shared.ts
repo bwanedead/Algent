@@ -11,7 +11,7 @@ export type AssetType =
 
 export type AssetStatus =
   | "operational" | "claimed_struck" | "reported_damaged" | "confirmed_damaged" | "destroyed" | "restored"
-  | "unknown" | "seized" | "designated";
+  | "unknown" | "seized" | "designated" | "behaviour_flagged";
 
 export type GeoAsset = {
   id: string;
@@ -65,6 +65,7 @@ export const STATUS_LABEL: Record<AssetStatus, string> = {
   unknown: "Status unknown",
   seized: "Seized",
   designated: "Designated",
+  behaviour_flagged: "Behaviour flagged",
 };
 
 /** What each status means to a reader, in the key: who is saying it, how firmly. */
@@ -78,6 +79,7 @@ export const STATUS_MEANING: Record<AssetStatus, string> = {
   unknown: "named, outcome not stated",
   seized: "taken by a party",
   designated: "put on a list by a party",
+  behaviour_flagged: "Ohmega saw the vessel do something worth a second look (AIS); not a finding of intent",
 };
 
 export const TYPE_LABEL: Record<AssetType, string> = {
@@ -110,7 +112,8 @@ export function statusTone(s: AssetStatus | null): string {
     case "destroyed": return TONE.confirmed;
     case "restored": return TONE.restored;
     case "seized":
-    case "designated": return TONE.taken;
+    case "designated":
+    case "behaviour_flagged": return TONE.taken;
     default: return TONE.neutral;
   }
 }
