@@ -422,6 +422,28 @@ def check_live(env: dict[str, str]) -> dict[str, Any]:
     return out
 
 
+def check_sanctions() -> dict[str, Any]:
+    """Sanctions list feeds: every source fetched well within ``flags.STALE_HOURS``. Nothing on this machine is fine (not collected here)."""
+    try:
+        from datetime import datetime, timezone
+
+        from algent_backend.sanctions import flags, store
+
+        status = store.load_status()
+        if not status:
+            return {"sanctions": _check(OK, "no sanctions store on this machine (feed not collected here)")}
+        now, bad = datetime.now(timezone.utc), []
+        for src in ("ofac", "uk", "eu"):
+            row = status.get(src) or {}
+            if not row.get("last_ok"):
+                bad.append(f"{src} (never fetched" + (f": {scrub(row.get('last_error', ''))}" if row.get("last_error") else "") + ")")
+            elif (now - datetime.fromisoformat(row["last_ok"])).total_seconds() > flags.STALE_HOURS * 3600:
+                bad.append(f"{src} (last ok {row['last_ok'][:16]}Z)")
+    except Exception as exc:  # noqa: BLE001
+        return {"sanctions": _check(WARN, f"unknown: {scrub(exc)}")}
+    return {"sanctions": _check(WARN, "stale: " + "; ".join(bad)) if bad else _check(OK, "all three lists fetched recently")}
+
+
 def check_basemap(probes: Probes) -> dict[str, Any]:
     """The Natural Earth basemap (untracked data) must load, or every daily map silently disappears."""
     try:
@@ -441,7 +463,7 @@ def run_checks(env: dict[str, str] | None = None, probes: Probes | None = None,
     checks: dict[str, Any] = {}
     for part in (check_keys(env), check_database(env, probes), check_search(env, probes), check_reads(probes),
                  check_harnesses(probes), check_publish(env, probes, repo), check_runner(probes),
-                 check_system(probes), check_watchdog(probes), check_schedule(probes), check_quota(probes), check_instruments(), check_live(env), check_basemap(probes)):
+                 check_system(probes), check_watchdog(probes), check_schedule(probes), check_quota(probes), check_instruments(), check_live(env), check_sanctions(), check_basemap(probes)):
         checks.update(part)
     counts = {s: sum(1 for c in checks.values() if c["status"] == s) for s in (OK, WARN, FAIL)}
     return {"ok": counts[FAIL] == 0, "summary": f"{counts[OK]} ok, {counts[WARN]} warn, {counts[FAIL]} fail",

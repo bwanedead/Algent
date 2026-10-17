@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import time
 from collections.abc import Iterator
+from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
 
@@ -91,3 +92,34 @@ def stream_lines(url: str, *, headers: dict[str, str] | None = None) -> Iterator
             yield from resp.iter_lines()
     except httpx.HTTPError as exc:
         raise SourceError(f"{url} stream failed: {exc}") from exc
+
+
+def download(url: str, dest: Path, *, headers: dict[str, str] | None = None, system_trust: bool = False) -> Path:
+    """Stream a large body (a 30 MB list file) to ``dest`` without holding it in memory; retries transient failures.
+    Never memoised. ``system_trust`` verifies against the operating system's certificate store instead of certifi's bundle (for
+    hosts whose chain ends in a private government root, e.g. Treasury's); verification stays ON. Raises ``SourceError``
+    (``SourceUnavailable`` on 401/403) naming the URL."""
+    verify: Any = True
+    if system_trust:
+        import ssl
+
+        verify = ssl.create_default_context()
+    hdrs = {"User-Agent": USER_AGENT, "Accept": "*/*", **(headers or {})}
+    last: Exception | None = None
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    for attempt in range(RETRIES + 1):
+        _pace(url)
+        try:
+            with httpx.stream("GET", url, headers=hdrs, timeout=TIMEOUT_S, follow_redirects=True, verify=verify) as resp:
+                if resp.status_code in (401, 403):
+                    raise SourceUnavailable(f"{resp.url} -> HTTP {resp.status_code} (access denied)")
+                if resp.status_code == 200:
+                    with dest.open("wb") as fh:
+                        for chunk in resp.iter_bytes(1 << 16):
+                            fh.write(chunk)
+                    return dest
+                last = RuntimeError(f"HTTP {resp.status_code}")
+        except httpx.HTTPError as exc:
+            last = exc
+        time.sleep(1.0 * (attempt + 1))
+    raise SourceError(f"{url} failed after {RETRIES + 1} attempts: {last}")
