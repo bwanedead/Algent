@@ -2,6 +2,7 @@ import { actor, allActors, compact, fieldOf, fmt, type Actor } from "./actors";
 import { calendarForCountry } from "./calendar";
 import { getGrid } from "./geoledger";
 import type { CountryPanel, PanelStat } from "./globe/data";
+import { countryBriefs } from "./globe-briefs";
 import { liveAnomalies } from "./live";
 import { sanctionsForCountry } from "./sanctions";
 
@@ -59,8 +60,8 @@ function statsOf(a: Actor, med: Map<string, number>): PanelStat[] {
 export async function countryPanel(iso: string): Promise<CountryPanel | null> {
   if (!/^[A-Z]{2}$/.test(iso)) return null;
   const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString().slice(0, 10);
-  const [a, med, sanctions, calendar, anomalies, grid] = await Promise.all([
-    actor(iso), worldMedians(), sanctionsForCountry(iso, 30), calendarForCountry(iso, 45, 60), liveAnomalies(), getGrid(iso),
+  const [a, med, sanctions, calendar, anomalies, grid, briefs] = await Promise.all([
+    actor(iso), worldMedians(), sanctionsForCountry(iso, 30), calendarForCountry(iso, 45, 60), liveAnomalies(), getGrid(iso), countryBriefs(iso),
   ]);
   return {
     iso,
@@ -74,5 +75,6 @@ export async function countryPanel(iso: string): Promise<CountryPanel | null> {
     },
     grid: grid && grid.line ? { line: grid.line, asOf: grid.as_of } : null,
     leaders: { head_of_state: a?.leadership.head_of_state?.name ?? "", head_of_government: a?.leadership.head_of_government?.name ?? "" },
+    briefs,
   };
 }
