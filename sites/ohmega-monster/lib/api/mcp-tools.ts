@@ -5,6 +5,8 @@ import { assetOp, assetsOp, gridOp } from "./ops-assets";
 import { searchOp } from "./ops-content";
 import { anomaliesOp, instrumentOp, instrumentsOp, liveEventsOp } from "./ops-data";
 import { calendarOp, sanctionsOp } from "./ops-forward";
+import { maritimeOp } from "./ops-maritime";
+import { KIND_ORDER as MARITIME_KINDS } from "@/lib/maritime-shared";
 import { dailyOp, pulseOp, pulsesOp, statementsOp, theaterOp, theatersOp } from "./ops-desk";
 import { arr, isObj, objs, type ApiResult, type Args, type Obj } from "./util";
 
@@ -208,6 +210,25 @@ export const TOOLS: Tool[] = [
       cursor: cursor_,
     }),
     run: (a) => sanctionsOp({ ...a, source: a.list }),
+  },
+  {
+    name: "get_maritime_behaviour",
+    title: "Vessel behaviour events",
+    description:
+      "Ohmega's own analysis of the ship positions it hears (AIS): vessels that went silent where other ships kept being heard (ais_gap), ship-to-ship encounters in open water (sts), identity changes (renames, IMO or flag changes), vessels matching a sanctions designation (sanctioned) and long dwells over chokepoints or cable corridors (loiter). Each event has why_flagged, a confidence and evidence points. Original analysis (ohmega_derived), not reported by any source: a pattern seen, never a finding of intent. Receiver-coverage gaps, ports and anchorage crowds are screened out.",
+    inputSchema: schema({
+      kind: str_("Kind of behaviour.", { enum: [...MARITIME_KINDS] }),
+      active: str_("true: still going; false: ended.", { enum: ["true", "false"] }),
+      flag: str_("ISO alpha-2 flag state of a vessel involved, e.g. PA."),
+      area: str_("Part of an area name, or a country the area touches, e.g. Hormuz."),
+      imo: str_("7-digit IMO number."),
+      mmsi: str_("9-digit MMSI."),
+      min_confidence: str_("Only at or above this confidence, 0 to 1."),
+      since: str_("Only started on or after this date or ISO instant."),
+      limit: limit_(20),
+      cursor: cursor_,
+    }),
+    run: maritimeOp,
   },
   {
     name: "get_assets",

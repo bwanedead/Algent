@@ -24,6 +24,9 @@ from datetime import datetime, timezone
 from typing import Any, Callable
 
 from algent_backend import polite_http
+from algent_backend.maritime import store as maritime_store
+from algent_backend.maritime.profile import ProfileBook
+from algent_backend.maritime.watch import Watch
 
 from . import flags, headlines, points, snapshots, store, tiles
 from .ais_memory import Coverage, StaticMemory
@@ -77,8 +80,24 @@ def _save_memory(static: dict, seen: dict) -> None:
         store.record_status("stream_memory", error=f"{type(exc).__name__}: {str(exc)[:120]}")
 
 
+def _watch_cycle(watch: Watch, board: VesselBoard, now: float) -> dict[str, Any] | None:
+    """Maritime behaviour memory: fold the board into the profile book and run due detector passes. Never raises."""
+    try:
+        return watch.cycle(board, now)
+    except Exception as exc:  # noqa: BLE001 - behaviour memory must never cost the stream a snapshot
+        store.record_status("maritime", error=f"{type(exc).__name__}: {str(exc)[:160]}")
+        return None
+
+
+def _save_profiles(doc: dict[str, Any]) -> None:
+    try:
+        ProfileBook.write(maritime_store.profiles_path(), doc)
+    except Exception as exc:  # noqa: BLE001 - a failed save only costs a restart some memory
+        store.record_status("maritime", error=f"save: {type(exc).__name__}: {str(exc)[:120]}")
+
+
 async def _cycle_loop(board: VesselBoard, sky: SkyBoard, stop_at: float | None,
-                      get: Callable[..., str] = polite_http.get, sampler: Sampler | None = None) -> None:
+                      get: Callable[..., str] = polite_http.get, sampler: Sampler | None = None, watch: Watch | None = None) -> None:
     last_tracks = 0.0
     while stop_at is None or time.monotonic() < stop_at:
         started = time.time()
@@ -86,6 +105,10 @@ async def _cycle_loop(board: VesselBoard, sky: SkyBoard, stop_at: float | None,
             await asyncio.to_thread(sky.poll, get, started)
             with_tracks = started - last_tracks >= flags.PERSIST_SECONDS
             docs = build_docs(board, sky, time.time(), tracks=with_tracks, sampler=sampler)
+            if watch is not None:
+                _watch_cycle(watch, board, time.time())
+                if watch.persist_due(started):
+                    await asyncio.to_thread(_save_profiles, watch.document(started))
             res = await asyncio.to_thread(snapshots.publish, docs)
             if with_tracks:
                 last_tracks = started
@@ -101,8 +124,10 @@ async def run(key: str = "", *, max_seconds: float | None = None) -> None:
     """Run every source (the websocket only with an AIS key) and the snapshot cycle together."""
     board = VesselBoard(static=StaticMemory.load(_static_path()), coverage=Coverage.load(_coverage_path()))
     sky = SkyBoard()
+    watch = Watch.load()
+    board.watch = watch
     stop_at = None if max_seconds is None else time.monotonic() + max_seconds
-    tasks = [_cycle_loop(board, sky, stop_at, sampler=Sampler())]
+    tasks = [_cycle_loop(board, sky, stop_at, sampler=Sampler(), watch=watch)]
     if key:
         tasks.append(ais.serve(key, max_seconds=max_seconds, counter=ais.load_counter(), board=board))
     if flags.OPENSKY_ENABLED:

@@ -5,10 +5,12 @@ import Crumbs, { INTEL_CRUMB } from "@/components/Crumbs";
 import { SourceLink } from "@/components/DailyVisuals";
 import { Section } from "@/components/dossier/parts";
 import { ActorLink, TheaterLink } from "@/components/entities/EntityLinks";
+import BehaviourList from "@/components/maritime/BehaviourList";
 import PointMap from "@/components/places/PointMap";
 import { dayLabel } from "@/lib/dossier-view";
 import { countryName } from "@/lib/flags";
 import { capacityLabel, STATUS_LABEL, STATUS_MEANING, statusTone, TYPE_LABEL } from "@/lib/geoledger-shared";
+import { imoOf, maritimeForVessel } from "@/lib/maritime";
 import { placeContext } from "@/lib/places";
 
 import "@/app/geopolitics/geopolitics.css";
@@ -39,6 +41,8 @@ export default async function PlacePage({ params }: { params: Params }) {
   if (!ctx) notFound();
   if (ctx.asset.merged_into) permanentRedirect(`/intel/places/${ctx.asset.merged_into}`);          // a spelling joined into another place
   const { asset, history, theaters } = ctx;
+  const imo = asset.type === "vessel" ? imoOf(asset) : "";
+  const behaviour = imo ? await maritimeForVessel({ imo }) : []; // what Ohmega saw this ship do (AIS), beside what parties said about it
   const iso = asset.country.toUpperCase();
   const cap = capacityLabel(asset);
   const newest = [...history].reverse();
@@ -118,6 +122,16 @@ export default async function PlacePage({ params }: { params: Params }) {
           </ul>
         )}
       </Section>
+
+      {behaviour.length > 0 && (
+        <Section
+          id="behaviour"
+          title={`${behaviour.length} behaviour ${behaviour.length === 1 ? "event" : "events"} seen by Ohmega`}
+          lead="Ohmega's own analysis of this ship's AIS broadcasts, not something a party said: a pattern seen, never a finding of intent."
+        >
+          <BehaviourList events={behaviour} nowMs={Date.now()} />
+        </Section>
+      )}
 
       {theaters.length > 0 && (
         <Section id="theaters" title={`Appears in ${theaters.length} theater${theaters.length === 1 ? "" : "s"}`} lead="The theaters whose reports put it on the record.">

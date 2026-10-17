@@ -12,7 +12,7 @@ import type { Item, Layer } from "./liveItems";
 export const COLOR = { outage: "#c4574a", quake: "#d9a521", fire: "#ea6a22", gates: "#2a8f9c" } as const;
 
 /** The map groups each toggle controls (an outage can draw as a fill and, unmatched, as a point). Aircraft regions are list-only. */
-export const GROUPS: Record<Layer | "anomalies", string[]> = { outage: ["outage", "outage-pt"], quake: ["quake"], aircraft: [], fire: ["fire", "fire-note"], gates: ["gates"], anomalies: ["anomalies"] };
+export const GROUPS: Record<Layer | "anomalies" | "shadow", string[]> = { outage: ["outage", "outage-pt"], quake: ["quake"], aircraft: [], fire: ["fire", "fire-note"], gates: ["gates"], anomalies: ["anomalies"], shadow: ["shadow", "shadow-track"] };
 
 /** Places flagged as outside their learned normal (backend `live/memory`): a thin ring per still-going anomaly, warm above normal and cool below, a touch
  *  larger when more confident. Drawn over the other layers without changing them; the popup says what it is and what it is not. */

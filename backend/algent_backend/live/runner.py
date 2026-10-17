@@ -81,6 +81,9 @@ def run(names: list[str] | None = None, *, get: Callable[..., str] | None = None
         from .memory import tick as memory_tick
 
         out["memory"] = memory_tick.tick(now.timestamp(), connect=connect)
+        from algent_backend.maritime import publish as maritime_publish
+
+        out["maritime"] = maritime_publish.run(connect=connect)          # AIS behaviour events the stream service wrote: site table + ledger link
     return out
 
 

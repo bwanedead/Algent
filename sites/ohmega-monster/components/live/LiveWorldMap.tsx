@@ -9,6 +9,9 @@ import {
   type CoverageDoc, type FiresDoc, type Headline, type LiveAnomaly, type LiveEvent, type LiveStat, type LiveWorld, type Summary,
 } from "@/lib/live-shared";
 
+import EventDetail from "@/components/maritime/EventDetail";
+import { shadowEvents, SHADOW_COLOR, type MaritimeEvent } from "@/lib/maritime-shared";
+
 import ChokepointTiles from "./ChokepointTiles";
 import { AIR_KINDS, NO_FILTER, passes, regionName, SHIP_CLASSES, type Entity } from "./entities";
 import Headlines from "./Headlines";
@@ -16,6 +19,7 @@ import LayerPanel, { type FilterState, type PanelRow } from "./LayerPanel";
 import { eventItem, gateItems } from "./liveItems";
 import { anomalyRings, COLOR, GROUPS, liveLayers, WORLD_BOUNDS } from "./liveLayers";
 import LiveWorldStatic from "./LiveWorldStatic";
+import { shadowId, shadowLayers } from "./shadowLayers";
 import { Tracks } from "./TrackLayers";
 import UnusualStrip from "./UnusualStrip";
 import { loadTrails, type Trail } from "./trails";
@@ -33,7 +37,7 @@ import { useLiveEntities } from "./useLiveEntities";
 
 const BASEMAP_CREDIT = "Interactive basemap: OpenFreeMap, © OpenMapTiles, data © OpenStreetMap contributors.";
 const DATA_CREDIT = "Ships: aisstream.io, Fintraffic digitraffic.fi (CC 4.0 BY), Norwegian Coastal Administration (NLOD). Aircraft: OpenSky Network, adsb.lol. Fires: NASA FIRMS. Quakes: USGS. Outages: IODA.";
-const STORE_KEY = "ohmega-live-off-v2"; // v2: coverage became off by default
+const STORE_KEY = "ohmega-live-off-v3"; // v3: the Shadow fleet layer joined coverage as off by default
 const POLL_MS = 60_000;
 const FIRES_MS = 600_000;
 const REFRESH_TRAILS_MS = 300_000;
@@ -45,11 +49,11 @@ const HEADLINE_TOGGLE: Record<Headline["layer"], string> = { outage: "outage", q
 
 type Focus = { nonce: number; bounds?: Bounds; center?: LngLat; zoom?: number };
 
-export default function LiveWorldMap({ world, events, stats, summary: summary0, anomalies }: { world: LiveWorld | null; events: LiveEvent[]; stats: LiveStat[]; summary: Summary | null; anomalies: LiveAnomaly[] }) {
+export default function LiveWorldMap({ world, events, stats, summary: summary0, anomalies, maritime }: { world: LiveWorld | null; events: LiveEvent[]; stats: LiveStat[]; summary: Summary | null; anomalies: LiveAnomaly[]; maritime: MaritimeEvent[] }) {
   const [summary, setSummary] = useState<Summary | null>(summary0);
   const [fires, setFires] = useState<FiresDoc | null>(null);
   const [coverage, setCoverage] = useState<CoverageDoc | null>(null);
-  const [off, setOff] = useState<Set<string>>(new Set(["coverage"]));
+  const [off, setOff] = useState<Set<string>>(new Set(["coverage", "shadow"]));
   const [filters, setFilters] = useState<FilterState>({ speed: "all", notable: false, flag: "", q: "" });
   const [sel, setSel] = useState<string | null>(null);
   const [selEnt, setSelEnt] = useState<Entity | null>(null);
@@ -153,12 +157,17 @@ export default function LiveWorldMap({ world, events, stats, summary: summary0, 
   const stableGates = useMemo(() => gates, [gatesKey]); // eslint-disable-line react-hooks/exhaustive-deps -- relabel only when a count changes
   const items = useMemo(() => [...events.filter((e) => e.ends_at === null || e.kind !== "outage").map(eventItem), ...gateItems(stableGates)], [events, stableGates]);
   const rings = useMemo(() => anomalyRings(anomalies), [anomalies]);
-  const layers = useMemo(() => [...liveLayers(items, world, fires, stableGates), ...(rings ? [rings] : [])], [items, world, fires, stableGates, rings]);
+  const [loadedAt, setLoadedAt] = useState<number | null>(null); // a fixed instant: the layer's data must not change identity every clock tick (the map would re-sync)
+  useEffect(() => setLoadedAt(Date.now()), []);
+  const shadow = useMemo(() => (loadedAt === null ? [] : shadowEvents(maritime, loadedAt)), [maritime, loadedAt]);
+  const shadowSpecs = useMemo(() => shadowLayers(shadow), [shadow]);
+  const layers = useMemo(() => [...liveLayers(items, world, fires, stableGates), ...(rings ? [rings] : []), ...shadowSpecs], [items, world, fires, stableGates, rings, shadowSpecs]);
   const hidden = useMemo(() => Array.from(off).filter((k) => !k.includes(".")).flatMap((l) => GROUPS[l as keyof typeof GROUPS] ?? []), [off]);
   const unusual = useMemo(() => strongest(anomalies), [anomalies]);
   const nUnusual = anomalies.filter((a) => a.active).length;
   const shownItems = items.filter((i) => !off.has(i.layer));
   const current = items.find((i) => i.id === sel) ?? null;
+  const shadowCurrent = shadow.find((e) => shadowId(e) === sel) ?? null;
 
   // ---- the panel ----------------------------------------------------------------------------------------------------
   const when = (iso: string | undefined) => (now !== null && iso ? ago(iso, now) : "");
@@ -175,6 +184,7 @@ export default function LiveWorldMap({ world, events, stats, summary: summary0, 
     { key: "outage", label: KIND_LABEL.outage, color: COLOR.outage, count: nOutages, fresh: when(summary?.fresh.outage) },
     { key: "gates", label: "Chokepoints", color: COLOR.gates, count: Object.keys(gates ?? {}).length, fresh: "" },
     ...(anomalies.length > 0 ? [{ key: "anomalies", label: "Anomalies", color: ANOMALY_COLOR.above, count: nUnusual, fresh: "" }] : []),
+    ...(maritime.length > 0 ? [{ key: "shadow", label: "Shadow fleet", color: SHADOW_COLOR, count: shadow.length, fresh: "" }] : []),
   ];
   const flags = useMemo(() => {
     if (mode !== "full") return topFlags.map(([code, c]) => ({ code, label: regionName(code), n: c }));
@@ -293,6 +303,13 @@ export default function LiveWorldMap({ world, events, stats, summary: summary0, 
           ) : (
             <p className="live-card-src">Source: {current.source}</p>
           )}
+        </section>
+      )}
+
+      {shadowCurrent && (
+        <section className="live-card" aria-label="Vessel behaviour detail">
+          <button type="button" className="live-card-x" aria-label="Close detail" onClick={() => setSel(null)}>×</button>
+          <EventDetail e={shadowCurrent} nowMs={now} />
         </section>
       )}
 

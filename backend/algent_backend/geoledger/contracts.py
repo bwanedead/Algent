@@ -24,7 +24,7 @@ AssetType = Literal["power_plant", "substation", "refinery", "fuel_depot", "port
                     "dam", "rail_hub", "vessel", "entity", "other"]
 Precision = Literal["exact", "approximate", "city_level", "unplaced"]
 Status = Literal["operational", "claimed_struck", "reported_damaged", "confirmed_damaged", "destroyed", "restored",
-                 "unknown", "seized", "designated"]
+                 "unknown", "seized", "designated", "behaviour_flagged"]
 Provenance = Literal["aggregated", "ohmega_derived"]
 Confidence = Literal["low", "medium", "high"]
 
@@ -34,7 +34,7 @@ STATUSES: tuple[str, ...] = get_args(Status)
 DAMAGE = ("claimed_struck", "reported_damaged", "confirmed_damaged", "destroyed")
 #: Same-day tie-break when two events carry one date: the later fact wins, a confirmation beats a claim.
 _RANK = {"unknown": 0, "operational": 1, "claimed_struck": 2, "reported_damaged": 3, "confirmed_damaged": 4,
-         "destroyed": 5, "seized": 5, "designated": 5, "restored": 6}
+         "destroyed": 5, "seized": 5, "designated": 5, "behaviour_flagged": 5, "restored": 6}
 
 
 class Asset(BaseModel):
@@ -106,5 +106,7 @@ def valid_day(raw: str) -> bool:
 
 
 def latest(events: list[StatusEvent]) -> StatusEvent | None:
-    """The event that describes the asset now: newest day, then newest hour, then the more advanced status."""
+    """The event that describes the asset now: newest day, then newest hour, then the more advanced status. A behaviour flag (something
+    Ohmega observed a vessel doing) never replaces the state of the asset itself; it describes the asset only when nothing else is on record."""
+    events = [e for e in events if e.status != "behaviour_flagged"] or events
     return max(events, key=lambda e: (e.occurred_on, e.occurred_at, _RANK.get(e.status, 0), e.observed_at), default=None)

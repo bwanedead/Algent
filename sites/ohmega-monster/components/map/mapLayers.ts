@@ -18,6 +18,7 @@ export type LayerKind =
   | "icons" // heading-rotated icon images (ships, aircraft: the same arrows /live draws); `cluster` merges dense ones into counted bubbles
   | "numbered" // circles carrying a number, solid when researched and hollow when reported (the daily's marks)
   | "rings" // thin unfilled rings coloured per feature by `col` (places flagged as unusual); radius `r` in px
+  | "marks" // small discs coloured per feature by `col` with a dark rim and a faint echo ring (vessel behaviour events); radius `r` in px
   | "assets"; // infrastructure: a small disc per place coloured by `col`, faded by `op`, with its type's letter `g`
 
 export type LayerSpec = {
@@ -45,7 +46,7 @@ export type LayerSpec = {
 };
 
 export const FONT = ["Noto Sans Bold"]; // served by the OpenFreeMap glyph server for both styles
-const ORDER: Record<LayerKind, number> = { area: 0, heat: 1, line: 2, rings: 2.5, dots: 3, assets: 3.2, icons: 3.5, numbered: 4 };
+const ORDER: Record<LayerKind, number> = { area: 0, heat: 1, line: 2, rings: 2.5, dots: 3, marks: 3.1, assets: 3.2, icons: 3.5, numbered: 4 };
 export const inDrawOrder = (specs: LayerSpec[]) => [...specs].sort((a, b) => ORDER[a.kind] - ORDER[b.kind]);
 
 const sourceId = (g: string) => `lm-${g}`;
@@ -123,6 +124,11 @@ export function installLayer(map: any, spec: LayerSpec): { all: string[]; click:
       // A thin outer echo and a thin ring: present but quiet, so they never compete with the layers they annotate.
       add({ id: id("echo"), type: "circle", paint: { "circle-radius": ["+", ["coalesce", ["get", "r"], 9], 5], "circle-color": "rgba(0,0,0,0)", "circle-stroke-color": ["get", "col"], "circle-stroke-opacity": 0.28, "circle-stroke-width": 0.8 } });
       add({ id: id("ring"), type: "circle", paint: { "circle-radius": ["coalesce", ["get", "r"], 9], "circle-color": "rgba(0,0,0,0)", "circle-stroke-color": ["get", "col"], "circle-stroke-opacity": 0.85, "circle-stroke-width": 1.4 } }, true);
+      break;
+    case "marks":
+      // Dark-rimmed (the ships and aircraft on the map have white rims), so a behaviour mark never reads as a vessel icon.
+      add({ id: id("echo"), type: "circle", paint: { "circle-radius": ["+", ["coalesce", ["get", "r"], 5], 4], "circle-color": "rgba(0,0,0,0)", "circle-stroke-color": ["get", "col"], "circle-stroke-opacity": 0.4, "circle-stroke-width": 1 } });
+      add({ id: id("mark"), type: "circle", paint: { "circle-radius": ["coalesce", ["get", "r"], 5], "circle-color": ["get", "col"], "circle-opacity": 0.95, "circle-stroke-color": "#111111", "circle-stroke-width": 1.4 } }, true);
       break;
     case "assets": {
       // A status on record (ev > 0) draws larger and always carries its letter; a place that merely exists is a quiet dot whose letter

@@ -64,7 +64,7 @@ Streamable HTTP, stateless, JSON replies only (no SSE, no sessions). `POST` JSON
 2025-06-18 / 2025-03-26 / 2024-11-05), `ping`, `tools/list`, `tools/call`; notifications get 202; `GET`/`DELETE` 405.
 A failing tool returns `isError: true` text (so the model can recover); unknown tool/method are JSON-RPC errors.
 Tools (all `readOnlyHint`): `get_daily`, `list_theaters`, `get_theater`, `list_pulses`, `get_pulse`, `search`,
-`get_statements`, `get_live_events`, `get_live_anomalies`, `get_calendar`, `get_sanctions`, `get_assets`, `get_instrument`
+`get_statements`, `get_live_events`, `get_live_anomalies`, `get_maritime_behaviour`, `get_calendar`, `get_sanctions`, `get_assets`, `get_instrument`
 (`/calendar` and `/sanctions` are the REST twins: dated things ahead, and OFAC / UK / EU list changes; see `sanctions-calendar.md`). Results are one JSON text block with `as_of`, `cite_as`,
 `license`; `get_daily` / `get_theater` / `get_pulse` are compacted (`view=full` for the whole daily) and any result
 is cut at 30 000 characters with a pointer to the REST twin. Client setup is on `/developers#mcp`.

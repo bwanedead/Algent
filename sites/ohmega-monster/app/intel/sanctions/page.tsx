@@ -25,7 +25,7 @@ export default async function SanctionsPage() {
   return (
     <div className="intel-page th-page">
       <p className="th-kicker">
-        <span>Intelligence</span> <Link href="/calendar" className="xt">what&apos;s coming →</Link>
+        <span>Intelligence</span> <Link href="/calendar" className="xt">what&apos;s coming →</Link> <Link href="/intel/maritime" className="xt">maritime behaviour →</Link>
       </p>
       <h1 className="th-claim">Sanctions designations</h1>
       <p className="th-asof">

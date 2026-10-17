@@ -7,6 +7,7 @@ import { fmtDay, latestDaily } from "./daily";
 import { dossierList } from "./dossier";
 import { latestSnapshot } from "./intel";
 import { liveSummary } from "./live";
+import { maritimeEvents } from "./maritime";
 import { getMenus } from "./radar";
 import { recordLedger } from "./record";
 import { recentSanctions } from "./sanctions";
@@ -21,7 +22,7 @@ export type Door = { href: string; title: string; line: string; hint: string };
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
 const hints = cache(async () => {
-  const [daily, theaters, actors, ledger, snap, articles, menus, live, upcoming, sanctions] = await Promise.all([
+  const [daily, theaters, actors, ledger, snap, articles, menus, live, upcoming, sanctions, maritime] = await Promise.all([
     latestDaily("geopolitics"),
     dossierList(),
     actorIds(),
@@ -32,6 +33,7 @@ const hints = cache(async () => {
     liveSummary(),
     calendarItems(30),
     recentSanctions(30),
+    maritimeEvents(300),
   ]);
   const ahead30 = upcoming.filter((r) => r.on_date <= addDays(todayIso(), 30));
   const active = theaters.filter((t) => !t.merged_into);
@@ -50,6 +52,7 @@ const hints = cache(async () => {
     radar: menus[0] ? plural(menus[0].leads.length, "headline") : "",
     live: live && live.headlines.length > 0 ? `${plural(live.headlines.length, "signal")} now` : "",
     calendar: ahead30.length > 0 ? `${plural(ahead30.length, "date")} · next 30 days` : "",
+    maritime: maritime.length > 0 ? `${plural(maritime.filter((m) => m.ended_at === null).length, "event")} going · last 30 days` : "",
     sanctions: sanctions.length > 0 ? `${plural(sanctions.filter((s) => s.action === "designated").length, "addition")} · last 30 days` : "",
   };
 });
@@ -81,6 +84,7 @@ export async function intelDoors(): Promise<Door[]> {
     { href: "/intel/graph", title: "Relationships", line: "States and theaters as one network: who is involved where.", hint: h.graph },
     { href: "/intel/record", title: "The record", line: "Statements by leaders and institutions, with transcripts.", hint: h.record },
     { href: "/intel/sanctions", title: "Sanctions", line: "Who was added to or removed from the US, UK and EU lists.", hint: h.sanctions },
+    { href: "/intel/maritime", title: "Maritime behaviour", line: "Ships that went dark, met at sea, changed identity or matched a sanctions list.", hint: h.maritime },
     { href: "/calendar", title: "Calendar", line: "What is scheduled in the next 30 days, with sources.", hint: h.calendar },
     { href: "/pulses", title: "Pulses", line: "Every relationship on one 0 to 100 scale.", hint: h.pulses },
     { href: "/geopolitics", title: "Daily report", line: "The day, read theater by theater.", hint: h.daily },

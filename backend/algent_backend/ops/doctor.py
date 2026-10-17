@@ -444,6 +444,25 @@ def check_sanctions() -> dict[str, Any]:
     return {"sanctions": _check(WARN, "stale: " + "; ".join(bad)) if bad else _check(OK, "all three lists fetched recently")}
 
 
+def check_maritime() -> dict[str, Any]:
+    """Maritime behaviour memory: the stream service cycled recently (state.json) and the profile book exists. Nothing here is fine (the stream runs elsewhere)."""
+    try:
+        import time
+
+        from algent_backend.maritime import store
+
+        state = store.read_state()
+        if not state:
+            return {"maritime": _check(OK, "no maritime store on this machine (the stream service runs elsewhere)")}
+        age = (time.time() - float(state.get("last_cycle", 0.0))) / 60
+        if age > 30:
+            return {"maritime": _check(WARN, f"behaviour memory last cycled {age:.0f} min ago (is ohmega-ais running?)")}
+        events = len(store.read_current())
+    except Exception as exc:  # noqa: BLE001
+        return {"maritime": _check(WARN, f"unknown: {scrub(exc)}")}
+    return {"maritime": _check(OK, f"cycled {age:.0f} min ago; {events} events in the picture")}
+
+
 def check_calendar() -> dict[str, Any]:
     """Calendar sources: each fetched within a day and a half. Sources are best-effort pages, so a stale one is a warning."""
     try:
@@ -486,7 +505,7 @@ def run_checks(env: dict[str, str] | None = None, probes: Probes | None = None,
     checks: dict[str, Any] = {}
     for part in (check_keys(env), check_database(env, probes), check_search(env, probes), check_reads(probes),
                  check_harnesses(probes), check_publish(env, probes, repo), check_runner(probes),
-                 check_system(probes), check_watchdog(probes), check_schedule(probes), check_quota(probes), check_instruments(), check_live(env), check_sanctions(), check_calendar(), check_basemap(probes)):
+                 check_system(probes), check_watchdog(probes), check_schedule(probes), check_quota(probes), check_instruments(), check_live(env), check_sanctions(), check_maritime(), check_calendar(), check_basemap(probes)):
         checks.update(part)
     counts = {s: sum(1 for c in checks.values() if c["status"] == s) for s in (OK, WARN, FAIL)}
     return {"ok": counts[FAIL] == 0, "summary": f"{counts[OK]} ok, {counts[WARN]} warn, {counts[FAIL]} fail",
