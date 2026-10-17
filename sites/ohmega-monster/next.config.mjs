@@ -14,7 +14,12 @@ const nextConfig = {
   // Three products (Daily, Theaters, Articles) plus tools: retired routes keep working as permanent redirects.
   // Individual briefs stay reachable at /intel/briefs/<slug>; they are dated entries on their theater's timeline.
   async redirects() {
-    return [{ source: "/intel/briefs", destination: "/intel/theaters", permanent: true }];
+    return [
+      { source: "/intel/briefs", destination: "/intel/theaters", permanent: true },
+      { source: "/intel/situation", destination: "/intel", permanent: true },
+      { source: "/radar",destination: "/headlines", permanent: true },
+      { source: "/radar/:slug", destination: "/headlines/:slug", permanent: true },
+    ];
   },
 
   // Analytic assets are AI-generated SVGs (this covers /public; the Supabase bucket serves its own). In-page they render via <img> (scripts never execute

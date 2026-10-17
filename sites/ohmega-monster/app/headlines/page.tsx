@@ -1,26 +1,28 @@
 import type { Metadata } from "next";
 
-import RadarView from "@/components/RadarView";
+import HeadlinesView from "@/components/HeadlinesView";
+import PageTag from "@/components/PageTag";
 import { getMenus } from "@/lib/radar";
 
 export const metadata: Metadata = {
-  title: "Headline radar",
+  title: "Headlines",
   description: "What crossed the wire, as other outlets reported it — not yet independently verified.",
 };
 
 export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
 
-export default async function RadarIndex() {
+export default async function HeadlinesIndex() {
   const newest = (await getMenus())[0];
   if (!newest) {
     return (
       <article className="radar-page">
         <header className="article-header">
-          <h1>Headline radar</h1>
-          <p className="dek">No radar editions yet.</p>
+          <p className="ptag-row"><PageTag kind="headlines" detail="Not verified" /></p>
+          <h1>Headlines</h1>
+          <p className="dek">No headline editions yet.</p>
         </header>
       </article>
     );
   }
-  return <RadarView menu={newest} />;
+  return <HeadlinesView menu={newest} />;
 }
