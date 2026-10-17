@@ -14,6 +14,7 @@ import DailyGlance from "./DailyGlance";
 import DailyThirty from "./DailyThirty";
 import Expander from "./Expander";
 import DailySweepBlock from "./DailySweep";
+import DailyMarketView from "./DailyMarketView";
 import DailyTheaterSection from "./DailyTheater";
 import DailyWatching from "./DailyWatching";
 
@@ -186,6 +187,8 @@ export default async function DailyReport({ report, title, mark }: { report: Dai
       ))}
 
       {report.sweep && <DailySweepBlock sweep={report.sweep} />}
+
+      {report.market_view && <DailyMarketView view={report.market_view} />}
 
       <Across report={report} />
       <DailyWatching watch={report.watch} quiet={report.quiet} dossiers={dossiers} />

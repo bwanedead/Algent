@@ -52,6 +52,7 @@ Docs sprawl is a real failure mode. To prevent it:
 - `actors.md` – power profiles of states: the one country registry, World Bank/OWID/Wikidata/IMF sources, append-only store, profile/compare, publish feed and actor pages.
 - `intel-desk.md` – the intelligence desk: broad headline base, heat, per-theater novelty, new/active/quiet lifecycle, budgeted daily focus.
 - `geoledger.md` – the geospatial asset ledger: places that exist (WRI power plants, OSM infrastructure) and append-only, claimant-attributed status events; extraction from stored text, theater-map layer, `/api/v1/assets`, MCP `get_assets`.
+- `markets-track-record.md` – the reality feedback loop: Polymarket mirror (read-only), blind per-market forecasts, paper portfolio, Brier/log-loss vs the market, calibration, `/intel/track-record`, `/api/v1/track-record`. Paper only.
 - `maritime-behaviour.md` – vessel behaviour from our own AIS (AIS gaps, STS candidates, identity changes, sanctioned vessels, loitering over cable corridors): profile memory, detectors and their thresholds, publish, `/intel/maritime`, `/api/v1/maritime`, MCP `get_maritime_behaviour`.
 
 ### Guides — `guides/`
