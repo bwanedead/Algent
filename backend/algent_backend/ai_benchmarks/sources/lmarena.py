@@ -10,6 +10,7 @@ the ``full`` split is 1.2 M rows (a parquet download, which needs pyarrow) and i
 from __future__ import annotations
 
 import json
+import time
 import urllib.parse
 from datetime import UTC, datetime
 
@@ -54,11 +55,12 @@ def parse(config: str, name: str, pages: list[str], *, observed_on: str) -> Harv
 
 RETRY_WAIT_S = 20.0
 RETRY_ROUNDS = 3
+#: The whole source gets this long: the dataset viewer can stall for minutes, and the collector shares a lock with the other jobs.
+DEADLINE_S = 240.0
 
 
-def _get(url: str) -> str:
+def _get(url: str, deadline: float = float('inf')) -> str:
     """The dataset viewer answers HTTP 500 "index is loading" for tens of seconds after it was idle; a patient retry gets the page."""
-    import time
 
     from algent_backend import polite_http
 
@@ -66,18 +68,18 @@ def _get(url: str) -> str:
         try:
             return polite_http.get(url)
         except polite_http.SourceError:
-            if round_ == RETRY_ROUNDS - 1:
+            if round_ == RETRY_ROUNDS - 1 or time.monotonic() + RETRY_WAIT_S > deadline:
                 raise
             time.sleep(RETRY_WAIT_S)
     raise AssertionError("unreachable")
 
 
-def _pages(config: str) -> list[str]:
+def _pages(config: str, deadline: float = float('inf')) -> list[str]:
     pages, offset = [], 0
     for _ in range(MAX_PAGES):
         query = {"dataset": DATASET, "config": config, "split": "latest", "where": f"\"category\"='{flags.LMARENA_CATEGORY}'",
                  "offset": offset, "length": PAGE_ROWS}
-        text = _get(f"{API}?{urllib.parse.urlencode(query)}")
+        text = _get(f"{API}?{urllib.parse.urlencode(query)}", deadline)
         pages.append(text)
         offset += PAGE_ROWS
         if offset >= int(json.loads(text).get("num_rows_total", 0)):
@@ -87,10 +89,14 @@ def _pages(config: str) -> list[str]:
 
 def fetch() -> Harvest:
     observed = datetime.now(UTC).date().isoformat()
+    deadline = time.monotonic() + DEADLINE_S
     out = Harvest()
     for config, name in flags.LMARENA_CONFIGS:
+        if time.monotonic() > deadline:
+            out.problems.append(f"{config}: skipped, the source's {DEADLINE_S:.0f} s budget was spent")
+            continue
         try:
-            part = parse(config, name, _pages(config), observed_on=observed)
+            part = parse(config, name, _pages(config, deadline), observed_on=observed)
         except Exception as exc:  # noqa: BLE001 - one config down must not hide the others
             out.problems.append(f"{config}: {type(exc).__name__}: {str(exc)[:120]}")
             continue
