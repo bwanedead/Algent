@@ -26,11 +26,11 @@ export default function TraderPanel({ ctx }: PanelProps) {
       <p className="hud-big">
         <span className="hud-big-n">{usd(t.equity)}</span> <Delta text={`${signedUsd(t.pnl)} on ${usd(t.bankroll)}`} sign={t.pnl} />
       </p>
-      <svg className="hud-chart" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" role="img" aria-label={`Paper trader equity against the flat bankroll, ${t.curve.length} days`}>
+      {curve.length >= 2 && (<svg className="hud-chart" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" role="img" aria-label={`Paper trader equity against the flat bankroll, ${t.curve.length} days`}>
         <polyline className="hud-line-flat" points={line((c) => c.flat)} />
         <polyline className="hud-line-main" points={line((c) => c.trader)} />
-      </svg>
-      <p className="hud-cap"><span className="hud-key hud-key-main" /> Trader <span className="hud-key hud-key-flat" /> Flat bankroll · {t.curve[0].day} to {t.curve[t.curve.length - 1].day}</p>
+      </svg>)}
+      <p className="hud-cap">{curve.length >= 2 ? <><span className="hud-key hud-key-main" /> Trader <span className="hud-key hud-key-flat" /> Flat bankroll · {curve[0].day} to {curve[curve.length - 1].day}</> : <>Day one, {curve[0].day}: the curve draws from tomorrow</>}</p>
       {t.positions.length > 0 && (
         <>
           <p className="hud-cap">Open positions ({t.open})</p>
