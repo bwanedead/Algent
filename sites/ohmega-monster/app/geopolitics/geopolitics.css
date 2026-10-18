@@ -342,3 +342,9 @@ button.geo-figure-zoom img, .geo-figure-big { display: block; width: 100%; heigh
 /* The saga: the big picture, under a section's headline. Quieter than the headline, ahead of the developments. */
 .geo-saga { margin: 6px 0 0; max-width: 72ch; color: var(--muted); font-size: 13px; line-height: 19px; }
 .geo-gloss { margin: 0 0 8px; max-width: 72ch; color: var(--muted); font-size: 11px; line-height: 16px; }
+
+/* The Daily's edition switch (components/DomainSwitch.tsx): Geopolitics · AI. */
+.geo-domains { display: flex; gap: 14px; margin: 0 0 6px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+.geo-domain { color: var(--muted); text-decoration: none; padding: 2px 0; border-bottom: 1px solid transparent; }
+a.geo-domain:hover { color: var(--strong); border-bottom-color: var(--rule-strong); }
+.geo-domain.is-on { color: var(--strong); border-bottom-color: var(--accent); }

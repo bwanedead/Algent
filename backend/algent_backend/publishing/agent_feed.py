@@ -43,8 +43,10 @@ def reader_safe(text: str, limit: int = _MAX_RATIONALE) -> str:
 
 
 # ── urls (relative to the site root) ──────────────────────────────────────────────────────────
-def daily_url(date: str) -> str:
-    return f"/geopolitics/{date}"
+def daily_url(date: str, domain: str = "geopolitics") -> str:
+    from algent_backend.agent_system.agents.intel.domains import daily_path
+
+    return daily_path(domain, date)
 
 
 def daily_data_url(domain: str, date: str) -> str:
@@ -72,7 +74,7 @@ def _ts(value: str) -> datetime:
 # ── daily reports and briefs ──────────────────────────────────────────────────────────────────
 def public_daily(record: dict) -> dict:
     out = {k: v for k, v in record.items() if k not in _INTERNAL_DAILY_FIELDS}
-    return {**out, "url": daily_url(record["date"]), "data_url": daily_data_url(record["domain"], record["date"])}
+    return {**out, "url": daily_url(record["date"], record.get("domain", "")), "data_url": daily_data_url(record["domain"], record["date"])}
 
 
 def public_brief(record: dict) -> dict:
@@ -181,7 +183,7 @@ def _pulse_events(store: Any, catalog: list[dict]) -> list[dict]:
 def _doc_events(reports: list[dict], briefs: list[dict]) -> list[dict]:
     out = [{"type": "daily_published", "at": r.get("built_at") or r["date"], "domain": r["domain"],
             "date": r["date"], "headline": (r.get("summary") or {}).get("headline", ""),
-            "url": daily_url(r["date"]), "data_url": daily_data_url(r["domain"], r["date"])} for r in reports]
+            "url": daily_url(r["date"], r["domain"]), "data_url": daily_data_url(r["domain"], r["date"])} for r in reports]
     out += [{"type": "brief_published", "at": b.get("built_at") or b.get("as_of", ""), "slug": b["slug"],
              "title": b.get("title", ""), "theater": b.get("theater_name", ""),
              "url": brief_url(b["slug"]), "data_url": brief_data_url(b["slug"])} for b in briefs]

@@ -260,3 +260,5 @@ anon SELECT only). Commands: `newsroom live run|ais|status|schedule|publish`.
 
 Honest limits: ADS-B and AIS only show what volunteer receivers hear and what transmits (terrestrial AIS misses open ocean); counts are floors and comparable
 with themselves over time; the civil aircraft picture is a sample of busy airspace. A fire hotspot is heat, not proof of a strike. An internet outage does not say why.
+
+The `ohmega-ai-bench` timer (every 12 h) collects AI benchmark scores (Epoch hub, SWE-bench, LMArena) and publishes `data/ai-benchmarks.json`; `ohmega-ai-discovery` (daily 06:50, needs the local SearXNG) records lab-claimed scores with one capped model call (under $0.10/day; `ALGENT_AI_DISCOVERY=0` stops it). `ai_benchmarks_store/` is in the nightly backup. Doctor check `ai_benchmarks`. The AI daily is a paid job that stays off until `AI_DAILY_SCHEDULED = True` in `intel/flags.py`. See `docs/architecture/ai-desk.md`.

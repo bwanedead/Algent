@@ -52,7 +52,7 @@ from algent_backend.markets import desk as markets_desk
 
 from . import brief as br
 from . import primers as primers_mod
-from . import daily_drafts, desk, flags, focus, forecasts, geo, numbers, on_record, render
+from . import daily_drafts, desk, domains, flags, focus, forecasts, geo, numbers, on_record, render
 from . import sensing as sensing_mod
 from . import sweep as sweep_mod
 from . import visuals as visuals_mod
@@ -736,7 +736,7 @@ def _sweep_and_spotlight(run: _Run, board: dict, sections: list[dict], rows: lis
     Appends to ``sections`` / ``rows``. Never raises: a failed sweep is a report row, not a failed day.
     ``earlier`` is the day's record so far when this is a later part: its sections, updates and sweep count as
     covered, and the day's one Spotlight is not nominated twice."""
-    if not flags.sweep_enabled():
+    if not flags.sweep_enabled() or not domains.get(run.domain).sweep:
         return None
     try:   # everything, input prep included: a sweep bug must cost the sweep, never the day's paid sections
         seen = [x for s in (earlier or {}).get("theaters") or [] for x in (s, *(s.get("updates") or []))]
@@ -830,7 +830,7 @@ def _rerun_theaters(run: _Run, board: dict, theaters: dict[str, Theater], heats:
     record["theaters"] = [new.get(s.get("theater_id"), s) for s in record["theaters"]]
     try:
         summary = write_summary(run.ctx, None, record["theaters"], as_of=run.as_of, domain=run.domain,
-                                model_spec=run.model_spec, sensing=sensing_mod.across_theaters(as_of=run.as_of),
+                                model_spec=run.model_spec, sensing=sensing_mod.across_theaters(as_of=run.as_of, domain=run.domain),
                                 archive=run.summary_archive)
     except Exception as exc:  # noqa: BLE001 - the corrected section stands; the old top is kept
         print(f"[daily] summary writer failed on rerun; keeping the earlier top: {br.describe_failure(exc)}", flush=True)
@@ -920,7 +920,7 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
     if sections:
         try:
             summary = write_summary(ctx, None, sections, as_of=as_of, domain=domain, model_spec=model_spec,
-                                    sensing=sensing_mod.across_theaters(as_of=as_of), archive=run.summary_archive)
+                                    sensing=sensing_mod.across_theaters(as_of=as_of, domain=domain), archive=run.summary_archive)
         except Exception as exc:  # noqa: BLE001 - the sections stand on their own; the top is a convenience
             summary_error = br.describe_failure(exc)
             print(f"[daily] summary writer failed; publishing sections without it: {summary_error}", flush=True)

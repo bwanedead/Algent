@@ -1,6 +1,7 @@
 import { cache } from "react";
 
 import { actorIds } from "./actors";
+import { aiBenchmarks } from "./ai-benchmarks";
 import { getAllMeta } from "./articles";
 import { addDays, calendarItems, todayIso } from "./calendar";
 import { fmtDay, latestDaily } from "./daily";
@@ -23,7 +24,7 @@ export type Door = { href: string; title: string; line: string; hint: string };
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
 const hints = cache(async () => {
-  const [daily, theaters, actors, ledger, snap, articles, menus, live, upcoming, sanctions, maritime, track] = await Promise.all([
+  const [daily, theaters, actors, ledger, snap, articles, menus, live, upcoming, sanctions, maritime, track, ai, aiDaily] = await Promise.all([
     latestDaily("geopolitics"),
     dossierList(),
     actorIds(),
@@ -36,6 +37,8 @@ const hints = cache(async () => {
     recentSanctions(30),
     maritimeEvents(300),
     trackRecord(),
+    aiBenchmarks(),
+    latestDaily("ai"),
   ]);
   const ahead30 = upcoming.filter((r) => r.on_date <= addDays(todayIso(), 30));
   const active = theaters.filter((t) => !t.merged_into);
@@ -55,6 +58,8 @@ const hints = cache(async () => {
     calendar: ahead30.length > 0 ? `${plural(ahead30.length, "date")} · next 30 days` : "",
     maritime: maritime.length > 0 ? `${plural(maritime.filter((m) => m.ended_at === null).length, "event")} going · last 30 days` : "",
     track: track ? `${plural(track.scores.compared, "market")} compared · ${plural(track.markets.open, "open market")}` : "",
+    ai: ai ? `${plural(ai.benchmarks.length, "benchmark")} · ${plural(ai.labs.length, "lab")}` : "",
+    aiDaily: aiDaily ? fmtDay(aiDaily.date) : "",
     sanctions: sanctions.length > 0 ? `${plural(sanctions.filter((s) => s.action === "designated").length, "addition")} · last 30 days` : "",
   };
 });
@@ -82,6 +87,8 @@ export async function toolDoors(): Promise<Door[]> {
     { href: "/intel/maritime", title: "Maritime", line: "Ships that went dark, met at sea, changed identity or matched a sanctions list.", hint: h.maritime },
     { href: "/intel/forecasts", title: "Forecasts", line: "Every open forecast on one timeline, and the track record.", hint: "" },
     { href: "/intel/track-record", title: "Track record", line: "Our forecasts scored against Polymarket prices, misses included. Paper only.", hint: h.track },
+    { href: "/ai", title: "AI Daily", line: "The Daily for artificial intelligence: the labs' race, chips, policy, security, open weights and capital.", hint: h.aiDaily },
+    { href: "/intel/ai", title: "AI benchmarks", line: "Frontier model scores on public benchmarks, open against closed, lab by lab.", hint: h.ai },
     { href: "/intel/graph", title: "Graph", line: "States and theaters as one network: who is involved where.", hint: h.graph },
     { href: "/live", title: "Live", line: "The live map: ships, aircraft, quakes, fires and outages.", hint: h.live },
     { href: "/intel/actors", title: "Actors", line: "Population, economy, energy and military of each state.", hint: h.actors },

@@ -292,4 +292,5 @@ backend/sanctions_store/
 backend/maritime_store/
 backend/calendar_store/
 backend/markets_store/
+backend/ai_benchmarks_store/
 backend/retrieval_store/

@@ -20,19 +20,26 @@ export type TheaterDay = {
 
 const TOP_DEVELOPMENTS = 4;
 
+// Every domain's Daily is read (the backend files a theater under one domain, so at most one of them has its sections); a section links to its own domain's page.
+const DOMAIN_BASES: [string, string][] = [["geopolitics", "/geopolitics"], ["ai", "/ai"]];
+
 /** Every day this theater had a section in the Daily, newest first. Days it was not written up are simply absent. */
 export async function theaterDays(theaterId: string): Promise<TheaterDay[]> {
-  const dates = await allDailyDates("geopolitics");
-  const reports = await Promise.all(dates.map((d) => daily("geopolitics", d)));
+  const perDomain = await Promise.all(
+    DOMAIN_BASES.map(async ([domain, base]) => {
+      const dates = await allDailyDates(domain);
+      return (await Promise.all(dates.map((d) => daily(domain, d)))).map((r, i) => ({ r, date: dates[i], base }));
+    }),
+  );
   const out: TheaterDay[] = [];
-  reports.forEach((r, ri) => {
+  perDomain.flat().forEach(({ r, date, base }) => {
     if (!r) return;
     const i = r.theaters.findIndex((t) => t.theater_id === theaterId && t.kind !== "update");
     if (i < 0) return;
     const t = r.theaters[i];
     out.push({
-      date: dates[ri],
-      href: `/geopolitics/${dates[ri]}#${theaterAnchor(t, i)}`,
+      date,
+      href: `${base}/${date}#${theaterAnchor(t, i)}`,
       claim: headlineOf(t.headline, t.bottom_line, 160) || t.name,
       bottomLine: t.bottom_line,
       direction: t.escalation.direction,
@@ -41,5 +48,5 @@ export async function theaterDays(theaterId: string): Promise<TheaterDay[]> {
       updates: t.updates.length,
     });
   });
-  return out;
+  return out.sort((a, b) => b.date.localeCompare(a.date));
 }

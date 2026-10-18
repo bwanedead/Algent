@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 const TOOL_PREFIXES = ["/intel", "/pulses", "/calendar", "/headlines", "/globe"];
 const LINKS: { href: string; label: string; match: (p: string) => boolean }[] = [
   { href: "/", label: "Home", match: (p) => p === "/" },
-  { href: "/geopolitics", label: "Daily", match: (p) => p.startsWith("/geopolitics") },
+  { href: "/geopolitics", label: "Daily", match: (p) => p.startsWith("/geopolitics") || p === "/ai" || p.startsWith("/ai/") },
   { href: "/intel/theaters", label: "Theaters", match: (p) => p.startsWith("/intel/theaters") },
   { href: "/articles", label: "Articles", match: (p) => p.startsWith("/articles") },
   { href: "/live", label: "Live", match: (p) => p.startsWith("/live") },

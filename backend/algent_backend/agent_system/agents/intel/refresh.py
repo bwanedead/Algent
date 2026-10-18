@@ -62,9 +62,27 @@ def _statements(context: Any, model_spec: Any) -> dict[str, Any]:
     return out
 
 
+def _ai_library() -> dict[str, Any]:
+    """The AI desk's crawl: its own sources only, so the AI daily never waits on (or pays for) the geopolitics crawl."""
+    from algent_backend.library.ai_sources import AI_SOURCE_IDS
+    from algent_backend.library.crawl import crawl
+
+    rep = crawl(sorted(AI_SOURCE_IDS), max_total=LIBRARY_MAX_PAGES)
+    return {k: v for k, v in rep.items() if not isinstance(v, (list, dict))}
+
+
+def _ai_benchmarks() -> dict[str, Any]:
+    """The benchmark tracker (free HTTP), then its site document: the AI theaters' hard numbers."""
+    from algent_backend.ai_benchmarks import collect, publish
+
+    rep = collect.collect()
+    return {"sources": [{k: r.get(k) for k in ("source", "status", "new", "error") if r.get(k) is not None} for r in rep["sources"]],
+            "publish": publish.publish()}
+
+
 def refresh(context: Any, model_spec: Any, *, instruments: Callable[[], dict] = _instruments,
             statements: Callable[[Any, Any], dict] = _statements,
-            library: Callable[[], dict] | None = None) -> dict[str, Any]:
+            library: Callable[[], dict] | None = None, domain: str = "geopolitics") -> dict[str, Any]:
     """Refresh the layers, library first (the reported-statements lane searches it, and the heat board's
     novelty reads it); returns ``{"library": ..., "instruments": ..., "statements": ...}`` where a layer that
     raised reports ``{"error": "..."}`` instead. ``library`` defaults to the real crawl only when the other
@@ -73,10 +91,12 @@ def refresh(context: Any, model_spec: Any, *, instruments: Callable[[], dict] = 
     if real and os.environ.get(_REFRESH_ENV, "").strip().lower() in ("0", "false", "no", "off"):
         return {"skipped": f"{_REFRESH_ENV}=0"}       # one-shot off switch; the test suite sets it for every test
     if library is None:
-        library = _library if real else (lambda: {"skipped": True})
+        library = (_ai_library if domain == "ai" else _library) if real else (lambda: {"skipped": True})
     report: dict[str, Any] = {}
-    for name, call in (("library", library), ("instruments", lambda: instruments()),
-                       ("statements", lambda: statements(context, model_spec))):
+    # The AI desk's layers: its own crawl and the benchmark tracker. No statements extraction (paid, and a geopolitics ledger).
+    layers = ((("library", library), ("ai_benchmarks", _ai_benchmarks if real else (lambda: {"skipped": True}))) if domain == "ai"
+              else (("library", library), ("instruments", lambda: instruments()), ("statements", lambda: statements(context, model_spec))))
+    for name, call in layers:
         try:
             report[name] = call()
         except Exception as exc:  # noqa: BLE001 - a layer being down must never fail the day

@@ -4,6 +4,7 @@ import DailyReport from "@/components/DailyReport";
 import DailyHeadlines from "@/components/DailyHeadlines";
 import DayKeys from "@/components/DayKeys";
 import DayNav from "@/components/DayNav";
+import DomainSwitch from "@/components/DomainSwitch";
 import GlobeSpinner from "@/components/GlobeSpinner";
 import { allDailyDates, dayHref, type Daily } from "@/lib/daily";
 
@@ -20,6 +21,7 @@ export default async function GeopoliticsDay({ report }: { report: Daily }) {
   return (
     <div className="intel-page">
       <DayKeys prev={older} next={newer} />
+      <DomainSwitch current="geopolitics" />
       <DayNav dates={dates} current={report.date} domain={DOMAIN} base={BASE} placement="top" />
       <DailyReport report={report} title="Geopolitics" mark={<Link href="/globe" className="globe-link" aria-label="Open the interactive globe" title="Open the interactive globe"><GlobeSpinner cycle decorative size={144} className="globe-mark" /></Link>} />
       {i === 0 && <DailyHeadlines />}

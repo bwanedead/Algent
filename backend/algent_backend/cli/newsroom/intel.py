@@ -38,6 +38,7 @@ def add_parser(sub: Any) -> None:
     verbs = p.add_subparsers(dest="intel_verb", required=True)
     h = verbs.add_parser("heat", help="find the active theaters and how hot they are")
     h.add_argument("--days", type=int, default=7)
+    h.add_argument("--domain", default="geopolitics", help="whose board: geopolitics (default) or ai; each domain has its own sources and board")
     b = verbs.add_parser("brief", help="write briefs on hot theaters")
     b.add_argument("--theater", default="", help="a theater id (default: the hottest ones)")
     b.add_argument("--top", type=int, default=3)
@@ -108,6 +109,12 @@ def run_intel(args: Any) -> int:
             "dossiers": _dossiers}[args.intel_verb](args)
 
 
+def _domain(args: Any) -> str:
+    """The single domain a verb works on (``cycle``'s repeatable --domain filters briefs instead and leaves the board geopolitics)."""
+    value = getattr(args, "domain", "geopolitics")
+    return value.strip().lower() if isinstance(value, str) and value.strip() else "geopolitics"
+
+
 def _refresh_sensing(args: Any) -> dict[str, Any]:
     """Refresh the numbers and statements layers before the desk writes. Never raises; ``--no-refresh`` skips."""
     if getattr(args, "no_refresh", False):
@@ -116,7 +123,8 @@ def _refresh_sensing(args: Any) -> dict[str, Any]:
     from algent_backend.agent_system.foundation.models import house_spec
 
     try:
-        return refresh.refresh(_ctx("intel-sensing"), house_spec(reasoning_effort="low", temperature=0.1, max_tokens=8192))
+        return refresh.refresh(_ctx("intel-sensing"), house_spec(reasoning_effort="low", temperature=0.1, max_tokens=8192),
+                               **({"domain": _domain(args)} if _domain(args) != "geopolitics" else {}))
     except Exception as exc:  # noqa: BLE001 - e.g. the model resolver cannot be built; the day goes on
         return {"error": f"{type(exc).__name__}: {str(exc)[:200]}"}
 
@@ -132,14 +140,19 @@ def _heat(args: Any, *, publish: bool = True) -> int:
 
     from algent_backend.agent_system.agents.intel import base
 
-    # The window ends today (the radar may not have run); radar + Wikipedia Current Events + our library.
-    board = heat.run(_ctx("intel-heat"), None, read_editions(), days=args.days,
+    # The window ends today (the radar may not have run); geopolitics: radar + Wikipedia Current Events + our library. Other domains
+    # bring their own sources (intel/domains.py) and write their own board.
+    domain = _domain(args)
+    geo = domain == "geopolitics"
+    board = heat.run(_ctx("intel-heat"), None, read_editions() if geo else [], days=args.days,
                      model_spec=house_spec(reasoning_effort="low", temperature=0.1, max_tokens=16384),
-                     loaders=base.default_loaders(), today=date.today(), covered_before=date.today().isoformat())
+                     loaders=base.default_loaders() if geo else None, today=date.today(), covered_before=date.today().isoformat(),
+                     domain=domain)
     out = _out(board["as_of"])
-    (out / "board.json").write_text(json.dumps(board, ensure_ascii=False, indent=2), encoding="utf-8")
-    (out / "board.html").write_text(render.render_board(board), encoding="utf-8")
-    report: dict[str, Any] = {"board": str(out / "board.html"), "theaters": [
+    stem = "board" if geo else f"board_{domain}"
+    (out / f"{stem}.json").write_text(json.dumps(board, ensure_ascii=False, indent=2), encoding="utf-8")
+    (out / f"{stem}.html").write_text(render.render_board(board), encoding="utf-8")
+    report: dict[str, Any] = {"board": str(out / f"{stem}.html"), "theaters": [
         {"id": h["theater_id"], "name": h["name"], "recent": h["recent"], "trend": h["trend"], "heat": h["heat"]}
         for h in board["heat"]]}
     if publish:
@@ -333,9 +346,9 @@ def _daily(args: Any) -> int:
     sensing_refresh = {} if only or edition > 1 else _refresh_sensing(args)   # a targeted rerun keeps the day's inputs
     if not only and _heat(args, publish=False) != 0:
         return 1
-    board = desk.latest_board()
+    board = desk.latest_board(*(() if _domain(args) == "geopolitics" else (_domain(args),)))
     if board is None:
-        print(json.dumps({"error": "no heat board"}))
+        print(json.dumps({"error": "no heat board" + ("" if _domain(args) == "geopolitics" else f" for {_domain(args)}")}))
         return 2
     # The report is dated the day it is written (as_of, above), not the board's date, which is the newest radar
     # edition's: on a day the radar had not run, "today's" daily silently overwrote yesterday's record.

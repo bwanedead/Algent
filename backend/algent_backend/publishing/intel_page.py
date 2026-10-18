@@ -322,7 +322,7 @@ def build_pulse_feed(store: Any, *, now: datetime | None = None) -> dict:
 def build_index(snapshot: dict) -> dict:
     """The compact agent index (``public/data/intel.json``) distilled from a snapshot."""
     return {"schema": "ohmega.intel.index/1", "built_at": snapshot["built_at"],
-            "daily": [{**d, "url": agent_feed.daily_url(d["date"]),
+            "daily": [{**d, "url": agent_feed.daily_url(d["date"], d["domain"]),
                        "data_url": agent_feed.daily_data_url(d["domain"], d["date"])} for d in snapshot["daily"]],
             "briefs": [{**b, "url": agent_feed.brief_url(b["slug"]), "data_url": agent_feed.brief_data_url(b["slug"])}
                        for b in snapshot["briefs"]],

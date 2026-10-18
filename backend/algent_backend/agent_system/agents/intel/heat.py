@@ -26,7 +26,7 @@ from typing import Any
 from pydantic import BaseModel, Field
 
 from . import base as base_mod
-from . import lineage
+from . import domains, lineage
 from .contracts import ClassShare, HeatPoint, Member, Theater, TheaterHeat
 
 _STORE_ENV = "ALGENT_INTEL_STORE"
@@ -118,22 +118,25 @@ def _slug(name: str) -> str:
     return "thr_" + (re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")[:48] or "theater")
 
 
-def cluster(context: Any, config: Any, heads: dict[str, dict], *, model_spec: Any) -> list[Theater]:
-    """One call: group the window's headlines into theaters, reusing known theater ids."""
+def cluster(context: Any, config: Any, heads: dict[str, dict], *, model_spec: Any, domain: str = domains.GEOPOLITICS) -> list[Theater]:
+    """One call: group the window's headlines into theaters, reusing known theater ids. On a non-geopolitics board only that domain's
+    tracked theaters are shown and every theater is filed under the domain (see ``domains``)."""
     from langchain_core.messages import HumanMessage, SystemMessage
 
     from algent_backend.agent_system.prompting import UNIVERSAL_AGENT_BASE, compose_system_prompt
 
     reg = registry()
-    nominated = lineage.nominations_block(reg, as_of=max((date.fromisoformat(h["day"]) for h in heads.values()),
-                                                         default=date.today()))
+    dom = domains.get(domain)
+    mine = {k: v for k, v in reg.items() if domains.owns(dom.id, v.get("domain", ""))}
+    nominated = (lineage.nominations_block(mine, as_of=max((date.fromisoformat(h["day"]) for h in heads.values()), default=date.today()))
+                 if dom.id == domains.GEOPOLITICS else "")          # red lines and threats on the record are the geopolitics desk's signal
     lines = "\n".join(f"[{hid}] {h['day']} ({h.get('kind', 'radar')}) — {h['title']}"
                       + (f": {h['thesis'][:160]}" if h.get("thesis") else "") for hid, h in heads.items())
     signals = f"SIGNALS THAT MAY DESERVE THEIR OWN THEATER:\n{nominated}\n\n" if nominated else ""
-    task = (f"THEATERS ALREADY TRACKED:\n{lineage.describe_known(reg)}\n\n{signals}"
+    task = (f"THEATERS ALREADY TRACKED:\n{lineage.describe_known(mine)}\n\n{signals}"
             f"HEADLINES:\n{lines}\n\nTASK: group them into theaters.")
     model = context.model_resolver.resolve(model_spec).client.with_structured_output(TheaterPlan)
-    plan = model.invoke([SystemMessage(content=compose_system_prompt(UNIVERSAL_AGENT_BASE, CLUSTER_ROLE)),
+    plan = model.invoke([SystemMessage(content=compose_system_prompt(UNIVERSAL_AGENT_BASE, CLUSTER_ROLE + dom.note())),
                          HumanMessage(content=task)], config=config)
     theaters: dict[str, Theater] = {}
     for p in getattr(plan, "theaters", []) or []:
@@ -147,7 +150,7 @@ def cluster(context: Any, config: Any, heads: dict[str, dict], *, model_spec: An
         have = theaters.get(r.id)
         if have is None:                     # two proposals landing in one theater (a merge) become one
             name = reg[r.id]["name"] if r.merged and r.id in reg else p.name
-            theaters[r.id] = Theater(id=r.id, name=name, domain=p.domain, description=p.description, why=p.why,
+            theaters[r.id] = Theater(id=r.id, name=name, domain=p.domain if dom.id == domains.GEOPOLITICS else dom.id, description=p.description, why=p.why,
                                      members=members, parent_id=r.parent_id, absorbed=list(r.merged))
         else:
             have.members += [m for m in members if (m.edition, m.n) not in {(x.edition, x.n) for x in have.members}]
@@ -266,7 +269,7 @@ def measure(theater: Theater, editions: list[dict], *, days: int, today: date,
 
 def run(context: Any, config: Any, editions: list[dict], *, model_spec: Any, days: int = 7,
         loaders: dict[str, base_mod.Loader] | None = None, today: date | None = None,
-        covered_before: str = "", write: bool = True) -> dict:
+        covered_before: str = "", write: bool = True, domain: str = domains.GEOPOLITICS) -> dict:
     """Assemble the base, cluster it, measure heat, record novelty and lifecycle, remember the theaters.
     Returns the heat board.
 
@@ -276,10 +279,13 @@ def run(context: Any, config: Any, editions: list[dict], *, model_spec: Any, day
     board without touching the registry or the board snapshot (the live check, tests)."""
     from . import focus
 
+    dom = domains.get(domain)
+    if not dom.uses_radar:                  # a domain with its own sources: the newsroom's radar picks are not its headlines
+        editions, loaders = [], loaders if loaders is not None else dom.loaders()
     base = base_mod.assemble(editions, days=days, today=today, loaders=loaders)
     heads = base.heads
     as_of = today or (max(date.fromisoformat(h["day"]) for h in heads.values()) if heads else date.today())
-    theaters = cluster(context, config, heads, model_spec=model_spec)
+    theaters = cluster(context, config, heads, model_spec=model_spec, domain=dom.id)
     reg = registry()
     for t in theaters:
         entry = reg.get(t.id, {"first_seen": as_of.isoformat()})
@@ -291,11 +297,11 @@ def run(context: Any, config: Any, editions: list[dict], *, model_spec: Any, day
     focus.annotate(theaters, heat, reg, as_of=as_of, days=days, covered_before=covered_before or as_of.isoformat())
     if write:
         _save_registry(reg)
-    board = {"as_of": as_of.isoformat(), "window_days": days, "headlines": len(heads), "base": base.summary(),
+    board = {"domain": dom.id, "as_of": as_of.isoformat(), "window_days": days, "headlines": len(heads), "base": base.summary(),
              "theaters": [t.model_dump() for t in theaters], "lineage": events, "heat": [h.model_dump() for h in heat],
              "lifecycle": focus.offboard(reg, {t.id for t in theaters}, as_of=as_of, days=days)}
     if write:
-        snap = store_dir() / "boards" / f"{as_of.isoformat()}.json"
+        snap = domains.boards_dir(store_dir(), dom.id) / f"{as_of.isoformat()}.json"
         snap.parent.mkdir(parents=True, exist_ok=True)
         snap.write_text(json.dumps(board, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     return board

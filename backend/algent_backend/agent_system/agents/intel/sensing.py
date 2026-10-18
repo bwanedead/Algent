@@ -74,6 +74,9 @@ class Evidence:
     """What sensing contributed for one writer call: the prompt blocks and the URLs they make citable."""
 
     instruments: str = ""
+    benchmarks: str = ""                                   # OHMEGA AI BENCHMARKS block (AI theaters only; ai_benchmarks/evidence)
+    benchmark_urls: set[str] = field(default_factory=set)   # the measured sources it cites (lab claims are never citable)
+    n_benchmarks: int = 0
     statements: str = ""
     histories: list[str] = field(default_factory=list)
     instrument_urls: set[str] = field(default_factory=set)      # public-display sources only
@@ -102,11 +105,11 @@ class Evidence:
 
     @property
     def primary_urls(self) -> set[str]:
-        return self.instrument_urls | self.statement_urls | self.live_urls | self.coming_urls
+        return self.instrument_urls | self.statement_urls | self.live_urls | self.coming_urls | self.benchmark_urls
 
     def render(self) -> str:
         """The blocks for a writer's task text ('' when there are none), ending in a blank line."""
-        parts = [p for p in (self.instruments, self.live, self.grid, self.anomalies, self.maritime, self.coming, self.statements, *self.histories) if p]
+        parts = [p for p in (self.instruments, self.benchmarks, self.live, self.grid, self.anomalies, self.maritime, self.coming, self.statements, *self.histories) if p]
         return "\n\n".join(parts) + "\n\n" if parts else ""
 
 
@@ -214,6 +217,15 @@ def _instrument_block(theater: Theater, actors: Any, as_of: date | None
     rows = sorted(rows, key=lambda r: (-score[r["series_id"]], not (r["unusual"] and r["new"])))[:MAX_INSTRUMENT_LINES]
     return (evidence.render_block(rows, as_of=as_of), {r["source_url"] for r in rows if r["public_display"]},
             tags, len(rows), rows)
+
+
+def _benchmark_block(day: date | None = None) -> tuple[str, set[str], int]:
+    """The AI desk's numbers: new measured benchmark records and lab claims (marked unverified), plus a note when a source stopped updating."""
+    from algent_backend.ai_benchmarks import evidence as ai_evidence
+
+    text, urls, n = ai_evidence.block(as_of=day)
+    note = ai_evidence.stale_note()
+    return (f"{text}\n\n{note}".strip() if note else text), urls, n
 
 
 # ── live events ───────────────────────────────────────────────────────────────────────────────
@@ -448,6 +460,8 @@ def for_theater(theater: Theater, *, as_of: str | date, actors: list[str] | tupl
          ev.statement_dates) = _statement_block(
             theater, actors, day, days=statement_days, limit=statement_limit, history_days=history_days)
         ev.n_statements = len(ev.shown)
+        if (theater.domain or "").lower() == "ai":
+            ev.benchmarks, ev.benchmark_urls, ev.n_benchmarks = _benchmark_block(day)
         ev.live, ev.live_urls, ev.n_live = _live_block(theater, actors)
         ev.grid, grid_urls = _grid_block(theater, actors, day.isoformat())
         ev.live_urls = ev.live_urls | grid_urls
@@ -485,10 +499,17 @@ def _trending(series_id: str, day: date) -> bool:
     return sd > 0 and abs(statistics.fmean(steps)) / (sd / math.sqrt(len(steps))) > moves.Z_LIMIT
 
 
-def across_theaters(*, as_of: str | date, days: int = CROSS_DAYS) -> Evidence:
+def across_theaters(*, as_of: str | date, days: int = CROSS_DAYS, domain: str = "geopolitics") -> Evidence:
     """For the day's top: the flagged moves across ALL series (except ones that merely trend) and the weightiest
     recent statements across ALL actors, so a major speech or number lands even when no hot theater claims
-    it. Never raises."""
+    it. The AI desk's cross-theater view is its benchmark block (the geopolitics series and ledger are not its numbers). Never raises."""
+    if (domain or "").lower() == "ai":
+        try:
+            ev = Evidence()
+            ev.benchmarks, ev.benchmark_urls, ev.n_benchmarks = _benchmark_block(date.fromisoformat(as_of) if isinstance(as_of, str) else as_of)
+            return ev
+        except Exception as exc:  # noqa: BLE001
+            return Evidence(error=f"{type(exc).__name__}: {str(exc)[:160]}")
     try:
         day = date.fromisoformat(as_of) if isinstance(as_of, str) else as_of
         rows = [r for r in evidence.moves_board(None, as_of=day)
@@ -530,6 +551,8 @@ def summary_for_report(ev: Evidence) -> dict[str, Any]:
         out["maritime"] = ev.n_maritime
     if ev.n_coming:
         out["coming"] = ev.n_coming
+    if ev.n_benchmarks:
+        out["benchmarks"] = ev.n_benchmarks
     if ev.error:
         out["error"] = ev.error
     return out
