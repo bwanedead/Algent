@@ -122,7 +122,7 @@ async function traderBlock(): Promise<HudTrader | null> {
   const t = rec?.trader;
   if (!rec || !t) return null;
   const curve = t.curve.filter((c): c is typeof c & { trader: number } => c.trader !== null).slice(-CURVE_DAYS).map((c) => ({ day: c.day, flat: c.flat, trader: c.trader }));
-  if (curve.length < 2) return null;
+  if (curve.length === 0) return null;
   return {
     asOf: rec.as_of, bankroll: t.limits.bankroll, equity: t.summary.equity, pnl: t.summary.pnl, open: t.summary.open, curve,
     positions: [...t.open_positions].sort((a, b) => Math.abs(b.pnl) - Math.abs(a.pnl)).slice(0, 6).map((p) => ({ question: p.question, side: p.side, pnl: p.pnl, value: p.value, url: p.url })),
