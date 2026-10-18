@@ -74,8 +74,10 @@ def task_for(m: Market, ev: evidence_mod.Evidence, today: date) -> str:
               f"WHAT THE DESK KNOWS:\n{body}\n\nTASK: the probability this resolves YES, with a brief rationale and the evidence ids you used.")
 
 
-def default_ask() -> Ask:
-    """(task, role) -> (ForecastOut, usd). The house model at low effort under a per-call cap and the budget gate."""
+def default_ask(role: str = ROLE, schema: type[BaseModel] = ForecastOut, cap_usd: float = flags.FORECAST_CALL_CAP_USD,
+                effort: str = "low", max_tokens: int = 2048) -> Ask:
+    """(task, role) -> (structured answer, usd). The house model under a per-call cap and the budget gate. The trader reuses this
+    plumbing with its own role, schema and cap."""
     from langchain_core.messages import HumanMessage, SystemMessage
 
     from algent_backend.agent_system.foundation import cost
@@ -84,14 +86,14 @@ def default_ask() -> Ask:
     from algent_backend.agent_system.foundation.models.resolver import ModelResolver
     from algent_backend.agent_system.prompting import UNIVERSAL_AGENT_BASE, compose_system_prompt
 
-    spec = house_spec(reasoning_effort="low", temperature=0.2, max_tokens=2048)
+    spec = house_spec(reasoning_effort=effort, temperature=0.2, max_tokens=max_tokens)
     client = ModelResolver().resolve(spec).client
     model = gate_chat_model(client)
-    system = compose_system_prompt(UNIVERSAL_AGENT_BASE, ROLE)
+    system = compose_system_prompt(UNIVERSAL_AGENT_BASE, role)
 
     def ask(task: str, _role: str = "") -> tuple[Any, float]:
-        with cost.scoped(flags.FORECAST_CALL_CAP_USD, spec.model):
-            out = model.with_structured_output(ForecastOut).invoke([SystemMessage(content=system), HumanMessage(content=task)])
+        with cost.scoped(cap_usd, spec.model):
+            out = model.with_structured_output(schema).invoke([SystemMessage(content=system), HumanMessage(content=task)])
             led = cost.current_ledger()
             usd = led.spent_usd if led is not None else cost.spent_usd()
         return out, round(float(usd), 6)
@@ -131,7 +133,18 @@ def candidates(now: datetime) -> list[Market]:
     return sorted(out, key=lambda m: (not m.theaters, -m.volume))
 
 
-def run(*, ask: Ask | None = None, now: datetime | None = None, limit: int | None = None, record: dict[str, Any] | None = None) -> dict[str, Any]:
+def evidence_index(today: date) -> Any:
+    """The retrieval index shared by a pass (built once). None if it cannot be built: the base evidence still works."""
+    try:
+        from algent_backend.retrieval.search import Index
+
+        return Index.build(today)
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def run(*, ask: Ask | None = None, now: datetime | None = None, limit: int | None = None, record: dict[str, Any] | None = None,
+        index: Any = None) -> dict[str, Any]:
     """The paid pass. Stops at the day's count or dollar limit, on a refused call, or when the list is done. Returns a report."""
     now = now or datetime.now(UTC)
     day = now.date().isoformat()
@@ -148,11 +161,12 @@ def run(*, ask: Ask | None = None, now: datetime | None = None, limit: int | Non
         return report
     record = record if record is not None else evidence_mod.latest_record()
     ask = ask or default_ask()
+    index = index if index is not None else evidence_index(now.date())
     for m in todo[:quota]:
         if usd_today >= flags.MAX_FORECAST_USD_PER_DAY:
             report["stopped"] = f"day budget reached (${usd_today:.2f})"
             break
-        ev = evidence_mod.build(m, today=now.date(), record=record)
+        ev = evidence_mod.build(m, today=now.date(), record=record, index=index)
         try:
             out, usd = ask(task_for(m, ev, now.date()), ROLE)
         except Exception as exc:  # noqa: BLE001 - a refused or failed call skips this market, and a refusal ends the pass

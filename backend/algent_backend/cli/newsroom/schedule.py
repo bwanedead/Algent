@@ -1,12 +1,12 @@
 """
-``newsroom schedule`` — the unattended paid jobs (the geopolitics daily's editions, the menu).
+``newsroom schedule`` — the unattended paid jobs (the geopolitics daily's editions, the menu, the Polymarket paper trader).
 
-    newsroom schedule run <job>     what a paid systemd unit starts (daily-1, daily-2, menu); see ``ops/schedule.py``
+    newsroom schedule run <job>     what a paid systemd unit starts (daily-1, daily-2, menu, markets-daily); see ``ops/schedule.py``
     newsroom schedule status        the jobs, their timer times, the kill switch and each job's last outcome (free)
     newsroom schedule times         "<job> <HH:MM>" lines, which ``infra/server/install_schedules.sh`` turns into timers
 
 Pause everything: ``SCHEDULED_PAID_RUNS = False`` in ``ops/flags.py`` (push), or `systemctl disable --now
-ohmega-daily-1.timer ohmega-daily-2.timer ohmega-menu.timer`.
+ohmega-daily-1.timer ohmega-daily-2.timer ohmega-menu.timer ohmega-markets-daily.timer`.
 """
 
 from __future__ import annotations

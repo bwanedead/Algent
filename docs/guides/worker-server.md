@@ -27,10 +27,10 @@ so it can be rebuilt from scratch instead of repaired by hand.
 | `ohmega-watchdog` | every 2 min | kills paid runs over their time/spend limits | free |
 | SearXNG (Docker) | always | our own metasearch on 127.0.0.1:8080 | free |
 
-### The three paid timers (operator-authorised, unattended)
+### The paid timers (operator-authorised, unattended): menu, daily 1, daily 2, markets-daily
 
 Times are in-repo flags: the editions in `intel/flags.py` (`EDITIONS`), the menu in `ops/flags.py` (`MENU_UTC`);
-change one and re-run `infra/server/install_schedules.sh`. Each unit runs `jobs.sh <job>` → `newsroom schedule run
+`markets-daily` (the Polymarket paper trader: forecasts, trades, marks; `markets/flags.py` `DAILY_UTC`, 07:30) is the fourth; change one and re-run `infra/server/install_schedules.sh`. Each unit runs `jobs.sh <job>` → `newsroom schedule run
 <job>` (`ops/schedule.py`), under the same job lock as everything else, so paid jobs never overlap (the menu, then
 daily 1, simply queue). Before it spends, a job checks, and on any "no" exits 0 having spent nothing and says why:
 

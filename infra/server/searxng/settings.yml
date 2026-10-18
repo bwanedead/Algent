@@ -27,3 +27,26 @@ outgoing:
   max_request_timeout: 8.0
   pool_connections: 100
   pool_maxsize: 20
+
+# Engines, tuned 2026-10-17 from probes off the server's own IP (a datacenter IP gets blocked or rate-limited by
+# some providers). Enabled: the ones that answered. Disabled: the ones that refuse us, so a query doesn't wait on
+# them. Re-probe before changing: `curl -G localhost:8080/search --data-urlencode engines=<name> ...` on the server.
+engines:
+  - name: bing
+    disabled: false
+  - name: yahoo
+    disabled: false
+  - name: bing news
+    disabled: false
+  - name: brave
+    disabled: true
+  - name: brave.news
+    disabled: true
+  - name: google news
+    disabled: true
+  - name: reuters
+    disabled: true
+  - name: qwant
+    disabled: true
+  - name: qwant news
+    disabled: true

@@ -58,6 +58,8 @@ PRICE_FRESH_H = 36.0
 EVIDENCE_SECTIONS = 3
 EVIDENCE_STATEMENTS = 6
 EVIDENCE_CALENDAR = 8
+#: Extra pieces the retrieval index adds per market (relevance-ranked, across dates and sources; retrieval/flags.py holds the windows).
+RETRIEVAL_K = 6
 #: Our probability is kept inside these bounds before it is stored or traded, so a log loss is never infinite and we never claim certainty.
 P_MIN, P_MAX = 0.01, 0.99
 
@@ -74,6 +76,30 @@ MAX_POSITION_FRAC = 0.05
 MAX_EXPOSURE_FRAC = 0.5
 #: Paper fills pay this much more than the quoted price (probability points) to stand in for spread and slippage.
 SLIPPAGE = 0.01
+
+# ── the trader: the daily agent book (trader.py), beside the rule book above ─────────────────────
+#: Master switch for the paid daily trade pass.
+TRADE_ENABLED = True
+#: When the unattended ``markets-daily`` job fires (UTC HH:MM): after daily part 1 (05:30, about 70 min) so the desk's newest sections are
+#: in the evidence the forecaster and trader read, and before the working day.
+DAILY_UTC = "07:30"
+#: The trade pass spends at most this much per UTC day, and no single call more than the call cap (cost.scoped). A batch of markets with
+#: their evidence is ~10-15k input tokens.
+TRADE_MAX_USD_PER_DAY = 0.75
+TRADE_CALL_CAP_USD = 0.20
+#: Markets per call, and the most markets looked at per day (positions held first, then the widest gaps between our view and the price).
+TRADE_BATCH = 8
+TRADE_MAX_MARKETS_PER_DAY = 40
+#: A market is offered for a NEW position only with a blind forecast of ours at most this many days old (held markets are always shown).
+TRADE_FORECAST_MAX_AGE_DAYS = 14
+#: Model effort for the trade call (house_spec reasoning_effort).
+TRADE_EFFORT = "low"
+#: Smallest ticket the book will fill (paper dollars): below it a buy is a clipped hold, so the ledger is not littered with dust.
+TRADE_MIN_TICKET = 10.0
+#: Evidence shown per market in the trade prompt, in characters (the forecast saw more; the trader needs what changed).
+TRADE_EVIDENCE_CHARS = 2400
+#: Price path shown per market: one point per day for this many days.
+TRADE_PATH_DAYS = 14
 
 # ── scoring ──────────────────────────────────────────────────────────────────────────────────────
 #: Calibration buckets are this wide (probability): ten of them.

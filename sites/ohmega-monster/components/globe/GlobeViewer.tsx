@@ -33,6 +33,8 @@ import GlobePanel, { type Pick } from "./GlobePanel";
 import "../globe-spinner.css";
 import "./globe-viewer.css";
 
+const LEGEND_KEY = "ohmega.globe.legend";
+
 type Mode = "cycle" | "still";
 
 const MIN_ZOOM = 1;
@@ -60,8 +62,10 @@ export default function GlobeViewer({ data }: { data: GlobeData | null }) {
   const [channel, setChannel] = useState<ChannelId>(data ? "theme" : "off");
   const [now] = useState(() => Date.now()); // the recency bands age against the viewer's clock (only used once the countries have loaded client-side)
   const [geo, setGeo] = useState<Countries | null>(null);
+  const legendId = useId();
   const [picked, setPicked] = useState<Pick | null>(null);
   const [showTheaters, setShowTheaters] = useState(false);
+  const [legendOpen, setLegendOpen] = useState(true); // open by default; the viewer's choice is remembered (read after mount, so the server render matches)
   const [mode, setModeState] = useState<Mode>("cycle");
   const [land, setLand] = useState<Poly[]>(COARSE_POLYS);
   const rings = useMemo(() => buildRings(land), [land]);
@@ -318,7 +322,7 @@ export default function GlobeViewer({ data }: { data: GlobeData | null }) {
       zoomBy(Math.exp(-e.deltaY * (e.deltaMode === 1 ? 0.05 : 0.0016)), e.clientX, e.clientY);
     };
     const onDown = (e: PointerEvent) => {
-      if ((e.target as Element).closest(".gv-controls, .gv-panel")) return;
+      if ((e.target as Element).closest(".gv-controls, .gv-panel, .gv-legend")) return;
       el.setPointerCapture(e.pointerId);
       pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
       const seen = matrix.current; // what the reader was looking at when they pressed (a cycle view snaps north-up right after)
@@ -407,6 +411,16 @@ export default function GlobeViewer({ data }: { data: GlobeData | null }) {
     };
   }, [rotateBy, setMode, toGlobe, zoomBy]);
 
+  useEffect(() => {
+    try { if (localStorage.getItem(LEGEND_KEY) === "min") setLegendOpen(false); } catch { /* storage blocked: stay open */ }
+  }, []);
+  const toggleLegend = useCallback(() => {
+    setLegendOpen((open) => {
+      try { localStorage.setItem(LEGEND_KEY, open ? "min" : "open"); } catch { /* storage blocked: the choice just lasts this visit */ }
+      return !open;
+    });
+  }, []);
+
   const legendChannel = geo && data ? channels.find((c) => c.id === channel) : undefined;
   const legend = useMemo(() => (legendChannel ? legendOf(channel, bucketIx) : null), [legendChannel, channel, bucketIx]);
 
@@ -479,7 +493,14 @@ export default function GlobeViewer({ data }: { data: GlobeData | null }) {
       </div>
       {picked && data && <GlobePanel pick={picked} data={data} geo={geo} onClose={() => setPicked(null)} />}
       {legendChannel && legend && legend.items.length > 0 && (
-        <div className="gv-legend" aria-label={`${legendChannel.label}: ${legendChannel.note}`}>
+        <div className={legendOpen ? "gv-legend" : "gv-legend is-min"}>
+          <div className="gv-legend-bar">
+            {legendOpen && <span>Legend</span>}
+            <button type="button" className="gv-legend-toggle" aria-expanded={legendOpen} aria-controls={legendId} onClick={toggleLegend}>
+              {legendOpen ? "Hide" : "Legend"}
+            </button>
+          </div>
+          <div id={legendId} hidden={!legendOpen}>
           <p className="gv-legend-note">{legendChannel.note}</p>
           {legend.hues.length > 0 && (
             <ul className="gv-legend-hues">
@@ -500,6 +521,7 @@ export default function GlobeViewer({ data }: { data: GlobeData | null }) {
               <li><span className="gv-sw gv-sw-fresh" aria-hidden="true" />New in 24 hours (pulse)</li>
             </ul>
           )}
+          </div>
         </div>
       )}
       <p className="gv-hint" aria-hidden="true">Drag to turn · scroll to zoom · double-click to centre</p>

@@ -44,11 +44,38 @@ export type ResolvedRow = {
   market_id: string; question: string; url: string; resolved_at: string; outcome: "yes" | "no"; ours: number; market: number | null; made_at: string;
   brier_ours: number; brier_market: number | null; ours_closer: boolean | null; rationale: string; theaters: string[];
 };
+// The trader (backend `markets/trader*.py`): an agent that manages its own paper book from the same $10k, once a day. Its equity curve is set against the
+// mechanical rule-based baseline and against the flat bankroll (doing nothing).
+export type CurvePoint = { day: string; flat: number; trader: number | null; rule: number | null };
+export type TraderSummary = {
+  equity: number; pnl: number; cash: number; realised: number; unrealised: number; open: number; buys: number; sells: number;
+  closed: number; wins: number; losses: number; hit_rate: number | null;
+};
+export type TraderPosition = {
+  market_id: string; question: string; url: string; ends: string; side: "yes" | "no"; shares: number; entry: number; now: number | null; cost: number;
+  value: number; pnl: number; opened: string; rationale: string; rationale_on: string; ours: number | null;
+};
+export type TradeRow = {
+  id: string; market_id: string; question: string; url: string; day: string; action: "buy_yes" | "buy_no" | "sell" | "settle"; side: "yes" | "no";
+  price: number; stake: number; shares: number; pnl: number | null; result: "" | "won" | "lost" | "void"; outcome: string; rationale: string;
+  ours: number | null; market: number | null; clips: string[];
+};
+export type Trader = {
+  summary: TraderSummary;
+  rule: Portfolio;
+  curve: CurvePoint[];
+  open_positions: TraderPosition[];
+  log: TradeRow[];
+  today: { decided: number; bought: number; sold: number; held: number; clipped: number };
+  since: string;
+  limits: { bankroll: number; max_position_frac: number; max_exposure_frac: number; slippage: number; min_ticket: number };
+};
 export type TrackRecord = {
   as_of: string;
   disclaimer: string;
   markets: { open: number; resolved: number; void: number };
   forecasts: number;
+  trader: Trader;
   scores: Scores;
   portfolio: Portfolio;
   open_positions: OpenPosition[];
@@ -83,8 +110,48 @@ function resolvedRow(r: Obj): ResolvedRow | null {
   };
 }
 
+const portfolio = (p: Obj): Portfolio => ({
+  bankroll: n0(p.bankroll), open: n0(p.open), settled: n0(p.settled), staked_open: n0(p.staked_open), realised_pnl: n0(p.realised_pnl),
+  unrealised_pnl: n0(p.unrealised_pnl), total_pnl: n0(p.total_pnl), return_on_bankroll: n0(p.return_on_bankroll), wins: n0(p.wins), losses: n0(p.losses),
+  hit_rate: num(p.hit_rate),
+});
+
+// A document from before the trader existed (schema /1) parses to an empty trader, so the page shows "not started" rather than failing.
+function parseTrader(raw: unknown, fallbackRule: Portfolio): Trader {
+  const t = isObj(raw) ? raw : {};
+  const s = isObj(t.summary) ? t.summary : {};
+  const lim = isObj(t.limits) ? t.limits : {};
+  const td = isObj(t.today) ? t.today : {};
+  return {
+    summary: {
+      equity: n0(s.equity), pnl: n0(s.pnl), cash: n0(s.cash), realised: n0(s.realised), unrealised: n0(s.unrealised), open: n0(s.open), buys: n0(s.buys),
+      sells: n0(s.sells), closed: n0(s.closed), wins: n0(s.wins), losses: n0(s.losses), hit_rate: num(s.hit_rate),
+    },
+    rule: isObj(t.rule) ? portfolio(t.rule) : fallbackRule,
+    curve: list(t.curve).map((c) => ({ day: str(c.day), flat: n0(c.flat), trader: num(c.trader), rule: num(c.rule) })),
+    open_positions: list(t.open_positions).map((r) => ({
+      market_id: str(r.market_id), question: str(r.question), url: httpOnly(r.url), ends: str(r.ends), side: r.side === "no" ? "no" : "yes", shares: n0(r.shares),
+      entry: n0(r.entry), now: num(r.now), cost: n0(r.cost), value: n0(r.value), pnl: n0(r.pnl), opened: str(r.opened), rationale: str(r.rationale),
+      rationale_on: str(r.rationale_on), ours: num(r.ours),
+    })),
+    log: list(t.log).map((r) => ({
+      id: str(r.id), market_id: str(r.market_id), question: str(r.question), url: httpOnly(r.url), day: str(r.day),
+      action: r.action === "buy_no" || r.action === "sell" || r.action === "settle" ? r.action : "buy_yes", side: r.side === "no" ? "no" : "yes",
+      price: n0(r.price), stake: n0(r.stake), shares: n0(r.shares), pnl: num(r.pnl),
+      result: r.result === "won" || r.result === "lost" || r.result === "void" ? r.result : "", outcome: str(r.outcome), rationale: str(r.rationale),
+      ours: num(r.ours), market: num(r.market), clips: Array.isArray(r.clips) ? r.clips.filter((x): x is string => typeof x === "string") : [],
+    })),
+    today: { decided: n0(td.decided), bought: n0(td.bought), sold: n0(td.sold), held: n0(td.held), clipped: n0(td.clipped) },
+    since: str(t.since),
+    limits: {
+      bankroll: n0(lim.bankroll) || fallbackRule.bankroll, max_position_frac: n0(lim.max_position_frac), max_exposure_frac: n0(lim.max_exposure_frac),
+      slippage: n0(lim.slippage), min_ticket: n0(lim.min_ticket),
+    },
+  };
+}
+
 export function parseTrackRecord(raw: unknown): TrackRecord | null {
-  if (!isObj(raw) || raw.schema !== "ohmega.track-record/1") return null;
+  if (!isObj(raw) || (raw.schema !== "ohmega.track-record/1" && raw.schema !== "ohmega.track-record/2")) return null;
   const s = isObj(raw.scores) ? raw.scores : {};
   const p = isObj(raw.portfolio) ? raw.portfolio : {};
   const m = isObj(raw.markets) ? raw.markets : {};
@@ -92,6 +159,7 @@ export function parseTrackRecord(raw: unknown): TrackRecord | null {
   const w = isObj(other.watches) ? other.watches : null;
   const j = isObj(other.judgments) ? other.judgments : null;
   const rules = isObj(raw.rules) ? raw.rules : {};
+  const rulePortfolio = portfolio(p);
   return {
     as_of: str(raw.as_of),
     disclaimer: str(raw.disclaimer) || "Paper trading only. Not financial advice.",
@@ -104,11 +172,8 @@ export function parseTrackRecord(raw: unknown): TrackRecord | null {
       brier_diff_series: list(s.brier_diff_series).map((d) => ({ n: n0(d.n), at: str(d.at), diff: n0(d.diff) })),
       yes_rate: num(s.yes_rate), mean_forecast: num(s.mean_forecast), verdict: str(s.verdict),
     },
-    portfolio: {
-      bankroll: n0(p.bankroll), open: n0(p.open), settled: n0(p.settled), staked_open: n0(p.staked_open), realised_pnl: n0(p.realised_pnl),
-      unrealised_pnl: n0(p.unrealised_pnl), total_pnl: n0(p.total_pnl), return_on_bankroll: n0(p.return_on_bankroll), wins: n0(p.wins), losses: n0(p.losses),
-      hit_rate: num(p.hit_rate),
-    },
+    portfolio: rulePortfolio,
+    trader: parseTrader(raw.trader, rulePortfolio),
     open_positions: list(raw.open_positions).map((r) => ({
       market_id: str(r.market_id), question: str(r.question), url: httpOnly(r.url), ends: str(r.ends), side: r.side === "no" ? "no" : "yes", stake: n0(r.stake),
       entry: n0(r.entry), ours: n0(r.ours), market_at_open: n0(r.market_at_open), market_now: num(r.market_now), value: n0(r.value), pnl: n0(r.pnl),

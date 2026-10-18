@@ -4,7 +4,8 @@ the market believes can reach the model. What the desk knows is the only input: 
 (with their Pulses and on-the-record statements), the calendar items for its countries, recent statements, live/anomaly/maritime blocks and
 recent sanctions events. Each piece carries an id the forecast can cite (``theater:``, ``calendar:``, ``statement:``, ``sanction:``, ``desk:``).
 
-Everything is read from local stores, best-effort: a missing store is simply a missing block, and "no evidence" is a legitimate input (the
+With a ``retrieval`` index it also carries the pieces of the desk's wider record (earlier dailies, older statements, claims, geoledger) that
+match the question's wording; their ids are citable too. Everything is read from local stores, best-effort: a missing store is simply a missing block, and "no evidence" is a legitimate input (the
 forecaster is told to fall back to base rates and say so).
 """
 
@@ -110,8 +111,21 @@ def _desk_blocks(countries: list[str]) -> list[str]:
         return []
 
 
-def build(market: Market, *, today: date, record: dict[str, Any] | None = None) -> Evidence:
-    """The blind evidence for one market. ``record`` is the daily to read (default: the newest on disk)."""
+def _retrieved(market: Market, index: Any, shown: set[str]) -> tuple[str, list[str]]:
+    """What the retrieval index finds for the question beyond what is already shown (the question text only: no price can be in the query)."""
+    query = " ".join([market.question, market.event_title if market.event_title != market.question else ""])
+    try:
+        hits = index.search(query, k=flags.RETRIEVAL_K, exclude=shown)
+    except Exception:  # noqa: BLE001 - retrieval is an addition; its failure leaves the base evidence
+        return "", []
+    if not hits:
+        return "", []
+    return "FROM THE DESK'S WIDER RECORD (found by relevance to the question):\n" + "\n".join(h.block() for h in hits), [h.id for h in hits]
+
+
+def build(market: Market, *, today: date, record: dict[str, Any] | None = None, index: Any = None) -> Evidence:
+    """The blind evidence for one market. ``record`` is the daily to read (default: the newest on disk); ``index`` is a
+    ``retrieval.Index`` that adds relevance-ranked material from across dates and sources (omitted: the base evidence only)."""
     record = record if record is not None else latest_record()
     day = str(record.get("date") or "")
     by_id = {s.get("theater_id"): s for s in record.get("theaters") or [] if isinstance(s, dict)}
@@ -129,4 +143,10 @@ def build(market: Market, *, today: date, record: dict[str, Any] | None = None) 
     if desk_blocks:
         parts.append("\n\n".join(desk_blocks))
         ids.append("desk:live")
+    if index is not None:
+        shown = set(ids) | {f"daily:{day}:{tid}" for tid in market.theaters}
+        text, got = _retrieved(market, index, shown)
+        if text:
+            parts.append(text)
+            ids += got
     return Evidence(text="\n\n".join(parts), ids=ids, n_blocks=len(parts))

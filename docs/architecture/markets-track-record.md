@@ -2,7 +2,8 @@
 
 A reality feedback loop. A system that only reads itself drifts into delusion; this one is scored by the world. For Polymarket markets on topics the desk
 covers, Ohmega forecasts **blind to the price**, stores the forecast immutably, and when the market resolves both we and the market are scored against what
-happened. **Paper only**: there is no wallet, no key and no order function anywhere; nothing here is financial advice. Code: `backend/algent_backend/markets/`;
+happened. On top of that a **trader agent** manages a paper portfolio every day, so the page shows whether judgement layered on the forecast makes money
+(below: *The trader*). **Paper only**: there is no wallet, no key and no order function anywhere; nothing here is financial advice. Code: `backend/algent_backend/markets/`;
 CLI `newsroom markets ...`; site `/intel/track-record`, `/api/v1/track-record`; the daily's "Where we disagree with the market".
 
 ## Pipeline
@@ -45,8 +46,70 @@ on the same pairs; log loss = mean -(o ln p + (1-o) ln(1-p)) with p clipped to [
 pairs. The page lists our worst misses first and shades markets where the market was closer. Settled Pulse watches (triggered vs expired: a condition, so hit-rated
 not Brier-scored) and the older desk judgment ledger (`intel/forecasts.py`, Brier) are shown beside.
 
+## The trader (`trader.py`, `trader_prompt.py`, `guards.py`, `book.py`, `trader_report.py`)
+Layered ON the blind forecast, never replacing it: the forecast stays the honest calibration signal (it never sees a price); the trader is shown our probability
+**and** the price and acts. Two books start from the same fixed $10,000 and are valued by the same code (`book.py`: holdings at the side's current price, payout 1/0/0.5):
+
+| book | who decides | closes early | ledger |
+|---|---|---|---|
+| **trader** (the agent) | the model, once a day | yes (sell, reduce, add) | `decisions.jsonl` |
+| **rule book** (`paper.py`, the baseline) | the edge rule (>= 10 pts, quarter Kelly) | never | `trades.jsonl` |
+
+A flat $10,000 line (doing nothing) is the third curve. `equity.jsonl` holds one point per book per day, written once and never replaced (`book.mark`).
+
+**A day** (`trader.run`): settle held markets that resolved (free; also done in `refresh`) -> candidates: every held market first, then open markets with a forecast of ours
+at most `TRADE_FORECAST_MAX_AGE_DAYS` old and a fresh price, widest gap first, at most `TRADE_MAX_MARKETS_PER_DAY` -> batches of `TRADE_BATCH` (8): per market the
+question, resolution rules, our probability and reasoning, price now and a daily path, days left, the position (entry, cost, worth) and evidence (`evidence.build` plus
+retrieval, clipped to `TRADE_EVIDENCE_CHARS`) -> one structured call per batch (flat schema `TraderOut`: market label, `buy_yes|buy_no|sell|hold`, `stake_usd`, a
+one-or-two-sentence plain-English rationale) -> every call goes through `guards.apply` -> one `Decision` line per market, **holds and clipped requests included**.
+The role (`trader_prompt.ROLE`) teaches: a gap is a reason to look, not to trade; hold is the default; slippage eats small gaps; time-to-resolution and capital; size by
+evidence not by gap; sell when the reason is gone, not when the position is down.
+
+**Guards are code, not prompt** (`guards.py`; numbers in `flags.py`): cash can never go negative; `MAX_POSITION_FRAC` (5% of the fixed bankroll, adds counted) per
+market and `MAX_EXPOSURE_FRAC` (50%) in total; no shorting (the only bet against an outcome is buying the other side, and holding both sides is refused: sell first); fills
+pay `SLIPPAGE` against the book (buys above the quote, sells below it); only open, freshly priced markets trade; a ticket under `TRADE_MIN_TICKET` is not filled; a sell
+cannot exceed the position. A cut is never silent: `Decision.clips` records how a request was trimmed and the page prints it. An unanswered market is a recorded hold.
+Idempotent per day: a market already decided today is not asked again, so a rerun after a failure repays nothing.
+
+**Cost** (`flags.py`): `TRADE_MAX_USD_PER_DAY` $0.75 and `TRADE_CALL_CAP_USD` $0.20 per call, under the budget gate (a spend halt refuses it); the forecast pass keeps its own
+$1.00/day and 40-market caps. Expected: ~40 markets in 5 batches at ~10-15k input tokens each is roughly $0.20-0.50 a day for the trader at low effort, and the forecast pass
+a few cents to a few tens of cents a day (it works through the ~300 open markets at up to 40 a day for the first week, then only new markets and weekly refreshes,
+`REFORECAST_DAYS` 7). Ceiling $1.75/day, typical well under $1. These are estimates, not measurements: the `usd` fields in `decisions.jsonl` and `forecasts.jsonl` after the first
+daily are the real numbers.
+
+**The page** (`/intel/track-record`, payload schema `ohmega.track-record/2`, `trader` object): equity curve (trader, rule book, flat), positions held with the agent's last
+words, every trade newest first with its outcome once resolved (green won, red lost), then the existing calibration and misses. A schema-1 document still parses (empty trader).
+
+## Retrieval (`backend/algent_backend/retrieval/`)
+A general corpus search, not a markets feature: `docs.py` turns every source into citable `Doc`s (`daily:<date>:<theater>` over the last `DAILY_DAYS`, `statement:`,
+`sanction:`, `calendar:`, `geo:` status events; profile claims come from `research/corpus.related` under `CLAIMS_K`), `lexical.py` ranks with in-process BM25 (title counted
+double, mild recency lift), and `search.Index` is built once per run and queried per market. `evidence.build(..., index=)` appends the best hits the base evidence did not already
+show, so **both the forecaster and the trader read it**; the ids are citable. It is blind-safe: the query is the question text, and the daily's `market_view` is never indexed.
+Data access is the local stores the desk already writes (the same files the evidence builder read), so no table or migration is needed and nothing depends on one.
+
+**Embeddings (off).** `retrieval/embed.py` is a pluggable dense ranker, `EMBEDDINGS_ENABLED = False` in `retrieval/flags.py`, import-guarded: switched off, or library/model
+unavailable, `load()` returns None and retrieval is lexical. When on, the dense ranking (cosine, asymmetric query/document prompts) is fused with BM25 by reciprocal rank, and
+document vectors are cached on disk (`retrieval_store/embeddings.jsonl`, `ALGENT_RETRIEVAL_STORE`) so each text is encoded once. No pgvector table is written: at a few thousand short
+documents an in-process scan is fast enough, and the system must work without the extension; if the corpus outgrows that, a `vector` table is the next seam behind `Index`.
+
+To enable (the maintainer's steps; nothing in the repo installs anything), on the server inside the backend venv:
+1. `pip install torch --index-url https://download.pytorch.org/whl/cpu` then `pip install sentence-transformers` (the CPU torch wheel keeps this to a few hundred MB instead of GBs).
+2. `google/embeddinggemma-300m` is a gated Hugging Face model: accept its licence on the model page and give the server an `HF_TOKEN` (a secret: server env only, never the repo).
+3. Set `EMBEDDINGS_ENABLED = True` in `backend/algent_backend/retrieval/flags.py`, commit, push. The first run encodes the corpus (a few thousand docs, minutes on 2 vCPU) and caches it.
+   Lighter alternative: `pip install fastembed` and `EMBED_BACKEND = "fastembed"` (ONNX; works only if the installed fastembed release supports the model, untested here).
+RAM: the 300M-parameter model is ~1.2 GB in fp32 (~0.6 GB in bf16) plus runtime and activations: budget **about 1.5-2 GB resident while the daily runs**, against ~2.4 GB free on the
+2 vCPU / 4 GB server. It fits, but not beside another heavy job: `jobs.sh` already serialises paid jobs on one lock and the model lives only inside the daily process.
+Disk: ~600 MB model download plus ~15-30 MB of cached vectors.
+
+## The daily job
+`newsroom markets daily` (`ops/schedule.jobs()["markets-daily"]`, time `markets/flags.DAILY_UTC`, 07:30 UTC, after daily part 1): refresh prices -> blind forecast pass -> rule book
+(`paper.run`) -> trader -> mark both books -> publish. A paid step that raises does not stop the free steps after it (the books are still marked and published) and makes the exit
+non-zero so the scheduler's single transient retry applies; the retry is safe because forecasts and trades are idempotent per day. It runs through `newsroom schedule run`, so it
+inherits the kill switch (`SCHEDULED_PAID_RUNS`), the runner claim, the spend halt and the watchdog (180 min, $15 per run). `infra/server/install_schedules.sh` installs it with the
+other paid timers through `newsroom schedule times` (no per-job edit) and `jobs.sh` routes `markets-daily` to the wrapper. Pause it alone:
+`sudo systemctl disable --now ohmega-markets-daily.timer`.
+
 ## Operating it
-`newsroom markets refresh` (mirror + paper + publish), `forecast [--limit N] [--dry-run]`, `paper`, `score [--full]`, `list`, `status`, `publish`. Doctor check `markets`
-(a good pass within 10 h). **The forecast is deliberately not on a paid timer**: the three unattended paid jobs are an operator authorisation (`ops/flags.py`,
-`infra/server/jobs.sh`); adding a fourth is the operator's call. To schedule it, add a `forecast` job to `ops/schedule.jobs()` (argv `("markets", "forecast")`, after daily-1) so it
-inherits the kill switch, runner claim, spend halt and retry.
+`newsroom markets refresh` (mirror + paper + trader settlement + publish; free), `daily` (the paid job above), `trade [--limit N] [--dry-run]`, `forecast [--limit N] [--dry-run]`,
+`paper`, `score [--full]`, `list`, `status`, `publish`. Doctor check `markets` (a good pass within 10 h). The unattended paid jobs are an operator authorisation (`ops/flags.py`,
+`infra/server/jobs.sh`); the operator has authorised `markets-daily` as the fourth (`tests/test_ops_schedule.py` pins the set).
