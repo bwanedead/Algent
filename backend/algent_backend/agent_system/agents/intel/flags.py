@@ -28,6 +28,13 @@ EDITIONS: tuple[Edition, ...] = (
 )
 
 
+#: The AI daily (`intel daily --domain ai --research`, one part a day) as a PAID scheduled job. OFF until the operator decides: flip this one
+#: constant to True, push, and re-run `infra/server/install_schedules.sh` (it reads `newsroom schedule times`, which lists the job only when True).
+AI_DAILY_SCHEDULED = False
+#: When it fires (UTC, HH:MM): after the AI sources' 4-hourly crawl and the 12-hourly benchmark collection, clear of the geopolitics daily's part 1.
+AI_DAILY_UTC = "07:30"
+
+
 def edition_info(n: int) -> Edition:
     """The edition numbered ``n`` (a row of ``EDITIONS``); unknown numbers get a neutral label, never an error."""
     return next((e for e in EDITIONS if e.n == n), Edition(n, f"Part {n}", "", ""))

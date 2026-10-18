@@ -37,7 +37,9 @@ from itertools import zip_longest
 from typing import Any
 
 RADAR, WIKIPEDIA, LIBRARY = "radar", "wikipedia", "library"
+AI_SOURCES, AI_COMMUNITY = "ai_sources", "ai_community"        # the AI desk's classes (``domains.AI``)
 CLASSES = (RADAR, WIKIPEDIA, LIBRARY)
+AI_CLASSES = (AI_SOURCES, AI_COMMUNITY)
 
 # ~600 lines is ~25k input tokens (a title plus a short thesis is ~40) and ~2k output tokens of ids: well
 # inside one low-effort call, while a week of a 40-a-day radar, a day's portal and a thinned library fit.
@@ -59,7 +61,7 @@ class Base:
 
     def summary(self) -> dict[str, dict[str, int]]:
         return {c: {"pool": self.pool.get(c, 0), "shown": sum(self.sizes.get(c, {}).values())}
-                for c in CLASSES if c in self.pool}
+                for c in (*CLASSES, *AI_CLASSES) if c in self.pool}
 
 
 # ── loaders (best-effort; each returns heads of one class) ────────────────────────────────────
@@ -93,9 +95,11 @@ def wikipedia_heads(days: int, today: date) -> list[Head]:
     return out
 
 
-def library_heads(days: int, today: date) -> list[Head]:
-    """Titles of the library's latest documents published in the window (a read-only query; [] when absent)."""
+def _library(days: int, today: date, *, ai: bool, kind: str, prefix: str) -> list[Head]:
+    """Titles of the library's latest documents published in the window, from the AI sources (``ai``) or from all the others
+    (a read-only query; [] when the library is absent)."""
     from algent_backend.library import store
+    from algent_backend.library.ai_sources import AI_SOURCE_IDS
 
     conn: sqlite3.Connection | None = None
     try:
@@ -113,13 +117,53 @@ def library_heads(days: int, today: date) -> list[Head]:
         if conn is not None:
             conn.close()
     out = []
-    for i, r in enumerate(rows, 1):
+    for i, r in enumerate((r for r in rows if (r["source_id"] in AI_SOURCE_IDS) == ai), 1):
         day = r["at"][:10]
         if day <= today.isoformat():             # a feed's clock a day ahead is not the future
-            out.append({"id": f"lib-{day}#{i}", "day": day, "kind": LIBRARY, "edition": f"{day}-library", "n": i,
+            out.append({"id": f"{prefix}-{day}#{i}", "day": day, "kind": kind, "edition": f"{day}-{kind}", "n": i,
                         "title": " ".join(r["title"].split()), "thesis": r["source_id"], "sources": [r["url"]],
                         "group": r["source_id"]})
     return out
+
+
+def library_heads(days: int, today: date) -> list[Head]:
+    """The geopolitics desk's library class: every crawled source except the AI desk's."""
+    return _library(days, today, ai=False, kind=LIBRARY, prefix="lib")
+
+
+def ai_library_heads(days: int, today: date) -> list[Head]:
+    """The AI desk's main class: lab blogs, AI research and policy shops, AI trade press (``library/ai_sources``)."""
+    return _library(days, today, ai=True, kind=AI_SOURCES, prefix="ai")
+
+
+HN_URL = "https://hn.algolia.com/api/v1/search_by_date"
+HN_QUERIES = ("LLM", "artificial intelligence", "AI model", "AI chips GPU", "AI regulation")
+HN_MIN_POINTS = 40
+
+
+def ai_community_heads(days: int, today: date) -> list[Head]:
+    """What AI practitioners are discussing: Hacker News stories matching generic AI terms with real engagement (Algolia's public API,
+    no key). Free; [] when unreachable."""
+    import json
+
+    from algent_backend import polite_http
+
+    start = datetime(today.year, today.month, today.day, tzinfo=UTC) - timedelta(days=days - 1)
+    seen: dict[str, Head] = {}
+    for q in HN_QUERIES:
+        try:
+            payload = json.loads(polite_http.get(HN_URL, {"tags": "story", "query": q, "hitsPerPage": 60,
+                                                          "numericFilters": f"points>{HN_MIN_POINTS},created_at_i>{int(start.timestamp())}"}))
+        except Exception:  # noqa: BLE001 - the base is an aid
+            continue
+        for hit in payload.get("hits", []):
+            oid, title = str(hit.get("objectID", "")), " ".join(str(hit.get("title") or "").split())
+            day = str(hit.get("created_at", ""))[:10]
+            if oid and title and day and day <= today.isoformat() and oid not in seen:
+                seen[oid] = {"id": f"hn-{oid}", "day": day, "kind": AI_COMMUNITY, "edition": f"{day}-hn", "n": len(seen) + 1, "title": title,
+                             "thesis": f"{hit.get('points', 0)} points", "sources": [hit.get("url") or f"https://news.ycombinator.com/item?id={oid}"],
+                             "group": day}
+    return list(seen.values())
 
 
 def default_loaders() -> dict[str, Loader]:

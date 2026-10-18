@@ -140,8 +140,11 @@ def produce(ctx: Any, theater: Theater, heat: dict, *, as_of: str, out: Path | N
     return row
 
 
-def latest_board() -> dict | None:
-    boards = sorted((store_dir() / "boards").glob("*.json"))
+def latest_board(domain: str = "geopolitics") -> dict | None:
+    """The newest heat board of the domain (geopolitics unless asked: its boards are the historical ``boards/*.json``)."""
+    from .domains import boards_dir
+
+    boards = sorted(boards_dir(store_dir(), domain).glob("*.json"))
     return json.loads(boards[-1].read_text(encoding="utf-8")) if boards else None
 
 

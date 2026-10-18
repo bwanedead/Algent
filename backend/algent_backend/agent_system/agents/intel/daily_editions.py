@@ -227,7 +227,7 @@ def produce(ctx: Any, *, domain: str = "geopolitics", top: int = 5, research: bo
     if added:
         try:
             summary = daily.write_summary(ctx, None, record["theaters"], as_of=as_of, domain=domain,
-                                          model_spec=model_spec, sensing=sensing_mod.across_theaters(as_of=as_of),
+                                          model_spec=model_spec, sensing=sensing_mod.across_theaters(as_of=as_of, domain=domain),
                                           archive=run.summary_archive, edition_note=_summary_note(edition, built_at))
         except Exception as exc:  # noqa: BLE001 - the additions stand; the earlier top is kept
             summary_error = br.describe_failure(exc)

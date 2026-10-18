@@ -34,7 +34,8 @@ def _records(folder: Path, *, dated: bool = False) -> list[dict]:
 
 def boards_newest_first(intel_dir: Path) -> Iterator[dict]:
     """Heat boards, newest first, read one at a time (the caller stops when it has what it needs)."""
-    for path in sorted((intel_dir / "boards").glob("*.json"), reverse=True) if (intel_dir / "boards").is_dir() else []:
+    folder = intel_dir / "boards"           # geopolitics boards sit here, other domains' in boards/<domain>/
+    for path in sorted(folder.rglob("*.json"), key=lambda p: p.stem, reverse=True) if folder.is_dir() else []:
         board = _json(path)
         if isinstance(board, dict):
             yield board

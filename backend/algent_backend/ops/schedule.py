@@ -62,6 +62,8 @@ def jobs() -> dict[str, Job]:
                                                   "--edition", str(e.n)), e.utc, f"geopolitics daily, part {e.n} ({e.label})")
     # The paper trader's day: refresh prices, blind forecasts, the agent's trades, marks, publish. After daily part 1 so the forecast reads
     # today's sections; capped by markets/flags (TRADE_MAX_USD_PER_DAY, MAX_FORECAST_USD_PER_DAY).
+    if intel_flags.AI_DAILY_SCHEDULED:      # the operator's switch (intel/flags.py): the AI domain's daily, one part a day
+        out["ai-daily"] = Job("ai-daily", ("intel", "daily", "--domain", "ai", "--research"), intel_flags.AI_DAILY_UTC, "AI daily")
     out["markets-daily"] = Job("markets-daily", ("markets", "daily"), markets_flags.DAILY_UTC, "Polymarket paper trader: forecasts, trades, marks")
     return out
 
@@ -177,6 +179,8 @@ def _ops_log(probes: Probes, line: str) -> None:
 def _link(job: Job, day: str) -> str:
     if job.name == "markets-daily":
         return f"{SITE}/intel/track-record"
+    if job.name == "ai-daily":
+        return f"{SITE}/ai/{day}"
     return f"{SITE}/geopolitics/{day}" if job.name.startswith("daily") else "backend/runs_data/menu_latest.md"
 
 

@@ -219,7 +219,9 @@ def statement_sources() -> tuple[Source, ...]:
 
 
 def all_sources() -> tuple[Source, ...]:
-    return (*SOURCES, *statement_sources())
+    from .ai_sources import AI_SOURCES
+
+    return (*SOURCES, *AI_SOURCES, *statement_sources())
 
 
 def by_id(source_id: str) -> Source | None:
