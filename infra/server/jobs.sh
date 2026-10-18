@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # The server's scheduled jobs, one entry point so systemd units stay one-liners:
 #
-#   jobs.sh library | instruments | statements | sanctions | calendar | markets | backup | watchdog | live <feed>   free
+#   jobs.sh library | instruments | statements | sanctions | calendar | markets | backup | watchdog | flows | live <feed>   free
 #   jobs.sh menu | daily-1 | daily-2 | markets-daily                       PAID, unattended (operator-authorised)
 #
 # Free work: crawl, public data series, statement transcripts without extraction, the archive backup.
@@ -17,6 +17,8 @@ PY=".venv/bin/python"
 if [ "${1:-}" = "watchdog" ]; then exec $PY -m algent_backend.cli newsroom watchdog; fi
 # Live feeds are seconds long and must keep listening while a daily holds the lock, so they skip it too.
 if [ "${1:-}" = "live" ]; then exec $PY -m algent_backend.cli newsroom live run --feed "${2:?usage: jobs.sh live <feed>}"; fi
+# The flows document (lane aggregates the stream service wrote + the weekly Comtrade refresh, a couple of minutes at most) is free and independent of the lock too.
+if [ "${1:-}" = "flows" ]; then exec $PY -m algent_backend.cli newsroom flows publish; fi
 exec 9>"$HOME/.ohmega-jobs.lock"
 flock -w 3600 9
 
