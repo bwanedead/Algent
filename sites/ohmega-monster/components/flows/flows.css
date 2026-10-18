@@ -1,0 +1,26 @@
+/* The flow layer (components/flows/): a transparent canvas over the globe plus a small legend that is also the layer switches.
+   Hairlines and the site's tokens only; the layer colours are set inline from style.ts so the canvas and the legend can never drift. */
+.fl-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+.fl-status { position: absolute; right: 10px; bottom: 30px; margin: 0; padding: 4px 8px; border: 1px solid var(--rule); background: color-mix(in srgb, var(--bg) 88%, transparent); font-size: 11px; color: var(--muted); }
+.fl-panel { position: absolute; right: 10px; bottom: 30px; width: min(268px, calc(100% - 20px)); max-height: calc(100% - 110px); overflow-y: auto; overscroll-behavior: contain; padding: 4px 8px 8px; border: 1px solid var(--rule); background: color-mix(in srgb, var(--bg) 90%, transparent); font-size: 11px; color: var(--muted); cursor: default; }
+.fl-panel.is-min { padding: 0 8px; width: auto; }
+.fl-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+.fl-toggle { appearance: none; border: 0; background: transparent; color: var(--link-accent); font: inherit; letter-spacing: inherit; text-transform: inherit; padding: 2px 0; cursor: pointer; }
+.fl-toggle:hover { color: var(--link-accent-hover); }
+.fl-toggle:focus-visible, .fl-panel li button:focus-visible { outline: 2px solid var(--link-accent); outline-offset: 1px; }
+.fl-head { margin: 6px 0 3px; padding-top: 5px; border-top: 1px solid var(--rule); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--strong); }
+.fl-head i { font-style: normal; letter-spacing: 0; text-transform: none; color: var(--muted); margin-left: 6px; }
+.fl-panel ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 1px; }
+.fl-panel li button { appearance: none; display: flex; align-items: center; gap: 7px; width: 100%; border: 0; background: transparent; color: var(--muted); font: inherit; padding: 2px 2px; text-align: left; cursor: pointer; opacity: 0.55; }
+.fl-panel li button.is-on { color: var(--strong); opacity: 1; }
+.fl-panel li button:hover { background: color-mix(in srgb, var(--link-accent) 10%, transparent); }
+.fl-sw { flex: none; width: 10px; height: 10px; border-radius: 50%; }
+.fl-name { flex: 1; }
+.fl-val { font-variant-numeric: tabular-nums; color: var(--muted); }
+.fl-note { margin: 4px 0 0; line-height: 1.35; }
+.fl-anom { display: flex; align-items: center; gap: 4px; }
+.fl-ring { flex: none; width: 9px; height: 9px; border-radius: 50%; border: 2px solid; }
+.fl-ring-above { border-color: #d4568a; }
+.fl-ring-below { border-color: #4a7fd0; margin-right: 3px; }
+.fl-foot { margin: 7px 0 0; padding-top: 5px; border-top: 1px solid var(--rule); line-height: 1.35; }
+@media (max-width: 640px) { .fl-panel { bottom: auto; top: 112px; width: min(230px, calc(100% - 20px)); max-height: 45%; } .fl-status { bottom: auto; top: 112px; } }

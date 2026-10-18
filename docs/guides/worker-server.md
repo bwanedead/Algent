@@ -203,6 +203,10 @@ unchanged-tile skip. Knobs if the bucket still runs hot: `flags.TILE_DEG` (small
 
 The stream service also keeps a bounded per-vessel memory (`maritime_store/`, `ALGENT_MARITIME_STORE`) and runs the behaviour detectors every 5 min; the timer runner publishes `maritime_events` (migration 013, apply before the site build) and links events into the geoledger. Seed OSM ports on the server (`newsroom geo seed --source osm`) so the port exclusion has data. `newsroom maritime status|events|vessel|publish`, doctor check `maritime`. Design and thresholds: `docs/architecture/maritime-behaviour.md`.
 
+### Flows: ship lanes, grain and money (`flows/`)
+
+The stream service also runs the lane tracker every 5 min (aggregates only, in `live_store/flows/`: `tracker.json.gz` per-vessel last place, `days.json` the daily lane and visit counts); the `ohmega-flows` timer (every 15 min, free, outside the job lock) refreshes the weekly UN Comtrade grain and money picture when due, builds the `flows` document and uploads it as `live/flows.json`. After the first deploy run `newsroom flows backfill` once on the server to seed the lanes from the maritime profile book's last 4 days. `newsroom flows status|lanes|trade|backfill|publish`. Design, sources and caveats: `docs/architecture/flows.md`.
+
 ### Markets track record (`markets/`)
 
 The `ohmega-markets` timer (every 4 h) mirrors relevant Polymarket markets read-only, runs the paper pass and publishes `data/track-record.json`; `markets_store/` (`ALGENT_MARKETS_STORE`) holds the append-only record (back it up with the other stores). `newsroom markets forecast` is the paid, day-capped blind-forecast pass and is **run by hand** (no paid timer without the operator's say-so). Doctor check `markets`. Design, scoring math and flags: `docs/architecture/markets-track-record.md`.

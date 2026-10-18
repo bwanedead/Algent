@@ -11,6 +11,8 @@
 //     bucket. Edges: amber = escalating, green = easing, pulsing ring = new within 24 h. Without the country file the plain land stays.
 //   - Tap a country (or, with "Theaters" on, a theater dot) and `onPick` hands the choice to the HUD (components/hud/GlobeHud.tsx), which
 //     opens that place's panel; "Theaters" toggles dots at theater centres sized by heat.
+//   - "Flows" lays the circulation over the globe (components/flows/): ship lanes and dots from our own AIS, grain and money arcs from
+//     public trade statistics. It is a separate canvas that reads this component's camera refs; nothing here depends on it.
 //   - Reduced motion: starts Still, no inertia, no easing. Pauses when the tab is hidden or the globe is off screen.
 // Frames are written straight to SVG paths from requestAnimationFrame, not through React (as in GlobeSpinner).
 // Geometry, projection, clipping and cameras all come from lib/globe/ (pure, client-safe).
@@ -27,6 +29,7 @@ import { bandOf } from "@/lib/globe/themes";
 import { COARSE_POLYS, GRAT, loadLand, toPolys, type Poly } from "@/lib/globe/sphere";
 import { centreOf, centredView, MAX_LAT, projectPoint, unproject, wrapLon } from "@/lib/globe/view";
 
+import FlowsOverlay from "../flows/FlowsOverlay";
 import "../globe-spinner.css";
 import "./globe-viewer.css";
 
@@ -63,6 +66,7 @@ export default function GlobeViewer({ data, pick, onPick, highlight }: { data: G
   const [geo, setGeo] = useState<Countries | null>(null);
   const legendId = useId();
   const [showTheaters, setShowTheaters] = useState(false);
+  const [showFlows, setShowFlows] = useState(false); // the flow layer (components/flows/): ships, grain and money in motion, drawn over the globe
   const [legendOpen, setLegendOpen] = useState(true); // open by default; the viewer's choice is remembered (read after mount, so the server render matches)
   const [mode, setModeState] = useState<Mode>("cycle");
   const [land, setLand] = useState<Poly[]>(COARSE_POLYS);
@@ -317,11 +321,12 @@ export default function GlobeViewer({ data, pick, onPick, highlight }: { data: G
     let lastTap: { x: number; y: number; t: number } | null = null;
 
     const onWheel = (e: WheelEvent) => {
+      if ((e.target as Element).closest(".fl-panel")) return; // the flow legend scrolls itself
       e.preventDefault();
       zoomBy(Math.exp(-e.deltaY * (e.deltaMode === 1 ? 0.05 : 0.0016)), e.clientX, e.clientY);
     };
     const onDown = (e: PointerEvent) => {
-      if ((e.target as Element).closest(".gv-controls, .gv-legend")) return;
+      if ((e.target as Element).closest(".gv-controls, .gv-legend, .fl-panel")) return;
       el.setPointerCapture(e.pointerId);
       pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
       const seen = matrix.current; // what the reader was looking at when they pressed (a cycle view snaps north-up right after)
@@ -466,6 +471,7 @@ export default function GlobeViewer({ data, pick, onPick, highlight }: { data: G
           ))}
         </g>
       </svg>
+      <FlowsOverlay active={showFlows} matrix={matrix} cam={cam} />
       <span ref={tag} className="gv-view-label" aria-hidden="true" />
       <div className="gv-controls" role="group" aria-label="Globe controls">
         <div className="gv-seg" role="group" aria-label="Mode">
@@ -484,6 +490,9 @@ export default function GlobeViewer({ data, pick, onPick, highlight }: { data: G
             <button type="button" className={showTheaters ? "is-on" : ""} aria-pressed={showTheaters} onClick={() => { setShowTheaters((v) => !v); dirty.current = true; }}>Theaters</button>
           </div>
         )}
+        <div className="gv-seg">
+          <button type="button" className={showFlows ? "is-on" : ""} aria-pressed={showFlows} onClick={() => setShowFlows((v) => !v)}>Flows</button>
+        </div>
         <div className="gv-seg gv-seg-right">
           <button type="button" aria-label="Zoom in" onClick={() => zoomBy(1.5)}>+</button>
           <button type="button" aria-label="Zoom out" onClick={() => zoomBy(1 / 1.5)}>&minus;</button>
