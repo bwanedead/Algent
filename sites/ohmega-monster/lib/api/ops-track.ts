@@ -14,6 +14,7 @@ export async function trackRecordOp(): Promise<ApiResult> {
       forecasts: t.forecasts,
       scores: t.scores,
       portfolio: t.portfolio,
+      trader: t.trader,
       open_positions: t.open_positions,
       disagreements: t.disagreements,
       worst_misses: t.worst_misses,
@@ -24,10 +25,10 @@ export async function trackRecordOp(): Promise<ApiResult> {
     },
     as_of: t.as_of || null,
     cite_as: abs("/intel/track-record"),
-    source: "ohmega.track-record/1",
+    source: "ohmega.track-record/2",
     verification: "ohmega_derived",
     note:
-      `${t.disclaimer} Probabilities are 0..1. Forecasts are made blind to the market price and stored immutably; the Brier score is the mean squared error ` +
+      `${t.disclaimer} trader is an agent-managed paper portfolio started from the same bankroll as the rule-based baseline (portfolio): trader.curve gives each day's equity for both and the flat bankroll, trader.log every buy, sell and settlement with its reason. Probabilities are 0..1. Forecasts are made blind to the market price and stored immutably; the Brier score is the mean squared error ` +
       "(lower is better, 0.25 is a constant 50%); brier_skill is 1 - ours/market on the same markets (positive means we beat the market). " +
       `Until ${t.rules.min_for_verdict} markets are compared the scores are noise: read scores.verdict.`,
   };

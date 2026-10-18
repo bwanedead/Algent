@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { BrierSeries, CalibrationChart } from "@/components/track/TrackCharts";
+import { EquityCurve, TraderPositions, TradeLog } from "@/components/track/TraderBook";
 import { Disagreements, OpenPositions, Resolved } from "@/components/track/TrackTables";
 import { trackRecord } from "@/lib/track-record";
 
@@ -10,8 +11,8 @@ import "../theaters/theaters.css";
 import "@/components/track/track.css";
 
 export const metadata: Metadata = {
-  title: "Track record",
-  description: "Ohmega's own probability forecasts scored against Polymarket prices at the same moment: Brier score, calibration, misses and a paper portfolio. Paper trading only.",
+  title: "Paper trader and track record",
+  description: "A paper-money trader that manages a Polymarket portfolio every day, its equity curve and every trade it makes, plus Ohmega's own probability forecasts scored against market prices. Paper trading only.",
   alternates: { canonical: "/intel/track-record", types: { "application/json": "/api/v1/track-record" } },
 };
 
@@ -33,16 +34,55 @@ export default async function TrackRecordPage() {
       <p className="th-kicker">
         <span>Intelligence</span> <Link href="/intel/situation" className="xt">situation room →</Link>
       </p>
-      <h1 className="th-claim">Track record</h1>
+      <h1 className="th-claim">Paper trader and track record</h1>
       <p className="tr-paper">
         <b>Paper trading only</b>
-        These are Ohmega&apos;s own probability forecasts compared with a prediction market&apos;s prices. No money is staked, no order is ever placed, and nothing here is
-        financial advice. It exists so our judgment is scored by the world, not by ourselves.
+        A trading agent manages a pretend portfolio on a prediction market&apos;s questions, and our own probability forecasts are scored against the market&apos;s prices. No money is
+        staked, no order is ever placed, and nothing here is financial advice. It exists so our judgment is scored by the world, not by ourselves.
       </p>
       {!t || !s ? (
         <p className="th-asof">No track record has been published yet. The mirror and the first forecasts have to run, and markets have to resolve, before there is anything to score.</p>
       ) : (
         <>
+          <h2 className="tr-h2">The trader</h2>
+          <p className="tr-note">
+            Every day the trader is shown a batch of markets, our own forecast for each, the market&apos;s price and what we know, and decides whether to buy, sell or stand aside with its{" "}
+            ${t.trader.limits.bankroll.toLocaleString("en-US")} of paper money. Fills pay {Math.round(t.trader.limits.slippage * 100)} point of slippage; no more than{" "}
+            {Math.round(t.trader.limits.max_position_frac * 100)}% of the starting money goes into one market or {Math.round(t.trader.limits.max_exposure_frac * 100)}% into all of them.
+            {t.trader.since && ` Trading since ${t.trader.since}.`}
+          </p>
+          <ul className="tr-stats">
+            <li>
+              <span className={`tr-stat-n ${t.trader.summary.pnl > 0 ? "tr-good" : t.trader.summary.pnl < 0 ? "tr-bad" : ""}`}>{usd(t.trader.summary.pnl)}</span>
+              <span className="tr-stat-l">trader P&amp;L, worth ${Math.round(t.trader.summary.equity).toLocaleString("en-US")}</span>
+            </li>
+            <li>
+              <span className={`tr-stat-n ${t.trader.rule.total_pnl > 0 ? "tr-good" : t.trader.rule.total_pnl < 0 ? "tr-bad" : ""}`}>{usd(t.trader.rule.total_pnl)}</span>
+              <span className="tr-stat-l">fixed-rule baseline P&amp;L</span>
+            </li>
+            <li><span className="tr-stat-n">{t.trader.summary.open}</span><span className="tr-stat-l">positions held</span></li>
+            <li><span className="tr-stat-n">{t.trader.summary.buys + t.trader.summary.sells}</span><span className="tr-stat-l">trades ({t.trader.summary.buys} buys, {t.trader.summary.sells} sells)</span></li>
+            <li>
+              <span className="tr-stat-n">{t.trader.summary.hit_rate === null ? "n/a" : `${Math.round(t.trader.summary.hit_rate * 100)}%`}</span>
+              <span className="tr-stat-l">closed positions in profit ({t.trader.summary.wins}W {t.trader.summary.losses}L)</span>
+            </li>
+            <li><span className="tr-stat-n">${Math.round(t.trader.summary.cash).toLocaleString("en-US")}</span><span className="tr-stat-l">cash</span></li>
+          </ul>
+          <EquityCurve curve={t.trader.curve} bankroll={t.trader.limits.bankroll} />
+          {t.trader.today.decided > 0 && (
+            <p className="tr-today">
+              Latest pass: looked at {t.trader.today.decided} markets, bought {t.trader.today.bought}, sold {t.trader.today.sold}, stood aside on {t.trader.today.held}.
+            </p>
+          )}
+
+          <h2 className="tr-h2">What it holds now</h2>
+          <TraderPositions rows={t.trader.open_positions} />
+
+          <h2 className="tr-h2">Every trade, newest first</h2>
+          <p className="tr-note">Green: the position paid off or was closed at a profit. Red: it lost. Reasons are the trader&apos;s own, written when it acted.</p>
+          <TradeLog rows={t.trader.log} />
+
+          <h2 className="tr-h2">How good are our forecasts</h2>
           <p className={`tr-verdict${early ? " is-early" : ""}`}>{s.verdict}</p>
           <ul className="tr-stats">
             <li><span className="tr-stat-n">{s.compared}</span><span className="tr-stat-l">resolved, compared</span></li>
@@ -71,10 +111,10 @@ export default async function TrackRecordPage() {
             <BrierSeries series={s.brier_diff_series} />
           </div>
 
-          <h2 className="tr-h2">Open paper positions</h2>
+          <h2 className="tr-h2">Fixed-rule baseline: open positions</h2>
           <p className="tr-note">
-            A position is taken when our forecast differs from the market&apos;s price by {Math.round(t.rules.edge_min * 100)} points or more, sized at a {Math.round(t.rules.kelly_fraction * 100)}% fraction of
-            Kelly and capped at {Math.round(t.rules.max_position_frac * 100)}% of the fixed ${t.rules.bankroll.toLocaleString("en-US")} bankroll. Marked to market daily, settled when the market resolves.
+            The baseline has no judgement: it takes a position whenever our forecast differs from the market&apos;s price by {Math.round(t.rules.edge_min * 100)} points or more, sized at a {Math.round(t.rules.kelly_fraction * 100)}% fraction of
+            Kelly and capped at {Math.round(t.rules.max_position_frac * 100)}% of the fixed ${t.rules.bankroll.toLocaleString("en-US")} bankroll. Never sold early; marked daily, settled when the market resolves.
             {t.portfolio.open > 0 && ` ${t.portfolio.open} open, $${t.portfolio.staked_open.toLocaleString("en-US", { maximumFractionDigits: 0 })} staked, unrealised ${usd(t.portfolio.unrealised_pnl)}.`}
           </p>
           <OpenPositions rows={t.open_positions} />
