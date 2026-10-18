@@ -124,6 +124,7 @@ def test_ai_daily_is_a_paid_job_only_when_the_operator_flips_the_flag(monkeypatc
     from algent_backend.agent_system.agents.intel import flags
     from algent_backend.ops import schedule
 
+    monkeypatch.setattr(flags, "AI_DAILY_SCHEDULED", False)
     assert "ai-daily" not in schedule.jobs()
     monkeypatch.setattr(flags, "AI_DAILY_SCHEDULED", True)
     job = schedule.jobs()["ai-daily"]
