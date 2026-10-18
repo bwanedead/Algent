@@ -55,6 +55,7 @@ Docs sprawl is a real failure mode. To prevent it:
 - `markets-track-record.md` – the reality feedback loop: Polymarket mirror (read-only), blind per-market forecasts, paper portfolio, Brier/log-loss vs the market, calibration, `/intel/track-record`, `/api/v1/track-record`. Paper only.
 - `ai-desk.md` – the AI desk: benchmark tracker (Epoch hub, SWE-bench, LMArena; freshness; capped self-reported discovery), the AI domain of the intel daily (`--domain ai`), `/intel/ai`, `/ai`, `/api/v1/ai-benchmarks`, how to schedule it.
 - `maritime-behaviour.md` – vessel behaviour from our own AIS (AIS gaps, STS candidates, identity changes, sanctioned vessels, loitering over cable corridors): profile memory, detectors and their thresholds, publish, `/intel/maritime`, `/api/v1/maritime`, MCP `get_maritime_behaviour`.
+- `flows.md` – the world's circulation: ship lanes derived from our own AIS (places, lane network, hops, rates, anomalies), grain and money from UN Comtrade (annual, separate), the `flows` document, the globe's Flows layer and HUD panel.
 
 ### Guides — `guides/`
 - `run-operator-entrypoint.md` – **start here** to operate runs; short hub that routes to the rest.

@@ -1,0 +1,8 @@
+{"elapsedTime": "0.2 secs", "count": 6, "error": "", "data": [
+  {"typeCode": "C", "freqCode": "A", "refYear": 2024, "period": "2024", "reporterCode": 842, "flowCode": "X", "partnerCode": 0, "partner2Code": 0, "cmdCode": "1001", "qty": 17943289415.0, "netWgt": 17943289415.0, "primaryValue": 6133433349.0, "isAggregate": true},
+  {"typeCode": "C", "freqCode": "A", "refYear": 2024, "period": "2024", "reporterCode": 842, "flowCode": "X", "partnerCode": 484, "partner2Code": 0, "cmdCode": "1001", "netWgt": 4424790000.0, "primaryValue": 1116000000.0, "isAggregate": true},
+  {"typeCode": "C", "freqCode": "A", "refYear": 2024, "period": "2024", "reporterCode": 842, "flowCode": "X", "partnerCode": 608, "partner2Code": 0, "cmdCode": "1001", "netWgt": 2494321000.0, "primaryValue": 630000000.0, "isAggregate": true},
+  {"typeCode": "C", "freqCode": "A", "refYear": 2024, "period": "2024", "reporterCode": 842, "flowCode": "X", "partnerCode": 392, "partner2Code": 0, "cmdCode": "1001", "netWgt": 2132915000.0, "primaryValue": 538000000.0, "isAggregate": true},
+  {"typeCode": "C", "freqCode": "A", "refYear": 2024, "period": "2024", "reporterCode": 842, "flowCode": "X", "partnerCode": 899, "partner2Code": 0, "cmdCode": "1001", "netWgt": 1000.0, "primaryValue": 5000.0, "isAggregate": true},
+  {"typeCode": "C", "freqCode": "A", "refYear": 2024, "period": "2024", "reporterCode": 842, "flowCode": "X", "partnerCode": 490, "partner2Code": 0, "cmdCode": "1001", "netWgt": 700000000.0, "primaryValue": 180000000.0, "isAggregate": true}
+]}

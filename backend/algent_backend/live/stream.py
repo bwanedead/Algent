@@ -9,6 +9,7 @@ The stream service (``newsroom live ais``, systemd unit ``ohmega-ais``) — ever
     needs them, the full ``vessels`` / ``aircraft``: ``flags.PUBLISH_FULL_SNAPSHOT``) to the public Storage bucket,
     every ``memory.flags.SAMPLE_SECONDS`` a count of what is on the boards per cell / area / class, folded into an hourly mean on disk
     (live memory, ``live/memory/``: baselines and anomalies are computed from it by the timer runner's tick),
+    every ``flows.flags.CYCLE_SECONDS`` the lane tracker folds the vessel board into ship-lane counts (``flows/``: aggregates only),
     and every ``PERSIST_SECONDS`` the short-trail shards (``tracks/v<k>``, ``tracks/a<k>``), the receiver-coverage grid and the local
     saves of the MMSI static memory (so a restart does not forget every ship's type).
 
@@ -24,6 +25,7 @@ from datetime import datetime, timezone
 from typing import Any, Callable
 
 from algent_backend import polite_http
+from algent_backend.flows.tracker import LaneTracker
 from algent_backend.maritime import store as maritime_store
 from algent_backend.maritime.profile import ProfileBook
 from algent_backend.maritime.watch import Watch
@@ -96,8 +98,25 @@ def _save_profiles(doc: dict[str, Any]) -> None:
         store.record_status("maritime", error=f"save: {type(exc).__name__}: {str(exc)[:120]}")
 
 
+def _flows_cycle(flows: LaneTracker, board: VesselBoard, now: float) -> dict[str, Any] | None:
+    """Lane tracking: fold the board's ships into the lane counts when a pass is due. Never raises."""
+    try:
+        return flows.cycle(board, now)
+    except Exception as exc:  # noqa: BLE001 - lane counts must never cost the stream a snapshot
+        store.record_status("flows", error=f"{type(exc).__name__}: {str(exc)[:160]}")
+        return None
+
+
+def _save_flows(docs: dict[str, Any]) -> None:
+    try:
+        LaneTracker.write(docs)
+    except Exception as exc:  # noqa: BLE001 - a failed save only costs a restart some counts
+        store.record_status("flows", error=f"save: {type(exc).__name__}: {str(exc)[:120]}")
+
+
 async def _cycle_loop(board: VesselBoard, sky: SkyBoard, stop_at: float | None,
-                      get: Callable[..., str] = polite_http.get, sampler: Sampler | None = None, watch: Watch | None = None) -> None:
+                      get: Callable[..., str] = polite_http.get, sampler: Sampler | None = None, watch: Watch | None = None,
+                      flows: LaneTracker | None = None) -> None:
     last_tracks = 0.0
     while stop_at is None or time.monotonic() < stop_at:
         started = time.time()
@@ -109,6 +128,10 @@ async def _cycle_loop(board: VesselBoard, sky: SkyBoard, stop_at: float | None,
                 _watch_cycle(watch, board, time.time())
                 if watch.persist_due(started):
                     await asyncio.to_thread(_save_profiles, watch.document(started))
+            if flows is not None:
+                _flows_cycle(flows, board, time.time())
+                if flows.persist_due(started):
+                    await asyncio.to_thread(_save_flows, flows.snapshot(started))
             res = await asyncio.to_thread(snapshots.publish, docs)
             if with_tracks:
                 last_tracks = started
@@ -127,7 +150,7 @@ async def run(key: str = "", *, max_seconds: float | None = None) -> None:
     watch = Watch.load()
     board.watch = watch
     stop_at = None if max_seconds is None else time.monotonic() + max_seconds
-    tasks = [_cycle_loop(board, sky, stop_at, sampler=Sampler(), watch=watch)]
+    tasks = [_cycle_loop(board, sky, stop_at, sampler=Sampler(), watch=watch, flows=LaneTracker.load())]
     if key:
         tasks.append(ais.serve(key, max_seconds=max_seconds, counter=ais.load_counter(), board=board))
     if flags.OPENSKY_ENABLED:
