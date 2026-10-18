@@ -2,6 +2,7 @@ import PageTag from "@/components/PageTag";
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import DomainSwitch from "@/components/DomainSwitch";
 import { latestDaily } from "@/lib/daily";
 
 import GeopoliticsDay, { BASE, DOMAIN } from "./GeopoliticsDay";
@@ -21,6 +22,7 @@ export default async function GeopoliticsPage() {
 
   return (
     <div className="intel-page">
+      <DomainSwitch current="geopolitics" />
       <div className="intel-strip" role="group" aria-label="Report status">
         <span className="intel-strip-title"><PageTag kind="daily" detail="Geopolitics" /></span>
       </div>

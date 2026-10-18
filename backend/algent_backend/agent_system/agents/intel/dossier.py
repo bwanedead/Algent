@@ -37,6 +37,7 @@ from . import dossier_lineage
 from . import dossier_timeline as tl
 from . import geo, on_record
 from .contracts import coverage_label
+from .domains import daily_path
 
 SCHEMA = "ohmega.dossier/1"
 INDEX_SCHEMA = "ohmega.dossier.index/1"
@@ -108,8 +109,8 @@ def _newest(stamps: Iterable[str]) -> str:
     return best
 
 
-def _daily_url(day: str) -> str:
-    return f"/geopolitics/{day}"
+def _daily_url(day: str, report: dict | None = None) -> str:
+    return daily_path((report or {}).get("domain", ""), day)
 
 
 def _brief_url(slug: str) -> str:
@@ -190,7 +191,7 @@ def _timeline(acc: _Acc) -> list[dict]:
                 date=tl.day_of(d.get("when", ""), day), headline=_clean(d["headline"], _HEADLINE_LIMIT),
                 detail=_clean(d.get("detail", ""), _DETAIL_LIMIT), where=_clean(d.get("where", ""), 160),
                 verification=d.get("verification") or "reported", sources=_urls(d.get("sources") or []),
-                origin=_daily_url(day)))
+                origin=_daily_url(day, _report)))
     for b in acc.briefs:
         for item in b.get("timeline") or []:
             if not (item.get("what") or "").strip():
@@ -394,7 +395,7 @@ def _current(acc: _Acc, coverage: str) -> dict | None:
                 "headline": _clean(s.get("headline", ""), _TEXT_LIMIT),
                 "escalation": {"direction": esc.get("direction", "unclear"), "pace": esc.get("pace", "gradual")},
                 "coverage": (s.get("temperature") or {}).get("coverage") or coverage, "source": "daily",
-                "url": _daily_url(day)}
+                "url": _daily_url(day, _r)}
     if brief is None:
         return None
     esc = brief.get("escalation") or {}
@@ -438,7 +439,7 @@ def build_one(tid: str, acc: _Acc, inp: Inputs, board: dict) -> dict:
         "figures": _figures(acc), "forecasts": forecasts, "indicators": _indicators(acc),
         "statements": _statements(acc), "on_record": _on_record(acc),
         "links": _links(acc),
-        "reports": [{"date": d, "url": _daily_url(d)} for d in reversed(days)],
+        "reports": [{"date": d, "url": _daily_url(d, acc.sections[d][0])} for d in reversed(days)],
         "briefs": [{"slug": b["slug"], "title": _clean(b.get("title", ""), _HEADLINE_LIMIT), "as_of": b.get("as_of", ""),
                     "url": _brief_url(b["slug"])} for b in reversed(acc.briefs)],
     }

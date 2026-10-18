@@ -34,6 +34,11 @@ class Domain:
     topics: tuple[tuple[str, str], ...] = field(default_factory=tuple)      # (area, what to watch for in it)
     scope: str = ""                                                          # one paragraph telling the clusterer what this board is
 
+    @property
+    def route(self) -> str:
+        """The site path of this domain's daily (`/geopolitics`, `/ai`): where `<route>/<date>` lives."""
+        return f"/{self.id}"
+
     def note(self) -> str:
         """The domain paragraph appended to the clustering role ('' for geopolitics, whose role text is the default)."""
         if not self.topics:
@@ -76,6 +81,12 @@ def get(domain: str) -> Domain:
     """The domain's recipe data; an unknown id gets the geopolitics recipe under its own name."""
     d = (domain or GEOPOLITICS).strip().lower()
     return REGISTRY.get(d) or Domain(d, d.title(), _geopolitics_loaders)
+
+
+def daily_path(domain: str, date: str) -> str:
+    """The site path of one day's report in ``domain``; a domain without its own daily page falls back to the geopolitics Daily."""
+    d = REGISTRY.get((domain or GEOPOLITICS).strip().lower())
+    return f"{d.route if d else '/' + GEOPOLITICS}/{date}"
 
 
 def owns(domain: str, entry_domain: str) -> bool:

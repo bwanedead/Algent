@@ -6,6 +6,7 @@ import { articleOp, articlesOp, searchOp } from "./ops-content";
 import { anomaliesOp, instrumentOp, instrumentsOp, liveEventsOp } from "./ops-data";
 import { calendarOp, sanctionsOp } from "./ops-forward";
 import { maritimeOp } from "./ops-maritime";
+import { aiBenchmarksOp } from "./ops-ai";
 import { trackRecordOp } from "./ops-track";
 import { KIND_ORDER as MARITIME_KINDS } from "@/lib/maritime-shared";
 import { KINDS } from "@/lib/calendar-shared";
@@ -209,6 +210,16 @@ export const ROUTES: Route[] = [
     summary:
       "Ohmega's reality check: its own probability forecasts on Polymarket markets (made blind to the price, stored immutably) scored against the market's price at the same moment. Brier score and log loss for both, calibration, open paper positions, resolved markets including the misses. PAPER ONLY, not financial advice.",
     run: () => trackRecordOp(),
+  },
+  {
+    path: "/ai-benchmarks",
+    summary:
+      "Frontier AI model scores across public benchmarks (Epoch AI hub, SWE-bench, LMArena): the best score so far, the frontier over time, open-weights against closed, per-lab series and how close each benchmark is to saturation. Measured scores only in the series; lab-claimed scores are listed apart as `claimed`. Without a filter: one summary row per benchmark.",
+    query: [
+      { name: "benchmark", description: "A benchmark id or part of its name; returns the full series for the matches.", example: "gpqa" },
+      { name: "lab", description: "With benchmark: only this lab's series (lab id, e.g. anthropic, openai, google, meta, deepseek).", example: "anthropic" },
+    ],
+    run: (_p, q) => aiBenchmarksOp(q),
   },
   {
     path: "/assets",
