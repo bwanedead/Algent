@@ -55,6 +55,14 @@ def test_domain_registry_owns_and_board_locations(tmp_path):
     assert domains.boards_dir(tmp_path, "geopolitics") == tmp_path / "boards" and domains.boards_dir(tmp_path, "ai") == tmp_path / "boards" / "ai"
 
 
+def test_daily_urls_follow_the_domain():
+    from algent_backend.publishing import agent_feed
+
+    assert domains.daily_path("ai", "2026-10-17") == "/ai/2026-10-17" and domains.daily_path("", "2026-10-17") == "/geopolitics/2026-10-17"
+    assert domains.daily_path("economics", "2026-10-17") == "/geopolitics/2026-10-17"          # no daily page of its own: the geopolitics Daily
+    assert agent_feed.daily_url("2026-10-17", "ai") == "/ai/2026-10-17" and agent_feed.daily_url("2026-10-17") == "/geopolitics/2026-10-17"
+
+
 def test_ai_sources_are_a_separate_crawlable_catalog():
     ids = [s.id for s in AI_SOURCES]
     assert len(ids) == len(set(ids)) >= 10 and not AI_SOURCE_IDS & {s.id for s in SOURCES}
