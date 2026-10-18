@@ -9,13 +9,12 @@
 //     Direction, Involvement and Anomalies when there is something): the page hands in a compact per-country dataset
 //     (lib/globe-data.ts), lib/globe/channels.ts sorts each country into a bucket (a CSS class), and the fills are one clipped path per
 //     bucket. Edges: amber = escalating, green = easing, pulsing ring = new within 24 h. Without the country file the plain land stays.
-//   - Tap a country for a side panel (components/globe/GlobePanel.tsx: headline, stats vs world median, counts, theaters, links); "Theaters" toggles dots
-//     at theater centres sized by heat, and tapping one opens its latest daily section.
+//   - Tap a country (or, with "Theaters" on, a theater dot) and `onPick` hands the choice to the HUD (components/hud/GlobeHud.tsx), which
+//     opens that place's panel; "Theaters" toggles dots at theater centres sized by heat.
 //   - Reduced motion: starts Still, no inertia, no easing. Pauses when the tab is hidden or the globe is off screen.
 // Frames are written straight to SVG paths from requestAnimationFrame, not through React (as in GlobeSpinner).
 // Geometry, projection, clipping and cameras all come from lib/globe/ (pure, client-safe).
 
-import Link from "next/link";
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 
 import { cameraAt, spun, VIEWS } from "@/lib/globe/camera";
@@ -23,12 +22,10 @@ import { buildRings, landPath } from "@/lib/globe/clip";
 import { C, f1, paths, R } from "@/lib/globe/project";
 import { availableChannels, bucketClass, bucketCount, bucketOf, legendOf, type ChannelId } from "@/lib/globe/channels";
 import { centroidOf, countryAt, loadCountries, type Countries } from "@/lib/globe/countries";
-import type { GlobeData } from "@/lib/globe/data";
+import type { GlobeData, GlobePick } from "@/lib/globe/data";
 import { bandOf } from "@/lib/globe/themes";
 import { COARSE_POLYS, GRAT, loadLand, toPolys, type Poly } from "@/lib/globe/sphere";
 import { centreOf, centredView, MAX_LAT, projectPoint, unproject, wrapLon } from "@/lib/globe/view";
-
-import GlobePanel, { type Pick } from "./GlobePanel";
 
 import "../globe-spinner.css";
 import "./globe-viewer.css";
@@ -56,14 +53,15 @@ type Dot = { id: string; lon: number; lat: number; r: number; dir: string };
 
 const BUCKETS = 18; // path slots: the most any channel uses (theme x 3 recency bands); countries with no data on a channel stay unfilled
 
-export default function GlobeViewer({ data }: { data: GlobeData | null }) {
+/** The globe. `pick` / `onPick` are controlled by the page (the HUD opens the picked place's panel); `highlight` outlines countries the
+ *  reader is pointing at elsewhere (a panel row's places), the same outline as the pick. */
+export default function GlobeViewer({ data, pick, onPick, highlight }: { data: GlobeData | null; pick: GlobePick | null; onPick: (p: GlobePick | null) => void; highlight: string[] }) {
   const id = useId();
   const channels = useMemo(() => availableChannels(data?.countries ?? {}), [data]);
   const [channel, setChannel] = useState<ChannelId>(data ? "theme" : "off");
   const [now] = useState(() => Date.now()); // the recency bands age against the viewer's clock (only used once the countries have loaded client-side)
   const [geo, setGeo] = useState<Countries | null>(null);
   const legendId = useId();
-  const [picked, setPicked] = useState<Pick | null>(null);
   const [showTheaters, setShowTheaters] = useState(false);
   const [legendOpen, setLegendOpen] = useState(true); // open by default; the viewer's choice is remembered (read after mount, so the server render matches)
   const [mode, setModeState] = useState<Mode>("cycle");
@@ -93,12 +91,14 @@ export default function GlobeViewer({ data }: { data: GlobeData | null }) {
     }
     return out;
   }, [geo, data, channel, now]);
-  const pickedIso = picked?.kind === "country" ? picked.iso : "";
-  const pickedTheater = picked?.kind === "theater" ? picked.id : "";
+  const pickedIso = pick?.kind === "country" ? pick.iso : "";
+  const pickedTheater = pick?.kind === "theater" ? pick.id : "";
+  const outlineKey = [pickedIso, ...highlight].join(",");
   const outlinePolys = useMemo(() => {
-    const c = pickedIso && geo ? geo.list.find((x) => x.iso === pickedIso) : undefined;
-    return c ? toPolys(c.rings.map((r) => [...r, r[0], r[1]])) : [];
-  }, [geo, pickedIso]);
+    const want = new Set(outlineKey.split(",").filter(Boolean));
+    if (!geo || want.size === 0) return [];
+    return geo.list.filter((x) => x.iso && want.has(x.iso)).flatMap((c) => toPolys(c.rings.map((r) => [...r, r[0], r[1]])));
+  }, [geo, outlineKey]);
   // Theater dots: where the reports put them, else the middle of the countries they involve; sized by heat.
   const markers = useMemo<Dot[]>(() => {
     const ts = data?.theaters ?? [];
@@ -300,11 +300,11 @@ export default function GlobeViewer({ data }: { data: GlobeData | null }) {
         const d = Math.hypot((q.x - nx) * rpx, (q.y - ny) * rpx);
         if (d < bestD) { best = mk; bestD = d; }
       }
-      if (best) { setPicked({ kind: "theater", id: best.id }); return; }
+      if (best) { onPick({ kind: "theater", id: best.id }); return; }
     }
     const p = unproject(m, nx, ny);
     const c = p && geo ? countryAt(geo, p.lon, p.lat) : null;
-    setPicked(c && c.iso ? { kind: "country", iso: c.iso } : null);
+    onPick(c && c.iso ? { kind: "country", iso: c.iso } : null);
   };
 
   useEffect(() => {
@@ -317,12 +317,11 @@ export default function GlobeViewer({ data }: { data: GlobeData | null }) {
     let lastTap: { x: number; y: number; t: number } | null = null;
 
     const onWheel = (e: WheelEvent) => {
-      if ((e.target as Element).closest(".gv-panel")) return; // let the panel scroll
       e.preventDefault();
       zoomBy(Math.exp(-e.deltaY * (e.deltaMode === 1 ? 0.05 : 0.0016)), e.clientX, e.clientY);
     };
     const onDown = (e: PointerEvent) => {
-      if ((e.target as Element).closest(".gv-controls, .gv-panel, .gv-legend")) return;
+      if ((e.target as Element).closest(".gv-controls, .gv-legend")) return;
       el.setPointerCapture(e.pointerId);
       pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
       const seen = matrix.current; // what the reader was looking at when they pressed (a cycle view snaps north-up right after)
@@ -491,7 +490,6 @@ export default function GlobeViewer({ data }: { data: GlobeData | null }) {
           <button type="button" aria-label="Toggle full screen" onClick={toggleFullscreen}>Full</button>
         </div>
       </div>
-      {picked && data && <GlobePanel pick={picked} data={data} geo={geo} onClose={() => setPicked(null)} />}
       {legendChannel && legend && legend.items.length > 0 && (
         <div className={legendOpen ? "gv-legend" : "gv-legend is-min"}>
           <div className="gv-legend-bar">

@@ -46,3 +46,6 @@ export type CountryPanel = {
   /** Every brief item naming the country, newest first. */
   briefs: CountryBrief[];
 };
+
+/** What a tap on the globe picked: a country (ISO alpha-2) or a theater dot (theater id). */
+export type GlobePick = { kind: "country"; iso: string } | { kind: "theater"; id: string };

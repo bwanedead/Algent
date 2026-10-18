@@ -1,24 +1,25 @@
 import type { Metadata } from "next";
 
-import GlobeViewer from "@/components/globe/GlobeViewer";
+import GlobeHud from "@/components/hud/GlobeHud";
 import { globeData } from "@/lib/globe-data";
+import { hudData } from "@/lib/globe-hud";
 
 export const metadata: Metadata = {
   title: "Globe",
-  description: "An interactive globe: drag to turn it, scroll or pinch to zoom in on a region, and colour the countries by what the daily reports say about them.",
+  description: "A personal intelligence board around an interactive globe: pick a country or theater to open its panel, pin what you want to track, and arrange the report, Pulses, live counters, calendar, sanctions and paper trader your way.",
 };
 
 export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
 
 export default async function GlobePage() {
-  const data = await globeData();
+  const [data, hud] = await Promise.all([globeData(), hudData()]);
   return (
     <div className="intel-page">
       <div className="intel-strip" role="group" aria-label="Globe status">
         <span className="intel-strip-title">Globe</span>
         {data && <span className="gv-asof">read against the {data.asOf} report</span>}
       </div>
-      <GlobeViewer data={data} />
+      <GlobeHud globe={data} hud={hud} />
     </div>
   );
 }
