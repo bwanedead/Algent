@@ -1,18 +1,14 @@
 "use client";
 
-// The globe's side panel: a theater (name, countries, link) or a country (its full brief history, then real supplemental stats
-// fetched lazily from /api/globe/country/[iso]: the briefs newest first with theme-coloured dots, stat rows with a tiny bar against the world median, and counts of what is going on).
+// The body of the HUD's country panel (components/hud/panels/PlacePanels.tsx supplies the frame): a country (its full brief history, then real supplemental stats fetched lazily from /api/globe/country/[iso]: the briefs newest first
+// with theme-coloured dots, stat rows with a tiny bar against the world median, and counts of what is going on).
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import IsoFlags from "@/components/IsoFlags";
 import { DirTick } from "@/components/vl/primitives";
-import type { Countries } from "@/lib/globe/countries";
 import type { CountryBrief, CountryHeadline, CountryPanel, GlobeData } from "@/lib/globe/data";
 import { THEMES } from "@/lib/globe/themes";
-
-export type Pick = { kind: "country"; iso: string } | { kind: "theater"; id: string };
 
 const COUNTS: { key: keyof CountryPanel["counts"]; one: string; many: string }[] = [
   { key: "theaters", one: "theater involved", many: "theaters involved" },
@@ -105,28 +101,18 @@ function CountryBody({ iso, fallback }: { iso: string; fallback: CountryHeadline
   );
 }
 
-export default function GlobePanel({ pick, data, geo, onClose }: { pick: Pick; data: GlobeData; geo: Countries | null; onClose: () => void }) {
-  if (pick.kind === "theater") {
-    const t = data.theaters.find((x) => x.id === pick.id);
-    if (!t) return null;
-    return (
-      <aside className="gv-panel" aria-label={t.name}>
-        <button type="button" className="gv-close" onClick={onClose} aria-label="Close">&times;</button>
-        <p className="gv-panel-kind">Theater</p>
-        <h2 className="gv-panel-name"><DirTick direction={t.dir} /> {t.name}</h2>
-        {t.iso.length > 0 && <p className="gv-panel-flags"><IsoFlags codes={t.iso} link /></p>}
-        <p className="gv-panel-links"><Link href={t.href} className="xt">Latest report section ({t.date})</Link></p>
-      </aside>
-    );
-  }
-  const info = data.countries[pick.iso];
-  const name = info?.name ?? geo?.list.find((c) => c.iso === pick.iso)?.name ?? pick.iso;
+/** A country's name for a panel title: the globe data's, else the platform's region names, else the code. */
+export function countryTitle(iso: string, data: GlobeData | null): string {
+  const named = data?.countries[iso]?.name;
+  if (named) return named;
+  try { return new Intl.DisplayNames(["en"], { type: "region" }).of(iso) ?? iso; } catch { return iso; }
+}
+
+export function CountryContent({ iso, data }: { iso: string; data: GlobeData | null }) {
+  const info = data?.countries[iso];
   return (
-    <aside className="gv-panel" aria-label={name}>
-      <button type="button" className="gv-close" onClick={onClose} aria-label="Close">&times;</button>
-      <p className="gv-panel-kind">Country</p>
-      <h2 className="gv-panel-name"><IsoFlags codes={[pick.iso]} /> {name}</h2>
-      <CountryBody iso={pick.iso} fallback={info?.headline ?? null} />
+    <>
+      <CountryBody iso={iso} fallback={info?.headline ?? null} />
       {info && info.theaters.length > 0 && (
         <>
           <p className="gv-panel-sub">Theaters</p>
@@ -137,7 +123,7 @@ export default function GlobePanel({ pick, data, geo, onClose }: { pick: Pick; d
           </ul>
         </>
       )}
-      {info?.page && <p className="gv-panel-links"><Link href={`/intel/actors/${pick.iso}`} className="xt">Country profile</Link></p>}
-    </aside>
+      {info?.page && <p className="gv-panel-links"><Link href={`/intel/actors/${iso}`} className="xt">Country profile</Link></p>}
+    </>
   );
 }
