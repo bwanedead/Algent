@@ -14,6 +14,7 @@ import LivePanel from "./panels/LivePanel";
 import { CountryPanel, TheaterPanel } from "./panels/PlacePanels";
 import PulsesPanel from "./panels/PulsesPanel";
 import SanctionsPanel from "./panels/SanctionsPanel";
+import SatellitePanel from "./panels/SatellitePanel";
 import TheatersPanel from "./panels/TheatersPanel";
 import TraderPanel from "./panels/TraderPanel";
 import TweetsPanel from "./panels/TweetsPanel";
@@ -38,6 +39,7 @@ export const REGISTRY: Record<PanelKind, PanelDef> = {
   trader: fixed("Paper trader", TraderPanel),
   tweets: fixed("Tweets of the day", TweetsPanel),
   flows: fixed("Ships, grain and money", FlowsPanel),
+  satellite: fixed("Satellite watch", SatellitePanel),
   country: {
     label: "Country",
     title: (p, ctx) => <><IsoFlags codes={[p.ref]} /> {countryTitle(p.ref, ctx.globe)}</>,
@@ -51,4 +53,4 @@ export const REGISTRY: Record<PanelKind, PanelDef> = {
 };
 
 /** The kinds the "Panels" menu offers, in menu order (place panels are opened from the globe instead). */
-export const MENU_KINDS: SingletonKind[] = ["daily", "theaters", "pulses", "live", "coming", "sanctions", "trader", "tweets", "flows"];
+export const MENU_KINDS: SingletonKind[] = ["daily", "theaters", "pulses", "live", "coming", "sanctions", "trader", "tweets", "flows", "satellite"];

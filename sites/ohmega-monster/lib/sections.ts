@@ -12,6 +12,7 @@ import { maritimeEvents } from "./maritime";
 import { getMenus } from "./radar";
 import { recordLedger } from "./record";
 import { recentSanctions } from "./sanctions";
+import { satelliteDoc } from "./satellite";
 import { trackRecord } from "./track-record";
 
 // The site's sections as doors: one line saying what is behind each, plus a small live hint read from the
@@ -24,7 +25,7 @@ export type Door = { href: string; title: string; line: string; hint: string };
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
 const hints = cache(async () => {
-  const [daily, theaters, actors, ledger, snap, articles, menus, live, upcoming, sanctions, maritime, track, ai, aiDaily] = await Promise.all([
+  const [daily, theaters, actors, ledger, snap, articles, menus, live, upcoming, sanctions, maritime, track, ai, aiDaily, satellite] = await Promise.all([
     latestDaily("geopolitics"),
     dossierList(),
     actorIds(),
@@ -39,6 +40,7 @@ const hints = cache(async () => {
     trackRecord(),
     aiBenchmarks(),
     latestDaily("ai"),
+    satelliteDoc(),
   ]);
   const ahead30 = upcoming.filter((r) => r.on_date <= addDays(todayIso(), 30));
   const active = theaters.filter((t) => !t.merged_into);
@@ -60,6 +62,7 @@ const hints = cache(async () => {
     track: track ? `${plural(track.scores.compared, "market")} compared · ${plural(track.markets.open, "open market")}` : "",
     ai: ai ? `${plural(ai.benchmarks.length, "benchmark")} · ${plural(ai.labs.length, "lab")}` : "",
     aiDaily: aiDaily ? fmtDay(aiDaily.date) : "",
+    satellite: satellite && satellite.counts.with_imagery > 0 ? `${plural(satellite.counts.with_imagery, "place")}${satellite.counts.changed > 0 ? ` · ${satellite.counts.changed} changed` : ""}` : "",
     sanctions: sanctions.length > 0 ? `${plural(sanctions.filter((s) => s.action === "designated").length, "addition")} · last 30 days` : "",
   };
 });
@@ -85,6 +88,7 @@ export async function toolDoors(): Promise<Door[]> {
     { href: "/calendar", title: "Calendar", line: "What is scheduled in the next 30 days, with sources.", hint: h.calendar },
     { href: "/intel/sanctions", title: "Sanctions", line: "Who was added to or removed from the US, UK and EU lists.", hint: h.sanctions },
     { href: "/intel/maritime", title: "Maritime", line: "Ships that went dark, met at sea, changed identity or matched a sanctions list.", hint: h.maritime },
+    { href: "/intel/satellite", title: "Satellite", line: "Fresh imagery of struck and watched places, before and after, with change flagged as a machine signal.", hint: h.satellite },
     { href: "/intel/forecasts", title: "Forecasts", line: "Every open forecast on one timeline, and the track record.", hint: "" },
     { href: "/intel/track-record", title: "Track record", line: "Our forecasts scored against Polymarket prices, misses included. Paper only.", hint: h.track },
     { href: "/ai", title: "AI Daily", line: "The Daily for artificial intelligence: the labs' race, chips, policy, security, open weights and capital.", hint: h.aiDaily },
