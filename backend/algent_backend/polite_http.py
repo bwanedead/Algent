@@ -88,6 +88,27 @@ def get(url: str, params: dict[str, Any] | None = None, *, headers: dict[str, st
     raise SourceError(f"{url} failed after {RETRIES + 1} attempts: {last}")
 
 
+def post_form(url: str, data: dict[str, str], *, headers: dict[str, str] | None = None) -> str:
+    """POST a form (an OAuth token request) and return the body text; retries transient failures, never memoised.
+    401/403 raise ``SourceUnavailable`` (bad credentials are not a bug)."""
+    hdrs = {"User-Agent": USER_AGENT, "Accept": "application/json", **(headers or {})}
+    last: Exception | None = None
+    for attempt in range(RETRIES + 1):
+        _pace(url)
+        try:
+            resp = httpx.post(url, data=data, headers=hdrs, timeout=TIMEOUT_S, follow_redirects=True)
+        except httpx.HTTPError as exc:
+            last = exc
+        else:
+            if resp.status_code in (400, 401, 403):
+                raise SourceUnavailable(f"{url} -> HTTP {resp.status_code} (credentials refused)")
+            if resp.status_code == 200:
+                return resp.text
+            last = RuntimeError(f"HTTP {resp.status_code}")
+        time.sleep(1.0 * (attempt + 1))
+    raise SourceError(f"{url} failed after {RETRIES + 1} attempts: {last}")
+
+
 def stream_lines(url: str, *, headers: dict[str, str] | None = None) -> Iterator[str]:
     """Yield a large text body line by line without holding it in memory (a big CSV); no retry or memo.
     Raises ``SourceError`` on a non-200 status or a transport failure before the first line."""

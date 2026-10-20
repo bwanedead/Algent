@@ -18,6 +18,8 @@ DAILY_DAYS = 60
 STATEMENT_DAYS = 90
 SANCTION_DAYS = 60
 GEO_DAYS = 45
+CONFLICT_DAYS = 30        # low-confidence (single-source machine-coded) events are left out of the index: they would crowd out better evidence
+GNSS_DAYS = 21
 CALENDAR_DAYS_BACK = 30
 CALENDAR_DAYS_AHEAD = 150
 

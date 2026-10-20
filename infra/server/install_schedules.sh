@@ -7,6 +7,10 @@
 #   ohmega-instruments  every 6 h      free public data series
 #   ohmega-statements   every 6 h      official statement transcripts (collection only, no extraction)
 #   ohmega-sanctions    every 6 h      OFAC / UK / EU sanctions list diffs -> designation events
+#   ohmega-conflict     every 15 min   attack / conflict event log: GDELT 15-minute files (keyless)
+#   ohmega-reliefweb    hourly         ReliefWeb humanitarian reports (needs an approved ALGENT_RELIEFWEB_APPNAME; reports so until set)
+#   ohmega-conflict-daily daily 05:20  ACLED + UCDP (need ALGENT_ACLED_EMAIL/PASSWORD, ALGENT_UCDP_TOKEN; report so until set)
+#   ohmega-gnss         hourly         GPS-jamming zones from ADS-B navigation accuracy + GPSJam cross-check (keyless)
 #   ohmega-calendar     daily 04:40    upcoming elections, central-bank decisions, summits, OPEC+, extracted deadlines
 #   ohmega-markets      every 4 h      Polymarket mirror (read-only): relevant markets, prices, resolutions; paper track record
 #   ohmega-ai-bench     every 12 h     AI benchmark scores (Epoch hub, SWE-bench, LMArena) -> site document
@@ -60,6 +64,10 @@ unit instruments "$INFRA/jobs.sh instruments"  "0/6:40"
 unit statements  "$INFRA/jobs.sh statements"   "1/6:10"
 unit sanctions   "$INFRA/jobs.sh sanctions"    "2/6:25"
 unit calendar    "$INFRA/jobs.sh calendar"     "*-*-* 04:40"
+unit conflict    "$INFRA/jobs.sh conflict"     "*:4/15"
+unit reliefweb   "$INFRA/jobs.sh reliefweb"    "*:41"
+unit conflict-daily "$INFRA/jobs.sh conflict-daily" "*-*-* 05:20"
+unit gnss        "$INFRA/jobs.sh gnss"         "*:12"
 unit markets     "$INFRA/jobs.sh markets"      "3/4:50"
 unit ai-bench    "$INFRA/jobs.sh ai-benchmarks" "0/12:55"
 unit ai-discovery "$INFRA/jobs.sh ai-discovery" "*-*-* 06:50"
@@ -105,7 +113,7 @@ done < <(cd "$HOME/Algent/backend" && .venv/bin/python -m algent_backend.cli new
 [ -n "$PAID" ] || { echo "no paid jobs listed by 'newsroom schedule times'; refusing to continue" >&2; exit 1; }
 
 sudo systemctl daemon-reload
-for t in update library instruments statements sanctions calendar markets ai-bench ai-discovery backup watchdog flows $LIVE_TIMERS $PAID; do
+for t in update library instruments statements sanctions calendar conflict reliefweb conflict-daily gnss markets ai-bench ai-discovery backup watchdog flows $LIVE_TIMERS $PAID; do
     sudo systemctl enable --now "ohmega-$t.timer" >/dev/null
 done
 sudo systemctl enable --now ohmega-ais.service >/dev/null

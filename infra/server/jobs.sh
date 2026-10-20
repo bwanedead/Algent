@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # The server's scheduled jobs, one entry point so systemd units stay one-liners:
 #
-#   jobs.sh library | instruments | statements | sanctions | calendar | markets | ai-benchmarks | ai-discovery | backup | watchdog | flows | live <feed>   free
+#   jobs.sh library | instruments | statements | sanctions | calendar | markets | ai-benchmarks | ai-discovery | backup | watchdog | flows | conflict | reliefweb | conflict-daily | gnss | live <feed>   free
 #   jobs.sh menu | daily-1 | daily-2 | markets-daily                       PAID, unattended (operator-authorised)
 #
 # Free work: crawl, AI benchmark scores, a capped (<$0.10/day, ai_benchmarks/flags.py) discovery of lab-claimed scores, public data series, statement transcripts without extraction, the archive backup.
@@ -19,15 +19,23 @@ if [ "${1:-}" = "watchdog" ]; then exec $PY -m algent_backend.cli newsroom watch
 if [ "${1:-}" = "live" ]; then exec $PY -m algent_backend.cli newsroom live run --feed "${2:?usage: jobs.sh live <feed>}"; fi
 # The flows document (lane aggregates the stream service wrote + the weekly Comtrade refresh, a couple of minutes at most) is free and independent of the lock too.
 if [ "${1:-}" = "flows" ]; then exec $PY -m algent_backend.cli newsroom flows publish; fi
+# The conflict log and the GNSS pass are light (seconds to ~1.5 min), keep their own state and run on short cadences: no lock, so a daily never delays them.
+case "${1:-}" in
+    conflict)       exec $PY -m algent_backend.cli newsroom conflict fetch --source gdelt ;;
+    reliefweb)      exec $PY -m algent_backend.cli newsroom conflict fetch --source reliefweb ;;
+    conflict-daily) exec $PY -m algent_backend.cli newsroom conflict fetch --source acled --source ucdp ;;
+    gnss)           exec $PY -m algent_backend.cli newsroom gnss run ;;
+esac
 exec 9>"$HOME/.ohmega-jobs.lock"
 flock -w 3600 9
 
-case "${1:?usage: jobs.sh library|instruments|statements|sanctions|calendar|markets|ai-benchmarks|ai-discovery|backup|live|menu|daily-1|daily-2|markets-daily}" in
+case "${1:?usage: jobs.sh library|instruments|statements|sanctions|calendar|conflict|reliefweb|conflict-daily|gnss|markets|ai-benchmarks|ai-discovery|backup|live|menu|daily-1|daily-2|markets-daily}" in
     library)     $PY -m algent_backend.cli newsroom library crawl --max 150 ;;
     instruments) $PY -m algent_backend.cli newsroom instruments fetch ;;
     statements)  $PY -m algent_backend.cli newsroom statements collect --no-extract --no-reported ;;
     sanctions)   $PY -m algent_backend.cli newsroom sanctions fetch ;;
     calendar)    $PY -m algent_backend.cli newsroom calendar refresh ;;
+    gnss)        $PY -m algent_backend.cli newsroom gnss run ;;
     markets)     $PY -m algent_backend.cli newsroom markets refresh ;;
     ai-benchmarks) $PY -m algent_backend.cli newsroom ai-benchmarks fetch ;;
     ai-discovery)  $PY -m algent_backend.cli newsroom ai-benchmarks discover ;;
