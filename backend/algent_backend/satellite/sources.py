@@ -25,7 +25,7 @@ GIBS_URL = "https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi"
 NIGHT_LAYER = "VIIRS_NOAA20_GapFilled_BRDF_Corrected_DayNightBand_Radiance"
 COLLECTION = "sentinel-2-l2a"
 #: The fixed stretch of surface reflectance (x10000) to 8 bit: the same for every date, so a difference is the ground, not the contrast stretch.
-RESCALE = "0,3000"
+RESCALE = "0,2400"
 
 BBox = tuple[float, float, float, float]   # west, south, east, north
 
@@ -68,7 +68,7 @@ class PlanetaryComputer:
         return polite_http.get_bytes(url, {"collection": COLLECTION, "item": scene.id, "assets": assets, **extra})
 
     def rgb(self, scene: Scene, bbox: BBox) -> bytes:
-        return self._chip(scene, bbox, ["B04", "B03", "B02"], {"rescale": RESCALE, "color_formula": "gamma RGB 1.8"})
+        return self._chip(scene, bbox, ["B04", "B03", "B02"], {"rescale": RESCALE})
 
     def scl(self, scene: Scene, bbox: BBox) -> bytes:
         return self._chip(scene, bbox, ["SCL"], {"rescale": "0,11", "resampling": "nearest"})
