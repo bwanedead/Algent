@@ -25,7 +25,7 @@ from collections.abc import Iterable
 from datetime import date
 from typing import Any
 
-from ..statements import store
+from ..statements import speakers, store
 from ..statements.contracts import Statement
 
 EXPORT_SCHEMA = "ohmega.record/1"
@@ -137,10 +137,24 @@ def tone_series(rows: list[Statement]) -> list[dict[str, Any]]:
 def export(*, today: date | None = None) -> dict[str, Any]:
     """The bounded public ledger (see module docstring). Pure read of the statements store; it carries the
     newest statement's date (``newest``) and the window's ``as_of``; no wall-clock stamp, so a rebuild with no
-    new statements on the same day is byte-identical."""
+    new statements on the same day is byte-identical.
+
+    Provenance (additive): ``total`` is the real size of the window (``count`` is what the cap let through, and
+    ``capped`` says whether it bit), ``collecting_since`` is the oldest statement date on file (the series cannot
+    be older), and ``basis`` says these are model-extracted from primary texts. Speakers are folded to one spelling
+    per person (``speakers.canonical_map``; the extractor's own spelling is kept as ``speaker_as_said`` when it differs)."""
     today = today or date.today()
-    rows = store.query(days=WINDOW_DAYS, today=today, limit=MAX_STATEMENTS)     # newest first
+    window = store.query(days=WINDOW_DAYS, today=today)                          # newest first, uncapped
+    rows = window[:MAX_STATEMENTS]
+    canon = speakers.canonical_map(window)
+    entries = []
+    for s, e in zip(rows, (entry(r) for r in rows)):
+        if (name := canon.get(s.speaker.strip())):
+            e["speaker_as_said"], e["speaker"] = e["speaker"], name
+        entries.append(e)
+    on_file = [s.date for s in store.load_statements() if s.date]
     return {"schema": EXPORT_SCHEMA, "window_days": WINDOW_DAYS, "max_statements": MAX_STATEMENTS,
-            "as_of": today.isoformat(), "count": len(rows),
-            "statements": [entry(s) for s in rows], "tone": tone_series(rows),
+            "as_of": today.isoformat(), "count": len(rows), "total": len(window), "capped": len(window) > MAX_STATEMENTS,
+            "collecting_since": min(on_file, default=""), "basis": "model_extracted",
+            "statements": entries, "tone": tone_series(rows),
             "newest": rows[0].date if rows else ""}

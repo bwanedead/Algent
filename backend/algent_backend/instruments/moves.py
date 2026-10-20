@@ -3,7 +3,7 @@ Moves — what the latest reading of a series says, judged against that series' 
 
 Pure and deterministic (no I/O, no model). For one series it reports the latest value, how it
 changed against the previous reading and ~7d / ~30d / ~1y earlier, where it sits in its trailing
-year (percentile), whether it is AT its high/low over a window (30d/90d/1y, ties allowed, only windows its history covers), and whether it is ``unusual``.
+year (percentile, only once the history really spans a year; `history_days` always says how much we hold), whether it is AT its high/low over a window (30d/90d/1y, ties allowed, only windows its history covers), and whether it is ``unusual``.
 
 "Unusual" is DERIVED, not tuned — there is no per-series threshold anywhere:
 
@@ -97,7 +97,14 @@ def compute(points: list[Point], today: date | None = None) -> dict[str, Any] | 
     window = [p for p in points[:-1] if p[0] > latest[0] - timedelta(days=TRAILING_DAYS)]
     trailing = [v for _, v in window] + [latest[1]]
     below = sum(v < latest[1] for v in trailing) + 0.5 * sum(v == latest[1] for v in trailing)
-    out["percentile_1y"] = round(below / len(trailing) * 100, 1)
+    pct = round(below / len(trailing) * 100, 1)
+    # Honest window: "of the past year" only when the stored history really spans a year. A younger series still gets its
+    # rank, but under its true window (`percentile_window`, n days / n readings) and `percentile_1y` stays None.
+    history_days = (latest[0] - points[0][0]).days
+    out["history_days"] = history_days
+    out["history_since"] = points[0][0].isoformat()
+    out["percentile_1y"] = pct if history_days >= TRAILING_DAYS - 1 else None
+    out["percentile_window"] = {"value": pct, "days": min(history_days, TRAILING_DAYS), "n": len(trailing)}
 
     steps = _steps(points)
     change_z = _z(steps[-1], steps[:-1]) if steps else None

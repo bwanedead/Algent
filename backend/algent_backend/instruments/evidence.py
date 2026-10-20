@@ -71,7 +71,10 @@ def _line(m: dict[str, Any]) -> str:
     if m["long_run_outside"]:
         flags.append(m["outside_note"] or "far from its usual level")
     flags += [f"at {m[k]} {k[4:]}" for k in ("new_high", "new_low") if m[k]]
-    tail = "; ".join([*parts, f"1y percentile {m['percentile_1y']:.0f}", *flags])
+    pw = m.get("percentile_window") or {}
+    rank = (f"1y percentile {m['percentile_1y']:.0f}" if m.get("percentile_1y") is not None
+            else f"percentile {pw['value']:.0f} within only {pw['days']}d of our history (not a year)" if pw else "")
+    tail = "; ".join([*parts, *([rank] if rank else []), *flags])
     internal = "" if m["public_display"] else " [internal source]"
     fr = m["freshness"]
     when = f"{m['latest']['period']} ({fr['note']})" if fr["cadence"] != "daily" or fr["status"] == "overdue"         else f"{m['latest']['period']} ({m['age_days']}d old)"
