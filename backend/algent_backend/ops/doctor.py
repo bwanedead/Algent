@@ -524,6 +524,26 @@ def check_ai_benchmarks() -> dict[str, Any]:
     return {"ai_benchmarks": _check(WARN, "stale: " + scrub("; ".join(bad))) if bad else _check(OK, f"{len(rows)} sources fresh; {n} scores stored")}
 
 
+def check_satellite() -> dict[str, Any]:
+    """Satellite watch: the last pass is within two days (the timer runs daily). Nothing on this machine is fine (not collected here)."""
+    try:
+        import time
+        from datetime import datetime
+
+        from algent_backend.satellite import store
+
+        doc = store.read_json("doc.json")
+        if not doc:
+            return {"satellite": _check(OK, "no satellite store on this machine (collected on the server)")}
+        age_h = (time.time() - datetime.fromisoformat(doc["as_of"]).timestamp()) / 3600
+        counts = doc.get("counts") or {}
+    except Exception as exc:  # noqa: BLE001
+        return {"satellite": _check(WARN, f"unknown: {scrub(exc)}")}
+    if age_h > 48:
+        return {"satellite": _check(WARN, f"last pass {age_h:.0f} h ago (is ohmega-satellite running?)")}
+    return {"satellite": _check(OK, f"last pass {age_h:.0f} h ago; {counts.get('with_imagery', 0)} of {counts.get('watched', 0)} sites have imagery")}
+
+
 def check_basemap(probes: Probes) -> dict[str, Any]:
     """The Natural Earth basemap (untracked data) must load, or every daily map silently disappears."""
     try:
@@ -543,7 +563,7 @@ def run_checks(env: dict[str, str] | None = None, probes: Probes | None = None,
     checks: dict[str, Any] = {}
     for part in (check_keys(env), check_database(env, probes), check_search(env, probes), check_reads(probes),
                  check_harnesses(probes), check_publish(env, probes, repo), check_runner(probes),
-                 check_system(probes), check_watchdog(probes), check_schedule(probes), check_quota(probes), check_instruments(), check_live(env), check_sanctions(), check_maritime(), check_calendar(), check_markets(), check_ai_benchmarks(), check_basemap(probes)):
+                 check_system(probes), check_watchdog(probes), check_schedule(probes), check_quota(probes), check_instruments(), check_live(env), check_sanctions(), check_maritime(), check_calendar(), check_markets(), check_ai_benchmarks(), check_satellite(), check_basemap(probes)):
         checks.update(part)
     counts = {s: sum(1 for c in checks.values() if c["status"] == s) for s in (OK, WARN, FAIL)}
     return {"ok": counts[FAIL] == 0, "summary": f"{counts[OK]} ok, {counts[WARN]} warn, {counts[FAIL]} fail",
