@@ -4,6 +4,7 @@ import { actorIds } from "./actors";
 import { aiBenchmarks } from "./ai-benchmarks";
 import { getAllMeta } from "./articles";
 import { addDays, calendarItems, todayIso } from "./calendar";
+import { latestZones, recentEvents } from "./conflict";
 import { fmtDay, latestDaily } from "./daily";
 import { dossierList } from "./dossier";
 import { latestSnapshot } from "./intel";
@@ -24,7 +25,7 @@ export type Door = { href: string; title: string; line: string; hint: string };
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
 const hints = cache(async () => {
-  const [daily, theaters, actors, ledger, snap, articles, menus, live, upcoming, sanctions, maritime, track, ai, aiDaily] = await Promise.all([
+  const [daily, theaters, actors, ledger, snap, articles, menus, live, upcoming, sanctions, maritime, track, ai, aiDaily, attacks, jam] = await Promise.all([
     latestDaily("geopolitics"),
     dossierList(),
     actorIds(),
@@ -39,6 +40,8 @@ const hints = cache(async () => {
     trackRecord(),
     aiBenchmarks(),
     latestDaily("ai"),
+    recentEvents(3, 800),
+    latestZones(),
   ]);
   const ahead30 = upcoming.filter((r) => r.on_date <= addDays(todayIso(), 30));
   const active = theaters.filter((t) => !t.merged_into);
@@ -60,6 +63,8 @@ const hints = cache(async () => {
     track: track ? `${plural(track.scores.compared, "market")} compared · ${plural(track.markets.open, "open market")}` : "",
     ai: ai ? `${plural(ai.benchmarks.length, "benchmark")} · ${plural(ai.labs.length, "lab")}` : "",
     aiDaily: aiDaily ? fmtDay(aiDaily.date) : "",
+    attacks: attacks.length > 0 ? `${plural(attacks.length, "event")} · last 3 days` : "",
+    gnss: jam && jam.zones.length > 0 ? `${plural(jam.zones.filter((z) => z.source === "ohmega_adsb").length || jam.zones.length, "zone")} · ${fmtDay(jam.day)}` : "",
     sanctions: sanctions.length > 0 ? `${plural(sanctions.filter((s) => s.action === "designated").length, "addition")} · last 30 days` : "",
   };
 });
@@ -84,6 +89,8 @@ export async function toolDoors(): Promise<Door[]> {
     { href: "/intel/record", title: "The record", line: "Statements by leaders and institutions, with transcripts.", hint: h.record },
     { href: "/calendar", title: "Calendar", line: "What is scheduled in the next 30 days, with sources.", hint: h.calendar },
     { href: "/intel/sanctions", title: "Sanctions", line: "Who was added to or removed from the US, UK and EU lists.", hint: h.sanctions },
+    { href: "/intel/attacks", title: "Attack log", line: "Attacks, clashes and mass-violence events reported by GDELT, ACLED and others, with the source and its limits.", hint: h.attacks },
+    { href: "/intel/gnss", title: "GPS interference", line: "Where aircraft report poor navigation accuracy: signs of GPS jamming, cross-checked against GPSJam.", hint: h.gnss },
     { href: "/intel/maritime", title: "Maritime", line: "Ships that went dark, met at sea, changed identity or matched a sanctions list.", hint: h.maritime },
     { href: "/intel/forecasts", title: "Forecasts", line: "Every open forecast on one timeline, and the track record.", hint: "" },
     { href: "/intel/track-record", title: "Track record", line: "Our forecasts scored against Polymarket prices, misses included. Paper only.", hint: h.track },

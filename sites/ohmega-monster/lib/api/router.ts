@@ -5,11 +5,13 @@ import { assetOp, assetsOp, gridOp } from "./ops-assets";
 import { articleOp, articlesOp, searchOp } from "./ops-content";
 import { anomaliesOp, instrumentOp, instrumentsOp, liveEventsOp } from "./ops-data";
 import { calendarOp, sanctionsOp } from "./ops-forward";
+import { attacksOp, gnssOp } from "./ops-conflict";
 import { maritimeOp } from "./ops-maritime";
 import { aiBenchmarksOp } from "./ops-ai";
 import { trackRecordOp } from "./ops-track";
 import { KIND_ORDER as MARITIME_KINDS } from "@/lib/maritime-shared";
 import { KINDS } from "@/lib/calendar-shared";
+import { EVENT_SOURCES, EVENT_TYPES } from "@/lib/conflict-shared";
 import {
   actorOp, actorsOp, apiUrl, briefOp, changesOp, dailyOp, deskAsOf, forecastsOp, pulseOp, pulsesOp, statementsOp, theaterOp, theatersOp,
 } from "./ops-desk";
@@ -187,6 +189,35 @@ export const ROUTES: Route[] = [
       { name: "since", description: SINCE, example: "2026-10-01" },
     ],
     run: (_p, q) => sanctionsOp({ ...q, source: q.list }),
+  },
+  {
+    path: "/attacks",
+    summary:
+      "The attack log: attacks, clashes and mass-violence events (and humanitarian reports) from GDELT, ACLED, UCDP and ReliefWeb in one schema: when, where (lat/lon, country), parties, kind, fatalities where the source states them, the source and how it was coded (machine, curated, report). Ohmega's own count of what was reported since it began collecting: a minimum. Carries provenance (basis, coverage note, collecting-since) on the response and every row.",
+    paged: true,
+    query: [
+      { name: "type", description: "Kind of event.", enum: EVENT_TYPES.map((t) => t.id) },
+      { name: "source", description: "Which source reported it.", enum: Object.keys(EVENT_SOURCES) },
+      { name: "coding", description: "machine = software-read news (GDELT); curated = researcher-checked (ACLED, UCDP); report = a published humanitarian report.", enum: ["machine", "curated", "report"] },
+      { name: "country", description: "ISO 3166-1 alpha-2 code of the place.", example: "UA" },
+      { name: "days", description: "How many days back (default 14, max 30).", example: "7" },
+      { name: "since", description: SINCE, example: "2026-10-01" },
+    ],
+    run: (_p, q) => attacksOp(q),
+  },
+  {
+    path: "/gnss",
+    summary:
+      "GPS/GNSS interference zones: one-degree cells where an unusual share of aircraft report poor navigation accuracy (ADS-B NACp), with severity, a new/intensifying flag against the cell's own history, and a cross-check against GPSJam's independent daily file. Ohmega's own estimate (basis our_estimate, a minimum, with the date collection began) plus GPSJam's top band (third_party).",
+    paged: true,
+    query: [
+      { name: "source", description: "ohmega_adsb = Ohmega's own estimate; gpsjam = GPSJam.org's file.", enum: ["ohmega_adsb", "gpsjam"] },
+      { name: "severity", description: "Band of the degraded share.", enum: ["low", "medium", "high"] },
+      { name: "flag", description: "Only zones that are new or intensifying against their own history.", enum: ["new", "intensifying"] },
+      { name: "country", description: "ISO 3166-1 alpha-2 code of the land under the cell centre.", example: "LT" },
+      { name: "days", description: "1 = the newest day only (default); up to 30 days of history.", example: "7" },
+    ],
+    run: (_p, q) => gnssOp(q),
   },
   {
     path: "/maritime",

@@ -199,6 +199,10 @@ Zoomed-in tiles refetch every minute where objects moved (positions and timestam
 unchanged-tile skip. Knobs if the bucket still runs hot: `flags.TILE_DEG` (smaller tiles = fewer wasted rows per view, more files per cycle),
 `SNAPSHOT_SECONDS`, and the CDN window `SNAPSHOT_CACHE`.
 
+### Attack log and GPS interference (`conflict/`, `gnss/`)
+
+Four timers, all free and outside the job lock: `ohmega-conflict` (every 15 min, GDELT), `ohmega-reliefweb` (hourly), `ohmega-conflict-daily` (05:20 UTC, ACLED + UCDP) and `ohmega-gnss` (hourly: 27 adsb.lol requests, then GPSJam once a day). Stores: `conflict_store/` (`ALGENT_CONFLICT_STORE`, about 1 MB a day of event shards) and `gnss_store/` (`ALGENT_GNSS_STORE`, small hourly tally lines). Apply migration 014 before the site build. The keyed sources report `needs-key` until their env vars are set in `~/algent.env` (`ALGENT_RELIEFWEB_APPNAME`, `ALGENT_ACLED_EMAIL`, `ALGENT_ACLED_PASSWORD`, `ALGENT_UCDP_TOKEN`; signup links in `docs/credentials.md`); no unit change is needed. `newsroom conflict status|events|fetch|publish`, `newsroom gnss status|zones|run|publish`, doctor checks `conflict` and `gnss`. GNSS flags (new / intensifying) only start after 7 closed days of hourly history. Design, thresholds and limits: `docs/architecture/conflict-events-gnss.md`.
+
 ### Maritime behaviour (`maritime/`)
 
 The stream service also keeps a bounded per-vessel memory (`maritime_store/`, `ALGENT_MARITIME_STORE`) and runs the behaviour detectors every 5 min; the timer runner publishes `maritime_events` (migration 013, apply before the site build) and links events into the geoledger. Seed OSM ports on the server (`newsroom geo seed --source osm`) so the port exclusion has data. `newsroom maritime status|events|vessel|publish`, doctor check `maritime`. Design and thresholds: `docs/architecture/maritime-behaviour.md`.

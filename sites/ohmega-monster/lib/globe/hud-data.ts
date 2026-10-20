@@ -3,6 +3,7 @@
 
 import type { Band, Direction, Pace, Trend } from "../intel";
 import type { Theme } from "./themes";
+import type { Provenance } from "@/lib/conflict-shared";
 
 /** One line of today's report: a theater's headline or a development, with the theme the map fill uses (lib/globe/themes.ts). */
 export type HudItem = { theme: Theme; text: string; href: string; date: string; kind: "section" | "development"; iso: string[] };
@@ -53,6 +54,14 @@ export type HudLive = { counters: HudCounter[]; anomalies: HudAnomaly[] };
 export type HudComing = { date: string; end: string; title: string; kind: string; label: string; iso: string[]; url: string; ours: boolean; until: string };
 export type HudSanction = { id: string; name: string; type: string; source: string; date: string; iso: string[]; programme: string; url: string };
 
+/** One reported attack for the HUD (see lib/conflict-shared.ts). `machine` marks software-read news (GDELT). */
+export type HudAttack = { id: string; date: string; type: string; place: string; iso: string[]; source: string; machine: boolean; fatalities: number | null; reports: number; url: string };
+/** The attack panel: the strongest recent rows, the count behind them and the provenance of that count (our own tally, a minimum, since when). */
+export type HudAttacks = { rows: HudAttack[]; total: number; days: number; provenance: Provenance };
+export type HudJam = { id: string; where: string; iso: string[]; severity: "low" | "medium" | "high"; share: number; flag: "" | "new" | "intensifying"; lat: number; lon: number };
+/** The GPS-interference panel: the strongest zones of the newest day from Ohmega's own estimate, with its provenance. */
+export type HudGnss = { day: string; zones: HudJam[]; total: number; provenance: Provenance };
+
 export type HudTrader = {
   asOf: string;
   bankroll: number;
@@ -91,6 +100,8 @@ export type HudData = {
   live: HudLive | null;
   coming: HudComing[];
   sanctions: HudSanction[];
+  attacks: HudAttacks | null;
+  gnss: HudGnss | null;
   trader: HudTrader | null;
   tweets: HudTweet[] | null;
 };

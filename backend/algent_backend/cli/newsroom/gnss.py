@@ -40,6 +40,7 @@ def run_pass(args: Any) -> int:
     report = collect.run(with_gpsjam=not args.no_gpsjam)
     if not args.no_publish:
         report["publish"] = publish.publish()
+        report["snapshot"] = publish.publish_snapshot()
     return _emit(report)
 
 
@@ -60,4 +61,4 @@ def run_status(_args: Any) -> int:
 def run_publish(_args: Any) -> int:
     from algent_backend.gnss import publish
 
-    return _emit(publish.publish())
+    return _emit({**publish.publish(), "snapshot": publish.publish_snapshot()})

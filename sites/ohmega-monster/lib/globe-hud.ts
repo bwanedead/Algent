@@ -2,7 +2,9 @@ import { addDays, ahead, calendarItems, kindOf, todayIso, untilWords } from "./c
 import { allDailyDates, claimOf, daily, dayHref, theaterAnchor, type Daily } from "./daily";
 import { entityIndex, textLinker } from "./entities";
 import { dailyMentions } from "./globe-mentions";
-import type { HudAnomaly, HudComing, HudCounter, HudData, HudDaily, HudLive, HudPulse, HudSanction, HudTheater, HudTrader } from "./globe/hud-data";
+import { latestZones, logProvenance, recentEvents, eventsSince } from "./conflict";
+import { countryName } from "./flags";
+import type { HudAnomaly, HudAttacks, HudGnss, HudComing, HudCounter, HudData, HudDaily, HudLive, HudPulse, HudSanction, HudTheater, HudTrader } from "./globe/hud-data";
 import { latestSnapshot, severitySorted, type Pulse } from "./intel";
 import { liveAnomalies, liveEvents, liveStats, type LiveStat } from "./live";
 import { recentSanctions, SOURCES, typeLabel } from "./sanctions";
@@ -21,6 +23,9 @@ const HISTORY_POINTS = 30;
 const COMING_DAYS = 14;
 const COMING_SHOWN = 10;
 const SANCTIONS_SHOWN = 10;
+const ATTACK_DAYS = 3;
+const ATTACKS_SHOWN = 8;
+const ZONES_SHOWN = 8;
 const TIES_PER_THEATER = 6;
 const CURVE_DAYS = 90;
 
@@ -117,6 +122,37 @@ async function sanctionsBlock(): Promise<HudSanction[]> {
   }));
 }
 
+async function attacksBlock(): Promise<HudAttacks | null> {
+  const [rows, since] = await Promise.all([recentEvents(ATTACK_DAYS, 600), eventsSince()]);
+  if (rows.length === 0) return null;
+  const strength = (r: (typeof rows)[number]): number => (r.coding === "curated" ? 1e6 : 0) + (r.fatalities ?? 0) * 1000 + r.articles;
+  return {
+    total: rows.length,
+    days: ATTACK_DAYS,
+    provenance: logProvenance(rows, since),
+    rows: [...rows].sort((a, b) => strength(b) - strength(a)).slice(0, ATTACKS_SHOWN).map((r) => ({
+      id: r.id, date: r.on_date, type: r.type, place: r.place || r.title, iso: ISO_RE.test(r.country) ? [r.country] : [], source: r.source, machine: r.coding === "machine",
+      fatalities: r.fatalities, reports: r.articles, url: web(r.urls[0] ?? ""),
+    })),
+  };
+}
+
+async function gnssBlock(): Promise<HudGnss | null> {
+  const latest = await latestZones();
+  const mine = latest?.zones.filter((z) => z.source === "ohmega_adsb") ?? [];
+  if (!latest || mine.length === 0) return null;
+  const top = [...mine].sort((a, b) => Number(b.flag !== "") - Number(a.flag !== "") || b.degraded_share - a.degraded_share).slice(0, ZONES_SHOWN);
+  return {
+    day: latest.day,
+    total: mine.length,
+    provenance: { basis: "our_estimate", coverage_note: mine[0].coverage_note, baseline_since: mine.find((z) => z.baseline_since)?.baseline_since ?? null },
+    zones: top.map((z) => ({
+      id: z.id, where: z.country ? countryName(z.country) : `${z.lat.toFixed(0)}, ${z.lon.toFixed(0)}`, iso: ISO_RE.test(z.country) ? [z.country] : [],
+      severity: z.severity, share: z.degraded_share, flag: z.flag, lat: z.lat, lon: z.lon,
+    })),
+  };
+}
+
 async function traderBlock(): Promise<HudTrader | null> {
   const rec = await trackRecord();
   const t = rec?.trader;
@@ -135,13 +171,13 @@ export async function hudData(): Promise<HudData> {
   const pulses = severitySorted(snap).flatMap((s) => s.pulses).filter((p) => p.position !== null && p.history.length >= 2);
   const pulseById = new Map(pulses.map((p) => [p.id, toHudPulse(p)]));
   const movers = [...pulses].sort((a, b) => Math.abs(b.velocity_7d ?? 0) - Math.abs(a.velocity_7d ?? 0)).slice(0, PULSES_SHOWN).map(toHudPulse);
-  const [live, coming, sanctions, trader] = await Promise.all([liveBlock(), comingBlock(), sanctionsBlock(), traderBlock()]);
+  const [live, coming, sanctions, trader, attacks, gnss] = await Promise.all([liveBlock(), comingBlock(), sanctionsBlock(), traderBlock(), attacksBlock(), gnssBlock()]);
   return {
     asOf: top?.date ?? "",
     daily: top ? dailyBlock(top, dates, linker) : null,
     theaters: top ? theatersBlock(top, dates, idx.ties, pulseById) : [],
     pulses: movers,
-    live, coming, sanctions, trader,
+    live, coming, sanctions, trader, attacks, gnss,
     tweets: null, // no published source yet: see HudTweet in lib/globe/hud-data.ts
   };
 }

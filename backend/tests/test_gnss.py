@@ -155,3 +155,15 @@ def test_publish_shape_and_gpsjam_floor():
     assert pub.publish(today=date(2026, 10, 20), connect=lambda: Conn())["zones"] == 0      # unchanged document: nothing resent
     store.save_zones("2026-10-20", {"date": "2026-10-20", "generated_at": "t2", "zones": [ours.model_dump()], "gpsjam": []})
     assert pub.publish(today=date(2026, 10, 20), connect=lambda: Conn())["zones"] == 1      # the open day changed: upserted again
+
+
+def test_snapshot_doc_is_compact_and_carries_provenance():
+    ours = Zone(id="z1", date="2026-10-20", source="ohmega_adsb", cell="55,20", lat=55.5, lon=20.5, size_deg=1.0, severity="high", degraded_share=0.4, aircraft=30,
+                flag="new", basis="our_estimate")
+    weak = Zone(id="z2", date="2026-10-20", source="gpsjam", cell="h", lat=1.0, lon=1.0, size_deg=0.25, severity="low", degraded_share=0.05, aircraft=10, basis="third_party")
+    store.save_zones("2026-10-20", {"date": "2026-10-20", "generated_at": "t", "baseline_since": "2026-10-14", "baseline_days": 6,
+                                    "zones": [ours.model_dump()], "gpsjam": [weak.model_dump()]})
+    doc = pub.snapshot_doc(date(2026, 10, 21))
+    assert doc["zones"] == [{"lat": 55.5, "lon": 20.5, "r": 1.0, "s": "high", "share": 0.4, "f": "new", "src": "o"}]
+    assert doc["p"]["ours"]["basis"] == "our_estimate" and doc["p"]["ours"]["baseline_since"] == "2026-10-14" and "minimum" in doc["p"]["ours"]["coverage_note"]
+    assert pub.snapshot_doc(date(2026, 10, 1)) is None
