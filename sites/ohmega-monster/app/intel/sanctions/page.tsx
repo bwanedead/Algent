@@ -5,8 +5,8 @@ import Link from "next/link";
 import SanctionsTable from "@/components/sanctions/SanctionsTable";
 import { recentSanctions } from "@/lib/sanctions";
 
-import "@/app/geopolitics/geopolitics.css";
-import "../theaters/theaters.css";
+import "@/app/daily/daily.css";
+import "@/app/situations/situations.css";
 
 export const metadata: Metadata = {
   title: "Sanctions designations",
@@ -26,7 +26,7 @@ export default async function SanctionsPage() {
   return (
     <div className="intel-page th-page">
       <p className="th-kicker">
-        <PageTag kind="tool" detail="Sanctions" /> <Link href="/calendar" className="xt">what&apos;s coming →</Link> <Link href="/intel/maritime" className="xt">maritime behaviour →</Link>
+        <PageTag kind="data" detail="Sanctions" /> <Link href="/calendar" className="xt">what&apos;s coming →</Link> <Link href="/intel/maritime" className="xt">maritime behaviour →</Link>
       </p>
       <h1 className="th-claim">Sanctions designations</h1>
       <p className="th-asof">

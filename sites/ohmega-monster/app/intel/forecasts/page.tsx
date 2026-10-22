@@ -1,34 +1,35 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import Crumbs, { INTEL_CRUMB } from "@/components/Crumbs";
+import Crumbs, { DATA_CRUMB } from "@/components/Crumbs";
+import JudgmentsSwitch from "@/components/JudgmentsSwitch";
 import PageTag from "@/components/PageTag";
 import SituationForecasts from "@/components/SituationForecasts";
 import { SituationVisitProvider } from "@/components/SituationVisit";
 import { situationRoom } from "@/lib/situation";
 
 import "../intel.css";
-import "../theaters/theaters.css";
+import "@/app/situations/situations.css";
 
 export const metadata: Metadata = {
-  title: "Forecasts and track record",
+  title: "Forecasts",
   description: "Every open forecast on one timeline, and how well past calls have held up.",
   alternates: { canonical: "/intel/forecasts" },
 };
 
-// A tool, not a publication: the forecasts the desk has made across theaters (what resolves soon, how sure we were)
-// and the track record. It is what was unique in the retired Situation room; the rest of that page already lives in
-// Pulses (moves), Theaters (coverage, direction) and the Daily (what changed).
+// A judgment page, one of two views of our forecasting (the other is /intel/track-record, see JudgmentsSwitch): the forecasts the
+// desk has made across situations (what resolves soon, how sure we were).
 export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
 
 export default async function ForecastsPage() {
   const room = await situationRoom();
   return (
     <div className="intel-page sit-page">
-      <Crumbs trail={[INTEL_CRUMB]} />
+      <Crumbs trail={[DATA_CRUMB]} />
       <p className="ptag-row">
-        <PageTag kind="tool" detail="Forecasts" />
+        <PageTag kind="judgment" detail="Forecasts" />
       </p>
+      <JudgmentsSwitch current="open" />
       <SituationVisitProvider>
         {!room ? (
           <p className="intel-empty">No forecasts have been published yet. Check back soon.</p>
@@ -37,7 +38,7 @@ export default async function ForecastsPage() {
         )}
       </SituationVisitProvider>
       <p className="geo-xlink">
-        <Link href="/intel/theaters">Theaters: forecasts per situation →</Link> · <Link href="/pulses">Pulses →</Link>
+        <Link href="/situations">Situations: forecasts per story →</Link> · <Link href="/pulses">Pulses →</Link>
       </p>
     </div>
   );

@@ -1,11 +1,11 @@
 import "./pagetag.css";
 
-// The one page-type marker. Every page wears exactly one, so a reader always knows which of the three products (or
-// which tool) they are in: DAILY (one report a day), THEATER (a living file), ARTICLE (a deep dive), HEADLINES (an
-// unverified feed) or TOOL (data and instruments). Sits at the start of the page's kicker line.
-export type PageKind = "daily" | "theater" | "article" | "headlines" | "tool";
+// The one page-type marker. Every page wears exactly one, and the six kinds partition the site (docs/architecture/information-architecture.md):
+// DAILY (a desk's report for a day), SITUATION (a long-running story's living file), ARTICLE (a deep dive), GLOBE (the HUD),
+// DATA (measured layers, no editorial voice) and JUDGMENT (what we think will happen, kept and scored). Sits at the start of the page's kicker line.
+export type PageKind = "daily" | "situation" | "article" | "globe" | "data" | "judgment";
 
-const LABEL: Record<PageKind, string> = { daily: "Daily", theater: "Theater", article: "Article", headlines: "Headlines", tool: "Tool" };
+const LABEL: Record<PageKind, string> = { daily: "Daily", situation: "Situation", article: "Article", globe: "Globe", data: "Data", judgment: "Judgment" };
 
 export default function PageTag({ kind, detail }: { kind: PageKind; detail?: string }) {
   return (

@@ -6,7 +6,7 @@ writes it, the timer runner reads and publishes it).
     state.json         the detectors' open work: slow encounters and dwell trackers (``watch.py``), small
     events.json        the CURRENT picture: behaviour events of the last ``RETAIN_DAYS`` days, by id (replaced atomically)
     log.jsonl          append-only: a line each time an event is first seen or changes state (the long record)
-    published.json    the watermark of the last publish to the site database
+    published.json    the watermark of the last publish to the site database and, per event, the signature + time of what was last sent
 """
 
 from __future__ import annotations
@@ -111,5 +111,14 @@ def published_at() -> str:
     return str(_read(root() / "published.json", {}).get("at", ""))
 
 
-def save_published(at: str) -> None:
-    _write(root() / "published.json", {"at": at})
+def published_sent() -> dict[str, list[str]]:
+    """``{event id: [signature, sent_at]}``: what the site table was last given for each event (see ``publish.signature``)."""
+    sent = _read(root() / "published.json", {}).get("sent", {})
+    return sent if isinstance(sent, dict) else {}
+
+
+def save_published(at: str, sent: dict[str, list[str]] | None = None) -> None:
+    """Record the watermark and (when given) the per-event record of what was sent; ids no longer in the picture are dropped."""
+    alive = read_current()
+    keep = {k: v for k, v in (sent if sent is not None else published_sent()).items() if k in alive}
+    _write(root() / "published.json", {"at": at, "sent": keep})

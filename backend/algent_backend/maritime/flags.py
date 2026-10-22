@@ -31,6 +31,10 @@ ACTIVITY_KEEP_H = 4 * 24
 RETAIN_DAYS = 30
 #: At most this many events are kept in the current picture (newest first): a storage / reader bound.
 EVENTS_MAX = 3000
+#: A still-going event is re-sent to the site table at most this often when only its moving parts changed (last heard, evidence, detail
+#: numbers): the site shows the event's state and words, which are in the table at once whenever they change. Six hours keeps the
+#: "last seen" on the page honest while cutting ~70 rewrites a day per ongoing event to 4.
+PUBLISH_REFRESH_H = 6
 #: Points of evidence kept on one event.
 EVIDENCE_POINTS = 24
 

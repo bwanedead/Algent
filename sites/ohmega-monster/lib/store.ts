@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { gunzipSync } from "node:zlib";
 
 // The site's content source (docs/architecture/published-content.md).
 //
@@ -51,7 +52,10 @@ const enc = encodeURIComponent;
 
 // ---- documents (daily, theaters, actors, briefs, snapshots, record, radar, agent feeds) ------------
 //
-// One table, one path model (published_intel_documents.path). The first path segment picks the file fallback:
+// One path model (published_intel_documents.path). The TABLE is only an index (path, kind, storage_key, size, sha256): the document body
+// is a gzipped JSON object in the public Storage bucket at `docs/<path>.gz` (backend publishing/doc_store.py; Storage is outside the
+// free plan's 500 MB database quota, docs/architecture/database-budget.md). A legacy row that still holds its body inline is read as-is
+// until `newsroom db diet` moves it. The first path segment picks the file fallback:
 //   data/<rel>   -> public/data/<rel>      the agent feeds (/data/*, situation feeds, article twins)
 //   radar/<rel>  -> content/radar/<rel>    headline-radar editions
 //   anything else-> content/intel/<path>   the desk's files
@@ -70,11 +74,37 @@ function readFile(file: string): unknown {
   }
 }
 
+/** A gzipped document object from the public bucket, parsed; null when it is missing or unreadable. The CDN window is short
+ *  (the writer sets max-age=60) and the data cache honours REVALIDATE_SECONDS. */
+async function storageDoc(key: string): Promise<unknown> {
+  if (!dbEnabled()) return null;
+  try {
+    const res = await fetch(`${BASE}/storage/v1/object/public/published-assets/${key}`, { next: { revalidate: REVALIDATE_SECONDS } });
+    if (!res.ok) return null;
+    return JSON.parse(gunzipSync(Buffer.from(await res.arrayBuffer())).toString("utf8"));
+  } catch {
+    return null;
+  }
+}
+
 /** One JSON document by its path, e.g. "daily/geopolitics/2026-10-01.json", "radar/2026-09-24-2217.json",
- *  "data/intel.json". Null when neither the database nor the files have it. */
+ *  "data/intel.json". The index row says where the body is (Storage key, or inline for a not-yet-moved legacy row);
+ *  `visible` is enforced by RLS on the row. Null when neither the database nor the files have it. */
 export async function intelDoc(rel: string): Promise<unknown> {
-  const rows = await rest<{ body: unknown }>("published_intel_documents", `select=body&path=eq.${enc(rel)}&limit=1`);
-  return rows && rows.length > 0 ? rows[0].body : readFile(fileRoot(rel));
+  const rows = await rest<{ body: unknown; storage_key: string | null }>(
+    "published_intel_documents",
+    `select=body,storage_key&path=eq.${enc(rel)}&limit=1`,
+  );
+  if (rows && rows.length > 0) {
+    const row = rows[0];
+    if (row.storage_key) {
+      const doc = await storageDoc(row.storage_key);
+      if (doc !== null) return doc;
+    } else if (row.body !== null && row.body !== undefined) {
+      return row.body;
+    }
+  }
+  return readFile(fileRoot(rel));
 }
 
 /** File names (not paths) directly inside a document directory, e.g. intelNames("daily/geopolitics"). */

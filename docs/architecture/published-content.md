@@ -2,10 +2,12 @@
 
 > Code: `backend/algent_backend/publishing/published_db.py` (rows), `asset_store.py` (images), `site_git.py` (publish
 > mode), `backend/migrations/004_published_content.sql` + `006_published_assets.sql` (tables, bucket, RLS),
-> `sites/ohmega-monster/lib/store.ts` + `lib/assets.ts` (readers). Access classes follow `pulse-system.md` Storage.
+> `sites/ohmega-monster/lib/store.ts` + `lib/assets.ts` (readers), `publishing/doc_store.py` + migration 014 (documents in Storage).
+> Access classes follow `pulse-system.md` Storage. **Size rules: `database-budget.md`** (the free plan's 500 MB quota).
 
-Publishing is a database write plus an object upload. The site fetches published rows over Supabase's REST API
-(PostgREST, plain `fetch`, no client library) and images from a public Storage bucket, and revalidates every 300 s
+Publishing is an object upload plus a small database write. Articles are rows; every JSON document is a gzipped Storage object with an index
+row (since 2026-10-22, `database-budget.md`). The site fetches rows over Supabase's REST API
+(PostgREST, plain `fetch`, no client library) and documents and images from a public Storage bucket, and revalidates every 300 s
 (ISR), so a new article, brief, radar edition or daily report is live within minutes with no commit to `site-live`
 and no redeploy.
 
@@ -30,11 +32,11 @@ The storage prefix stays `radar/`.
 | Object | Holds | Public (`anon`) |
 |---|---|---|
 | `published_articles` (004) | one row per slug: title, status, `published_at`, the full site markdown (frontmatter + body + receipts) | `select` where `visible` |
-| `published_intel_documents` (004) | JSON documents keyed by `path` (below) | `select` where `visible` |
+| `published_intel_documents` (004, 014) | the **index** of the JSON documents keyed by `path` (below): `kind`, `storage_key`, `size_bytes`, `sha256`, `visible`; `body` only on a legacy row until `newsroom db diet` moves it | `select` where `visible` |
 | `published_article_revisions` (004) | append-only: every changed article write | nothing (no grant, no policy) |
-| bucket `published-assets` (006) | article hero / figure / chart images | public read of this bucket's objects only; no write policy |
+| bucket `published-assets` (006, 008) | article images (`analytics/`), live map snapshots (`live/`), **and every desk document as `docs/<path>.gz`** (gzipped canonical JSON) | public read of this bucket's objects only; no write policy |
 
-Document paths in `published_intel_documents` (the first segment is the `kind`):
+Document paths in `published_intel_documents` (the first segment is the `kind`; the body is the Storage object `docs/<path>.gz`):
 
 | Path | Content | Site reader |
 |---|---|---|
@@ -49,9 +51,10 @@ pins 006 (one `select` policy for `anon`, on `storage.objects` for this bucket, 
 ## Write path
 
 `publish_run` / `retract` (articles), `write_intel` (desk documents + agent feeds), `publish_menu` (radar) and
-`_write_agent_twin` (article twin + `/data/index.json`) call `published_db` after writing their files. It upserts
-only changed rows (idempotent), never raises into a run, and is a no-op without `DATABASE_URL` (env only; `.env` is
-not loaded, so tests cannot reach the live database). `ALGENT_DB_PUBLISH=0` pauses rows and uploads.
+`_write_agent_twin` (article twin + `/data/index.json`) call `published_db` after writing their files. Articles upsert
+only changed rows (idempotent, size-capped, last 5 revisions kept); documents are hashed and only a **changed** one is uploaded to
+Storage (then its index row written; an unchanged one costs a hash compare). It never raises into a run, and is a no-op without `DATABASE_URL` (documents also need `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY`; env only; `.env` is
+not loaded, so tests cannot reach the live database). `ALGENT_DB_PUBLISH=0` pauses rows and uploads. A document that is too big for the bucket (10 MiB gzipped) or an article row over the row cap is refused and logged.
 
 **Assets.** `publish_run` uploads each article image (SVGs sanitised first) to the bucket **before** writing the row,
 so a page never goes live ahead of its images. Key = the site path without its slash (`/analytics/<slug>/hero.webp`
@@ -74,7 +77,8 @@ Radar has no image assets (editions are text documents).
 `lib/store.ts`: when `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are set, pages read Supabase; an
 error or an empty answer falls back to the content files (`content/articles`, `content/intel`, `content/radar`,
 `public/data`). Every reader (`daily`, `intel`, `dossier`, `actors`, `radar`, `situation`, `record`, articles,
-sitemap, `/data/*`) goes through `intelDoc` / `intelNames` / `intelSlugs` / `articleSource(s)`. Pages that read it
+sitemap, `/data/*`) goes through `intelDoc` / `intelNames` / `intelSlugs` / `articleSource(s)`. `intelDoc` reads the index row, then
+the Storage object (`gunzipSync`); a legacy row that still holds its body inline is read as-is, and the content files stay the last fallback. Pages that read it
 carry `revalidate = 300`; briefs, theaters and actors render on demand when new (no `dynamicParams = false`), so a
 new one needs no redeploy.
 

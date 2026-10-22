@@ -45,6 +45,7 @@ Docs sprawl is a real failure mode. To prevent it:
 - `map-analytics-stack.md` – accurate country-scale map figures for the newsroom analytics path.
 - `pulse-system.md` – Ohmega Pulse: situations, anchored Pulses, append-only influences, watches, storage.
 - `published-content.md` – publishing as a database write: `published_*` tables, anon-read RLS, the site's Supabase reader with file fallback.
+- `database-budget.md` – staying on Supabase's free plan: what fills the 500 MB database (estimates), documents in Storage with an index row, retention windows, the size guard, and the read-only recovery runbook (`newsroom db size|prune|diet|vacuum-full`).
 - `agent-api.md` – the agent surface of the site: `/api/v1` JSON API, OpenAPI, remote MCP server, discovery files, and the API-key seam.
 - `instruments.md` – the numbers layer: free programmatic series (chokepoint transits, energy, rates, FX…), append-only store, moves vs each series' own history, evidence API.
 - `statements.md` – the record of who said what: primary transcripts (Kremlin, White House, State, FCDO, No 10, EC, China MFA), quote-validated extraction, append-only ledger, recall API.
@@ -56,6 +57,7 @@ Docs sprawl is a real failure mode. To prevent it:
 - `ai-desk.md` – the AI desk: benchmark tracker (Epoch hub, SWE-bench, LMArena; freshness; capped self-reported discovery), the AI domain of the intel daily (`--domain ai`), `/intel/ai`, `/ai`, `/api/v1/ai-benchmarks`, how to schedule it.
 - `maritime-behaviour.md` – vessel behaviour from our own AIS (AIS gaps, STS candidates, identity changes, sanctioned vessels, loitering over cable corridors): profile memory, detectors and their thresholds, publish, `/intel/maritime`, `/api/v1/maritime`, MCP `get_maritime_behaviour`.
 - `flows.md` – the world's circulation: ship lanes derived from our own AIS (places, lane network, hops, rates, anomalies), grain and money from UN Comtrade (annual, separate), the `flows` document, the globe's Flows layer and HUD panel.
+- `satellite.md` – satellite watch: data-driven watch list, keyless Sentinel-2 chips and VIIRS night lights, the pure-Python change signal and its honesty rules, provenance on every number, `/intel/satellite`, `/api/v1/satellite`, the HUD panel, the daily timer.
 
 ### Guides — `guides/`
 - `run-operator-entrypoint.md` – **start here** to operate runs; short hub that routes to the rest.

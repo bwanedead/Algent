@@ -9,6 +9,7 @@ import PulseTile from "@/components/PulseTile";
 import { SpectrumLegend } from "@/components/PulseSpectrum";
 import { ActorMap, EscalationChips, ProbBar, RELATION_KINDS } from "@/components/IntelViz";
 import { allBriefSlugs, brief as loadBrief, type ChangeKind, type Effect, findPulse, latestSnapshot, type Plausibility, safeUrl, type Snapshot } from "@/lib/intel";
+import { situationHref } from "@/lib/desks";
 import { dossierIds } from "@/lib/dossier";
 import { toWallPulse, type WallPulse } from "@/lib/pulse-wall";
 
@@ -93,16 +94,16 @@ export default async function BriefPage({ params }: { params: Params }) {
 
   return (
     <article className="intel-page intel-brief">
-      <Link href={hasDossier ? `/intel/theaters/${b.theater_id}#history` : "/intel/theaters"} className="intel-back">
-        {hasDossier ? `← ${b.theater_name || "Theater"}: timeline` : "← All theaters"}
+      <Link href={hasDossier ? situationHref(b.theater_id) : "/situations"} className="intel-back">
+        {hasDossier ? `← ${b.theater_name || "Situation"}` : "← All situations"}
       </Link>
       <header className="intel-brief-head">
         <p className="intel-micro">
-          <PageTag kind="theater" detail="Brief" />
+          <PageTag kind="situation" detail="Brief" />
           {b.theater_name && (
             <>
               {" · "}
-              {hasDossier ? <Link href={`/intel/theaters/${b.theater_id}`} className="xt">{b.theater_name}</Link> : b.theater_name}
+              {hasDossier ? <Link href={situationHref(b.theater_id)} className="xt">{b.theater_name}</Link> : b.theater_name}
             </>
           )}
           {b.as_of ? ` · as of ${b.as_of.slice(0, 10)}` : ""}

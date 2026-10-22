@@ -108,7 +108,7 @@ function developmentsFor(idx: Index, iso: string): Development[] {
           theaterId: t.theater_id,
           headline: headlineOf(dev.headline, dev.detail, 150) || dev.headline,
           when: dev.when,
-          href: `/geopolitics/${d.date}#${theaterAnchor(t, i)}`,
+          href: `/daily/geopolitics/${d.date}#${theaterAnchor(t, i)}`,
           event: unique ? eventPath(d.date, t.theater_id, n) : "",
         });
       });

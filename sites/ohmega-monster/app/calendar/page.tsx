@@ -4,8 +4,8 @@ import type { Metadata } from "next";
 import CalendarView from "@/components/calendar/CalendarView";
 import { calendarItems, todayIso } from "@/lib/calendar";
 
-import "@/app/geopolitics/geopolitics.css";
-import "@/app/intel/theaters/theaters.css";
+import "@/app/daily/daily.css";
+import "@/app/situations/situations.css";
 
 export const metadata: Metadata = {
   title: "What's coming",
@@ -24,7 +24,7 @@ export default async function CalendarPage() {
   return (
     <div className="intel-page th-page">
       <p className="th-kicker">
-        <PageTag kind="tool" detail="Calendar" />
+        <PageTag kind="data" detail="Calendar" />
       </p>
       <h1 className="th-claim">What&apos;s coming in the next 30 days</h1>
       <p className="th-asof">

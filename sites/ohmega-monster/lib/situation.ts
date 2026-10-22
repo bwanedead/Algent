@@ -99,7 +99,7 @@ function coverageView(snap: Snapshot): CoverageView {
   const link = (t: Snapshot["theaters"][number]): { href: string | null; hrefLabel: string } => {
     if (t.brief && SLUG.test(t.brief)) return { href: `/intel/briefs/${t.brief}`, hrefLabel: "Brief" };
     const day = [...snap.daily].sort((a, b) => b.date.localeCompare(a.date)).find((d) => d.theaters.some((x) => x.theater_id === t.id));
-    return day ? { href: `/geopolitics/${day.date}`, hrefLabel: "Daily" } : { href: null, hrefLabel: "" };
+    return day ? { href: `/daily/geopolitics/${day.date}`, hrefLabel: "Daily" } : { href: null, hrefLabel: "" };
   };
   const item = (t: Snapshot["theaters"][number]): CoverageItem => ({
     id: t.id,
@@ -317,7 +317,7 @@ function changes(snap: Snapshot, feed: unknown): { news: ChangeItem[]; times: st
         whenLabel: fmtShort(ms(at)),
         title: str(e.headline),
         detail: "",
-        href: /^\/geopolitics(\/[\w.-]+)?$/.test(url) ? url : "/geopolitics",
+        href: /^\/geopolitics(\/[\w.-]+)?$/.test(url) ? `/daily${url}` : "/daily/geopolitics",
       });
       times.push(at);
     } else if (type === "pulse_created" && str(e.name)) {
@@ -353,7 +353,7 @@ function changes(snap: Snapshot, feed: unknown): { news: ChangeItem[]; times: st
         items.push({ key: `b-${b.slug}`, kind: "brief", at: b.as_of, whenLabel: fmtShort(ms(b.as_of)), title: b.title, detail: firstSentence(b.bottom_line), href: `/intel/briefs/${b.slug}` });
     for (const d of snap.daily)
       if (Number.isFinite(ms(d.date)))
-        items.push({ key: `d-${d.date}`, kind: "daily", at: d.date, whenLabel: fmtShort(ms(d.date)), title: d.headline, detail: "", href: `/geopolitics/${d.date}` });
+        items.push({ key: `d-${d.date}`, kind: "daily", at: d.date, whenLabel: fmtShort(ms(d.date)), title: d.headline, detail: "", href: `/daily/geopolitics/${d.date}` });
     times.push(...items.map((i) => i.at));
   }
 

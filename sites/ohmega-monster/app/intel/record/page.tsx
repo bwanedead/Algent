@@ -1,13 +1,13 @@
 import PageTag from "@/components/PageTag";
 import type { Metadata } from "next";
-import Crumbs, { INTEL_CRUMB } from "@/components/Crumbs";
+import Crumbs, { DATA_CRUMB } from "@/components/Crumbs";
 import { SAID_NOTE } from "@/components/OnRecord";
 import RecordBrowser from "@/components/RecordBrowser";
 import ToneChart from "@/components/ToneChart";
 import { recordLedger } from "@/lib/record";
 
-import "@/app/geopolitics/geopolitics.css";
-import "@/app/intel/theaters/theaters.css";
+import "@/app/daily/daily.css";
+import "@/app/situations/situations.css";
 
 export const metadata: Metadata = {
   title: "The record",
@@ -22,8 +22,8 @@ export default async function RecordPage() {
   const ledger = await recordLedger();
   return (
     <div className="intel-page geo">
-      <Crumbs trail={[INTEL_CRUMB]} />
-      <p className="ptag-row"><PageTag kind="tool" detail="The record" /></p>
+      <Crumbs trail={[DATA_CRUMB]} />
+      <p className="ptag-row"><PageTag kind="data" detail="The record" /></p>
       <h1 className="geo-headline">{ledger && ledger.statements.length > 0 ? `${ledger.statements.length} statements in the last ${ledger.window_days} days, in their own words` : "The record"}</h1>
       {!ledger || ledger.statements.length === 0 ? (
         <p className="intel-empty">No statements have been published yet. Check back soon.</p>

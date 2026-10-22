@@ -2,7 +2,8 @@
 Publish live rows for the site: ``live_events`` (current events per feed) and ``live_stats`` (daily series values).
 
 Same contract as ``publishing/published_db``: never raises, idempotent, a no-op without ``DATABASE_URL`` (or with
-``ALGENT_DB_PUBLISH=0``). Events a feed no longer reports are marked ``active = false`` (kept as history, hidden
+``ALGENT_DB_PUBLISH=0``). An event that has not changed is not rewritten (the upsert's ``where ... is distinct from``): the feeds run every
+10-15 minutes and rewriting every event each time was the largest source of dead tuples and WAL (docs/architecture/database-budget.md). Events a feed no longer reports are marked ``active = false`` (kept as history, hidden
 from the public view). Stats: the completed days of the last ``PUBLISH_STATS_DAYS`` plus the running (partial) day.
 """
 
@@ -31,6 +32,11 @@ on conflict (id) do update
        countries = excluded.countries, severity = excluded.severity, starts_at = excluded.starts_at,
        ends_at = excluded.ends_at, source_url = excluded.source_url, tags = excluded.tags, data = excluded.data,
        active = true, updated_at = now()
+ where (live_events.title, live_events.detail, live_events.lat, live_events.lon, live_events.countries, live_events.severity,
+        live_events.starts_at, live_events.ends_at, live_events.source_url, live_events.tags, live_events.data, live_events.active)
+       is distinct from
+       (excluded.title, excluded.detail, excluded.lat, excluded.lon, excluded.countries, excluded.severity,
+        excluded.starts_at, excluded.ends_at, excluded.source_url, excluded.tags, excluded.data, true)
 """
 _RETIRE = "update live_events set active = false, updated_at = now() where feed = %s and active and not (id = any(%s))"
 _STAT = """

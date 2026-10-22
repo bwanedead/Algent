@@ -7,7 +7,7 @@ import Popover from "@/components/Popover";
 import Term from "@/components/Term";
 import type { Daily } from "@/lib/daily";
 import { claimOf, crossParts, editionTag, firstSentences, fmtDay, isCut, publishedLine, shortTheater, theaterAnchor } from "@/lib/daily";
-import { dossier, dossierIds } from "@/lib/dossier";
+import { dossier, situationIds } from "@/lib/dossier";
 import { theaterInfra, type TheaterInfra } from "@/lib/geoledger";
 import { latestSnapshot } from "@/lib/intel";
 
@@ -19,8 +19,8 @@ import DailyMarketView from "./DailyMarketView";
 import DailyTheaterSection from "./DailyTheater";
 import DailyWatching from "./DailyWatching";
 
-// The daily report page body. Screen one is the day in 30 seconds (headline, one line per theater);
-// the theater table and the longer day sit behind expanders. Each theater follows as a claim, a picture
+// The daily report page body. Screen one is the day in 30 seconds (headline, one line per situation);
+// the situations table and the longer day sit behind expanders. Each theater follows as a claim, a picture
 // and its top developments, the rest behind expanders (Expander.tsx). See
 // docs/ethos/information-ergonomics-ethos.md.
 
@@ -57,8 +57,8 @@ function Across({ report }: { report: Daily }) {
   if (report.cross_theater.length === 0) return null;
   const idx = (name: string) => report.theaters.findIndex((t) => t.name === name);
   return (
-    <section className="geo-across" aria-label="Across theaters">
-      <h2 className="geo-h2">Across theaters</h2>
+    <section className="geo-across" aria-label="Across situations">
+      <h2 className="geo-h2">Across situations</h2>
       <ul>
         {report.cross_theater.map((c, k) => {
           const { mutual, text } = crossParts(c);
@@ -133,7 +133,7 @@ async function infrastructure(report: Daily): Promise<Record<string, TheaterInfr
 /** `mark`: an optional small decoration at the start of the status strip (the geopolitics page puts its cycling globe there). */
 export default async function DailyReport({ report, title, mark }: { report: Daily; title: string; mark?: ReactNode }) {
   const snap = await latestSnapshot();
-  const dossiers = new Set(await dossierIds());
+  const dossiers = new Set(await situationIds());
   const published = publishedLine(report);
   const background = await backgrounds(report, dossiers);
   const infra = await infrastructure(report);
@@ -158,12 +158,12 @@ export default async function DailyReport({ report, title, mark }: { report: Dai
       {report.headline && <h1 className="geo-headline">{report.headline}</h1>}
 
       {report.theaters.length === 0 ? (
-        <p className="intel-empty">No theaters were covered in this report.</p>
+        <p className="intel-empty">No situations were covered in this report.</p>
       ) : (
         <>
           <DailyThirty report={report} />
           <div className="geo-exps geo-exps-top">
-            <Expander label="All theaters side by side" hint="state, direction, Pulses, coverage">
+            <Expander label="All situations side by side" hint="state, direction, Pulses, coverage">
               <DailyGlance report={report} snap={snap} />
             </Expander>
             {report.the_day.length > 0 && (

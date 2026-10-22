@@ -12,7 +12,7 @@ import { mapIndexBase } from "./numbering";
 // reference map, not a styled one — pale water, light land, grey borders, dark labels with a white halo,
 // rivers, reference cities, a scale bar and a locator inset, and the event marks numbered as in the
 // development list. Legible in BOTH themes because the map is a light "printed" panel either way
-// (colours are map-local variables in app/geopolitics/geopolitics.css, not theme tokens).
+// (colours are map-local variables in app/daily/daily.css, not theme tokens).
 // Geometry is the backend's (geo.build_map); label PLACEMENT is done here because it depends on the real
 // rendered size: the same map shows fewer labels on a phone than on a desktop, and never overlapping ones.
 // Disputed/occupied areas (spec `disputed`, Natural Earth + a cited status table) are one quiet diagonal hatch

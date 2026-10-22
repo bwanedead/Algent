@@ -45,7 +45,7 @@ export default function DailyGlance({
       {!compact && (
         <div className="geo-glance-head">
           <span>
-            <Term id="theater">Theater</Term>
+            <Term id="theater">Situation</Term>
           </span>
           <span>State</span>
           <span>

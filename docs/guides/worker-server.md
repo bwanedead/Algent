@@ -21,6 +21,7 @@ so it can be rebuilt from scratch instead of repaired by hand.
 | `ohmega-instruments` | every 6 h | public data series | free |
 | `ohmega-statements` | every 6 h | official statement transcripts (collection only) | free |
 | `ohmega-backup` | daily 06:15 | stores → private `algent-data` archive | free |
+| `ohmega-db-prune` | daily 03:40 | retention windows on the growing Postgres tables + `VACUUM` (`newsroom db prune --apply`) | free |
 | `ohmega-menu` | daily 05:00 | newsroom menu (`run --to menu`) | **paid** |
 | `ohmega-daily-1` | daily 05:30 | geopolitics daily, part 1 (Europe/Asia morning) | **paid** |
 | `ohmega-daily-2` | daily 17:30 | geopolitics daily, part 2 (Americas), appended to the same report | **paid** |
@@ -72,6 +73,9 @@ Logs: `journalctl -u ohmega-<job> -n 50`; timers: `systemctl list-timers 'ohmega
   rebuild or key change.
 - The server is not a dependency: `newsroom runner status|claim|release` records which machine runs paid work
   and publishes, and the laptop can take over. Procedure: `docs/guides/runner-handover.md`.
+- `newsroom db size` (also two lines in `newsroom doctor`: `database budget`, `storage budget`) is the free-plan guard: the database is capped
+  at 500 MB (warn 70%, fail 85%). The documents live in Storage, not Postgres; `newsroom db prune|diet|vacuum-full` and the recovery
+  order are in `docs/architecture/database-budget.md`. Never let a writer rewrite a big JSONB column on a timer.
 - `newsroom search-usage` shows how search is doing (who answers, free vs paid, failures).
 
 ## Watchdog
@@ -206,6 +210,10 @@ The stream service also keeps a bounded per-vessel memory (`maritime_store/`, `A
 ### Flows: ship lanes, grain and money (`flows/`)
 
 The stream service also runs the lane tracker every 5 min (aggregates only, in `live_store/flows/`: `tracker.json.gz` per-vessel last place, `days.json` the daily lane and visit counts); the `ohmega-flows` timer (every 15 min, free, outside the job lock) refreshes the weekly UN Comtrade grain and money picture when due, builds the `flows` document and uploads it as `live/flows.json`. After the first deploy run `newsroom flows backfill` once on the server to seed the lanes from the maritime profile book's last 4 days. `newsroom flows status|lanes|trade|backfill|publish`. Design, sources and caveats: `docs/architecture/flows.md`.
+
+### Satellite watch (`satellite/`)
+
+The `ohmega-satellite` timer (daily 03:20 UTC, free, keyless, outside the job lock) runs `newsroom satellite run`: it ranks the watch list from the geoledger, today's developments and the maritime chokepoints, takes the twelve most overdue (`MAX_SITES_PER_PASS`, `REVISIT_HOURS` in `satellite/flags.py`; ~15 s a site, a few minutes a pass), fetches Sentinel-2 chips (Planetary Computer STAC and data API) and VIIRS night lights (NASA GIBS), appends one record per site to `live_store/satellite/records.jsonl` (never rewritten), uploads the dated chips to `published-assets/satellite/` and then the `satellite` document as `live/satellite.json`. Chips are ~150 kB each and only new scenes are uploaded. `newsroom satellite watch|run|status`; `newsroom doctor` warns when the last pass is over 48 h old. Design, sources and limits: `docs/architecture/satellite.md`. After the first deploy: `sudo bash infra/server/install_schedules.sh` to add the timer.
 
 ### Markets track record (`markets/`)
 

@@ -14,7 +14,7 @@ import { recentSanctions } from "./sanctions";
 // The theme rule is documented in lib/globe/themes.ts. Server only (reads documents).
 
 const DOMAIN = "geopolitics";
-const BASE = "/geopolitics";
+const BASE = "/daily/geopolitics";
 const DAILIES = 21; // how many dailies the theme tally and the 7-to-30-day band read (sanctions cover the rest of the 30 days)
 const TIES_PER_THEATER = 6; // countries named on a theater's dot
 const DIR_ORDER: Dir[] = ["rising", "steady", "easing", "unclear"]; // which direction a country shows when its theaters disagree
@@ -98,7 +98,7 @@ export async function globeData(): Promise<GlobeData | null> {
   for (const iso of Array.from(codes)) {
     const tied = (byCountry.get(iso) ?? []).sort((a, b) => b.weight - a.weight);
     const theaters = tied.map(({ id }) => idx.refs.get(id)).filter((r): r is NonNullable<typeof r> => !!r)
-      .map((r) => ({ id: r.id, name: r.name, dir: r.direction as Dir, href: r.linked ? `/intel/theaters/${r.id}` : "" }));
+      .map((r) => ({ id: r.id, name: r.name, dir: r.direction as Dir, href: r.linked ? `/situations/${r.id}` : "" }));
     const dirs = new Set(theaters.map((t) => t.dir));
     const row: CountryRow = { n: theaters.length, dir: DIR_ORDER.find((d) => dirs.has(d)) ?? null, t: newest.get(iso) ?? null, th: dominant(tally.get(iso)), hot: hot.get(iso) ?? 0 };
     countries[iso] = { ...row, name: actorName(idx, iso), theaters, headline: headline.get(iso) ?? null, page: idx.actors.has(iso) || theaters.length > 0 };
