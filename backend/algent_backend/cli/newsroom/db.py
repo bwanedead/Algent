@@ -45,9 +45,9 @@ def _emit(doc: Any) -> int:
 
 
 def _connect():
-    from algent_backend.database import migrate
+    from algent_backend.database.migrate import connect  # the package re-exports a function named `migrate`
 
-    return migrate.connect()
+    return connect()
 
 
 def run_size(_args: Any) -> int:
