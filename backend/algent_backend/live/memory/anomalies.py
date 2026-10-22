@@ -16,7 +16,7 @@ from typing import Any, Callable, Literal
 
 from pydantic import BaseModel, Field
 
-from algent_backend.publishing.published_db import _run
+from algent_backend.publishing import site_data
 
 from . import flags, hours
 from .areas import PHRASE, WORLD, layer_of, place_countries, place_kind, place_label, place_lonlat, place_tags
@@ -209,9 +209,21 @@ def _row(a: Anomaly) -> tuple:
     return tuple(d[c] for c in _COLUMNS)
 
 
+SITE_MAX = 200                     # what the page lists (it used to read limit=200)
+
+
+def documents(anoms: list[Anomaly]) -> dict[str, Any]:
+    """``live/anomalies.json``: still-going first, then the strongest (rows as ``LiveAnomaly`` in lib/live-shared.ts)."""
+    rows = [dict(zip(_COLUMNS, _row(a))) for a in anoms]
+    rows.sort(key=lambda r: (not r["active"], -r["confidence"]))
+    return {"live/anomalies.json": {"anomalies": site_data.stamped("live_anomalies", rows[:SITE_MAX])}}
+
+
 def publish(anoms: list[Anomaly], *, connect: Callable[[], Any] | None = None) -> dict[str, Any]:
     """Upsert the current anomalies, retire rows no longer in the picture, drop rows closed longer than ``RETAIN_DAYS`` ago.
     Never raises; a no-op without ``DATABASE_URL``."""
+
+    files = site_data.publish_built(lambda: documents(anoms))
 
     def work(conn: Any) -> dict:
         with conn.cursor() as cur:
@@ -221,4 +233,4 @@ def publish(anoms: list[Anomaly], *, connect: Callable[[], Any] | None = None) -
             cur.execute(_PRUNE, (flags.RETAIN_DAYS,))
         return {"anomalies": len(anoms)}
 
-    return _run(work, connect)
+    return site_data.also_postgres(files, work, connect)

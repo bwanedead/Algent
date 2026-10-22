@@ -66,7 +66,7 @@ def ensure_worktree(root: Path) -> tuple[Path | None, str]:
         from . import published_db
 
         if not published_db.enabled():
-            return None, "db publish mode needs DATABASE_URL (and ALGENT_DB_PUBLISH not off)"
+            return None, "db publish mode needs the object store (R2_* names) or, with the Postgres flag, DATABASE_URL (and ALGENT_DB_PUBLISH not off)"
         wt.mkdir(parents=True, exist_ok=True)
         return wt, "db mode: staging dir (no git)"
     if wt.exists():

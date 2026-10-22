@@ -51,17 +51,18 @@ def build_docs(board: VesselBoard, sky: SkyBoard, now: float, *, tracks: bool = 
     store.write_doc("gates_now", {"as_of": iso(at), "gates": gates})
     docs: dict[str, Any] = {"vessels": vessels, "aircraft": aircraft,
                             "summary": headlines.build(at, extra_fresh={"ships": vessels["as_of"], "aircraft": aircraft["as_of"]})}
-    docs.update(tiles.build(vessels, aircraft))
+    if flags.tiles_enabled():
+        docs.update(tiles.build(vessels, aircraft))
     docs["points"] = points.build(vessels, aircraft)
-    if not flags.PUBLISH_FULL_SNAPSHOT:
+    if not flags.full_snapshot():
         del docs["vessels"], docs["aircraft"]
     if tracks:
         docs["coverage"] = board.coverage.document(vessels["as_of"], now)
-        for k in range(flags.TRACK_SHARDS):
-            docs[f"tracks/v{k}"] = {"as_of": vessels["as_of"], "t": board.tracks.shard(k, flags.TRACK_SHARDS)}
+        for k in range(flags.track_shards()):
+            docs[f"tracks/v{k}"] = {"as_of": vessels["as_of"], "t": board.tracks.shard(k, flags.track_shards())}
         with sky.lock:         # worker threads (OpenSky, adsb.lol) add to these trails
-            for k in range(flags.AIR_TRACK_SHARDS):
-                docs[f"tracks/a{k}"] = {"as_of": aircraft["as_of"], "t": sky.tracks.shard(k, flags.AIR_TRACK_SHARDS)}
+            for k in range(flags.track_shards(air=True)):
+                docs[f"tracks/a{k}"] = {"as_of": aircraft["as_of"], "t": sky.tracks.shard(k, flags.track_shards(air=True))}
     return docs
 
 
@@ -122,7 +123,7 @@ async def _cycle_loop(board: VesselBoard, sky: SkyBoard, stop_at: float | None,
         started = time.time()
         try:
             await asyncio.to_thread(sky.poll, get, started)
-            with_tracks = started - last_tracks >= flags.PERSIST_SECONDS
+            with_tracks = started - last_tracks >= flags.tracks_seconds()
             docs = build_docs(board, sky, time.time(), tracks=with_tracks, sampler=sampler)
             if watch is not None:
                 _watch_cycle(watch, board, time.time())
@@ -137,10 +138,10 @@ async def _cycle_loop(board: VesselBoard, sky: SkyBoard, stop_at: float | None,
                 last_tracks = started
                 await asyncio.to_thread(_save_memory, dict(board.static.m), dict(board.coverage.seen))
             store.record_status("stream", last_ok=iso(datetime.now(timezone.utc)), error="",
-                                note=f"{docs['density']['layers']['vessels']['n']} vessels, {docs['density']['layers']['aircraft']['n']} aircraft; upload {res.get('assets', 0)} new, {len(res.get('failed', []))} failed")
+                                note=f"{docs['points']['layers']['vessels']['n']} vessels, {docs['points']['layers']['aircraft']['n']} aircraft; upload {res.get('assets', 0)} new, {len(res.get('failed', []))} failed")
         except Exception as exc:  # noqa: BLE001 - the service outlives a bad cycle
             store.record_status("stream", error=f"{type(exc).__name__}: {str(exc)[:160]}")
-        await asyncio.sleep(max(1.0, flags.SNAPSHOT_SECONDS - (time.time() - started)))
+        await asyncio.sleep(max(1.0, flags.snapshot_seconds() - (time.time() - started)))
 
 
 async def run(key: str = "", *, max_seconds: float | None = None) -> None:

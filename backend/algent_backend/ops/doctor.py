@@ -25,7 +25,7 @@ OK, WARN, FAIL = "ok", "warn", "fail"
 #: (a test asserts every name here appears in the manifest).
 REQUIRED_KEYS: tuple[tuple[str, tuple[str, ...], str], ...] = (
     ("house model key", ("META_MODEL_API_KEY",), FAIL),
-    ("database", ("DATABASE_URL",), FAIL),
+    ("database (optional: Postgres publish flag)", ("DATABASE_URL",), WARN),
     ("gemini (hero images)", ("GEMINI_API_KEY", "GOOGLE_API_KEY"), WARN),
     ("x read", ("X_BEARER_TOKEN", "X_API_BEARER_TOKEN", "X_BEARER", "X_BEARER_KEY", "TWITTER_BEARER_TOKEN"), WARN),
     ("x post key", ("X_API_KEY",), WARN),
@@ -216,13 +216,38 @@ def check_keys(env: dict[str, str]) -> dict[str, Any]:
 
 
 def check_database(env: dict[str, str], probes: Probes) -> dict[str, Any]:
+    from algent_backend.database import flags as db_flags
+
+    needed = db_flags.postgres_publish()          # off by default: the server is the record and the site reads files in R2
     if not env.get("DATABASE_URL"):
-        return {"database": _check(FAIL, "DATABASE_URL not set")}
+        return {"database": _check(FAIL if needed else OK, "DATABASE_URL not set" + ("" if needed else " (not needed: Postgres publish flag is off)"))}
     try:
         probes.db_select1()
     except Exception as exc:  # noqa: BLE001
-        return {"database": _check(FAIL, f"not reachable: {scrub(exc, env)}")}
+        return {"database": _check(FAIL if needed else WARN, f"not reachable: {scrub(exc, env)}" + ("" if needed else " (optional: Postgres publish flag is off)"))}
     return {"database": _check(OK, "connected, select 1 ok")}
+
+
+def check_object_store(env: dict[str, str]) -> dict[str, Any]:
+    """The published-file store (R2 by default) and its free-tier budget (publishing/object_budget.py): FAIL at the hard stop."""
+    from algent_backend.database import flags as db_flags
+    from algent_backend.publishing import object_budget, object_store
+
+    if env.get("ALGENT_DB_PUBLISH", "1").strip().lower() in ("0", "false", "no", "off") or env.get("ALGENT_PUBLISH", "1").strip().lower() in ("0", "false", "no", "off"):
+        return {"object store": _check(WARN, "publishing paused (ALGENT_DB_PUBLISH=0)")}
+    backend = (env.get("ALGENT_OBJECT_BACKEND", "").strip().lower() or db_flags.OBJECT_BACKEND)
+    if backend != "r2":
+        return {"object store": _check(OK, f"backend {backend} (no R2 budget applies)")}
+    missing = [n for n in object_store.R2_ENV if not env.get(n)]
+    if missing:
+        return {"object store": _check(FAIL, f"R2 not configured, missing: {', '.join(missing)} (docs/credentials.md)")}
+    rep = object_budget.meter().status()
+    a, b, s = (rep["usage"][k] for k in ("class_a", "class_b", "storage_bytes"))
+    line = (f"R2 {rep['month']}: class A {a['used']:,}/{a['free_tier']:,} ({a['share']:.0%}, projected {a['projected_share']:.0%}), "
+            f"class B {b['used']:,}, stored {s['used'] / 1024 ** 2:,.0f} MB ({s['share']:.0%})")
+    status = FAIL if rep["level"] == "stop" else WARN if rep["level"] == "warn" else OK
+    hint = " - writes are REFUSED until the budget allows (newsroom storage status)" if status == FAIL else ""
+    return {"object store": _check(status, line + hint, share=max(a["share"], s["share"]))}
 
 
 def check_db_budget(env: dict[str, str], probes: Probes) -> dict[str, Any]:
@@ -592,7 +617,7 @@ def run_checks(env: dict[str, str] | None = None, probes: Probes | None = None,
     probes = probes or Probes()
     repo = repo or Path(__file__).resolve().parents[3]
     checks: dict[str, Any] = {}
-    for part in (check_keys(env), check_database(env, probes), check_search(env, probes), check_reads(probes),
+    for part in (check_keys(env), check_database(env, probes), check_object_store(env), check_search(env, probes), check_reads(probes),
                  check_harnesses(probes), check_publish(env, probes, repo), check_runner(probes),
                  check_system(probes), check_watchdog(probes), check_schedule(probes), check_quota(probes), check_instruments(), check_live(env), check_sanctions(), check_maritime(), check_calendar(), check_markets(), check_ai_benchmarks(), check_satellite(), check_basemap(probes)):
         checks.update(part)

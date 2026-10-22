@@ -62,9 +62,11 @@ def run_size(_args: Any) -> int:
 
 
 def run_prune(args: Any) -> int:
-    from algent_backend.database import prune
+    from algent_backend.database import flags, prune
 
     _env()
+    if not flags.postgres_publish():          # the nightly timer still calls this; with no database in the loop it is a no-op, not a failure
+        return _emit({"skipped": "Postgres publish flag is off (database/flags.POSTGRES_PUBLISH): nothing to prune"})
     with _connect() as conn:
         return _emit(prune.run(conn, apply=args.apply))
 

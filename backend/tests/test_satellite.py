@@ -3,6 +3,10 @@ list and its rotation, a whole pass against a fake imagery source, and the publi
 
 from __future__ import annotations
 
+import pytest
+
+pytestmark = pytest.mark.usefixtures("legacy_supabase")
+
 import struct
 import zlib
 from datetime import datetime, timedelta, timezone

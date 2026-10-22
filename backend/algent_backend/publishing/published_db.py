@@ -26,7 +26,7 @@ from typing import Any, Callable
 
 from algent_backend.database import flags as budget
 
-from . import asset_store, doc_store
+from . import asset_store, doc_store, object_docs
 
 _OFF = ("0", "false", "no", "off")
 _FM_DATE = re.compile(r"^published_at:\s*['\"]?([^'\"\n]+)", re.MULTILINE)
@@ -55,8 +55,22 @@ on conflict (path) do update
 """
 
 
+def pg_enabled() -> bool:
+    """The legacy Postgres paths: on only when ``flags.postgres_publish()`` and ``DATABASE_URL`` is set."""
+    return budget.postgres_publish() and bool(os.environ.get("DATABASE_URL")) \
+        and os.environ.get("ALGENT_DB_PUBLISH", "1").strip().lower() not in _OFF
+
+
+def files_only(connect: Callable[[], Any] | None) -> bool:
+    """True when a publisher should write documents only: no injected connection and the Postgres flag is off (the default)."""
+    return connect is None and not budget.postgres_publish()
+
+
 def enabled() -> bool:
-    return bool(os.environ.get("DATABASE_URL")) and os.environ.get("ALGENT_DB_PUBLISH", "1").strip().lower() not in _OFF
+    """Whether a publish can land at all: the object store is configured (the default), or - with the Postgres flag on - the database is."""
+    if budget.postgres_publish():
+        return pg_enabled() and asset_store.enabled()
+    return asset_store.enabled()
 
 
 def _connect():
@@ -66,8 +80,8 @@ def _connect():
 
 
 def _run(work: Callable[[Any], dict], connect: Callable[[], Any] | None) -> dict[str, Any]:
-    if connect is None and not enabled():
-        return {"db": False, "note": "database publishing off (no DATABASE_URL)"}
+    if connect is None and not pg_enabled():
+        return {"db": False, "note": "database publishing off (Postgres publish flag off or no DATABASE_URL; the site reads published files)"}
     try:
         with (connect or _connect)() as conn:
             result = work(conn)
@@ -95,6 +109,8 @@ def _no_nul(text: str) -> str:
 def publish_article(slug: str, markdown: str, *, title: str = "", status: str = "",
                     connect: Callable[[], Any] | None = None) -> dict[str, Any]:
     """Upsert one article (its full site markdown). A changed body also appends a revision."""
+    if connect is None and not budget.postgres_publish():
+        return object_docs.publish_article(slug, markdown, title=title, status=status)
     markdown = _no_nul(markdown)          # Postgres text rejects NUL; scraped source text sometimes carries it
     title = _no_nul(title)
     if (why := doc_store.row_over_cap(f"article {slug}", markdown)):
@@ -121,10 +137,12 @@ def publish_documents(docs: dict[str, dict], *, connect: Callable[[], Any] | Non
     is skipped without any write (``force`` resends everything); one over the object cap is refused and logged. Storage is written BEFORE
     the index row, so a listing never names a missing object, and a failed upload leaves its old row untouched (the rest still land, then
     the call reports the failure so db-mode publishes do not read as success)."""
-    if connect is None and not enabled():
+    if connect is None and not budget.postgres_publish():
+        return object_docs.publish(docs, http=http, force=force)          # the default: the object store, a local hash manifest, no database
+    if connect is None and not pg_enabled():
         return {"db": False, "note": "database publishing off (no DATABASE_URL)"}
     if http is None and not asset_store.enabled():
-        return {"db": False, "note": "document storage off (set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY: documents live in Storage, not Postgres)"}
+        return {"db": False, "note": "document storage off (no object store configured: documents live in Storage, not Postgres)"}
 
     def work(conn: Any) -> dict:
         packed = [doc_store.pack(path, body) for path, body in sorted(docs.items())]

@@ -95,3 +95,19 @@ def _no_live_beat_sweep(monkeypatch):
     that wants the rotation drives ``beat_refresh`` directly with an injected sweep.
     """
     monkeypatch.setenv("ALGENT_BEATS_REFRESH", "0")
+
+
+@pytest.fixture(autouse=True)
+def _isolated_publish_state(tmp_path, monkeypatch):
+    """Publish hash manifests (asset_hashes.json, doc_hashes.json, articles_index.json) are server state - no test may touch the real ones."""
+    monkeypatch.setenv("ALGENT_PUBLISH_HELD", str(tmp_path / "publish_held_iso"))
+    for name in ("R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_BUCKET", "R2_PUBLIC_BASE", "ALGENT_POSTGRES_PUBLISH",
+                 "ALGENT_OBJECT_BACKEND"):
+        monkeypatch.delenv(name, raising=False)        # a dev machine's real bucket must never be reachable from a test
+
+
+@pytest.fixture
+def legacy_supabase(monkeypatch):
+    """The pre-2026-10-22 publish path (Postgres tables + Supabase Storage), for the tests that pin it. The default is files in R2."""
+    monkeypatch.setenv("ALGENT_POSTGRES_PUBLISH", "1")
+    monkeypatch.setenv("ALGENT_OBJECT_BACKEND", "supabase")

@@ -310,6 +310,6 @@ def test_publish_uploads_flows_json_and_stays_quiet_where_no_ships_are_held(monk
     out = publish.run(now=now, http=http, get=_fake_get)
     assert out["publish"]["assets"] == 1 and out["lanes"] >= 1 and out["grain_flows"] == 4
     url, cache, body = sent[0]
-    assert url.endswith("/published-assets/live/flows.json") and cache == "public, max-age=30"
+    assert url.endswith("/live/flows.json") and cache == "public, max-age=30"
     assert json.loads(body)["ais"]["days"] == 9
     assert store.read_json("flows_doc.json")["v"] == 1

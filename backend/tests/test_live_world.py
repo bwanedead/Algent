@@ -3,6 +3,10 @@ snapshots, energy and the headline strip."""
 
 from __future__ import annotations
 
+import pytest
+
+pytestmark = pytest.mark.usefixtures("legacy_supabase")
+
 import gzip
 import json
 from datetime import date, datetime, timezone

@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+import pytest
+
+pytestmark = pytest.mark.usefixtures("legacy_supabase")
+
 import re
 from datetime import datetime, timedelta, timezone
 from pathlib import Path

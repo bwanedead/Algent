@@ -1,8 +1,9 @@
 """
 Which Pulse store the running system uses — the single seam between Pulse logic and storage.
 
-Postgres when ``DATABASE_URL`` is configured and the driver is installed; the file store
-otherwise (development without a database, and every test). Callers ask ``pulse_store()`` and
+The file store by default (``database/flags.PULSE_BACKEND = "files"``: the worker server is the system of record and the
+store is in the nightly ``data_backup`` mirror); Postgres only when the flag (or ``ALGENT_PULSE_BACKEND=postgres``) says so AND
+``DATABASE_URL`` is configured and the driver is installed. Callers ask ``pulse_store()`` and
 never construct a store themselves, so moving storage is a configuration change, not a code change.
 Both implementations satisfy ``PulseRepository`` and are held to the same invariants: an
 append-only, idempotent influence ledger; versioned definitions; one-way watch resolution.
@@ -52,9 +53,17 @@ def database_configured() -> bool:
         return False
 
 
+def backend() -> str:
+    """"files" (the default: the server's ``pulse_store``, mirrored nightly) or "postgres": ``database/flags.PULSE_BACKEND``, overridable
+    per process by ``ALGENT_PULSE_BACKEND``."""
+    from algent_backend.database import flags
+
+    return (os.environ.get("ALGENT_PULSE_BACKEND", "").strip().lower() or flags.PULSE_BACKEND)
+
+
 def pulse_store() -> PulseRepository:
-    """The live store: Postgres when configured, the file store otherwise."""
-    if os.environ.get("ALGENT_PULSE_BACKEND", "").lower() != "files" and database_configured():
+    """The live store: the file store (the system of record) unless the backend is switched to Postgres AND a database is configured."""
+    if backend() in ("postgres", "pg") and database_configured():
         from .pg_store import PgPulseStore
 
         return PgPulseStore()

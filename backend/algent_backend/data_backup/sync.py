@@ -53,8 +53,27 @@ def _sources() -> dict[str, Path]:
     from algent_backend.ai_benchmarks.store import root as ai_benchmarks_dir
     from algent_backend.instruments.store import store_dir as instruments_dir
 
+    from algent_backend.geoledger.store import root as geoledger_dir
+    from algent_backend.lookahead.store import root as calendar_dir
+    from algent_backend.maritime.store import root as maritime_dir
+    from algent_backend.markets.store import root as markets_dir
+    from algent_backend.publishing import site_git
+    from algent_backend.sanctions.store import root as sanctions_dir
+
+    # The server is the system of record (no database): every corpus store is mirrored, plus what was PUBLISHED (the dailies and articles
+    # exist nowhere else once the database is gone). The raw maritime positions (GB) are not mirrored; their daily summaries are.
+    site = site_git.live_site_dir(_repo_root())
     return {"profile_store": resolve(JsonProfileStore().root),
             "pulse_store": resolve(PulseStore().root),
+            "geoledger_store": resolve(geoledger_dir()),
+            "sanctions_store": resolve(sanctions_dir()),
+            "calendar_store": resolve(calendar_dir()),
+            "markets_store": resolve(markets_dir()),
+            "maritime_daily": resolve(maritime_dir()) / "daily",
+            "site_articles": site / "content" / "articles",
+            "site_intel": site / "content" / "intel",
+            "site_radar": site / "content" / "radar",
+            "site_data": site / "public" / "data",
             "intel_store": resolve(intel_dir()),
             "instruments_store": resolve(instruments_dir()),
             "ai_benchmarks_store": resolve(ai_benchmarks_dir()),   # forward-captured Arena snapshots and lab claims cannot be re-fetched

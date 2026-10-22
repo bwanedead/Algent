@@ -1,15 +1,14 @@
 """
-Published assets in Supabase Storage — the public bucket ``published-assets`` (migration 006).
+Published assets — the one uploader behind every public object (docs/architecture/database-budget.md, storage architecture).
 
-Article hero/figure/chart images upload here on publish, so an article's images no longer ship by git commit
-(docs/architecture/published-content.md). The object key is the site path without its leading slash:
-``/analytics/<slug>/<name>`` -> ``analytics/<slug>/<name>``; the site resolves it to
-``<SUPABASE_URL>/storage/v1/object/public/published-assets/<key>``.
+Article hero/figure/chart images, live snapshots/tiles/points, satellite chips and the gzipped JSON documents (``doc_store``) all go
+through ``upload``. The object key is the site path without its leading slash (``/analytics/<slug>/<name>`` -> ``analytics/<slug>/<name>``)
+and the site reads it from ``NEXT_PUBLIC_DATA_BASE`` + the key. WHERE the bytes go is ``object_store``'s business (Cloudflare R2 by default,
+Supabase Storage by a flag); this module owns the policy: content hash skip, parallelism, headers, never raising.
 
-Contract (same as ``published_db``): never raises into a run; idempotent (an object whose content hash matches the
-last upload is skipped); a no-op without ``SUPABASE_URL`` + ``SUPABASE_SERVICE_ROLE_KEY`` or with
-``ALGENT_DB_PUBLISH=0``. Environment only (``.env`` is not loaded), so a dev test run cannot reach the live project.
-The service-role key is SERVER-ONLY: it is never on the site (docs/credentials.md).
+Contract: never raises into a run; idempotent (an object whose content hash matches the last upload is skipped, so nothing churns); a no-op
+when no object store is configured or with ``ALGENT_DB_PUBLISH=0``. Environment only (``.env`` is not loaded), so a dev test run cannot reach
+the live bucket. The access keys are SERVER-ONLY: never on the site (docs/credentials.md).
 """
 
 from __future__ import annotations
@@ -17,28 +16,22 @@ from __future__ import annotations
 import hashlib
 import json
 import mimetypes
-import os
-import urllib.error
-import urllib.request
 from pathlib import Path
 from typing import Any, Callable
 
-BUCKET = "published-assets"
-_OFF = ("0", "false", "no", "off")
+from . import object_store
+
+#: Supabase Storage's bucket (kept for the switch-back path); R2's bucket is ``R2_BUCKET``.
+BUCKET = object_store.SUPABASE_BUCKET
 _MIME = {".svg": "image/svg+xml", ".webp": "image/webp", ".png": "image/png", ".jpg": "image/jpeg",
          ".jpeg": "image/jpeg", ".gif": "image/gif", ".json": "application/json", ".gz": "application/gzip"}
 
-#: ``http(method, url, headers, body) -> status`` — injectable so tests need no network.
+#: ``http(method, url, headers, body) -> status`` - injectable so tests need no network.
 Http = Callable[[str, str, dict[str, str], bytes], int]
 
 
-def _base() -> str:
-    return os.environ.get("SUPABASE_URL", "").strip().rstrip("/")
-
-
 def enabled() -> bool:
-    return bool(_base() and os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "").strip()) \
-        and os.environ.get("ALGENT_DB_PUBLISH", "1").strip().lower() not in _OFF
+    return object_store.select() is not None
 
 
 def object_key(site_path: str) -> str:
@@ -47,28 +40,21 @@ def object_key(site_path: str) -> str:
 
 
 def public_url(site_path: str, base: str | None = None) -> str:
-    """The URL the site serves an asset from once it is in the bucket."""
-    return f"{(base if base is not None else _base())}/storage/v1/object/public/{BUCKET}/{object_key(site_path)}"
+    """The URL the site serves an asset from once it is in the bucket (``base`` overrides the configured public prefix)."""
+    if base is not None:
+        return f"{base.rstrip('/')}/{object_key(site_path)}"
+    store = object_store.select(allow_unconfigured=True)
+    return store.public_url(object_key(site_path)) if store else object_key(site_path)
 
 
 def content_type(key: str) -> str:
     return _MIME.get(Path(key).suffix.lower()) or mimetypes.guess_type(key)[0] or "application/octet-stream"
 
 
-def _http(method: str, url: str, headers: dict[str, str], body: bytes) -> int:
-    req = urllib.request.Request(url, data=body, method=method, headers=headers)
-    try:
-        with urllib.request.urlopen(req, timeout=30) as resp:   # noqa: S310 — https URL from our own env
-            return resp.status
-    except urllib.error.HTTPError as exc:
-        return exc.code
-
-
 def _manifest_path() -> Path:
     """Where the per-object content hashes live: server-local state, gitignored, never in the site checkout."""
-    from .site_git import repo_root
 
-    return repo_root() / "backend" / "publish_held" / "asset_hashes.json"
+    return object_store.held_dir() / "asset_hashes.json"
 
 
 def _load(path: Path) -> dict[str, str]:
@@ -79,34 +65,39 @@ def _load(path: Path) -> dict[str, str]:
         return {}
 
 
+def _store_for(http: Http | None) -> object_store.ObjectStore | None:
+    """The configured store; with an injected ``http`` (tests) a store over that transport, configured or not."""
+    if http is None:
+        return object_store.select()
+    return object_store.select(call=lambda m, u, h, b: (http(m, u, h, b), {}, b""), allow_unconfigured=True)
+
+
 def upload(files: dict[str, bytes], *, http: Http | None = None, manifest: Path | None = None,
            cache_control: str = "max-age=3600", workers: int = 1, force: bool = False) -> dict[str, Any]:
     """Upload ``{site path: bytes}`` (``cache_control`` is the objects' CDN/browser cache header; the live snapshots
     pass a short one; ``workers`` > 1 sends that many requests at once, for the live tiles; ``force`` ignores and leaves untouched the local hash
-    manifest, for callers that decide "changed" themselves, as the document store does from the database's index). Returns ``{"assets": n_uploaded, "skipped": n, "failed": [paths], "ok": bool}``
-    (``ok`` False only when a configured upload failed). Never raises."""
+    manifest, for callers that decide "changed" themselves, as the document store does from its own hash manifest). Returns ``{"assets": n_uploaded,
+    "skipped": n, "failed": [paths], "ok": bool}`` (``ok`` False only when a configured upload failed). Never raises."""
     if not files:
         return {"assets": 0, "skipped": 0, "failed": [], "ok": True}
-    if http is None and not enabled():
+    store = _store_for(http)
+    if store is None:
         return {"assets": 0, "skipped": 0, "failed": [], "ok": True,
-                "note": "asset upload off (no SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY)"}
+                "note": "asset upload off (no object store configured: set the R2_* names, docs/credentials.md)"}
     try:
         mpath = manifest or _manifest_path()
         seen = {} if force else _load(mpath)
-        key_env = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
-        send = http or _http
 
         def one(site_path: str) -> tuple[str, str]:
             data = files[site_path]
             key = object_key(site_path)
             digest = hashlib.sha256(data).hexdigest()
-            if seen.get(key) == digest:
+            mkey = f"{store.ident}|{key}"          # per backend: switching stores re-sends everything once
+            if seen.get(mkey) == digest:
                 return "skipped", site_path
-            headers = {"Authorization": f"Bearer {key_env}", "apikey": key_env, "x-upsert": "true",
-                       "Content-Type": content_type(key), "Cache-Control": cache_control}
-            status = send("POST", f"{_base()}/storage/v1/object/{BUCKET}/{key}", headers, data)
+            status = store.put(key, data, content_type=content_type(key), cache_control=cache_control)
             if 200 <= status < 300:
-                seen[key] = digest
+                seen[mkey] = digest
                 return "uploaded", site_path
             return "failed", f"{site_path} ({status})"
 
@@ -118,6 +109,8 @@ def upload(files: dict[str, bytes], *, http: Http | None = None, manifest: Path 
                 results = list(pool.map(one, paths))
         else:
             results = [one(p) for p in paths]
+        if hasattr(store, "meter"):
+            store.meter().flush()            # the usage counter reaches disk at the end of every batch (object_budget.py)
         uploaded = sum(r == "uploaded" for r, _ in results)
         skipped = sum(r == "skipped" for r, _ in results)
         failed = [what for r, what in results if r == "failed"]
@@ -128,7 +121,7 @@ def upload(files: dict[str, bytes], *, http: Http | None = None, manifest: Path 
             except OSError:
                 pass   # the manifest is an optimisation: losing it only costs re-uploads
         return {"assets": uploaded, "skipped": skipped, "failed": failed, "ok": not failed}
-    except Exception as exc:  # noqa: BLE001 — the article is the product; assets must never sink a run
+    except Exception as exc:  # noqa: BLE001 - the article is the product; assets must never sink a run
         return {"assets": 0, "skipped": 0, "failed": [f"{type(exc).__name__}: {str(exc)[:120]}"], "ok": False}
 
 

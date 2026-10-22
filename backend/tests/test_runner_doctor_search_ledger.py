@@ -183,7 +183,8 @@ def test_doctor_all_green_and_key_names_only():
     assert "summary" in rep and "fail" in rep["summary"]
 
 
-def test_doctor_scrubs_connection_errors_and_flags_missing_keys():
+def test_doctor_scrubs_connection_errors_and_flags_missing_keys(monkeypatch):
+    monkeypatch.setenv("ALGENT_POSTGRES_PUBLISH", "1")        # an unreachable database only fails the doctor when it is needed
     env = {**_FULL_ENV}
     del env["META_MODEL_API_KEY"]
     rep = doctor.run_checks(env, FakeProbes(db_error="could not connect to postgresql://u:pw-secret@host/db"))
