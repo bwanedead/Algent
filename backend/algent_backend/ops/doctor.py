@@ -25,7 +25,7 @@ OK, WARN, FAIL = "ok", "warn", "fail"
 #: (a test asserts every name here appears in the manifest).
 REQUIRED_KEYS: tuple[tuple[str, tuple[str, ...], str], ...] = (
     ("house model key", ("META_MODEL_API_KEY",), FAIL),
-    ("database", ("DATABASE_URL",), FAIL),
+    ("database (optional: Postgres publish flag)", ("DATABASE_URL",), WARN),
     ("gemini (hero images)", ("GEMINI_API_KEY", "GOOGLE_API_KEY"), WARN),
     ("x read", ("X_BEARER_TOKEN", "X_API_BEARER_TOKEN", "X_BEARER", "X_BEARER_KEY", "TWITTER_BEARER_TOKEN"), WARN),
     ("x post key", ("X_API_KEY",), WARN),
@@ -68,6 +68,16 @@ class Probes:
         migrate = importlib.import_module("algent_backend.database.migrate")
         with migrate.connect() as conn:
             conn.execute("select 1")
+
+    def db_budget(self) -> dict[str, Any]:
+        """Database size vs the free-plan quota (``database/size.report``): a few catalog reads."""
+        import importlib
+
+        migrate = importlib.import_module("algent_backend.database.migrate")
+        from algent_backend.database import size
+
+        with migrate.connect() as conn:
+            return size.report(conn, top=3)
 
     def http_get_json(self, url: str, timeout: float = 10.0) -> Any:
         import httpx
@@ -206,13 +216,59 @@ def check_keys(env: dict[str, str]) -> dict[str, Any]:
 
 
 def check_database(env: dict[str, str], probes: Probes) -> dict[str, Any]:
+    from algent_backend.database import flags as db_flags
+
+    needed = db_flags.postgres_publish()          # off by default: the server is the record and the site reads files in R2
     if not env.get("DATABASE_URL"):
-        return {"database": _check(FAIL, "DATABASE_URL not set")}
+        return {"database": _check(FAIL if needed else OK, "DATABASE_URL not set" + ("" if needed else " (not needed: Postgres publish flag is off)"))}
     try:
         probes.db_select1()
     except Exception as exc:  # noqa: BLE001
-        return {"database": _check(FAIL, f"not reachable: {scrub(exc, env)}")}
+        return {"database": _check(FAIL if needed else WARN, f"not reachable: {scrub(exc, env)}" + ("" if needed else " (optional: Postgres publish flag is off)"))}
     return {"database": _check(OK, "connected, select 1 ok")}
+
+
+def check_object_store(env: dict[str, str]) -> dict[str, Any]:
+    """The published-file store (R2 by default) and its free-tier budget (publishing/object_budget.py): FAIL at the hard stop."""
+    from algent_backend.database import flags as db_flags
+    from algent_backend.publishing import object_budget, object_store
+
+    if env.get("ALGENT_DB_PUBLISH", "1").strip().lower() in ("0", "false", "no", "off") or env.get("ALGENT_PUBLISH", "1").strip().lower() in ("0", "false", "no", "off"):
+        return {"object store": _check(WARN, "publishing paused (ALGENT_DB_PUBLISH=0)")}
+    backend = (env.get("ALGENT_OBJECT_BACKEND", "").strip().lower() or db_flags.OBJECT_BACKEND)
+    if backend != "r2":
+        return {"object store": _check(OK, f"backend {backend} (no R2 budget applies)")}
+    missing = [n for n in object_store.R2_ENV if not env.get(n)]
+    if missing:
+        return {"object store": _check(FAIL, f"R2 not configured, missing: {', '.join(missing)} (docs/credentials.md)")}
+    rep = object_budget.meter().status()
+    a, b, s = (rep["usage"][k] for k in ("class_a", "class_b", "storage_bytes"))
+    line = (f"R2 {rep['month']}: class A {a['used']:,}/{a['free_tier']:,} ({a['share']:.0%}, projected {a['projected_share']:.0%}), "
+            f"class B {b['used']:,}, stored {s['used'] / 1024 ** 2:,.0f} MB ({s['share']:.0%})")
+    status = FAIL if rep["level"] == "stop" else WARN if rep["level"] == "warn" else OK
+    hint = " - writes are REFUSED until the budget allows (newsroom storage status)" if status == FAIL else ""
+    return {"object store": _check(status, line + hint, share=max(a["share"], s["share"]))}
+
+
+def check_db_budget(env: dict[str, str], probes: Probes) -> dict[str, Any]:
+    """The free plan's 500 MB database quota (docs/architecture/database-budget.md): warn at 70%, fail at 85%.
+    Skipped when the database itself is not reachable (``check_database`` already said so)."""
+    if not env.get("DATABASE_URL"):
+        return {}
+    from algent_backend.database import size
+
+    try:
+        rep = probes.db_budget()
+    except Exception as exc:  # noqa: BLE001
+        return {"database budget": _check(WARN, f"unknown: {scrub(exc, env)}")}
+    verdict = size.judge(rep["size_bytes"], rep.get("quota_bytes"))
+    hint = "" if verdict["status"] == OK else " - run `newsroom db size`, then `newsroom db prune --apply` (docs/architecture/database-budget.md)"
+    out = {"database budget": _check(verdict["status"], size.summary_line({**rep, **verdict}) + hint, share=verdict["share"])}
+    if (st := rep.get("storage")):
+        top = ", ".join(f"{k}/ {size.human(v)}" for k, v in list(st["by_prefix"].items())[:3])
+        out["storage budget"] = _check(st["status"], f"{size.human(st['size_bytes'])} of {size.human(st['quota_bytes'])} ({st['share'] * 100:.0f}%) in published-assets: {top}",
+                                       share=st["share"])
+    return out
 
 
 def check_search(env: dict[str, str], probes: Probes) -> dict[str, Any]:
@@ -524,6 +580,26 @@ def check_ai_benchmarks() -> dict[str, Any]:
     return {"ai_benchmarks": _check(WARN, "stale: " + scrub("; ".join(bad))) if bad else _check(OK, f"{len(rows)} sources fresh; {n} scores stored")}
 
 
+def check_satellite() -> dict[str, Any]:
+    """Satellite watch: the last pass is within two days (the timer runs daily). Nothing on this machine is fine (not collected here)."""
+    try:
+        import time
+        from datetime import datetime
+
+        from algent_backend.satellite import store
+
+        doc = store.read_json("doc.json")
+        if not doc:
+            return {"satellite": _check(OK, "no satellite store on this machine (collected on the server)")}
+        age_h = (time.time() - datetime.fromisoformat(doc["as_of"]).timestamp()) / 3600
+        counts = doc.get("counts") or {}
+    except Exception as exc:  # noqa: BLE001
+        return {"satellite": _check(WARN, f"unknown: {scrub(exc)}")}
+    if age_h > 48:
+        return {"satellite": _check(WARN, f"last pass {age_h:.0f} h ago (is ohmega-satellite running?)")}
+    return {"satellite": _check(OK, f"last pass {age_h:.0f} h ago; {counts.get('with_imagery', 0)} of {counts.get('watched', 0)} sites have imagery")}
+
+
 def check_basemap(probes: Probes) -> dict[str, Any]:
     """The Natural Earth basemap (untracked data) must load, or every daily map silently disappears."""
     try:
@@ -541,10 +617,12 @@ def run_checks(env: dict[str, str] | None = None, probes: Probes | None = None,
     probes = probes or Probes()
     repo = repo or Path(__file__).resolve().parents[3]
     checks: dict[str, Any] = {}
-    for part in (check_keys(env), check_database(env, probes), check_search(env, probes), check_reads(probes),
+    for part in (check_keys(env), check_database(env, probes), check_object_store(env), check_search(env, probes), check_reads(probes),
                  check_harnesses(probes), check_publish(env, probes, repo), check_runner(probes),
-                 check_system(probes), check_watchdog(probes), check_schedule(probes), check_quota(probes), check_instruments(), check_live(env), check_sanctions(), check_maritime(), check_calendar(), check_markets(), check_ai_benchmarks(), check_basemap(probes)):
+                 check_system(probes), check_watchdog(probes), check_schedule(probes), check_quota(probes), check_instruments(), check_live(env), check_sanctions(), check_maritime(), check_calendar(), check_markets(), check_ai_benchmarks(), check_satellite(), check_basemap(probes)):
         checks.update(part)
+    if checks.get("database", {}).get("status") == OK:        # the size check needs a reachable database
+        checks.update(check_db_budget(env, probes))
     counts = {s: sum(1 for c in checks.values() if c["status"] == s) for s in (OK, WARN, FAIL)}
     return {"ok": counts[FAIL] == 0, "summary": f"{counts[OK]} ok, {counts[WARN]} warn, {counts[FAIL]} fail",
             "checks": checks}

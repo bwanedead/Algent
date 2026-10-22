@@ -21,6 +21,8 @@ so it can be rebuilt from scratch instead of repaired by hand.
 | `ohmega-instruments` | every 6 h | public data series | free |
 | `ohmega-statements` | every 6 h | official statement transcripts (collection only) | free |
 | `ohmega-backup` | daily 06:15 | stores → private `algent-data` archive | free |
+| `ohmega-db-prune` | daily 03:40 | retention windows on the growing Postgres tables + `VACUUM` (`newsroom db prune --apply`; a no-op while the Postgres flag is off) | free |
+| `ohmega-maritime-rollup` | daily 04:05 | daily per-zone ship summaries + retention of the raw maritime event log (`newsroom maritime rollup --apply`) | free |
 | `ohmega-menu` | daily 05:00 | newsroom menu (`run --to menu`) | **paid** |
 | `ohmega-daily-1` | daily 05:30 | geopolitics daily, part 1 (Europe/Asia morning) | **paid** |
 | `ohmega-daily-2` | daily 17:30 | geopolitics daily, part 2 (Americas), appended to the same report | **paid** |
@@ -72,6 +74,11 @@ Logs: `journalctl -u ohmega-<job> -n 50`; timers: `systemctl list-timers 'ohmega
   rebuild or key change.
 - The server is not a dependency: `newsroom runner status|claim|release` records which machine runs paid work
   and publishes, and the laptop can take over. Procedure: `docs/guides/runner-handover.md`.
+- **The server is the system of record; the site reads published files from Cloudflare R2** (decision 2026-10-22, `docs/architecture/database-budget.md`).
+  `newsroom storage status` (and the `object store` line of `newsroom doctor`) is the R2 free-tier guard: month-to-date Class A/B operations and
+  stored bytes, projections, warn at 70%, **writes refused at 90%**. `newsroom publish rebuild-all [--dry-run]` republishes everything from the local
+  stores; `newsroom maritime store|rollup` shows and compacts the ship data. The Postgres tools (`newsroom db size|prune|diet|vacuum-full`) apply
+  only if `database/flags.POSTGRES_PUBLISH` is switched back on. Never let a writer rewrite a big document on a timer without a content-hash skip.
 - `newsroom search-usage` shows how search is doing (who answers, free vs paid, failures).
 
 ## Watchdog
@@ -89,8 +96,9 @@ See what it did: `tail runs_data/watchdog.jsonl` (one JSON line per pass/kill/ha
 ## Source of truth for data
 
 Once runs happen on the server, **its stores are the live ones**; the laptop stops running jobs so the two
-never both write and both publish. The private `algent-data` archive (nightly + after runs) is the recovery copy;
-Supabase (next step) becomes the working database.
+never both write and both publish. The private `algent-data` archive (nightly + after runs) is the recovery copy and now mirrors every corpus
+store plus what was published (`data_backup/sync.py`, pinned by `tests/test_backup_coverage.py`). There is no working database: R2 holds only the
+publication, rebuilt at any time with `newsroom publish rebuild-all`.
 
 ## Access it holds
 
@@ -98,8 +106,8 @@ Supabase (next step) becomes the working database.
   **after the cut-over to `"db"` (`docs/architecture/published-content.md`) it can become read-only**: a publish is
   then database rows plus Storage uploads and never pushes; keep read access for `git pull`) and `algent-data`
   (write: backups). Revoke or downgrade under each repo → Settings → Deploy keys.
-- In db mode the worker env also needs `DATABASE_URL`, `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` (see
-  `docs/credentials.md`). The `.site-live/` directory stays as a local staging area; no git runs against it.
+- In db mode (objects are the publish) the worker env needs the five `R2_*` names (see `docs/credentials.md`; `DATABASE_URL` / `SUPABASE_*` are
+  optional legacy). The `.site-live/` directory stays as a local staging area (and is backed up); no git runs against it.
 - Secrets: `~/algent.env` (chmod 600), copied from the laptop by `scp`, linked as `backend/.env`. Key names and
   purposes: `docs/credentials.md` (manifest).
 - Still to log in on the server (operator, interactive): the chart harnesses `grok-build` and `codex`.
@@ -160,8 +168,13 @@ dropped when it leaves the board. The ICAO address and registration are never pu
 published as `coverage.json.gz` and drawn as a faint layer, so empty ocean reads as "no receiver" and not "no ships". Honest limits:
 aisstream is volunteer terrestrial AIS (about 40 nautical miles from a coast receiver); open ocean needs satellite AIS, which is paid.
 
-**Transport.** Nothing per-object goes to Postgres. Every 60 s the service writes compact JSON to the public Storage bucket
-`published-assets` under `live/` via `publishing/asset_store` (cache header `public, max-age=30` so a CDN can answer repeat fetches, unchanged
+**R2 profile (current).** The text below describes the Supabase profile (60 s cycle, tiles, 16+16 trail shards: ~440 000 PUTs a day, 13x R2's free
+Class A tier). On R2 (`live/flags.py` `cost_capped()`) the service publishes only `vessels`, `aircraft`, `points`, `summary` every **180 s** and
+`coverage` + 4 ship + 4 aircraft trail shards every **900 s** (no tiles, no `density`): ~2 800 objects a day, 8% of the free tier; the site polls
+every 180 s and falls back to the full snapshots where tiles are missing. The write budget is in `docs/architecture/database-budget.md`.
+
+**Transport.** Nothing per-object goes to Postgres. Every 60 s (Supabase profile) the service writes compact JSON to the public bucket
+under `live/` via `publishing/asset_store` (cache header `public, max-age=30` so a CDN can answer repeat fetches, unchanged
 files skipped by content hash, uploads in parallel; content types `application/json` and `application/gzip` only, bucket migration `008`).
 The vessel and aircraft boards go out as (`live/points.py`, `live/tiles.py`, constants in `live/flags.py`):
 
@@ -206,6 +219,10 @@ The stream service also keeps a bounded per-vessel memory (`maritime_store/`, `A
 ### Flows: ship lanes, grain and money (`flows/`)
 
 The stream service also runs the lane tracker every 5 min (aggregates only, in `live_store/flows/`: `tracker.json.gz` per-vessel last place, `days.json` the daily lane and visit counts); the `ohmega-flows` timer (every 15 min, free, outside the job lock) refreshes the weekly UN Comtrade grain and money picture when due, builds the `flows` document and uploads it as `live/flows.json`. After the first deploy run `newsroom flows backfill` once on the server to seed the lanes from the maritime profile book's last 4 days. `newsroom flows status|lanes|trade|backfill|publish`. Design, sources and caveats: `docs/architecture/flows.md`.
+
+### Satellite watch (`satellite/`)
+
+The `ohmega-satellite` timer (daily 03:20 UTC, free, keyless, outside the job lock) runs `newsroom satellite run`: it ranks the watch list from the geoledger, today's developments and the maritime chokepoints, takes the twelve most overdue (`MAX_SITES_PER_PASS`, `REVISIT_HOURS` in `satellite/flags.py`; ~15 s a site, a few minutes a pass), fetches Sentinel-2 chips (Planetary Computer STAC and data API) and VIIRS night lights (NASA GIBS), appends one record per site to `live_store/satellite/records.jsonl` (never rewritten), uploads the dated chips to `published-assets/satellite/` and then the `satellite` document as `live/satellite.json`. Chips are ~150 kB each and only new scenes are uploaded. `newsroom satellite watch|run|status`; `newsroom doctor` warns when the last pass is over 48 h old. Design, sources and limits: `docs/architecture/satellite.md`. After the first deploy: `sudo bash infra/server/install_schedules.sh` to add the timer.
 
 ### Markets track record (`markets/`)
 

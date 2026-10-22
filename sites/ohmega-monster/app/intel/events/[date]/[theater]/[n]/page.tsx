@@ -2,21 +2,22 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import Crumbs, { INTEL_CRUMB } from "@/components/Crumbs";
+import Crumbs, { DATA_CRUMB } from "@/components/Crumbs";
 import { DevelopmentDetail } from "@/components/DailyVisuals";
 import { Section } from "@/components/dossier/parts";
 import { ActorLink, TheaterLink } from "@/components/entities/EntityLinks";
 import PointMap from "@/components/places/PointMap";
 import { fmtDay, daily, headlineOf, theaterAnchor } from "@/lib/daily";
+import { dailyHref } from "@/lib/desks";
 import { isoForName } from "@/lib/countries";
 import { textLinker, theaterRef } from "@/lib/entities";
 
-import "@/app/geopolitics/geopolitics.css";
-import "../../../../theaters/theaters.css";
+import "@/app/daily/daily.css";
+import "@/app/situations/situations.css";
 
 type Params = { date: string; theater: string; n: string };
 
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 1800; // lib/store.ts TTL.daily: a desk publishes twice a day
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -56,7 +57,7 @@ export default async function EventPage({ params }: { params: Params }) {
   const pin = dev.place && dev.place.lat !== null && dev.place.lon !== null ? dev.place : null;
   return (
     <div className="intel-page th-page">
-      <Crumbs trail={[INTEL_CRUMB, { href: "/geopolitics", label: "Daily report" }]} />
+      <Crumbs trail={[DATA_CRUMB, { href: "/daily", label: "Daily" }]} />
       <p className="th-kicker">
         <span>{fmtDay(report.date)}</span>
         <span>
@@ -65,8 +66,8 @@ export default async function EventPage({ params }: { params: Params }) {
       </p>
       <h1 className="th-claim">{dev.headline}</h1>
       <p className="th-asof">
-        Development {n} of {t.developments.length} in this theater&apos;s section.{" "}
-        <Link href={`/geopolitics/${report.date}#${theaterAnchor(t, i)}-d${n}`} className="xt">
+        Development {n} of {t.developments.length} in this situation&apos;s section.{" "}
+        <Link href={`${dailyHref(report.domain || "geopolitics", report.date)}#${theaterAnchor(t, i)}-d${n}`} className="xt">
           See it in the day&apos;s report →
         </Link>
       </p>

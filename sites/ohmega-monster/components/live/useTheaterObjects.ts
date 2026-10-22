@@ -14,7 +14,7 @@ import { decodeAircraft, decodeVessels } from "./entities";
 import { groupOf, NO_OBJECTS, shape, withMargin, type Obj, type Shaped } from "./theaterObjects";
 import { tilesIn } from "./useLiveEntities";
 
-const POLL_MS = 60_000;
+const POLL_MS = 180_000; // the stream republishes every 3 min
 const NEAR_PX = 600; // start loading this far before the strip scrolls into view
 type Cached = { etag: string; objs: Obj[] };
 const LAYERS = [["vessels", "v"], ["aircraft", "a"]] as const;
@@ -23,9 +23,22 @@ const LAYERS = [["vessels", "v"], ["aircraft", "a"]] as const;
 const pickTiles = (box: [number, number, number, number], deg: number): string[] =>
   tilesIn([Math.max(-180, box[0]), Math.max(-90, box[1]), Math.min(180, box[2]), Math.min(90, box[3])], deg);
 
+/** No tiles are published (the R2 write budget publishes the two full snapshots instead, backend live/flags.py `tiles_enabled`): read them and cut to the box. */
+async function fetchFromFull(box: [number, number, number, number]): Promise<Obj[] | null> {
+  const [v, a] = await Promise.all([fetchSnapshot<VesselsDoc>("vessels"), fetchSnapshot<AircraftDoc>("aircraft")]);
+  if (!v && !a) return null;
+  const ents = [...(v ? decodeVessels(v) : []), ...(a ? decodeAircraft(a) : [])];
+  const objs: Obj[] = [];
+  for (const e of ents) {
+    const group = groupOf(e);
+    if (group && e.lon >= box[0] && e.lon <= box[2] && e.lat >= box[1] && e.lat <= box[3]) objs.push({ group, e });
+  }
+  return objs;
+}
+
 async function fetchObjects(box: [number, number, number, number], cache: Map<string, Cached>): Promise<Obj[] | null> {
   const index = await fetchSnapshot<TilesIndex>("tiles/index");
-  if (!index) return null;
+  if (!index) return fetchFromFull(box);
   const ids = pickTiles(box, index.deg);
   const keep = new Set<string>();
   const jobs: Promise<void>[] = [];

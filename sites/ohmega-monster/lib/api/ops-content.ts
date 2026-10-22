@@ -105,7 +105,7 @@ async function corpus(): Promise<Hit[]> {
   }
   for (const t of objs(theaters?.theaters)) {
     const id = str(t.theater_id);
-    hits.push({ type: "theater", id, title: str(t.name), text: str(t.domain), date: str(t.last_seen), cite_as: abs(`/intel/theaters/${id}`), api_url: apiUrl(`/theaters/${id}`) });
+    hits.push({ type: "theater", id, title: str(t.name), text: str(t.domain), date: str(t.last_seen), cite_as: abs(`/situations/${id}`), api_url: apiUrl(`/theaters/${id}`) });
   }
   for (const p of objs(pulses?.pulses)) {
     const id = str(p.id);
@@ -118,7 +118,7 @@ async function corpus(): Promise<Hit[]> {
   for (const d of objs(intel?.daily)) {
     const dom = str(d.domain);
     const date = str(d.date);
-    hits.push({ type: "daily", id: `${dom}/${date}`, title: str(d.headline), text: arr(d.theaters).map(str).join(" "), date, cite_as: abs(str(d.url) || `/geopolitics/${date}`), api_url: apiUrl(`/daily/${dom}/${date}`) });
+    hits.push({ type: "daily", id: `${dom}/${date}`, title: str(d.headline), text: arr(d.theaters).map(str).join(" "), date, cite_as: abs(str(d.url) || `/daily/${dom}/${date}`), api_url: apiUrl(`/daily/${dom}/${date}`) });
   }
   for (const x of objs(actors?.actors)) {
     const iso = str(x.iso2);

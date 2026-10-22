@@ -1,7 +1,7 @@
 import Link from "next/link";
 
-// The one breadcrumb for every deep page: the trail back up ("Intelligence / Theaters"). The page's own
-// name is not repeated (its heading is right below). Styled by `.th-crumb` (app/intel/theaters/theaters.css).
+// The one breadcrumb for every deep page: the trail back up ("Data / Actors"). The page's own
+// name is not repeated (its heading is right below). Styled by `.th-crumb` (app/situations/situations.css).
 export default function Crumbs({ trail }: { trail: { href: string; label: string }[] }) {
   return (
     <nav className="th-crumb" aria-label="Breadcrumb">
@@ -15,6 +15,6 @@ export default function Crumbs({ trail }: { trail: { href: string; label: string
   );
 }
 
-export const INTEL_CRUMB = { href: "/intel", label: "Intelligence" } as const;
-export const THEATERS_CRUMB = { href: "/intel/theaters", label: "Theaters" } as const;
+export const DATA_CRUMB = { href: "/data", label: "Data" } as const;
+export const SITUATIONS_CRUMB = { href: "/situations", label: "Situations" } as const;
 export const ACTORS_CRUMB = { href: "/intel/actors", label: "Actors" } as const;

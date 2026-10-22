@@ -148,6 +148,9 @@ class Influence(BaseModel):
     prompt_version: str = ""
     model: str = ""
     watch_ids_triggered: list[str] = Field(default_factory=list)
+    # Where the entry came from when it was NOT written by a live assessment: "rescued_from_site_cache" (a reading the live site still served after
+    # the database was lost) or "reconstructed_from_daily" (a position read back from a daily report, no rationale). Empty = a native assessment.
+    provenance: str = ""
 
 
 def influence_key(pulse_id: str, event_id: str, run_id: str, mode: str) -> str:

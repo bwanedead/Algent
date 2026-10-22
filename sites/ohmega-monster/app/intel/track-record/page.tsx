@@ -1,13 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import JudgmentsSwitch from "@/components/JudgmentsSwitch";
+import PageTag from "@/components/PageTag";
+
 import { BrierSeries, CalibrationChart } from "@/components/track/TrackCharts";
 import { EquityCurve, TraderPositions, TradeLog } from "@/components/track/TraderBook";
 import { Disagreements, OpenPositions, Resolved } from "@/components/track/TrackTables";
+import { hitRateView } from "@/lib/stats/render";
 import { trackRecord } from "@/lib/track-record";
 
-import "@/app/geopolitics/geopolitics.css";
-import "../theaters/theaters.css";
+import "@/app/daily/daily.css";
+import "@/app/situations/situations.css";
 import "@/components/track/track.css";
 
 export const metadata: Metadata = {
@@ -19,7 +23,7 @@ export const metadata: Metadata = {
 // The reality feedback loop (backend `markets/`): for each Polymarket market on a topic we cover, the desk forecasts BLIND to the price, the forecast is stored
 // immutably, and when the market resolves both we and the market are scored against what happened. Internal-first and unflattering by design: the losses and
 // the markets that beat us are listed as prominently as the wins. Paper trading only; nothing here is financial advice.
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 3600; // lib/store.ts TTL.static: slow products (markets every 4 h, benchmarks every 12 h)
 
 const f3 = (v: number | null) => (v === null ? "n/a" : v.toFixed(3));
 const usd = (v: number) => `${v < 0 ? "-" : v > 0 ? "+" : ""}$${Math.abs(v).toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
@@ -29,12 +33,15 @@ export default async function TrackRecordPage() {
   const s = t?.scores;
   const early = !t || !s || s.compared < t.rules.min_for_verdict;
   const skill = s?.brier_skill ?? null;
+  const traderHit = t ? hitRateView(t.trader.summary.hit_rate, t.trader.summary.wins + t.trader.summary.losses, t.rules.min_for_verdict) : { text: "–", note: "" };
+  const paperHit = t ? hitRateView(t.portfolio.hit_rate, t.portfolio.wins + t.portfolio.losses, t.rules.min_for_verdict) : { text: "–", note: "" };
   return (
     <div className="intel-page th-page">
       <p className="th-kicker">
-        <span>Intelligence</span> <Link href="/intel/situation" className="xt">situation room →</Link>
+        <PageTag kind="judgment" detail="Forecasts · scored" />
       </p>
       <h1 className="th-claim">Paper trader and track record</h1>
+      <JudgmentsSwitch current="scored" />
       <p className="tr-paper">
         <b>Paper trading only</b>
         A trading agent manages a pretend portfolio on a prediction market&apos;s questions, and our own probability forecasts are scored against the market&apos;s prices. No money is
@@ -63,8 +70,8 @@ export default async function TrackRecordPage() {
             <li><span className="tr-stat-n">{t.trader.summary.open}</span><span className="tr-stat-l">positions held</span></li>
             <li><span className="tr-stat-n">{t.trader.summary.buys + t.trader.summary.sells}</span><span className="tr-stat-l">trades ({t.trader.summary.buys} buys, {t.trader.summary.sells} sells)</span></li>
             <li>
-              <span className="tr-stat-n">{t.trader.summary.hit_rate === null ? "n/a" : `${Math.round(t.trader.summary.hit_rate * 100)}%`}</span>
-              <span className="tr-stat-l">closed positions in profit ({t.trader.summary.wins}W {t.trader.summary.losses}L)</span>
+              <span className="tr-stat-n">{traderHit.text}</span>
+              <span className="tr-stat-l">closed positions in profit ({t.trader.summary.wins}W {t.trader.summary.losses}L){traderHit.note && `; ${traderHit.note}`}</span>
             </li>
             <li><span className="tr-stat-n">${Math.round(t.trader.summary.cash).toLocaleString("en-US")}</span><span className="tr-stat-l">cash</span></li>
           </ul>
@@ -99,8 +106,8 @@ export default async function TrackRecordPage() {
               <span className="tr-stat-l">paper P&amp;L on ${t.portfolio.bankroll.toLocaleString("en-US")}</span>
             </li>
             <li>
-              <span className="tr-stat-n">{t.portfolio.hit_rate === null ? "n/a" : `${Math.round(t.portfolio.hit_rate * 100)}%`}</span>
-              <span className="tr-stat-l">paper hit rate ({t.portfolio.wins}W {t.portfolio.losses}L)</span>
+              <span className="tr-stat-n">{paperHit.text}</span>
+              <span className="tr-stat-l">paper hit rate ({t.portfolio.wins}W {t.portfolio.losses}L){paperHit.note && `; ${paperHit.note}`}</span>
             </li>
             <li><span className="tr-stat-n">{t.markets.open}</span><span className="tr-stat-l">markets open, {t.forecasts} forecasts</span></li>
           </ul>
@@ -141,7 +148,7 @@ export default async function TrackRecordPage() {
               {t.other.judgments && (
                 <p className="tr-note">
                   Desk judgments in briefs: {t.other.judgments.resolved} resolved, {t.other.judgments.open} open
-                  {t.other.judgments.brier !== null && `, Brier ${t.other.judgments.brier.toFixed(3)} (0.25 is a coin flip)`}. See <Link href="/intel/situation" className="xt">the situation room</Link>.
+                  {t.other.judgments.brier !== null && `, Brier ${t.other.judgments.brier.toFixed(3)} (0.25 is a coin flip)`}. See <Link href="/intel/forecasts" className="xt">the open forecasts</Link>.
                 </p>
               )}
               {t.other.watches && (

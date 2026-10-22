@@ -43,6 +43,10 @@ def add_parser(sub: Any) -> None:
     pr.add_argument("--situation", default="", help="place it in this situation id")
     verbs.add_parser("promote-ready", help="promote every proposal that has recurred")
     verbs.add_parser("migrate-proposals", help="replay intel_store/pulse_proposals.jsonl (idempotent)")
+    rb = verbs.add_parser("rebuild", help="rebuild a lost stretch of the ledger from the site's published pulse documents + the dailies (idempotent)")
+    rb.add_argument("--from-rescue", required=True, help="directory holding the rescued pulse_<id>.json documents (e.g. ~/pulse_rescue)")
+    rb.add_argument("--dailies", default="", help="daily reports directory (default: intel_store/daily); positions after the last rescued reading are read from it")
+    rb.add_argument("--dry-run", action="store_true", help="report what would be added; write nothing")
     lb = verbs.add_parser("labels", help="build the missing who-and-what display titles (cached; one cheap call each)")
     lb.add_argument("--refresh", action="store_true", help="re-make every label, not only missing or outdated ones")
     p.set_defaults(handler=run_pulse)
@@ -58,7 +62,7 @@ def _publish() -> dict:
 def run_pulse(args: Any) -> int:
     return {"seed": _seed, "commit": _commit, "reassess": _reassess, "show": _show,
             "log": _log, "proposals": _proposals, "promote": _promote, "promote-ready": _promote_ready,
-            "migrate-proposals": _migrate, "labels": _labels}[args.pulse_verb](args)
+            "migrate-proposals": _migrate, "labels": _labels, "rebuild": _rebuild}[args.pulse_verb](args)
 
 
 def _seed(args: Any) -> int:
@@ -228,6 +232,21 @@ def _migrate(args: Any) -> int:
 
     print(json.dumps(registry.migrate_legacy_proposals(proposals_path(), pulse_store()), indent=2))
     return 0
+
+
+def _rebuild(args: Any) -> int:
+    """Merge the site's published Pulse documents (and, for the days after them, the dailies) into the file store. Never overwrites."""
+    from algent_backend.agent_system.agents.intel.heat import store_dir
+    from algent_backend.agent_system.agents.pulse import rescue
+    from algent_backend.agent_system.agents.pulse.repository import pulse_store
+
+    dailies = Path(args.dailies).expanduser() if args.dailies else store_dir() / "daily"
+    report = rescue.rebuild(pulse_store(), Path(args.from_rescue).expanduser(), dailies, dry_run=args.dry_run)
+    added = report.get("rescued", {}).get("readings_added", 0) + report.get("reconstructed", {}).get("readings_added", 0)
+    if added and not args.dry_run:
+        report["publish"] = _publish()
+    print(json.dumps(report, indent=2))
+    return 1 if "error" in report else 0
 
 
 def _labels(args: Any) -> int:

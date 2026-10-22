@@ -31,9 +31,9 @@ export async function dailyOp(a: Args): Promise<ApiResult> {
   if (!doc) throw notFound(`daily report ${domain}/${date}`);
   const day = str(doc.date) || date;
   return {
-    data: { id: `daily:${domain}:${day}`, ...doc, cite_as: abs(str(doc.url) || `/geopolitics/${day}`), api_url: apiUrl(`/daily/${domain}/${day}`) },
+    data: { id: `daily:${domain}:${day}`, ...doc, cite_as: abs(str(doc.url) || `/daily/${domain}/${day}`), api_url: apiUrl(`/daily/${domain}/${day}`) },
     as_of: str(doc.built_at) || day,
-    cite_as: abs(str(doc.url) || `/geopolitics/${day}`),
+    cite_as: abs(str(doc.url) || `/daily/${domain}/${day}`),
     source: "ohmega.daily/1",
     note: "Each development carries verification: 'researched' (our research established it) or 'reported' (another outlet reported it; a lead, not a finding).",
   };
@@ -49,14 +49,14 @@ export async function theatersOp(a: Args): Promise<ApiResult> {
     .map((t) => ({
       id: str(t.theater_id),
       ...t,
-      cite_as: abs(`/intel/theaters/${str(t.theater_id)}`),
+      cite_as: abs(`/situations/${str(t.theater_id)}`),
       api_url: apiUrl(`/theaters/${str(t.theater_id)}`),
     }));
   const p = paginate(rows, limitParam(a.limit), a.cursor);
   return {
     data: { theaters: p.items, total: p.total },
     as_of: str(idx?.built_at) || null,
-    cite_as: abs("/intel/theaters"),
+    cite_as: abs("/situations"),
     source: "ohmega.dossier.index/1",
     next_cursor: p.next_cursor,
     note: "heat is how much a theater is in the news, not how bad things are.",
@@ -68,7 +68,7 @@ export async function theaterOp(a: Args): Promise<ApiResult> {
   const doc = id === "index" ? null : await docObj(`theaters/${id}.json`);
   if (!doc) throw notFound(`theater ${id}`);
   const { map: _map, ...rest } = doc; // the drawing spec is presentation; places[] carries the coordinates
-  const cite = abs(`/intel/theaters/${id}`);
+  const cite = abs(`/situations/${id}`);
   return {
     data: { id, ...rest, cite_as: cite, api_url: apiUrl(`/theaters/${id}`) },
     as_of: str(doc.built_at) || null,

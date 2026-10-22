@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import InfoHover from "@/components/stats/InfoHover";
+import { ModelMark } from "@/components/stats/ModelMark";
 import { Delta, Spark } from "@/components/vl/primitives";
 import { fmtPct, type Cell, type DayChart, type Mover } from "@/lib/glance";
 import { assetUrl } from "@/lib/assets";
@@ -16,17 +18,20 @@ export function GlanceBand({ cells }: { cells: Cell[] }) {
     <section className="hm-glance" aria-label="At a glance">
       <p className="hm-sub">
         <span>At a glance</span>
-        <span className="hm-sub-note">our own counts, against their usual</span>
+        <span className="hm-sub-note">official figures first; our own counts are minimums (hover the i)</span>
       </p>
       <ul className="hm-cells">
         {cells.map((c) => (
-          <li key={c.key}>
+          <li key={c.key} className="tip-host">
+            <InfoHover label={c.label} lines={c.info} />
             <Link href={c.href} className="hm-cell" title={c.foot}>
               <span className="vl-label hm-cell-label">{c.label}</span>
               <span className="hm-cell-main">
                 <span className="hm-cell-num">{c.value}</span>
                 <span className="hm-cell-unit">{c.unit}</span>
+                {c.model && <ModelMark />}
               </span>
+              {c.note && <span className="hm-cell-note">{c.note}</span>}
               <span className="hm-cell-foot">
                 {c.delta ? <Delta text={c.delta.text} sign={c.delta.sign} /> : <span className="vl-delta">{c.foot}</span>}
                 <Spark values={c.spark} label={`${c.label}: ${c.foot}`} />

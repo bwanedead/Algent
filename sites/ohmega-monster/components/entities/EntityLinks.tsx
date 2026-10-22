@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ActorFlag } from "@/components/actors/ActorParts";
 import { Overflow, Section } from "@/components/dossier/parts";
 import { RecordRow, SAID_NOTE } from "@/components/OnRecord";
+import { situationHref } from "@/lib/desks";
 import { DIRECTION, dayLabel } from "@/lib/dossier-view";
 import type { ActorContext, ActorRef, RelatedActor, RelatedTheater, TheaterRef } from "@/lib/entities";
 
@@ -31,7 +32,7 @@ export function TheaterLink({ t }: { t: TheaterRef }) {
         <span aria-hidden="true">{dir.glyph}</span>
         <span className="en-sr"> {dir.word}: </span>
       </span>
-      {t.linked ? <Link href={`/intel/theaters/${t.id}`}>{t.name}</Link> : t.name}
+      {t.linked ? <Link href={situationHref(t.id)}>{t.name}</Link> : t.name}
     </>
   );
 }
@@ -53,7 +54,7 @@ export function InvolvedIn({ name, theaters }: { name: string; theaters: ActorCo
     <Section
       id="involved-in"
       title={`${name} is involved in ${theaters.length} theater${theaters.length === 1 ? "" : "s"}${moving > 0 ? `, ${moving} escalating` : ""}`}
-      lead="Arrows show where each theater is heading. Open one for its dossier."
+      lead="Arrows show where each situation is heading. Open one for its living file."
     >
       {rows(theaters.slice(0, SHOWN))}
       {theaters.length > SHOWN && (
@@ -104,7 +105,7 @@ export function ActorOnRecord({ name, said, about }: { name: string; said: Actor
 export function ActorDevelopments({ name, items }: { name: string; items: ActorContext["developments"] }) {
   if (items.length === 0) return null;
   return (
-    <Section id="developments" title={`Recent developments involving ${name}`} lead="From the last few daily reports; each opens that day at that theater.">
+    <Section id="developments" title={`Recent developments involving ${name}`} lead="From the last few daily reports; each opens that day at that situation.">
       <ul className="en-rows">
         {items.map((d, i) => (
           <li key={i}>
@@ -137,7 +138,7 @@ export function RelatedActors({ name, related }: { name: string; related: Relate
     </ul>
   );
   return (
-    <Section id="related" title={`Who ${name} shares a theater with`} lead="States named alongside it in the same theater, with the theaters in common.">
+    <Section id="related" title={`Who ${name} shares a situation with`} lead="States named alongside it in the same situation, with the situations in common.">
       {list(related.slice(0, SHOWN))}
       {related.length > SHOWN && (
         <Overflow label={`${name}: related actors`} trigger={`${related.length - SHOWN} more`}>
@@ -166,15 +167,15 @@ export function RelatedTheaters({ items }: { items: RelatedTheater[] }) {
     </ul>
   );
   return (
-    <Section id="related-theaters" title="Related theaters" lead="Other theaters that involve the same states.">
+    <Section id="related-theaters" title="Related situations" lead="Other situations that involve the same states.">
       {list(items.slice(0, SHOWN))}
       {items.length > SHOWN && (
-        <Overflow label="Related theaters" trigger={`${items.length - SHOWN} more`}>
+        <Overflow label="Related situations" trigger={`${items.length - SHOWN} more`}>
           {list(items.slice(SHOWN))}
         </Overflow>
       )}
       <p className="th-note">
-        <Link href="/intel/theaters" className="xt">
+        <Link href="/situations" className="xt">
           All theaters →
         </Link>
       </p>

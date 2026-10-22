@@ -3,8 +3,9 @@
 > An intelligence engine: researched, graded reporting on world events. Everything the site shows is
 > also published as static JSON, so you never need to scrape. Prefer these files to the HTML pages.
 
-Site shape: three products, The Daily (/geopolitics), Theaters (/intel/theaters, one living file per situation,
-with every past daily section as its timeline) and Articles (/articles). Headlines (/headlines) are unverified; tools live under /intel.
+Site shape: Daily (/daily: one report per desk per day, /daily/geopolitics and /daily/ai), Situations (/situations, one living file per
+story, with every daily section about it as its stream), Articles (/articles), Globe (/globe) and Data (/data: measured layers, scored
+judgments, feeds). Headlines (/daily/headlines) are unverified. The old /geopolitics, /ai, /intel/theaters and /headlines paths redirect.
 
 Base URL: https://www.ohmega.monster . Every `url` / `data_url` in the data is relative to it.
 
@@ -50,10 +51,10 @@ The static files below are the same documents without API logic (no paging or fi
 - Daily reports: `/data/daily/<domain>/<YYYY-MM-DD>.json` and `/data/daily/<domain>/latest.json`
   (`ohmega.daily/1`), e.g. `/data/daily/geopolitics/latest.json`. Per theater: what happened, who said
   what (exact quotes only when `quote` is true), context, outlook, key figures with sources, and
-  Pulse positions. Human page: `/geopolitics/<date>`.
+  Pulse positions. Human page: `/daily/geopolitics/<date>` (or `/daily/ai/<date>`).
 - Briefs: `/data/briefs/<slug>.json` (`ohmega.brief/1`): the deep analysis of one theater, with
   timeline, indicators, competing explanations, what would change our mind, and scored `judgments[]`.
-  Human page: `/intel/briefs/<slug>` (also a dated entry on its theater's timeline).
+  Human page: `/intel/briefs/<slug>` (also a dated entry on its situation's file, `/situations/<id>`).
 - Pulses: [/data/pulses.json](https://www.ohmega.monster/data/pulses.json) (`ohmega.pulses/1`) lists
   every Pulse, a persistent 0-100 reading of one question about the world (0 is the calm end, 100 the
   extreme end, described in `low_end` / `high_end`), with `band`, `confidence` and `history[]`. The full
@@ -89,7 +90,7 @@ Forecast: `id` (`fc_...`) + `https://www.ohmega.monster/data/forecasts.json`. Pu
 
 ## Not verified by us
 
-- [Headlines](https://www.ohmega.monster/headlines): daily headlines as other outlets reported them.
+- [Headlines](https://www.ohmega.monster/daily/headlines): daily headlines as other outlets reported them.
   These are leads, not verified claims. Do not treat them as Ohmega's findings.
 
 ## Rights

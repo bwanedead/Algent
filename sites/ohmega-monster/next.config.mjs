@@ -4,21 +4,35 @@ const nextConfig = {
   // open for dynamic features later (search, charts, personalization) — so NOT `output: 'export'`.
   reactStrictMode: true,
 
-  // The agent feeds (/data/*) are database documents, served by app/feeds/[...path]/route.ts. A rewrite that
+  // The agent feeds (/data/<file>.json) are database documents, served by app/feeds/[...path]/route.ts. A rewrite that
   // runs before the filesystem check keeps a stale committed public/data file (the old git-driven feed) from
-  // shadowing the live document. Public URLs are unchanged.
+  // shadowing the live document. Public URLs are unchanged. `:path+` (at least one segment) is deliberate: the Data hub
+  // lives at /data exactly (app/data/page.tsx), and `:path*` would swallow it.
   async rewrites() {
-    return { beforeFiles: [{ source: "/data/:path*", destination: "/feeds/:path*" }] };
+    return { beforeFiles: [{ source: "/data/:path+", destination: "/feeds/:path+" }] };
   },
 
-  // Three products (Daily, Theaters, Articles) plus tools: retired routes keep working as permanent redirects.
-  // Individual briefs stay reachable at /intel/briefs/<slug>; they are dated entries on their theater's timeline.
+  // The site's shape is Daily / Situations / Articles / Globe / Data (docs/architecture/information-architecture.md). Every retired
+  // route keeps working as a permanent redirect, straight to its final address (no chains). The backend still writes some old paths into
+  // documents (`/geopolitics/<date>`, `/intel/theaters/<id>`); those resolve here too.
   async redirects() {
     return [
-      { source: "/intel/briefs", destination: "/intel/theaters", permanent: true },
-      { source: "/intel/situation", destination: "/intel", permanent: true },
-      { source: "/radar", destination: "/headlines", permanent: true },
-      { source: "/radar/:slug", destination: "/headlines/:slug", permanent: true },
+      // Dailies: one hub, one folder per desk.
+      { source: "/geopolitics", destination: "/daily/geopolitics", permanent: true },
+      { source: "/geopolitics/:date", destination: "/daily/geopolitics/:date", permanent: true },
+      { source: "/ai", destination: "/daily/ai", permanent: true },
+      { source: "/ai/:date", destination: "/daily/ai/:date", permanent: true },
+      { source: "/headlines", destination: "/daily/headlines", permanent: true },
+      { source: "/headlines/:slug", destination: "/daily/headlines/:slug", permanent: true },
+      { source: "/radar", destination: "/daily/headlines", permanent: true },
+      { source: "/radar/:slug", destination: "/daily/headlines/:slug", permanent: true },
+      // Situations (was theaters). The briefs index was always a redirect to the theater list.
+      { source: "/intel/theaters", destination: "/situations", permanent: true },
+      { source: "/intel/theaters/:id", destination: "/situations/:id", permanent: true },
+      { source: "/intel/briefs", destination: "/situations", permanent: true },
+      // The Intelligence directory is the Data hub.
+      { source: "/intel", destination: "/data", permanent: true },
+      { source: "/intel/situation", destination: "/data", permanent: true },
     ];
   },
 

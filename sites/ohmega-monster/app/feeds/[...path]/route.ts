@@ -6,9 +6,9 @@ import { intelDoc } from "@/lib/store";
 // /data/index.json, /data/articles/<slug>.json, /data/intel.json, /data/pulses.json, /data/changes.json,
 // /data/forecasts.json, /data/daily/<domain>/<date>.json, /data/briefs/<slug>.json, /data/theaters/<id>.json,
 // /data/actors/<ISO2>.json, /data/record.json … Each is the document `data/<path>` in
-// published_intel_documents (lib/store.ts falls back to public/data/<path> during the transition).
+// published_intel_documents (an index row; the body is the gzipped Storage object docs/data/<path>.gz, lib/store.ts intelDoc; it falls back to public/data/<path> during the transition).
 // Contract: docs/architecture/published-content.md; the feed shapes are documented in public/llms.txt.
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 1800; // lib/store.ts TTL.daily: a desk publishes twice a day
 
 const SEGMENT = /^[\w.-]+$/;
 

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ActorFlag, ordinal, rankText, ScaleBar } from "@/components/actors/ActorParts";
-import Crumbs, { ACTORS_CRUMB, INTEL_CRUMB } from "@/components/Crumbs";
+import Crumbs, { ACTORS_CRUMB, DATA_CRUMB } from "@/components/Crumbs";
 import GridImpact from "@/components/GridImpact";
 import { Anchor, Overflow, Section } from "@/components/dossier/parts";
 import ActorWatch from "@/components/entities/ActorWatch";
@@ -19,12 +19,12 @@ import { latestSnapshot } from "@/lib/intel";
 import { toWallPulse } from "@/lib/pulse-wall";
 import { sanctionsForCountry } from "@/lib/sanctions";
 
-import "@/app/geopolitics/geopolitics.css";
-import "../../theaters/theaters.css";
+import "@/app/daily/daily.css";
+import "@/app/situations/situations.css";
 
 type Params = { iso: string };
 
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 1800; // lib/store.ts TTL.daily: a desk publishes twice a day
 
 export async function generateStaticParams(): Promise<Params[]> {
   return (await actorIds()).map((iso) => ({ iso }));
@@ -150,7 +150,7 @@ async function ActorStub({ iso }: { iso: string }) {
   if (!ctx) notFound();
   return (
     <div className="intel-page th-page">
-      <Crumbs trail={[INTEL_CRUMB, ACTORS_CRUMB]} />
+      <Crumbs trail={[DATA_CRUMB, ACTORS_CRUMB]} />
       <p className="th-kicker">
         <span>
           <ActorFlag iso2={iso} name={ctx.name} /> {ctx.name}
@@ -202,7 +202,7 @@ export default async function ActorPage({ params }: { params: Params }) {
   );
   return (
     <div className="intel-page th-page">
-      <Crumbs trail={[INTEL_CRUMB, ACTORS_CRUMB]} />
+      <Crumbs trail={[DATA_CRUMB, ACTORS_CRUMB]} />
       <p className="th-kicker">
         <span>
           <ActorFlag iso2={a.iso2} name={a.name} /> {a.name}

@@ -21,7 +21,7 @@ export default function DossierLineage({ d }: { d: Dossier }) {
     <section className="th-lineage" aria-label="Lineage">
       {into && (
         <p className="th-lineage-line is-merged">
-          This theater was merged into <Name r={into} />
+          This situation was merged into <Name r={into} />
           {into.at && <> on {when(into.at)}</>}. Its record is kept here; new developments are followed there.
           {into.why && <span className="th-since"> {into.why}</span>}
         </p>

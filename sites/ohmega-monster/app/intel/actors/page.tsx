@@ -2,11 +2,11 @@ import PageTag from "@/components/PageTag";
 import type { Metadata } from "next";
 import ActorTable, { type TableRow } from "@/components/actors/ActorTable";
 import { COMPARE_METRICS, headline } from "@/components/actors/ActorParts";
-import Crumbs, { INTEL_CRUMB } from "@/components/Crumbs";
+import Crumbs, { DATA_CRUMB } from "@/components/Crumbs";
 import { allActors, fmt } from "@/lib/actors";
 
-import "@/app/geopolitics/geopolitics.css";
-import "../theaters/theaters.css";
+import "@/app/daily/daily.css";
+import "@/app/situations/situations.css";
 
 export const metadata: Metadata = {
   title: "Every actor",
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 // The index: every published actor as one row of a small-multiples table, each column on one shared
 // scale. The claim names the biggest of each kind, so the first screen answers "who is big at what".
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 1800; // lib/store.ts TTL.daily: a desk publishes twice a day
 
 export default async function ActorsIndexPage() {
   const actors = await allActors();
@@ -45,9 +45,9 @@ export default async function ActorsIndexPage() {
   const asOf = actors.map((a) => a.data_as_of).sort().pop() ?? "";
   return (
     <div className="intel-page th-page">
-      <Crumbs trail={[INTEL_CRUMB]} />
+      <Crumbs trail={[DATA_CRUMB]} />
       <p className="th-kicker">
-        <PageTag kind="tool" detail="Actors" />
+        <PageTag kind="data" detail="Actors" />
       </p>
       <h1 className="th-claim">
         {biggest && spender

@@ -23,6 +23,7 @@ import {
 } from "@/lib/pulse-wall";
 
 import PulseTile from "./PulseTile";
+import { ModelMark } from "./stats/ModelMark";
 
 const GAP = 6;
 const MIN_TILE = 150;
@@ -100,6 +101,9 @@ export default function PulseWall({ pulses, asOf, asOfLabel }: { pulses: WallPul
         <span className="intel-strip-title">Pulses</span>
         <span className="intel-strip-item">
           <span className="intel-micro">As of</span> {asOfLabel}
+        </span>
+        <span className="intel-strip-item">
+          <ModelMark />
         </span>
         <span className="intel-strip-item">
           <b className="intel-num-sm">{pulses.length}</b> <span className="intel-micro">{assessed === pulses.length ? "Pulses" : `Pulses · ${assessed} assessed`}</span>

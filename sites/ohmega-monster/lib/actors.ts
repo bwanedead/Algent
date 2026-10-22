@@ -2,7 +2,7 @@ import { safeUrl, type Band } from "./intel";
 import { intelDoc, intelNames } from "./store";
 
 // Actors: one power profile per state, written by the backend (publishing/actors_feed.py) as
-// the documents actors/<ISO2>.json (ohmega.actor/1) plus index.json, read through lib/store.ts (Supabase,
+// the documents actors/<ISO2>.json (ohmega.actor/1) plus index.json, read through lib/store.ts (published files in R2,
 // content files as the fallback). Parsed defensively: a missing document or malformed file yields empty
 // states, never a build failure.
 const ISO_RE = /^[A-Z]{2}$/;

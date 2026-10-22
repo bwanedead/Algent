@@ -40,7 +40,9 @@ export type CountryBrief = { theme: Theme; date: string; text: string; href: str
 export type CountryPanel = {
   iso: string;
   stats: PanelStat[];
-  counts: { theaters: number; statements7d: number; sanctions30d: number; calendar: number; anomalies: number };
+  /** How many states the stat medians are taken over (the profiled set, not the world). */
+  profiled: number;
+  counts: { theaters: number; statements7d: number; sanctions: number; calendar: number; anomalies: number };
   grid: { line: string; asOf: string } | null;
   leaders: { head_of_state: string; head_of_government: string };
   /** Every brief item naming the country, newest first. */

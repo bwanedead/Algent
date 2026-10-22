@@ -6,6 +6,7 @@ import { articleOp, articlesOp, searchOp } from "./ops-content";
 import { anomaliesOp, instrumentOp, instrumentsOp, liveEventsOp } from "./ops-data";
 import { calendarOp, sanctionsOp } from "./ops-forward";
 import { maritimeOp } from "./ops-maritime";
+import { satelliteOp } from "./ops-satellite";
 import { aiBenchmarksOp } from "./ops-ai";
 import { trackRecordOp } from "./ops-track";
 import { KIND_ORDER as MARITIME_KINDS } from "@/lib/maritime-shared";
@@ -204,6 +205,18 @@ export const ROUTES: Route[] = [
       { name: "since", description: SINCE, example: "2026-10-01" },
     ],
     run: (_p, q) => maritimeOp(q),
+  },
+  {
+    path: "/satellite",
+    summary:
+      "Satellite watch: places the desk tracks (struck or damaged assets, places in today's developments, chokepoints) with a before and after Sentinel-2 chip of the same ground, a change score and night lights against the site's own history. Ohmega's own computation: a machine signal that pixels differ, never an interpretation; a cloudy pair is inconclusive, and a site with little history is 'learning'. Every judgement carries basis, method_note, baseline_since and n_obs.",
+    paged: true,
+    query: [
+      { name: "label", description: "Change verdict.", enum: ["changed", "steady", "learning", "inconclusive"] },
+      { name: "kind", description: "A place from the ledger or a chokepoint zone.", enum: ["asset", "zone"] },
+      { name: "country", description: "ISO 3166-1 alpha-2 code of the place.", example: "UA" },
+    ],
+    run: (_p, q) => satelliteOp(q),
   },
   {
     path: "/track-record",

@@ -28,7 +28,11 @@ export type OnRecord = {
 
 export type TonePoint = { date: string; stance: number; n: number };
 export type ToneSeries = { affiliation: string; iso2: string; about: string; about_iso2: string; n: number; mean: number; points: TonePoint[] };
-export type RecordLedger = { as_of: string; window_days: number; count: number; statements: OnRecord[]; tone: ToneSeries[] };
+/** `count` is what the export's cap let through; `total` is the real size of the window (null in documents from before the export said so),
+ *  `capped` whether the cap bit, `collecting_since` the oldest statement date on file. */
+export type RecordLedger = {
+  as_of: string; window_days: number; count: number; total: number | null; capped: boolean; collecting_since: string; statements: OnRecord[]; tone: ToneSeries[];
+};
 
 // ---- defensive coercion ---------------------------------------------------------------------
 type Obj = Record<string, unknown>;
@@ -79,6 +83,9 @@ export function parseLedger(raw: unknown): RecordLedger | null {
     as_of: str(raw.as_of),
     window_days: num(raw.window_days) ?? 60,
     count: num(raw.count) ?? 0,
+    total: num(raw.total),
+    capped: raw.capped === true,
+    collecting_since: str(raw.collecting_since),
     statements: parseOnRecord(raw.statements),
     tone: arr(raw.tone)
       .filter(isObj)

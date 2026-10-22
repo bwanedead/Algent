@@ -2,11 +2,12 @@ import { parseMap, type TheaterMap } from "./daily";
 import { bandAt } from "./band";
 import { parseOnRecord, type OnRecord } from "./record-model";
 import { maxBand, parseCoverage, safeUrl, type Band, type Coverage, type Direction, type IndicatorStatus, type Pace } from "./intel";
+import { situationHref } from "./desks";
 import { intelDoc, intelSlugs } from "./store";
 
 // Theater dossiers: one living record per theater, written by the backend as JSON to
 // the documents theaters/index.json and theaters/<theater_id>.json (ohmega.dossier/1), read through
-// lib/store.ts (Supabase, content files as the fallback). Parsed defensively: a missing document, a missing
+// lib/store.ts (published files in R2, content files as the fallback). Parsed defensively: a missing document, a missing
 // index or a malformed file yields empty states, never a build failure.
 const ID_RE = /^[\w.-]+$/;
 
@@ -339,8 +340,15 @@ export async function dossierList(): Promise<DossierIndexItem[]> {
 
 export const dossierIds = async (): Promise<string[]> => (await dossierList()).map((i) => i.theater_id);
 
+/** A Spotlight story with a single report is a one-day item of the Daily, not yet a situation: it appears in the Daily and its archive
+ *  until a second report follows (docs/architecture/information-architecture.md §2). Its page still exists, it is just never listed or linked. */
+export const isSpotlightOneOff = (i: Pick<DossierIndexItem, "theater_id" | "days_covered">): boolean => i.theater_id.startsWith("thr_spot_") && i.days_covered <= 1;
+
+/** The ids that count as situations: every dossier except Spotlight one-offs. Used wherever a situation is linked or listed. */
+export const situationIds = async (): Promise<string[]> => (await dossierList()).filter((i) => !isSpotlightOneOff(i)).map((i) => i.theater_id);
+
 /** Where a theater's dossier lives, or null when it has none (so callers link only what exists). `known` is
  *  the set from `dossierIds()`, fetched once per page so rendering stays synchronous. */
 export function dossierPath(theaterId: string, known: ReadonlySet<string>): string | null {
-  return ID_RE.test(theaterId) && known.has(theaterId) ? `/intel/theaters/${theaterId}` : null;
+  return ID_RE.test(theaterId) && known.has(theaterId) ? situationHref(theaterId) : null;
 }

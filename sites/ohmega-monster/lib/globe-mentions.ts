@@ -7,7 +7,7 @@ import { themeOf, type Theme } from "./globe/themes";
 // disagree with the colour the map gave the country. Server only (types from the daily reader).
 
 const ISO_RE = /^[A-Z]{2}$/;
-const BASE = "/geopolitics";
+const BASE = "/daily/geopolitics";
 
 export type Mention = {
   kind: "section" | "development";

@@ -3,6 +3,10 @@ snapshots, energy and the headline strip."""
 
 from __future__ import annotations
 
+import pytest
+
+pytestmark = pytest.mark.usefixtures("legacy_supabase")
+
 import gzip
 import json
 from datetime import date, datetime, timezone
@@ -286,4 +290,4 @@ def test_summary_build_carries_freshness_gates_and_fires_meta():
     assert s["fresh"]["outage"] == "2026-10-11T09:55:00+00:00" and s["fresh"]["ships"] == "2026-10-11T09:59:00+00:00"
     g = s["gates"]["hormuz"]
     assert g["in_strait"] == 3 and g["transits_today"] == 4 and g["tanker_transits_today"] == 2 and g["label"] == "Strait of Hormuz"
-    assert s["fires"] == {"as_of": "x", "detections": 5, "occupied": 3}
+    assert s["fires"] == {"as_of": "x", "detections": 5, "occupied": 3, "scope": "world"}

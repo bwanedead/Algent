@@ -46,6 +46,7 @@ export default function GridImpact({ grid, name }: { grid: GridDoc; name: string
   const pct = (mw: number) => `${Math.min(100, (mw / scale) * 100).toFixed(2)}%`;
   const claimed = w.claimed;
   const confirmed = w.confirmed;
+  const reported = w.reported;
   return (
     <section className="gi" aria-label={`Grid impact in ${name}`}>
       <p className="gi-head">
@@ -64,6 +65,13 @@ export default function GridImpact({ grid, name }: { grid: GridDoc; name: string
           <span className="gi-sub">a party&apos;s own word</span>
         </div>
         <div className="gi-num">
+          <span className="gi-big">{pctLabel(reported.share)}</span>
+          <span className="gi-lab">
+            <i className="gi-sw" style={{ background: TONE.reported }} aria-hidden="true" /> damage reported · {mwLabel(reported.mw)}
+          </span>
+          <span className="gi-sub">owner, authorities or media</span>
+        </div>
+        <div className="gi-num">
           <span className="gi-big">{pctLabel(confirmed.share)}</span>
           <span className="gi-lab">
             <i className="gi-sw" style={{ background: TONE.confirmed }} aria-hidden="true" /> confirmed damaged · {mwLabel(confirmed.mw)}
@@ -78,10 +86,10 @@ export default function GridImpact({ grid, name }: { grid: GridDoc; name: string
         </div>
       </div>
       <p className="gi-cap">
-        Last 30 days, of {mwLabel(grid.installed.mw)} installed capacity the ledger knows. Claimed and confirmed overlap; they are not added.
+        Last 30 days, of {mwLabel(grid.installed.mw)} installed (nameplate) capacity the ledger knows. A plant can appear under more than one figure (claimed, then reported, then confirmed), so the figures overlap and are not added; the bars count each plant once, at the firmest thing said about it.
       </p>
 
-      <div className="gi-rows" role="img" aria-label={`Capacity by fuel; ${mwLabel(claimed.mw)} claimed struck and ${mwLabel(confirmed.mw)} confirmed damaged of ${mwLabel(grid.installed.mw)}`}>
+      <div className="gi-rows" role="img" aria-label={`Capacity by fuel; ${mwLabel(claimed.mw)} claimed struck, ${mwLabel(reported.mw)} damage reported and ${mwLabel(confirmed.mw)} confirmed damaged of ${mwLabel(grid.installed.mw)}`}>
         {fuels.map((f: GridFuel) => (
           <div key={f} className="gi-row">
             <span className="gi-fuel">{FUEL_LABEL[f]}</span>

@@ -1,13 +1,13 @@
-# Published content — the site reads Supabase live
+# Published content — the site reads published files from R2
 
-> Code: `backend/algent_backend/publishing/published_db.py` (rows), `asset_store.py` (images), `site_git.py` (publish
-> mode), `backend/migrations/004_published_content.sql` + `006_published_assets.sql` (tables, bucket, RLS),
-> `sites/ohmega-monster/lib/store.ts` + `lib/assets.ts` (readers). Access classes follow `pulse-system.md` Storage.
+> Code: `backend/algent_backend/publishing/` (`object_store.py`, `object_docs.py`, `asset_store.py`, `site_data.py`, `rebuild.py`, `site_git.py`),
+> the domain publishers (`live/publish.py`, `maritime/publish.py`, `sanctions/publish.py`, `lookahead/publish.py`, `geoledger/site_docs.py`),
+> `sites/ohmega-monster/lib/store.ts` + `lib/data-base.ts` + `lib/assets.ts` (readers). **Storage architecture, budgets and the runbook:
+> `database-budget.md`.** There is no database on the read path (decision 2026-10-22).
 
-Publishing is a database write plus an object upload. The site fetches published rows over Supabase's REST API
-(PostgREST, plain `fetch`, no client library) and images from a public Storage bucket, and revalidates every 300 s
-(ISR), so a new article, brief, radar edition or daily report is live within minutes with no commit to `site-live`
-and no redeploy.
+The worker server is the system of record. Publishing is an object upload: every JSON document is a gzipped object in the public R2 bucket, every image
+and live snapshot a plain object. The site fetches them with plain `fetch` from one public URL (`NEXT_PUBLIC_DATA_BASE`) and revalidates each product on
+its own cadence (ISR), so a new article, brief, radar edition or daily report is live within its window with no commit to `site-live` and no redeploy.
 
 ## Products (what the site publishes)
 
@@ -15,100 +15,80 @@ Three products, and nothing else is a publication. Every page wears a type tag (
 
 | Product | Route | Source documents |
 |---|---|---|
-| **The Daily** | `/geopolitics`, `/geopolitics/<date>` | `daily/geopolitics/<date>.json`: one report per day, today's slice across theaters (morning and evening parts merge into it). A collapsed "Today's headlines" strip sits under the newest day. |
-| **Theaters** | `/intel/theaters`, `/intel/theaters/<id>` | `theaters/<id>.json` plus every Daily section for that theater (`lib/theater-history.ts`). The living file: state header, Latest, a day-by-day timeline (past Daily sections and dated briefs, newest first), then background, actors, record, maps. |
-| **Articles** | `/articles`, `/articles/<slug>` | `articles/<slug>.json`: deep dives. |
+| **The Daily** | `/daily/<desk>`, `/daily/<desk>/<date>` | `daily/<domain>/<date>.json`: one report per day (morning and evening parts merge into it) |
+| **Situations** (theaters) | `/situations`, `/situations/<id>` | `theaters/<id>.json` plus every Daily section for that theater |
+| **Articles** | `/articles`, `/articles/<slug>` | `articles/index.json` (front matter of all) + `articles/<slug>.json` (the markdown): deep dives |
 
-Not products: **Headlines** (`/headlines`, formerly Radar: an unverified wire feed, `radar/<slug>.json`) and the **Data & tools** under `/intel`
-(Pulses, the record, calendar, sanctions, maritime, graph, live, actors, forecasts). Individual briefs (`/intel/briefs/<slug>`) are
-dated entries on their theater's timeline. Retired routes redirect permanently (`next.config.mjs`): `/intel/briefs` to
-`/intel/theaters`, `/intel/situation` to `/intel` (its forecasts and track record moved to `/intel/forecasts`), `/radar[/slug]` to `/headlines[/slug]`.
-The storage prefix stays `radar/`.
+Not products: **Headlines** (`radar/<slug>.json`) and the **Data & tools** (Pulses, record, calendar, sanctions, maritime, live, actors, forecasts, places).
+Retired routes redirect permanently (`next.config.mjs`).
 
-## Tables and bucket
+## Objects in the bucket
 
-| Object | Holds | Public (`anon`) |
+Key layout (the same keys on any backend; `NEXT_PUBLIC_DATA_BASE` + key is the URL):
+
+| Prefix | Holds | Content type |
 |---|---|---|
-| `published_articles` (004) | one row per slug: title, status, `published_at`, the full site markdown (frontmatter + body + receipts) | `select` where `visible` |
-| `published_intel_documents` (004) | JSON documents keyed by `path` (below) | `select` where `visible` |
-| `published_article_revisions` (004) | append-only: every changed article write | nothing (no grant, no policy) |
-| bucket `published-assets` (006) | article hero / figure / chart images | public read of this bucket's objects only; no write policy |
+| `docs/<path>.gz` | every document, canonical JSON, gzipped (`doc_store.pack`) | `application/gzip` |
+| `docs/_names/<dir>.json.gz` | the names directly inside `<dir>` (a bucket cannot be listed by the site) | gzip |
+| `live/<name>.json[.gz]` | the map's snapshots (`vessels`, `aircraft`, `points`, `summary`, `energy`, `fires`, `coverage`, `tracks/…`, `flows`, `satellite`) | json / gzip |
+| `analytics/<slug>/<file>` | article images | image/* |
+| `satellite/<site>/…` | Sentinel-2 chips (immutable) | image/png |
 
-Document paths in `published_intel_documents` (the first segment is the `kind`):
+Document paths (`kind` = first segment). The table-shaped products are listed in `database-budget.md` ("What each product publishes"):
 
 | Path | Content | Site reader |
 |---|---|---|
 | `daily/<domain>/<date>.json`, `theaters/<id>.json` + `index.json`, `actors/<ISO2>.json` + `index.json`, `briefs/<slug>.json`, `snapshots/<slug>.json`, `record.json` | the desk's files | `daily.ts`, `dossier.ts`, `actors.ts`, `intel.ts`, `record.ts` |
 | `radar/<slug>.json` | one headline-radar edition (kept forever) | `radar.ts` |
-| `data/<rel>` | the agent feeds, byte-for-byte what `public/data/<rel>` was: `data/index.json`, `data/articles/<slug>.json`, `data/intel.json`, `data/pulses.json`, `data/changes.json`, `data/forecasts.json`, `data/daily/…`, `data/briefs/…`, `data/pulses/…`, `data/theaters/…`, `data/actors/…`, `data/record.json` | `app/feeds/[...path]/route.ts` (served at `/data/*`), `situation.ts` |
-
-Every other table (corpus, ledgers, Pulse) has RLS on, **no policy, no grant**: unreadable through the anon key.
-`tests/test_published_db.py` pins 004 (only the two published tables are granted); `tests/test_published_assets.py`
-pins 006 (one `select` policy for `anon`, on `storage.objects` for this bucket, nothing else).
+| `data/<rel>` | the agent feeds, byte-for-byte what `public/data/<rel>` was | `app/feeds/[...path]/route.ts`, `situation.ts` |
+| `live/events|stats|anomalies.json`, `live/world.json` | live products | `live.ts` |
+| `maritime/…`, `sanctions/…`, `calendar/next.json`, `geo/…`, `articles/…` | table-shaped products | `maritime.ts`, `sanctions.ts`, `calendar.ts`, `geoledger.ts`, `articles.ts` |
 
 ## Write path
 
-`publish_run` / `retract` (articles), `write_intel` (desk documents + agent feeds), `publish_menu` (radar) and
-`_write_agent_twin` (article twin + `/data/index.json`) call `published_db` after writing their files. It upserts
-only changed rows (idempotent), never raises into a run, and is a no-op without `DATABASE_URL` (env only; `.env` is
-not loaded, so tests cannot reach the live database). `ALGENT_DB_PUBLISH=0` pauses rows and uploads.
+`publish_run` / `retract` (articles), `write_intel` (desk documents + agent feeds), `publish_menu` (radar), `_write_agent_twin`, and each domain's
+`publish()` call `published_db.publish_documents` / `publish_article` — names kept for the callers; with `POSTGRES_PUBLISH` off they go to
+`object_docs`. A document is packed (canonical JSON, sha256), compared with the LOCAL manifest, uploaded only if changed, then the name index of any
+directory that gained a document is refreshed. Everything goes through `asset_store.upload` → `object_store` (R2 by default; the SigV4 signing is
+stdlib), so one place applies the free-tier guard (`object_budget.py`). It never raises into a run and is a no-op until the R2 names are set;
+`ALGENT_DB_PUBLISH=0` pauses it. A document over the object cap (10 MiB gzipped) or an article over the row cap is refused and logged.
 
-**Assets.** `publish_run` uploads each article image (SVGs sanitised first) to the bucket **before** writing the row,
-so a page never goes live ahead of its images. Key = the site path without its slash (`/analytics/<slug>/hero.webp`
--> `analytics/<slug>/hero.webp`), via the Storage REST API (`POST /storage/v1/object/published-assets/<key>`,
-`x-upsert`) with the **server-only** `SUPABASE_SERVICE_ROLE_KEY` + `SUPABASE_URL`. Idempotent: a SHA-256 manifest
-(`backend/publish_held/asset_hashes.json`, gitignored) skips unchanged objects; losing it only costs re-uploads.
-Radar has no image assets (editions are text documents).
+**Assets.** `publish_run` uploads each article image (SVGs sanitised first) **before** writing the article, so a page never goes live ahead of its
+images. Key = the site path without its slash. Idempotent via `backend/publish_held/asset_hashes.json`.
 
 ## Publish modes (`flags.SITE_PUBLISH_VIA`, one-shot override `ALGENT_SITE_PUBLISH_VIA`)
 
 | Mode | What a publish does |
 |---|---|
-| `"git"` (default) | writes files into the `.site-live` worktree and commits + pushes to `site-live`; rows and uploads are a mirror (a failure there is ignored) |
-| `"db"` | rows + uploads **are** the publish: no commit, no push, no deploy-key write. `ensure_worktree` only makes sure `.site-live/` exists as a plain staging directory (the writers and the history readers keep using it) and `commit_and_push` is a no-op. A failed row/upload write is an **error** (nothing written locally, the article is not announced, a retry is clean); with no `DATABASE_URL` the publish is skipped with a clear note rather than silently not shipping |
+| `"git"` | writes files into the `.site-live` worktree and commits + pushes to `site-live`; the object upload is a mirror |
+| `"db"` (the name is historical: it means "objects are the publish") | uploads **are** the publish: no commit, no push. `.site-live/` stays a plain staging directory (the writers, the history readers and the backup use it); a failed upload is an **error** (the article is not announced, a retry is clean); with no object store configured the publish is skipped with a clear note |
 
-`ALGENT_SITE_PUBLISH=0` still pauses everything (stage only) in both modes.
+`ALGENT_SITE_PUBLISH=0` still pauses everything (stage only).
 
 ## Read path
 
-`lib/store.ts`: when `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are set, pages read Supabase; an
-error or an empty answer falls back to the content files (`content/articles`, `content/intel`, `content/radar`,
-`public/data`). Every reader (`daily`, `intel`, `dossier`, `actors`, `radar`, `situation`, `record`, articles,
-sitemap, `/data/*`) goes through `intelDoc` / `intelNames` / `intelSlugs` / `articleSource(s)`. Pages that read it
-carry `revalidate = 300`; briefs, theaters and actors render on demand when new (no `dynamicParams = false`), so a
-new one needs no redeploy.
+`lib/store.ts` reads `<NEXT_PUBLIC_DATA_BASE>/docs/<path>.gz` (`publishedDoc`, `intelDoc`, `tableDoc`, `intelNames` from the `_names` indexes, `articleFronts`,
+`articleSource`). With the variable unset (local dev) or a document answering 404, it falls back to the content files (`content/articles`,
+`content/intel`, `content/radar`, `public/data`). **Failure rule:** 404 = not published (null); any other failure throws so ISR keeps the last good page
+(never regenerate an empty one); during `next build` a failure degrades to the files. Per-product windows: `TTL` in `store.ts` (see `database-budget.md`).
+Briefs, theaters and actors render on demand when new, so a new one needs no redeploy.
 
-`next.config.mjs` rewrites `/data/:path*` to `app/feeds/[...path]/route.ts` **before** the filesystem check, so a
-stale committed `public/data/*` can never shadow the live document; the public URLs are unchanged. `public/llms.txt`
-stays a static file (hand-written documentation of the feeds, not publish output).
+`next.config.mjs` rewrites `/data/:path*` to `app/feeds/[...path]/route.ts` **before** the filesystem check, so a stale committed `public/data/*` can
+never shadow the live document. `public/llms.txt` stays a static file.
 
-**Images.** `lib/assets.ts` `assetUrl()` maps `/analytics/…` to
-`<NEXT_PUBLIC_SUPABASE_URL>/storage/v1/object/public/published-assets/analytics/…` when the env is set (else the
-`/public` path). `NEXT_PUBLIC_ASSETS_FROM_STORAGE=0` forces `/public` (use until the asset backfill has run). Used by
-the article page (hero, Open Graph), the feed thumbnails, and `ArticleImage` (markdown figures). The site uses plain
-`<img>`, so no `next/image` remote pattern is needed.
+**Images.** `lib/assets.ts` `assetUrl()` maps `/analytics/…` to `<NEXT_PUBLIC_DATA_BASE>/analytics/…` when set (else `/public`);
+`NEXT_PUBLIC_ASSETS_FROM_STORAGE=0` forces `/public` (use until `rebuild-all` has run). The live map reads `<base>/live/…`, satellite chips `<base>/satellite/…`.
 
-## Cut-over (operator + lead)
+**Environment (site, Vercel):** `NEXT_PUBLIC_DATA_BASE` only. The Supabase variables are no longer read.
 
-1. Apply migration 006 (`python -m algent_backend.database migrate`) — creates the bucket and its `select` policy.
-2. Put `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in the worker's `~/algent.env` (never in Vercel).
-3. Backfill, from a checkout whose site dir has the existing files (the `.site-live` worktree):
-   `python -m algent_backend.publishing.published_db .site-live/sites/ohmega-monster` (articles, desk files, radar
-   editions, `data/*`) and `python -m algent_backend.publishing.asset_store .site-live/sites/ohmega-monster`
-   (every `public/analytics/**` image). Both are idempotent and safe to re-run.
-4. Deploy the site (Vercel env already has the two `NEXT_PUBLIC_SUPABASE_*`). Check an article hero loads from the
-   `…/storage/v1/object/public/published-assets/…` URL, `/data/index.json` and `/radar` render.
-5. Flip `SITE_PUBLISH_VIA = "db"` in `agents/newsroom/flags.py`. Publish one article; confirm it appears with no
-   `site-live` commit.
-6. The `Algent` deploy key can become read-only (`docs/guides/worker-server.md`).
+## Cut-over
 
-**Retirement of the file path** (a week after step 5 with no fallback hits): delete the file readers in `store.ts`
-(`fileRoot`, `readFile`, the `fs` branches), `content/` + `public/data` + `public/analytics` from the `site-live`
-branch, the file writes and `.site-live` staging in the publishers, and `site_git`'s git functions. Until then the
-fallback is what keeps the site up if Supabase is unreachable.
+The runbook (R2 keys → `newsroom publish rebuild-all` → `NEXT_PUBLIC_DATA_BASE` in Vercel → redeploy) is in `database-budget.md`.
+`rebuild-all` replaces the old backfill modules: it republishes every document, article, image and table-shaped product from the local stores and is
+idempotent. Retirement of the file fallback (a week after the cut-over with no fallback hits): delete `fileRoot`/`readFile` and the `fs` branches in
+`store.ts`, `content/` + `public/data` + `public/analytics` from the `site-live` branch, and `site_git`'s git functions.
 
 ## Left
 
-Lists longer than PostgREST's 1000-row page cap (`intelNames`) need pagination once a directory (e.g. a domain's
-daily reports) nears it. The history readers on the backend (`recent_headlines`, radar `read_editions`,
-`_existing_corrections`) still read the `.site-live` staging directory, not the database.
+The history readers on the backend (`recent_headlines`, radar `read_editions`, `_existing_corrections`) read the `.site-live` staging directory, which
+is now also part of the nightly backup. Static (event-less) places beyond a country's 2000 largest have no published page data.

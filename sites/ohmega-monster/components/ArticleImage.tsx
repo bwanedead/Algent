@@ -36,7 +36,7 @@ export default function ArticleImage({ src, alt }: { src?: string; alt?: string 
   // Generated pictures wear the page's AI signature: the frame, and a label a reader will
   // actually see. Spans, not divs — react-markdown puts an image inside a <p>.
   const generated = isGeneratedImage(src);
-  const url = assetUrl(src); // Supabase Storage when configured, else /public (lib/assets.ts)
+  const url = assetUrl(src); // the published bucket when configured, else /public (lib/assets.ts)
 
   return (
     <span className={generated ? "ai-image" : undefined}>

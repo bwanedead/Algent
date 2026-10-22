@@ -130,10 +130,13 @@ def forecasts_file(intel_dir: Path, briefs: list[dict]) -> dict:
 def _reading(i: Any) -> dict:
     """One log entry in public words. ``absolute_position``, prompt versions and claim/profile ids stay home."""
     slug = i.source.article_slug
-    return {"at": i.at, "mode": _MODE_WORDS.get(i.mode, i.mode), "moves_pulse": i.mode != "blind",
-            "decision": i.decision, "position": i.proposed_position, "rationale": reader_safe(i.rationale),
-            "confidence": i.confidence.overall(), "evidence_through": i.evidence_through, "model": i.model,
-            "article_url": f"/articles/{slug}" if slug else None}
+    row = {"at": i.at, "mode": _MODE_WORDS.get(i.mode, i.mode), "moves_pulse": i.mode != "blind",
+           "decision": i.decision, "position": i.proposed_position, "rationale": reader_safe(i.rationale),
+           "confidence": i.confidence.overall(), "evidence_through": i.evidence_through, "model": i.model,
+           "article_url": f"/articles/{slug}" if slug else None}
+    if i.provenance:                                    # an entry not written by a live assessment says so (pulse rescue)
+        row["provenance"] = i.provenance
+    return row
 
 
 def pulse_file(store: Any, row: dict, pulse: Any) -> dict:

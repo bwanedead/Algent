@@ -31,6 +31,22 @@ def add_parser(sub: Any) -> None:
     pb = verbs.add_parser("publish", help="push events to the site database and the ledger")
     pb.add_argument("--full", action="store_true", help="resend every current event, not just what changed")
     pb.set_defaults(handler=run_publish)
+    ru = verbs.add_parser("rollup", help="daily per-zone summaries + retention of the raw event log (dry run unless --apply)")
+    ru.add_argument("--apply", action="store_true", help="write the summaries and compact log.jsonl (default: report only)")
+    ru.set_defaults(handler=run_rollup)
+    verbs.add_parser("store", help="size of every file in the maritime store").set_defaults(handler=run_store)
+
+
+def run_rollup(args: Any) -> int:
+    from algent_backend.maritime import rollup
+
+    return _emit(rollup.run(apply=args.apply))
+
+
+def run_store(_args: Any) -> int:
+    from algent_backend.maritime import rollup
+
+    return _emit(rollup.store_report())
 
 
 def _emit(doc: Any) -> int:

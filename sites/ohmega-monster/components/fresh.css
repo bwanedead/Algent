@@ -1,0 +1,4 @@
+/* Freshness marks (Fresh.tsx, NewDot.tsx): an as-of age that dims when late for its own cadence, and a "new since your last visit" dot. */
+.fresh-age { color: var(--muted); font-size: 11px; line-height: 16px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.fresh-age.is-stale { opacity: 0.6; font-style: italic; }
+.fresh-dot { display: inline-block; width: 7px; height: 7px; margin-left: 6px; border-radius: 50%; background: var(--accent); vertical-align: middle; flex: none; }

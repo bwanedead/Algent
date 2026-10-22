@@ -209,4 +209,4 @@ def test_the_site_serves_the_rollup_and_the_migration_defines_it() -> None:
     assert "revoke insert, update, delete, truncate on geo_grid from anon, authenticated" in sql
     site = Path(__file__).resolve().parents[2] / "sites" / "ohmega-monster" / "lib"
     assert 'path: "/grid/{iso}"' in (site / "api" / "router.ts").read_text(encoding="utf-8")
-    assert '"geo_grid"' in (site / "geoledger.ts").read_text(encoding="utf-8")
+    assert 'geo/grid/' in (site / "geoledger.ts").read_text(encoding="utf-8")

@@ -48,6 +48,14 @@ def copy_ledger(src: Any, dst: Any) -> dict:
     return counts
 
 
+def copy_postgres_to_files() -> dict:
+    """The reverse: pull the Postgres ledger into the file store (the system of record). Idempotent; never overwrites an entry."""
+    from algent_backend.agent_system.agents.pulse.pg_store import PgPulseStore
+    from algent_backend.agent_system.agents.pulse.store import PulseStore
+
+    return copy_ledger(PgPulseStore(), PulseStore())
+
+
 def copy_files_to_postgres() -> dict:
     from algent_backend.agent_system.agents.pulse.pg_store import PgPulseStore
     from algent_backend.agent_system.agents.pulse.store import PulseStore

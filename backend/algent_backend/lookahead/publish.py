@@ -12,6 +12,7 @@ from collections.abc import Callable
 from datetime import date, timedelta
 from typing import Any
 
+from algent_backend.publishing import published_db, site_data
 from algent_backend.publishing.published_db import _run
 
 from . import store
@@ -37,7 +38,31 @@ def row(i: CalendarItem) -> tuple:
             i.provenance, i.via, i.active)
 
 
+#: The site reads one document: active items from a week back to ``AHEAD_DAYS`` ahead (the page shows 45, an actor page 120).
+AHEAD_DAYS = 120
+COLUMNS = ("id", "on_date", "end_date", "title", "kind", "countries", "theaters", "source", "source_url", "confidence", "provenance", "via", "active")
+
+
+def documents(today: date | None = None) -> dict[str, Any]:
+    """``calendar/next.json``: the active items in the window, soonest first (rows as ``CalendarRow`` in lib/calendar-shared.ts)."""
+    today = today or date.today()
+    lo, hi = (today - timedelta(days=KEEP_DAYS_BACK)).isoformat(), (today + timedelta(days=AHEAD_DAYS)).isoformat()
+    rows = [dict(zip(COLUMNS, row(i))) for i in store.current().values() if i.active and (i.end_date or i.date) >= lo and i.date <= hi]
+    rows.sort(key=lambda r: (r["on_date"], r["id"]))
+    return {"calendar/next.json": {"items": rows}}
+
+
 def publish(*, today: date | None = None, connect: Callable[[], Any] | None = None) -> dict[str, Any]:
+    files = site_data.publish_built(lambda: documents(today))
+    if published_db.files_only(connect):
+        return files
+    out = _publish_table(today=today, connect=connect)
+    if files.get("ok"):
+        out["files"] = files
+    return out
+
+
+def _publish_table(*, today: date | None = None, connect: Callable[[], Any] | None = None) -> dict[str, Any]:
     horizon = ((today or date.today()) - timedelta(days=KEEP_DAYS_BACK)).isoformat()
     items = [i for i in store.current().values() if (i.end_date or i.date) >= horizon]
     if not items:

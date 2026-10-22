@@ -7,10 +7,11 @@ import type { CountryBrief } from "./globe/data";
 // count and what theme each reads as come from lib/globe-mentions.ts, the same walker that colours the map. Server only.
 
 const DOMAIN = "geopolitics";
+const HISTORY_DAYS = 30; // the newest reports only: reading every daily ever written per country request is what made builds slow
 
 export async function countryBriefs(iso: string): Promise<CountryBrief[]> {
   const [dates, linker] = await Promise.all([allDailyDates(DOMAIN), textLinker()]); // dates are newest first; each daily is a cached read
-  const dailies = (await Promise.all(dates.map((d) => daily(DOMAIN, d)))).filter((d): d is Daily => d !== null);
+  const dailies = (await Promise.all(dates.slice(0, HISTORY_DAYS).map((d) => daily(DOMAIN, d)))).filter((d): d is Daily => d !== null);
   const out: CountryBrief[] = [];
   for (const d of dailies) {
     const seen = new Set<string>();

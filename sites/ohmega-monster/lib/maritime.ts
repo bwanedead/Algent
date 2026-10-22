@@ -1,11 +1,11 @@
-import { dbRows } from "@/lib/store";
+import { tableDoc, TTL } from "@/lib/store";
 
-import { asKind, type EvidencePoint, type MaritimeEvent } from "./maritime-shared";
+import { asKind, KIND_ORDER, type EvidencePoint, type MaritimeEvent } from "./maritime-shared";
 
 export * from "./maritime-shared";
 
-// Server reads of the maritime behaviour table (migration 013: `maritime_events`, anon read-only). Everything degrades to "nothing": no
-// database, an empty table or a failed request yields an empty list and the layer / page simply show none. Server-only: client components
+// Server reads of the maritime behaviour products: published files (backend `maritime/publish.py`), no database. Everything degrades to "nothing": no
+// published file yields an empty list and the layer / page simply show none (a failing bucket throws, lib/store.ts). Server-only: client components
 // import lib/maritime-shared.ts instead.
 
 const num = (v: unknown): number | null => (typeof v === "number" && Number.isFinite(v) ? v : null);
@@ -60,18 +60,38 @@ function toEvent(r: Raw): MaritimeEvent | null {
   };
 }
 
-/** The current behaviour events (those still going first, then recently ended, strongest first); [] without a database. */
-export async function maritimeEvents(limit = 1500): Promise<MaritimeEvent[]> {
-  const rows = await dbRows<Raw>("maritime_events", `select=*&order=active.desc,started_at.desc&limit=${Math.min(Math.max(limit, 1), 3000)}`);
-  return rows.map(toEvent).filter((e): e is MaritimeEvent => e !== null);
+async function eventsOf(rel: string, revalidate: number): Promise<MaritimeEvent[]> {
+  const doc = await tableDoc<{ events?: Raw[] }>(rel, revalidate);
+  return (doc?.events ?? []).map(toEvent).filter((e): e is MaritimeEvent => e !== null);
 }
 
-/** Events about one vessel, by IMO number or MMSI, newest first. */
+/** The behaviour events of the last 30 days (those still going first, then newest start); [] when none are published. The analysis page
+ *  reads this (`maritime/recent.json`, evidence trimmed to a short track). */
+export async function maritimeEvents(limit = 1500): Promise<MaritimeEvent[]> {
+  return (await eventsOf("maritime/recent.json", TTL.maritime)).slice(0, Math.min(Math.max(limit, 1), 3000));
+}
+
+/** What is going on NOW: still-going events and those ended in the last two days, evidence cut to the last few points
+ *  (`maritime/live.json`, a fraction of the size of the full list). The /live map layer and the home strip read this. */
+export async function maritimeLive(limit = 400): Promise<MaritimeEvent[]> {
+  return (await eventsOf("maritime/live.json", TTL.live)).slice(0, Math.min(Math.max(limit, 1), 400));
+}
+
+/** Real totals for the page lead: every event kept (30 days), those still open, and per kind (`maritime/counts.json`, computed by the backend
+ *  over all events, not over a capped list). */
+export type MaritimeCounts = { total: number; ongoing: number; byKind: Record<string, number> };
+
+export async function maritimeCounts(): Promise<MaritimeCounts | null> {
+  const doc = await tableDoc<Partial<MaritimeCounts>>("maritime/counts.json", TTL.maritime);
+  if (!doc || typeof doc.total !== "number" || typeof doc.ongoing !== "number") return null;
+  const by = doc.byKind ?? {};
+  return { total: doc.total, ongoing: doc.ongoing, byKind: Object.fromEntries(KIND_ORDER.map((k) => [k, by[k] ?? 0])) };
+}
+
+/** Events about one vessel, by IMO number, newest start first (`maritime/vessel/<imo>.json`; only vessels with events have a file).
+ *  The partner ship of a pair is not indexed by MMSI any more: the IMO file of either ship carries the event. */
 export async function maritimeForVessel(ids: { imo?: string; mmsi?: number }, limit = 100): Promise<MaritimeEvent[]> {
-  const q: string[] = [];
-  if (ids.imo && /^\d{7}$/.test(ids.imo)) q.push(`imo.eq.${ids.imo}`);
-  if (ids.mmsi && Number.isInteger(ids.mmsi)) q.push(`mmsi.eq.${ids.mmsi}`, `mmsi2.eq.${ids.mmsi}`);
-  if (q.length === 0) return [];
-  const rows = await dbRows<Raw>("maritime_events", `select=*&or=(${q.join(",")})&order=started_at.desc&limit=${limit}`);
-  return rows.map(toEvent).filter((e): e is MaritimeEvent => e !== null);
+  if (!ids.imo || !/^\d{7}$/.test(ids.imo)) return [];
+  const rows = await eventsOf(`maritime/vessel/${ids.imo}.json`, TTL.tables);
+  return rows.sort((a, b) => b.started_at.localeCompare(a.started_at)).slice(0, limit);
 }

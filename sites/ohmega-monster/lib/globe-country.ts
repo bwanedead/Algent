@@ -4,10 +4,10 @@ import { getGrid } from "./geoledger";
 import type { CountryPanel, PanelStat } from "./globe/data";
 import { countryBriefs } from "./globe-briefs";
 import { liveAnomalies } from "./live";
-import { sanctionsForCountry } from "./sanctions";
+import { sanctionsForCountry, SANCTIONS_WINDOW_DAYS } from "./sanctions";
 
 // The globe's country panel: supplemental stats and counts for one country, fetched when it is picked (so the globe payload stays small).
-// Stats come from the published actor profiles; each bar places the value against the WORLD MEDIAN of the same field on a log track
+// Stats come from the published actor profiles; each bar places the value against the MEDIAN OF THE PROFILED STATES (G20, P5, countries in the news; not the world) for the same field on a log track
 // (tick at the middle, a factor of ten either side spans it), so heavy-tailed fields (GDP, population) stay readable. Server only.
 
 const STATS: { id: string; label: string }[] = [
@@ -23,7 +23,7 @@ const STATS: { id: string; label: string }[] = [
 ];
 
 const MEDIAN_TTL_MS = 3600000;
-let medians: { at: number; by: Map<string, number> } | null = null;
+let medians: { at: number; by: Map<string, number>; n: number } | null = null;
 
 const median = (xs: number[]): number => {
   const s = [...xs].sort((a, b) => a - b);
@@ -31,16 +31,16 @@ const median = (xs: number[]): number => {
   return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
 };
 
-async function worldMedians(): Promise<Map<string, number>> {
-  if (medians && Date.now() - medians.at < MEDIAN_TTL_MS) return medians.by;
+async function profiledMedians(): Promise<{ by: Map<string, number>; n: number }> {
+  if (medians && Date.now() - medians.at < MEDIAN_TTL_MS) return medians;
   const all = await allActors();
   const by = new Map<string, number>();
   for (const { id } of STATS) {
     const vals = all.map((a) => fieldOf(a, id)?.value).filter((v): v is number => typeof v === "number" && v > 0);
     if (vals.length >= 5) by.set(id, median(vals));
   }
-  medians = { at: Date.now(), by };
-  return by;
+  medians = { at: Date.now(), by, n: all.length };
+  return medians;
 }
 
 const pos = (v: number, med: number | undefined): number | null =>
@@ -61,15 +61,16 @@ export async function countryPanel(iso: string): Promise<CountryPanel | null> {
   if (!/^[A-Z]{2}$/.test(iso)) return null;
   const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString().slice(0, 10);
   const [a, med, sanctions, calendar, anomalies, grid, briefs] = await Promise.all([
-    actor(iso), worldMedians(), sanctionsForCountry(iso, 30), calendarForCountry(iso, 45, 60), liveAnomalies(), getGrid(iso), countryBriefs(iso),
+    actor(iso), profiledMedians(), sanctionsForCountry(iso, SANCTIONS_WINDOW_DAYS), calendarForCountry(iso, 45, 60), liveAnomalies(), getGrid(iso), countryBriefs(iso),
   ]);
   return {
     iso,
-    stats: a ? statsOf(a, med) : [],
+    stats: a ? statsOf(a, med.by) : [],
+    profiled: med.n,
     counts: {
       theaters: a?.involved.theaters.length ?? 0,
       statements7d: a?.statements.filter((s) => s.date >= weekAgo).length ?? 0,
-      sanctions30d: sanctions.length,
+      sanctions: sanctions.length,
       calendar: calendar.length,
       anomalies: anomalies.filter((x) => x.active && x.countries.includes(iso)).length,
     },
