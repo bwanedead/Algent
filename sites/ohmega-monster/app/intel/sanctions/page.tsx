@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 // Recent designations and delistings on the OFAC SDN list, the UK Sanctions List and the EU consolidated financial sanctions list. Ohmega
 // downloads each list every six hours and diffs it against the last copy (backend `sanctions/`, migration 012), so a row is a change we saw,
 // dated by the list when it states a recent date and otherwise the day we saw it. Designated ships also appear on the places map.
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 1800; // lib/store.ts TTL.daily: a desk publishes twice a day
 
 export default async function SanctionsPage() {
   const rows = await recentSanctions(SANCTIONS_WINDOW_DAYS);

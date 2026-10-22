@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   alternates: { types: { "application/json": "/api/v1/pulses" } },
 };
 
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 900; // lib/store.ts TTL.articles: a handful of publishes a day
 
 export default async function PulsesPage() {
   const snap = await latestSnapshot();

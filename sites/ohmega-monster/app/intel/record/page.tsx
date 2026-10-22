@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 // The whole statements ledger (last 60 days, bounded), browsable. The desk's reports show the few that bear
 // on a theater; here is every one. Doctrine: docs/ethos/information-ergonomics-ethos.md.
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 3600; // lib/store.ts TTL.static: slow products (markets every 4 h, benchmarks every 12 h)
 
 export default async function RecordPage() {
   const ledger = await recordLedger();

@@ -38,7 +38,7 @@ import { useLiveEntities } from "./useLiveEntities";
 const BASEMAP_CREDIT = "Interactive basemap: OpenFreeMap, © OpenMapTiles, data © OpenStreetMap contributors.";
 const DATA_CREDIT = "Ships: aisstream.io, Fintraffic digitraffic.fi (CC 4.0 BY), Norwegian Coastal Administration (NLOD). Aircraft: OpenSky Network, adsb.lol. Fires: NASA FIRMS. Quakes: USGS. Outages: IODA.";
 const STORE_KEY = "ohmega-live-off-v3"; // v3: the Shadow fleet layer joined coverage as off by default
-const POLL_MS = 60_000;
+const POLL_MS = 180_000; // the stream republishes every 3 min
 const FIRES_MS = 600_000;
 const REFRESH_TRAILS_MS = 300_000;
 

@@ -1,3 +1,4 @@
+import { dataUrl, DATA_BASE } from "@/lib/data-base";
 import { bySignal, satelliteDoc, type SatSite } from "@/lib/satellite";
 
 import { abs, enumParam, limitParam, paginate, type ApiResult, type Args } from "./util";
@@ -32,8 +33,8 @@ export async function satelliteOp(a: Args): Promise<ApiResult> {
 }
 
 function withUrls(s: SatSite) {
-  const base = (process.env.NEXT_PUBLIC_SUPABASE_URL || "").replace(/\/+$/, "");
-  const url = (key: string | undefined) => (key && base ? `${base}/storage/v1/object/public/published-assets/${key}` : null);
+
+  const url = (key: string | undefined) => (key && DATA_BASE ? dataUrl(key) : null);
   return {
     ...s,
     baseline: s.baseline ? { ...s.baseline, chip_url: url(s.baseline.chip) } : null,

@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 // Satellite watch (backend `satellite/`): the places the ledger, today's developments and the maritime chokepoints say matter, each as a before / after
 // pair of Sentinel-2 chips of the same ground, with a change score that is a machine signal (never an interpretation), the chip's own cloud share, and
 // VIIRS night lights against the site's own earlier nights. The document is rebuilt by the server's daily pass.
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 1800; // lib/store.ts TTL.daily: a desk publishes twice a day
 
 export default async function SatellitePage() {
   const doc = await satelliteDoc();

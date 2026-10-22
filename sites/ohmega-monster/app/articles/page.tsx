@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 // Every article, newest first. (Home shows only the latest few.)
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 900; // lib/store.ts TTL.articles: a handful of publishes a day
 
 export default async function ArticlesPage() {
   const articles = await getAllMeta();

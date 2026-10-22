@@ -141,6 +141,17 @@ def test_uploader_reports_a_guarded_object_as_failed_and_retries_it_later(tmp_pa
     assert s["failed"] == ["/live/n11.json (429)"]                     # the manifest never recorded it: it is retried, not lost
 
 
+def test_parallel_workers_cannot_overshoot_the_stop_together(tmp_path, monkeypatch) -> None:
+    from concurrent.futures import ThreadPoolExecutor
+
+    monkeypatch.setattr(flags, "R2_FREE_CLASS_A", 100)
+    monkeypatch.setattr(flags, "R2_DAILY_STOP_MULT", 100.0)
+    m = _meter(tmp_path)
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        granted = sum(1 for r in pool.map(lambda _: m.acquire("a") == "", range(300)) if r)
+    assert granted == 90                                              # exactly the 90% stop, however the threads interleave
+
+
 def test_status_cli_prints_the_report(capsys) -> None:
     from algent_backend.cli.newsroom import storage
 

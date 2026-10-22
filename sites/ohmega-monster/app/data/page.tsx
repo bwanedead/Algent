@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 // and scored; For machines is the API, MCP server and feeds. Each row carries the as-of age of its product. The tool pages keep their
 // routes (/intel/..., /pulses, /calendar): only the JSON feeds live under /data/<file>.json (a rewrite in next.config.mjs that matches
 // at least one segment, so this page at /data exactly is never swallowed).
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 1800; // lib/store.ts TTL.daily: a desk publishes twice a day
 
 export default async function DataHub() {
   const groups = await dataGroups();

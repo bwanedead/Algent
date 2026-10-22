@@ -24,7 +24,7 @@ import "@/components/home/home.css";
 // at-a-glance band of numerals against their own normal, the day's sections ranked beside the chart of the day, a compact index of
 // doors into every section, and the latest three articles as thin rows. Every number links to where it lives; running text is
 // the headline and short names. Visual language: app/visual.css. Band data: lib/glance.ts.
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 300; // lib/store.ts: mixes the daily with the live strip, so it follows the faster of the two (live 120 s, daily 1800 s)
 
 const LATEST_ARTICLES = 3;
 

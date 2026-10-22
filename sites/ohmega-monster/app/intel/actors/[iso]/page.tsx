@@ -24,7 +24,7 @@ import "@/app/situations/situations.css";
 
 type Params = { iso: string };
 
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 1800; // lib/store.ts TTL.daily: a desk publishes twice a day
 
 export async function generateStaticParams(): Promise<Params[]> {
   return (await actorIds()).map((iso) => ({ iso }));

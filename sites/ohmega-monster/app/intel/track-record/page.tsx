@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 // The reality feedback loop (backend `markets/`): for each Polymarket market on a topic we cover, the desk forecasts BLIND to the price, the forecast is stored
 // immutably, and when the market resolves both we and the market are scored against what happened. Internal-first and unflattering by design: the losses and
 // the markets that beat us are listed as prominently as the wins. Paper trading only; nothing here is financial advice.
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 3600; // lib/store.ts TTL.static: slow products (markets every 4 h, benchmarks every 12 h)
 
 const f3 = (v: number | null) => (v === null ? "n/a" : v.toFixed(3));
 const usd = (v: number) => `${v < 0 ? "-" : v > 0 ? "+" : ""}$${Math.abs(v).toLocaleString("en-US", { maximumFractionDigits: 0 })}`;

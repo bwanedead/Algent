@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 // The forward calendar: dated things ahead from official schedules (central banks, the UN Security Council), announcements compiled by
 // volunteers (elections, OPEC+) and deadlines our own daily reports named. Data: backend `lookahead/` (migration 012, table
 // calendar_items). A date is a plan, not an outcome: items taken from our own reports are marked unconfirmed.
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 1800; // lib/store.ts TTL.daily: a desk publishes twice a day
 
 export default async function CalendarPage() {
   const today = todayIso();

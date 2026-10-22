@@ -3,6 +3,7 @@
 // series computed from them. Everything here degrades to "nothing": no database, an empty table or a failed
 // request yields empty lists, and the page says so instead of inventing a picture.
 
+import { DATA_BASE } from "./data-base";
 import type { Provenance } from "./stats/render";
 
 export type LiveKind ="outage" | "quake" | "aircraft" | "fire";
@@ -141,7 +142,7 @@ export const KIND_LABEL: Record<LiveKind, string> = {
 
 // ---- snapshot documents (backend `live/snapshots.py`): compact JSON in the public Storage bucket, polled by the map ----------
 
-export const SNAPSHOT_BASE = `${(process.env.NEXT_PUBLIC_SUPABASE_URL || "").replace(/\/+$/, "")}/storage/v1/object/public/published-assets/live`;
+export const SNAPSHOT_BASE = `${DATA_BASE}/live`;
 
 /** URL of a live snapshot's plain-JSON form ("fires", "summary", "energy"; the big ones are fetched with `fetchSnapshot`). */
 export const snapshotUrl = (name: string) => `${SNAPSHOT_BASE}/${name}.json`;

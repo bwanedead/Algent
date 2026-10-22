@@ -155,13 +155,12 @@ class R2Store:
 
         m = self.meter()
         cls = CLASS_A if method in ("PUT", "DELETE") or (method == "GET" and not key) else CLASS_B
-        if (reason := m.check(cls, len(body) if method == "PUT" else 0, key)):
+        if (reason := m.acquire(cls, len(body) if method == "PUT" else 0, key)):
             m.refuse(reason)
             return 429, {"x-ohmega-guard": reason}, b""
         reply = self._call(method, url, headers, body)
-        ok = 200 <= reply[0] < 300
-        m.record(cls, key=key if ok and method in ("PUT", "DELETE") else None, size=len(body) if method == "PUT" else None,
-                 removed=method == "DELETE")
+        if 200 <= reply[0] < 300 and method in ("PUT", "DELETE"):
+            m.record(cls, key=key, size=len(body) if method == "PUT" else None, removed=method == "DELETE", count=False)
         return reply
 
     def put(self, key: str, data: bytes, *, content_type: str, cache_control: str, content_encoding: str | None = None) -> int:

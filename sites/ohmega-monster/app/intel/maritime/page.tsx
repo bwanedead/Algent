@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 // Behaviour events Ohmega derives from the ship positions it hears (backend `maritime/`, migration 013): an AIS gap inside water that stayed heard, two ships
 // alongside in open water, a renamed or re-flagged identity, a vessel matching a sanctions designation, a long dwell over a chokepoint or cable corridor. Each
 // row opens into the reason it was flagged, the vessel's identity, a mini track and the evidence points. A pattern seen, never a finding of intent.
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 600; // lib/store.ts TTL.maritime: thirty days of events, republished when one changes
 
 export default async function MaritimePage() {
   const [rows, counts] = await Promise.all([maritimeEvents(), maritimeCounts()]);

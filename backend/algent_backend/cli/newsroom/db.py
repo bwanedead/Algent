@@ -20,6 +20,8 @@ def add_parser(sub: Any) -> None:
     p = sub.add_parser("db", help="database size budget: size, prune, diet (recovery), vacuum-full")
     verbs = p.add_subparsers(dest="db_cmd", required=True)
     verbs.add_parser("size", help="size vs quota, top tables, dead rows, WAL").set_defaults(handler=run_size)
+    verbs.add_parser("export-pulses", help="pull the Pulse ledger from Postgres into the file store, if the database is reachable"
+                     ).set_defaults(handler=run_export_pulses)
     for name, handler, text in (("prune", run_prune, "apply the retention windows"),
                                 ("diet", run_diet, "move inline documents to Storage, prune, vacuum"),
                                 ("vacuum-full", run_vacuum_full, "VACUUM FULL the bloated tables, smallest first")):
@@ -59,6 +61,22 @@ def run_size(_args: Any) -> int:
     rep["summary"] = size.summary_line(rep)
     _emit(rep)
     return 1 if rep["status"] == size.FAIL else 0
+
+
+def run_export_pulses(_args: Any) -> int:
+    """Pull the Pulse ledger out of Postgres into the file store IF the database answers; a safe no-op otherwise."""
+    from algent_backend.database import pulse_copy
+    from algent_backend.database.migrate import database_url
+
+    _env()
+    try:
+        import psycopg
+
+        psycopg.connect(database_url(), connect_timeout=10).close()          # a dead host must not hang the command
+    except Exception as exc:  # noqa: BLE001 - an unreachable database is the expected case; say so and succeed
+        return _emit({"exported": False, "note": f"database not reachable ({type(exc).__name__}); nothing exported, file store untouched"})
+    return _emit({"exported": True, "counts": pulse_copy.copy_postgres_to_files(),
+                  "note": "merged into the file store; republish with `newsroom intel publish`"})
 
 
 def run_prune(args: Any) -> int:

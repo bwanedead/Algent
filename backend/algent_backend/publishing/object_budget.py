@@ -143,12 +143,22 @@ class Meter:
             self._last_log = self._clock()
             print(f"[object_store] REFUSED {reason}; the cycle is skipped and retried when the budget allows", flush=True)
 
-    def record(self, cls: str, *, key: str | None = None, size: int | None = None, removed: bool = False) -> None:
+    def acquire(self, cls: str, add_bytes: int = 0, key: str | None = None) -> str:
+        """Check and count in one step under the lock, so parallel upload workers cannot all pass the check and overshoot the stop together.
+        Returns the refusal reason, or "" with the operation already counted (counted even if the call then fails: conservative)."""
         with self._lock:
-            self._delta[cls] += 1
-            day = self._now().strftime("%Y-%m-%d")
-            cur = self._delta["days"].setdefault(day, [0, 0])
-            cur[0 if cls == CLASS_A else 1] += 1
+            if (reason := self.check(cls, add_bytes, key)):
+                return reason
+            self.record(cls)
+            return ""
+
+    def record(self, cls: str, *, key: str | None = None, size: int | None = None, removed: bool = False, count: bool = True) -> None:
+        with self._lock:
+            if count:
+                self._delta[cls] += 1
+                day = self._now().strftime("%Y-%m-%d")
+                cur = self._delta["days"].setdefault(day, [0, 0])
+                cur[0 if cls == CLASS_A else 1] += 1
             if key is not None and (removed or size is not None):
                 self._delta["objects"][key] = None if removed else int(size or 0)
             if self._clock() - self._last_flush >= _FLUSH_EVERY_S:

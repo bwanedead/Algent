@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import HeadlinesView from "@/components/HeadlinesView";
 import { getMenu, getMenus, menuLabel } from "@/lib/radar";
 
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 1800; // lib/store.ts TTL.daily: a desk publishes twice a day
 
 export async function generateStaticParams() {
   return (await getMenus()).map((m) => ({ slug: m.slug }));

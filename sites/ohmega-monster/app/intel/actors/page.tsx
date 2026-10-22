@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 // The index: every published actor as one row of a small-multiples table, each column on one shared
 // scale. The claim names the biggest of each kind, so the first screen answers "who is big at what".
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 1800; // lib/store.ts TTL.daily: a desk publishes twice a day
 
 export default async function ActorsIndexPage() {
   const actors = await allActors();

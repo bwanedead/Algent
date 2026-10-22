@@ -9,7 +9,7 @@ import { DESKS } from "./desks";
 import { CADENCE_HOURS, newest } from "./fresh";
 import { latestSnapshot } from "./intel";
 import { liveSummary } from "./live";
-import { maritimeCounts, maritimeEvents } from "./maritime";
+import { maritimeCounts, maritimeLive } from "./maritime";
 import { getMenus } from "./radar";
 import { recordLedger } from "./record";
 import { recentSanctions, SANCTIONS_WINDOW_DAYS } from "./sanctions";
@@ -51,7 +51,7 @@ const hints = cache(async () => {
     calendarItems(30),
     recentSanctions(SANCTIONS_WINDOW_DAYS),
     maritimeCounts(),
-    maritimeEvents(300),
+    maritimeLive(300),
     trackRecord(),
     aiBenchmarks(),
     satelliteDoc(),

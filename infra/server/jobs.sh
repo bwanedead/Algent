@@ -34,6 +34,7 @@ case "${1:?usage: jobs.sh library|instruments|statements|sanctions|calendar|mark
     ai-benchmarks) $PY -m algent_backend.cli newsroom ai-benchmarks fetch ;;
     ai-discovery)  $PY -m algent_backend.cli newsroom ai-benchmarks discover ;;
     db-prune)    $PY -m algent_backend.cli newsroom db prune --apply ;;
+    maritime-rollup) $PY -m algent_backend.cli newsroom maritime rollup --apply ;;
     backup)      $PY -c "from algent_backend.data_backup import sync; print(sync.backup(note='server nightly'))" ;;
     menu|daily-1|daily-2|markets-daily|ai-daily) $PY -m algent_backend.cli newsroom schedule run "$1" ;;
     *) echo "unknown job: $1" >&2; exit 2 ;;

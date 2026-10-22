@@ -37,6 +37,10 @@ def _repo_root() -> Path:
     return Path(__file__).resolve().parents[3]          # …/Algent
 
 
+def _env_dir(env: str, default: str) -> Path:
+    return Path(os.environ.get(env) or default)
+
+
 def _sources() -> dict[str, Path]:
     """What is backed up, by the folder name it gets in the data repo."""
     from algent_backend.agent_system.agents.pulse import PulseStore
@@ -70,6 +74,10 @@ def _sources() -> dict[str, Path]:
             "calendar_store": resolve(calendar_dir()),
             "markets_store": resolve(markets_dir()),
             "maritime_daily": resolve(maritime_dir()) / "daily",
+            # paid editorial work the pipeline must never redo (memory: never-redo-paid-work)
+            "draft_store": resolve(_env_dir("ALGENT_DRAFT_STORE", "draft_store")),
+            "treatment_store": resolve(_env_dir("ALGENT_TREATMENT_STORE", "treatment_store")),
+            "lead_store": resolve(_env_dir("ALGENT_LEAD_STORE", "lead_store")),
             "site_articles": site / "content" / "articles",
             "site_intel": site / "content" / "intel",
             "site_radar": site / "content" / "radar",

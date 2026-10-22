@@ -10,7 +10,7 @@ import { indexedPlaceIds } from "@/lib/places";
 import { SITE_URL } from "@/lib/site";
 
 // A self-populating site needs machines (indexers) to notice new articles without being told.
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 3600; // lib/store.ts TTL.static: slow products (markets every 4 h, benchmarks every 12 h)
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const articles = (await getAllMeta()).map((a) => ({

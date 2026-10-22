@@ -18,7 +18,7 @@ import "@/app/situations/situations.css";
 
 type Params = { id: string };
 
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 1800; // lib/store.ts TTL.daily: a desk publishes twice a day
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const ctx = await placeContext(params.id);

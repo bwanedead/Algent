@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 // The AI desk's numbers (backend `ai_benchmarks/`, docs/architecture/ai-desk.md): scores collected twice a day from free public leaderboards, a frontier
 // derived per benchmark, and a capped daily pass that records what labs CLAIM before any leaderboard carries it. Claims are always drawn apart from measured
 // scores (hollow diamonds) and never enter a line.
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 3600; // lib/store.ts TTL.static: slow products (markets every 4 h, benchmarks every 12 h)
 
 const CARDS_SHOWN = 24;
 const PAIRS_SHOWN = 6;

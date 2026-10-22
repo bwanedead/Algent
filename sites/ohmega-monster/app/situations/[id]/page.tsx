@@ -28,7 +28,7 @@ import "../situations.css";
 type Params = { id: string };
 
 // A situation published after the last deploy renders on demand (dynamicParams stays on): publishing is a database write.
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 1800; // lib/store.ts TTL.daily: a desk publishes twice a day
 
 const PRERENDERED = 8; // each page reads every Daily that covers it; the rest render on first request and are cached (ISR)
 

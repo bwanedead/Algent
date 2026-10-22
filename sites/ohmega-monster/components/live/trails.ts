@@ -6,8 +6,8 @@ import { fetchSnapshot, type TracksDoc } from "@/lib/live-shared";
 
 import { colorOf, type Entity } from "./entities";
 
-export const SHIP_SHARDS = 16; // backend flags.TRACK_SHARDS
-export const AIR_SHARDS = 16; // backend flags.AIR_TRACK_SHARDS
+export const SHIP_SHARDS = 4; // backend live/flags.py R2_TRACK_SHARDS (the R2 write budget: 4 trail files per layer; the Supabase profile used 16)
+export const AIR_SHARDS = 4; // backend live/flags.py R2_TRACK_SHARDS
 const FRESH_MS = 4 * 60 * 1000;
 const MAX_TRAILS = 160; // "trails for visible" is capped: more lines than this is a hairball, not information
 

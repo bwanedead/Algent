@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 // Built from what the entity pages already know (lib/entities.ts), so it can never disagree with them.
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 1800; // lib/store.ts TTL.daily: a desk publishes twice a day
 
 export default async function GraphPage() {
   const graph = await entityGraph();

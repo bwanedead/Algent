@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: "What crossed the wire, as other outlets reported it — not yet independently verified.",
 };
 
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 1800; // lib/store.ts TTL.daily: a desk publishes twice a day
 
 export default async function HeadlinesIndex() {
   const newest = (await getMenus())[0];

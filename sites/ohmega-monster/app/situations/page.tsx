@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 // The situations index: one tab per desk (generated from the desk list), active situations first with the quiet ones folded below.
 // Spotlight one-offs are not here; they live in the Daily until a second report makes them a situation.
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 1800; // lib/store.ts TTL.daily: a desk publishes twice a day
 
 export default async function SituationsPage() {
   const groups = await situationsByDesk();

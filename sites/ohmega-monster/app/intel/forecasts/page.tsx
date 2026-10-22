@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 // A judgment page, one of two views of our forecasting (the other is /intel/track-record, see JudgmentsSwitch): the forecasts the
 // desk has made across situations (what resolves soon, how sure we were).
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 1800; // lib/store.ts TTL.daily: a desk publishes twice a day
 
 export default async function ForecastsPage() {
   const room = await situationRoom();

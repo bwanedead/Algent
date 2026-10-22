@@ -147,23 +147,44 @@ def _index_doc(entries: dict[str, dict[str, Any]]) -> dict[str, Any]:
 def publish_article(slug: str, markdown: str, *, title: str = "", status: str = "", http: Any = None,
                     index_file: Path | None = None, manifest: Path | None = None) -> dict[str, Any]:
     """An article is ``articles/<slug>.json`` (its markdown) plus a refreshed ``articles/index.json`` (front matter of all, no bodies)."""
-    markdown = markdown.replace(chr(0), "")
-    if (why := doc_store.row_over_cap(f"article {slug}", markdown)):
-        print(f"[object_docs] REFUSED {why}", flush=True)
-        return {"db": False, "ok": False, "note": why}
-    data = _front_matter(markdown)
-    published_at = str(data.get("published_at") or "")
+    return publish_articles([(slug, markdown, title, status)], http=http, index_file=index_file, manifest=manifest)
+
+
+def publish_articles(items: list[tuple[str, str, str, str]], *, http: Any = None, index_file: Path | None = None,
+                     manifest: Path | None = None, dry_run: bool = False) -> dict[str, Any]:
+    """Several articles in one go (``(slug, markdown, title, status)``): the bodies, and the index written once. ``dry_run`` reports only."""
+    docs: dict[str, Any] = {}
     ipath = index_file or articles_index_path()
     with _LOCK:
         entries = _load_entries(ipath)
-        entries[slug] = {"slug": slug, "title": title or str(data.get("title") or slug), "status": status or str(data.get("status") or ""),
-                         "published_at": published_at, "data": data}
+        for slug, markdown, title, status in items:
+            markdown = markdown.replace(chr(0), "")
+            if (why := doc_store.row_over_cap(f"article {slug}", markdown)):
+                print(f"[object_docs] REFUSED {why}", flush=True)
+                return {"db": False, "ok": False, "note": why}
+            data = _front_matter(markdown)
+            published_at = str(data.get("published_at") or "")
+            entries[slug] = {"slug": slug, "title": title or str(data.get("title") or slug), "status": status or str(data.get("status") or ""),
+                             "published_at": published_at, "data": data}
+            docs[f"articles/{slug}.json"] = {"slug": slug, "title": entries[slug]["title"], "status": entries[slug]["status"],
+                                             "published_at": published_at, "markdown": markdown}
+        docs["articles/index.json"] = _index_doc(entries)
+        if dry_run:
+            return dry_run_report(docs, manifest=manifest)
         _save_entries(ipath, entries)
-    res = publish({f"articles/{slug}.json": {"slug": slug, "title": entries[slug]["title"], "status": entries[slug]["status"],
-                                             "published_at": published_at, "markdown": markdown},
-                   "articles/index.json": _index_doc(entries)}, http=http, manifest=manifest)
-    res["articles"] = 1 if res.get("documents") else 0
+    res = publish(docs, http=http, manifest=manifest)
+    res["articles"] = len(items) if res.get("documents") else 0
     return res
+
+
+def dry_run_report(docs: dict[str, Any], *, manifest: Path | None = None) -> dict[str, Any]:
+    """What ``publish(docs)`` would send, without sending or recording anything: counts and gzipped bytes of the changed documents."""
+    store = asset_store._store_for(None) or object_store.select(allow_unconfigured=True)  # noqa: SLF001
+    state = _load(manifest or manifest_path())
+    packed = [doc_store.pack(p, b) for p, b in sorted(docs.items())]
+    changed = [p for p in packed if state.get(f"{store.ident}|{p.path}") != p.sha256]
+    return {"ok": True, "dry_run": True, "of": len(docs), "would_upload": len(changed), "unchanged": len(docs) - len(changed),
+            "bytes_gz": sum(len(p.gz) for p in changed), "refused": [w for p in changed if (w := doc_store.over_cap(p))]}
 
 
 def _load_entries(path: Path) -> dict[str, dict[str, Any]]:

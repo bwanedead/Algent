@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/daily" },
 };
 
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 1800; // lib/store.ts TTL.daily: a desk publishes twice a day
 
 const RECENT_DAYS = 6;
 

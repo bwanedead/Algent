@@ -10,7 +10,7 @@ import "../../daily.css";
 type Params = { desk: string; date: string };
 
 // New days appear without a redeploy: unknown dates render on demand (404 if no report) and are cached.
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 1800; // lib/store.ts TTL.daily: a desk publishes twice a day
 
 const PRERENDERED_DAYS = 3; // per desk; older days render on first request and are then cached (ISR), so a build never reads the whole archive
 

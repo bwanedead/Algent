@@ -16,7 +16,7 @@ import { toWallPulse, type WallPulse } from "@/lib/pulse-wall";
 type Params = { slug: string };
 
 // A brief published after the last deploy renders on demand (dynamicParams stays on): publishing is a database write.
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 1800; // lib/store.ts TTL.daily: a desk publishes twice a day
 
 export async function generateStaticParams(): Promise<Params[]> {
   return (await allBriefSlugs()).map((slug) => ({ slug }));
