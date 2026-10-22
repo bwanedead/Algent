@@ -1,8 +1,188 @@
-# Database budget — Postgres holds small, relational, bounded data; everything big or churny lives elsewhere
+# Storage architecture — the server is the record, R2 is the publication, no database on the read path
 
-> Code: `backend/algent_backend/database/` (`flags.py` the knobs, `size.py`, `prune.py`, `diet.py`), `publishing/doc_store.py` +
-> `published_db.py` (documents), `cli/newsroom/db.py` (`newsroom db …`), `backend/migrations/014_documents_in_storage.sql`,
-> `sites/ohmega-monster/lib/store.ts` (`intelDoc`). Related: `published-content.md`, `docs/guides/worker-server.md`.
+> Code: `backend/algent_backend/publishing/` (`object_store.py` R2 + SigV4, `object_budget.py` the free-tier guard, `object_docs.py` documents,
+> `asset_store.py` the uploader, `site_data.py`, `rebuild.py`), `database/flags.py` (every knob), each domain's `publish.py`
+> (`live/`, `maritime/`, `sanctions/`, `lookahead/`, `geoledger/site_docs.py`), `maritime/rollup.py`, `data_backup/sync.py`,
+> `sites/ohmega-monster/lib/store.ts` + `lib/data-base.ts`. Related: `published-content.md`, `docs/guides/worker-server.md`, `docs/credentials.md`.
+> The sections below "Legacy" are the Postgres mode (database budget, diet, recovery); they apply only if the Postgres flag is switched back on.
+
+## The decision (operator, 2026-10-22)
+
+The free Supabase database (500 MB) filled and went down; the operator will not pay for Pro. So:
+
+```
+ worker server (system of record)            Cloudflare R2 (publication)              Vercel (the site)
+ ─────────────────────────────────           ─────────────────────────────           ───────────────────────
+ file stores: pulse_store, profile_store,    docs/<path>.gz       JSON documents      reads NEXT_PUBLIC_DATA_BASE only:
+   geoledger_store, sanctions_store,         docs/_names/<dir>.json.gz  dir indexes     ISR pages fetch docs/…;
+   calendar_store, markets_store,            live/…               map snapshots        the browser polls live/…
+   maritime_store, intel_store, …            analytics/…, satellite/…  images/chips    and loads images
+ publishers build documents from the stores ─► hash-skip ─► PUT (SigV4, stdlib)  ─►  no database, no service key
+ nightly mirror ► private algent-data repo     public, free egress
+```
+
+* **No live database on the read path.** Everything the site used to read from PostgREST tables is now a published JSON document built from
+  the server's local store by the domain that owns it (below). Supabase is not needed; `database/flags.POSTGRES_PUBLISH = False`.
+* **The Pulse ledger's primary store is the file store** (`database/flags.PULSE_BACKEND = "files"`). Postgres code stays, off by a flag.
+* **Backend switch, one line each:** `database/flags.OBJECT_BACKEND` (`"r2"` default, `"supabase"`), `POSTGRES_PUBLISH`, `PULSE_BACKEND`.
+  One-shot env overrides: `ALGENT_OBJECT_BACKEND`, `ALGENT_POSTGRES_PUBLISH=1`, `ALGENT_PULSE_BACKEND=postgres`. Publishing is a no-op until the
+  R2 names are set; `ALGENT_DB_PUBLISH=0` still pauses everything.
+
+### What each product publishes (the former tables)
+
+| Was (table) | Published documents (key = `docs/<path>.gz`) | Built from | Size / bound |
+|---|---|---|---|
+| `live_events` | `live/events.json` (current events of every feed, newest 400) | `live_store/events/*.json` | ~20 KB gz |
+| `live_stats` | `live/stats.json` (45 days of chokepoint series + the running day; `presence` means stay server-side) | instruments store + `live_store` | ~60 KB gz |
+| `live_anomalies` | `live/anomalies.json` (strongest 200, active first) | `live_store/memory/anomalies/current.json` | ~10 KB gz |
+| `maritime_events` | `maritime/live.json` (going + last 48 h, evidence last 4 points, max 400), `maritime/recent.json` (30 days, max 1500, evidence last 12), `maritime/counts.json`, `maritime/vessel/<imo>.json` | `maritime_store/events.json` | live ~100 KB, recent ~1 MB gz |
+| `sanctions_events` | `sanctions/recent.json` (180 d, max 3000), `sanctions/country/<ISO>.json` (180 d, max 200) | `sanctions_store` | ~100 KB / ~5 KB |
+| `calendar_items` | `calendar/next.json` (active, a week back to 120 d ahead) | `calendar_store` | ~30 KB |
+| `geo_assets`, `geo_asset_events` | `geo/c/<ISO>.json` (places with a status + the 2000 largest without), `geo/countries.json` (index with bbox), `geo/events-assets.json`, `geo/a/<id>.json` (one place + history; only places with events), `geo/events/<YYYY-MM>.json` | `geoledger_store` | ≤ ~150 KB gz each |
+| `geo_grid` | `geo/grid/<ISO>.json` | ledger rollups | ~3 KB each |
+| `published_articles` | `articles/index.json` (front matter of all, no bodies), `articles/<slug>.json` | `content/articles/*.md` staging + `publish_held/articles_index.json` | index ~50 KB |
+| `published_intel_documents` | unchanged paths: `daily/…`, `theaters/…`, `actors/…`, `briefs/…`, `snapshots/…`, `record.json`, `radar/…`, `data/…` + `_names/<dir>.json` indexes (the site cannot list a bucket) | the desk's staged files | as before |
+
+Not published any more: places with no event outside a country's 2000 largest (the ledger keeps them; the map never drew more than 500 per frame) and
+`mmsi`-keyed vessel lookups (the place page asks by IMO). Nothing else is Postgres-only: **no feature needs a database now.**
+
+### Rules the code keeps
+
+1. **Hash-skip every write.** `object_docs` compares a document's canonical-JSON sha256 with a LOCAL manifest (`backend/publish_held/doc_hashes.json`);
+   `asset_store` does the same per object (`asset_hashes.json`). An unchanged document costs no request. Moving parts are kept out of the hash:
+   maritime rows are replaced only when their signature changes or after `PUBLISH_REFRESH_H`; `updated_at` is "last changed" (`site_data.stamped`).
+2. **The server never reads back from the bucket what it holds locally.** Nothing in the publish path calls `get`, `head` or `list` (they exist for
+   tooling). Name indexes are rebuilt from the local manifest, never from a bucket listing.
+3. **Never LIST in a hot path.** The site reads small published index files (`_names/…`, `articles/index.json`, `geo/countries.json`), not a listing.
+4. **Switching backend re-sends everything once** (manifest keys carry the backend id), so `rebuild-all` after a switch is complete by construction.
+5. **A server-side GET of a public URL needs a real `User-Agent`** (Cloudflare answers 403 to urllib's default); `object_store.default_call` sets one.
+
+## R2 budget — a hard guard (the account has a card on file)
+
+R2 free tier per month: **10 GB-month storage, 1 M Class A (PUT/COPY/LIST), 10 M Class B (GET/HEAD)**; egress is free. Overage bills.
+
+* **Counter** (`publishing/object_budget.py`): a persistent per-month count of OUR Class A (PUT/LIST/DELETE, DELETE counted although free) and Class B
+  calls and of stored bytes, in `backend/publish_held/r2_usage.json` (several processes add their deltas; month rolls over, stored bytes persist).
+* **Budgets** (`database/flags.py`): daily allowance = free tier ÷ days in the month; **warn at 70%**, **HARD STOP at 90%** of the monthly free tier;
+  a single UTC day may use at most `R2_DAILY_STOP_MULT` (3x) its allowance. Past a limit `R2Store` refuses the call (HTTP 429 to the uploader, a logged
+  `REFUSED …` once a minute): the object is reported failed, its hash is not recorded, so it is retried when the budget allows. Parallel workers cannot
+  overshoot (check and count are one locked step). Publishers never raise; the live cycle simply skips.
+* **`newsroom storage status`** prints month-to-date Class A/B ops, stored bytes, today vs the daily allowance, the projection to month end, and the
+  level (exit 1 at the hard stop). **`newsroom doctor`** has an `object store` line: WARN at 70%, **FAIL at the stop**.
+
+### Estimated write volume (Class A) — fits at ~11% of the free tier
+
+| Writer | Objects per cycle | Cycle | Per day |
+|---|---|---|---|
+| live snapshots: `vessels`, `aircraft`, `points`, `summary` | 4 | 180 s (`live/flags.R2_SNAPSHOT_SECONDS`) | 1 920 |
+| trail shards + coverage: 4 ship + 4 aircraft + 1 | 9 | 900 s (`R2_TRACKS_SECONDS`, `R2_TRACK_SHARDS = 4`) | 864 |
+| `live/events`, `live/stats` | 2 | each live run (~15 min) | ~190 |
+| anomalies / maritime documents / sanctions / calendar | changes only | hourly / 5 min (hash-skip) | ~200 |
+| energy (15 min), fires (3 h), flows (15 min), satellite chips + doc | | | ~250 |
+| desk documents (2 dailies + dossiers, actors, feeds, name indexes), articles + images | changed only | twice a day | ~200 |
+| **Total** | | | **~3.6 k/day = ~110 k/month = 11% of 1 M** (ceiling 40%) |
+
+What was cut to get there: the Supabase profile sent a vessel/aircraft **tile** set (~300 objects) + `density` + `tiles/index` every **60 s** and 16+16 trail
+shards every 5 min: ~430 000 PUTs a day, 13 million a month = 13x the free tier. On R2 the tiles are not published (`live/flags.tiles_enabled()`), the
+site falls back to the `points` + full snapshots it already supports (R2's free egress affords the larger files), the cycle is 180 s and the site polls
+every 180 s. `rebuild-all` costs one PUT per changed document (a few thousand once); `--dry-run` prints the number first.
+
+### Class B (reads) and `r2.dev`
+
+`R2_PUBLIC_BASE` as `https://pub-….r2.dev` is **rate-limited and meant for development**; it also has no cache, so every browser poll and every ISR
+fetch is a Class B read. **Production path: a custom domain (e.g. `data.ohmega.monster`, needs the domain's DNS on Cloudflare) on the bucket with a
+cache rule**: repeat GETs are then served from Cloudflare's edge and are not billed R2 operations. Both the server (`R2_PUBLIC_BASE`) and the site
+(`NEXT_PUBLIC_DATA_BASE`) keep the base URL as a single setting, so the switch is one line in each.
+
+Without the cache, the budget is: ISR reads (worst case, every product requested every window): `live/*` 4 docs × 720 windows + maritime 144 + tables 48 ×
+~6 + daily docs ≈ 6-10 k/day; each open `/live` tab polls ~3 objects per 180 s = 1 440/day. 10 M a month = 333 k/day ≈ 230 always-open tabs. The counter
+sees only the server's calls; the public reads are in the Cloudflare dashboard (R2 > Metrics).
+
+## Egress — keep Vercel reads lean (the 2026-10 Supabase bill was 15.2 GB against a 5 GB quota)
+
+The cause was ISR pages re-downloading multi-MB documents every 300 s, plus the server reading back. Now:
+
+* **Per-product revalidate**, from each product's real cadence (`lib/store.ts` `TTL`, repeated as literals on each page): live layers 120 s, the live map's
+  first paint 180 s, maritime analysis 600 s, articles 900 s, dailies/dossiers/actors/tables 1800 s, track record/benchmarks/sitemap 3600 s.
+  A fetched object is cached by Next's data cache for its window, so it is downloaded once per window per region however many pages use it.
+* **Split documents so a page fetches only what it renders**: maritime `live` (small) vs `recent` (30 days) vs `counts`; sanctions `recent` vs
+  `country/<ISO>`; geo per country / per place / per month; articles `index` vs `<slug>`; live events / stats / anomalies separate; directory `_names`.
+* **Compressed at rest and in the cache**: objects are `application/gzip` (no `Content-Encoding`), so Next caches the compressed bytes (its cache
+  refuses items over 2 MB; the compressed ones fit) and the site gunzips.
+* **The server reads nothing back** from R2.
+* Expected read volume per day, upper bound if every product is requested every window: live 4 docs (~250 KB gz) × 720 = ~180 MB; maritime `recent`
+  (~1 MB) × 144 = ~145 MB; tables ~200 KB × 48 × 3 = ~30 MB; daily + dossier documents ~300 KB × 48 × ~10 = ~145 MB; articles ~50 KB × 96 = ~5 MB.
+  **≈ 0.5 GB/day (≈ 15 GB/month) worst case, a third of that typical**, all from R2 where egress is free. The remaining Vercel-side cost is the
+  Fast Origin Transfer of those fetches; if it matters, lengthen `TTL.live` or `TTL.maritime` first.
+
+### ISR "keep the last good page" (Next 14.2)
+
+`lib/store.ts` distinguishes two outcomes. A 404 is "not published" (null: the page says so). Anything else (network error, 5xx, 403, an unparseable
+body) **throws** `DataUnavailable`. In Next 14 an ISR regeneration that throws leaves the previously generated page in place and retries on the next
+request, whereas a render that returns an empty list would be written as the new page for a whole window; a non-200 `fetch` is also never stored in the data
+cache. During `next build` (no previous page exists) a failure degrades to the content files so a bucket blip cannot fail the deploy.
+
+## Ship data: daily summaries and retention (`maritime/rollup.py`)
+
+Only one file in `maritime_store` is unbounded: **`log.jsonl`**, the append-only record (a full event with evidence every time one opens or changes
+state; **measured ~1.9 KB a line**). `profiles.json.gz` (≤ 50 000 vessels, 4 days) and `events.json` (30 days, ≤ 3000 events) are bounded already, and the
+detectors read nothing else: profile book 4 days, activity grid 4 days, picture `RETAIN_DAYS`. Nothing reads the log back, so raw lines older than
+`LOG_KEEP_DAYS = RETAIN_DAYS` (30) are summarised and dropped. I could not measure the server's 1.7 GB from here: run `newsroom maritime store` to see
+which file it is; at 1.9 KB a line the log alone would be ~0.9 M lines.
+
+`newsroom maritime rollup [--apply]` (timer `ohmega-maritime-rollup`, 04:05) writes `maritime_store/daily/<YYYY-MM-DD>.json.gz` (a few KB each):
+
+| Block | Content | From |
+|---|---|---|
+| `zones` | per chokepoint / region: unique ships, by vessel class, ships underway, median speed, samples | profile book (4 days) |
+| `events` | opened that day: total, by kind, by area, AIS gaps per area, outcomes | the log |
+| `notable` | up to 30 sanctioned / confidence ≥ 0.8 events, compact | the log |
+| `tracks` | up to 12 flagged vessels' evidence points (≤ 24 each) — the only positions kept long term | the log |
+
+The compaction streams the log (never loads it whole), renames it aside so the stream service keeps appending, appends the recent lines back, and
+resumes from `log.jsonl.work` after a crash. Each line is counted once and dropped, so a re-run never double counts. **Before / after:**
+log = 1.9 KB × events/day × all history (unbounded) → 1.9 KB × events/day × 30 days + ~5-10 KB/day of summaries (~3 MB/year). At 3 000 events/day:
+~5.7 MB/day forever → capped at ~170 MB + 3 MB/year; the old history shrinks ~300x (1.9 KB × N → ~7 KB per day). The summaries are in the nightly mirror.
+
+## Backups (the server is the only copy)
+
+`data_backup/sync.py` mirrors, nightly (06:15) and after runs, into the private `algent-data` repo: `profile_store`, `pulse_store`, `geoledger_store`,
+`sanctions_store`, `calendar_store`, `markets_store`, `maritime_daily`, `intel_store`, `instruments_store`, `ai_benchmarks_store`, `statements_store`,
+`actors_store`, `draft_store`, `treatment_store`, `lead_store`, and what was **published** (the dailies and articles exist nowhere else): `site_articles`,
+`site_intel`, `site_radar`, `site_data`. Deliberately not mirrored (reasons in `tests/test_backup_coverage.py`): run logs, `live_store` (re-collected;
+baselines relearn in ~3 weeks), the library crawl cache, embeddings and fetch caches. `test_backup_coverage.py` fails when the code gains a store
+that is in neither table, so this cannot silently regress.
+
+## Recovery of the lost Pulse stretch
+
+`newsroom db export-pulses` pulls the Pulse ledger from Postgres into the file store **if the database answers** (safe no-op otherwise).
+`newsroom pulse rebuild --from-rescue ~/pulse_rescue [--dailies DIR] [--dry-run]` merges the readings the live site still served
+(`provenance: rescued_from_site_cache`, original timestamps) and, for days after the last of them, one position reading per Pulse per day from the
+dailies (`provenance: reconstructed_from_daily`, no rationale, low confidence, and the text says so). Idempotent; never overwrites; the published reading
+carries its `provenance`.
+
+## Operator runbook: R2 keys → rebuild-all → site env → deploy
+
+1. **Server** (`~/algent.env`, chmod 600): `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` (=`ohmega`), `R2_PUBLIC_BASE`
+   (the r2.dev URL, later `https://data.ohmega.monster`). `newsroom doctor` should show `object store` ok; `newsroom storage status` the budget.
+2. `newsroom publish rebuild-all --dry-run` — how many documents/bytes (≈ Class A operations); then `newsroom publish rebuild-all`. Re-run it freely:
+   it sends only what is missing. Add `--only live,maritime` etc. to redo one product.
+3. Restart the stream service so it picks up the R2 cadence: `sudo systemctl restart ohmega-ais` (the timers pick it up on their next run).
+4. **Vercel** (Production + Preview): set `NEXT_PUBLIC_DATA_BASE` to the same URL as `R2_PUBLIC_BASE`; **remove** `NEXT_PUBLIC_SUPABASE_URL` and
+   `NEXT_PUBLIC_SUPABASE_ANON_KEY` (nothing reads them). Redeploy (a redeploy is required: `NEXT_PUBLIC_*` is inlined at build time).
+5. Check: an article hero loads from the data base, `/data/index.json`, `/live`, `/intel/maritime`, `/daily/geopolitics` render; `newsroom storage status`.
+6. Optional production hardening: put the bucket on `data.ohmega.monster` (Cloudflare DNS) with a cache rule; change both URLs; run `rebuild-all` once
+   more only if the R2 bucket changed (the object keys do not depend on the domain).
+7. If the Supabase database comes back: `newsroom db export-pulses`, then `newsroom pulse rebuild --from-rescue … --dry-run`; to use it again set
+   `POSTGRES_PUBLISH`/`PULSE_BACKEND` in `database/flags.py` (the legacy sections below).
+
+Note: article images are served from R2 and so no longer get the `/analytics/*` Content-Security-Policy header from `next.config.mjs`; they render in
+`<img>` (scripts never run there) and the converter still sanitises SVGs before upload. Add a Cloudflare response header rule on the data domain
+(`Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; sandbox` for `/analytics/*`) to restore the floor.
+
+---
+
+# Legacy (Postgres mode, only if `POSTGRES_PUBLISH` is switched back on)
 
 ## Why this exists (the 2026-10-22 incident)
 

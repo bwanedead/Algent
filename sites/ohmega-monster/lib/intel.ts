@@ -1,7 +1,7 @@
 import { parseOnRecord, type OnRecord } from "./record-model";
 import { intelDoc, intelSlugs } from "./store";
 
-// The Intelligence desk's data is written by the backend as JSON documents (Supabase, with the content
+// The Intelligence desk's data is written by the backend as JSON documents (published files in R2, with the content
 // files as the transitional fallback — lib/store.ts). Everything is parsed defensively: a missing document
 // yields empty states, never a build failure.
 

@@ -247,11 +247,13 @@ def test_the_site_reads_and_the_publisher_writes_only_columns_the_migration_defi
 
     sql = next(p for p in available() if p.stem == "009_geoledger").read_text(encoding="utf-8")
     sql010 = next(p for p in available() if p.stem == "010_geo_grid").read_text(encoding="utf-8")
-    ts = _site("lib", "geoledger.ts")
-    for table, const, writer in (("geo_assets", "ASSET_COLS", publish._ASSET), ("geo_asset_events", "EVENT_COLS", publish._EVENT)):
+    assert 'geo/c/' in _site("lib", "geoledger.ts")
+    from algent_backend.geoledger import site_docs
+
+    for table, cols, writer in (("geo_assets", site_docs.ASSET_COLS, publish._ASSET), ("geo_asset_events", site_docs.EVENT_COLS, publish._EVENT)):
         have = set(_table_columns(sql, table))
         have |= set(re.findall(rf"alter table {table} add column (\w+)", sql010))
-        read = re.search(rf'const {const} = "([^"]+)"', ts).group(1).split(",")
+        read = list(cols)                 # the published documents carry exactly these columns (the site parsers read them by name)
         wrote = [c.strip() for c in re.search(r"\((.*?)\)\s*values", writer, re.S).group(1).split(",")]
         assert set(read) <= have, set(read) - have
         assert set(wrote) <= have, set(wrote) - have

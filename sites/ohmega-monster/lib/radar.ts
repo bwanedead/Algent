@@ -1,7 +1,7 @@
 import { intelDoc, intelSlugs } from "./store";
 
 // Headline radar: every synthesis menu the newsroom builds, one JSON document per build
-// (radar/<slug>.json), written by the publish pipeline (backend publishing/radar_page.py) to Supabase, with
+// (radar/<slug>.json), written by the publish pipeline (backend publishing/radar_page.py) to the published files, with
 // content/radar as the transitional fallback (lib/store.ts). Kept forever — the archive is the point.
 
 export type RadarLead = {

@@ -323,5 +323,5 @@ def test_ongoing_maritime_events_are_resent_only_when_they_change_or_age() -> No
 # ── the reader and the writer agree on where a document lives ───────────────────────────────────
 def test_the_site_reader_resolves_the_storage_key_the_writer_uses() -> None:
     ts = (Path(__file__).resolve().parents[2] / "sites" / "ohmega-monster" / "lib" / "store.ts").read_text(encoding="utf-8")
-    assert "storage_key" in ts and "gunzipSync" in ts and "published-assets" in ts
+    assert "/docs/${rel}.gz" in ts and "gunzipSync" in ts and "DataUnavailable" in ts and "NEXT_PUBLIC_SUPABASE" not in ts
     assert doc_store.object_key("daily/geopolitics/2026-10-01.json") == "docs/daily/geopolitics/2026-10-01.json.gz"

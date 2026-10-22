@@ -23,7 +23,7 @@ export const revalidate = 600; // lib/store.ts TTL.maritime: thirty days of even
 export default async function MaritimePage() {
   const [rows, counts] = await Promise.all([maritimeEvents(), maritimeCounts()]);
   const nowMs = Date.now();
-  // The list is a capped fetch (PostgREST returns at most 1000 rows), so totals come from a count query; without one the list size is shown as "latest N".
+  // The list is a capped fetch (1500 events), so totals come from the published counts document; without one the list size is shown as "latest N".
   const total = counts?.total ?? null;
   const ongoing = counts?.ongoing ?? rows.filter((e) => e.ended_at === null).length;
   const events = statView({ id: "maritime_events", value: rows.length, cap: { limit: 1000, total } });

@@ -7,7 +7,7 @@ import { intelDoc, intelSlugs } from "./store";
 
 // Theater dossiers: one living record per theater, written by the backend as JSON to
 // the documents theaters/index.json and theaters/<theater_id>.json (ohmega.dossier/1), read through
-// lib/store.ts (Supabase, content files as the fallback). Parsed defensively: a missing document, a missing
+// lib/store.ts (published files in R2, content files as the fallback). Parsed defensively: a missing document, a missing
 // index or a malformed file yields empty states, never a build failure.
 const ID_RE = /^[\w.-]+$/;
 
