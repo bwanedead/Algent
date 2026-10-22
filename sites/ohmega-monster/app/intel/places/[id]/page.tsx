@@ -14,7 +14,7 @@ import { imoOf, maritimeForVessel } from "@/lib/maritime";
 import { placeContext } from "@/lib/places";
 
 import "@/app/daily/daily.css";
-import "../../theaters/theaters.css";
+import "@/app/situations/situations.css";
 
 type Params = { id: string };
 

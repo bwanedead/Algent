@@ -13,6 +13,7 @@ import { maritimeEvents } from "./maritime";
 import { getMenus } from "./radar";
 import { recordLedger } from "./record";
 import { recentSanctions } from "./sanctions";
+import { satelliteDoc } from "./satellite";
 import { situationsByDesk } from "./situations";
 import { trackRecord } from "./track-record";
 
@@ -36,7 +37,7 @@ export type Door = {
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
 const hints = cache(async () => {
-  const [dailies, situations, actors, ledger, snap, articles, menus, live, upcoming, sanctions, maritime, track, ai] = await Promise.all([
+  const [dailies, situations, actors, ledger, snap, articles, menus, live, upcoming, sanctions, maritime, track, ai, satellite] = await Promise.all([
     Promise.all(DESKS.map((d) => latestDaily(d.id))),
     situationsByDesk(),
     actorIds(),
@@ -50,6 +51,7 @@ const hints = cache(async () => {
     maritimeEvents(300),
     trackRecord(),
     aiBenchmarks(),
+    satelliteDoc(),
   ]);
   const ahead30 = upcoming.filter((r) => r.on_date <= addDays(todayIso(), 30));
   // One universe for every situation count: the active ones (not quiet, not merged, not a one-day Spotlight), across all desks.
@@ -73,6 +75,7 @@ const hints = cache(async () => {
     articles: { hint: articles.length > 0 ? `${plural(articles.length, "article")}` : "", stamp: articles[0]?.published_at || articles[0]?.date || "" },
     headlines: { hint: menus[0] ? plural(menus[0].leads.length, "headline") : "", stamp: menus[0]?.builtAt ?? "" },
     live: { hint: live && live.headlines.length > 0 ? `${plural(live.headlines.length, "signal")} now` : "", stamp: live?.as_of ?? "" },
+    satellite: satellite && satellite.counts.with_imagery > 0 ? `${plural(satellite.counts.with_imagery, "place")}${satellite.counts.changed > 0 ? ` · ${satellite.counts.changed} changed` : ""}` : "",
     calendar: ahead30.length > 0 ? `${plural(ahead30.length, "date")} · next 30 days` : "",
     maritime: {
       hint: maritime.length > 0 ? `${plural(maritime.filter((m) => m.ended_at === null).length, "event")} going · last 30 days` : "",
@@ -114,6 +117,7 @@ export async function dataGroups(): Promise<DataGroup[]> {
         { href: "/live", title: "Live map", line: "Ships, aircraft, quakes, fires and outages as they happen.", hint: h.live.hint, stamp: h.live.stamp, cadenceHours: CADENCE_HOURS.live },
         { href: "/intel/maritime", title: "Maritime", line: "Ships that went dark, met at sea, changed identity or matched a sanctions list.", hint: h.maritime.hint, stamp: h.maritime.stamp, cadenceHours: CADENCE_HOURS.maritime },
         { href: "/intel/sanctions", title: "Sanctions", line: "Who was added to or removed from the US, UK and EU lists.", hint: h.sanctions.hint, stamp: h.sanctions.stamp, cadenceHours: CADENCE_HOURS.sanctions },
+        { href: "/intel/satellite", title: "Satellite", line: "Fresh imagery of struck and watched places, before and after, with change flagged as a machine signal.", hint: h.satellite },
         { href: "/calendar", title: "Calendar", line: "What is scheduled in the next 30 days, with sources.", hint: h.calendar },
         { href: "/intel/ai", title: "AI benchmarks", line: "Frontier model scores on public benchmarks, open against closed, lab by lab.", hint: h.ai.hint, stamp: h.ai.stamp, cadenceHours: CADENCE_HOURS.benchmarks },
         { href: "/intel/actors", title: "Countries", line: "Population, economy, energy and military of each state.", hint: h.actors },

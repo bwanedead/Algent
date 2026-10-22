@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # The server's scheduled jobs, one entry point so systemd units stay one-liners:
 #
-#   jobs.sh library | instruments | statements | sanctions | calendar | markets | ai-benchmarks | ai-discovery | backup | watchdog | flows | live <feed>   free
+#   jobs.sh library | instruments | statements | sanctions | calendar | markets | ai-benchmarks | ai-discovery | backup | watchdog | flows | satellite | live <feed>   free
 #   jobs.sh menu | daily-1 | daily-2 | markets-daily                       PAID, unattended (operator-authorised)
 #
 # Free work: crawl, AI benchmark scores, a capped (<$0.10/day, ai_benchmarks/flags.py) discovery of lab-claimed scores, public data series, statement transcripts without extraction, the archive backup.
@@ -19,6 +19,8 @@ if [ "${1:-}" = "watchdog" ]; then exec $PY -m algent_backend.cli newsroom watch
 if [ "${1:-}" = "live" ]; then exec $PY -m algent_backend.cli newsroom live run --feed "${2:?usage: jobs.sh live <feed>}"; fi
 # The flows document (lane aggregates the stream service wrote + the weekly Comtrade refresh, a couple of minutes at most) is free and independent of the lock too.
 if [ "${1:-}" = "flows" ]; then exec $PY -m algent_backend.cli newsroom flows publish; fi
+# The satellite pass (a dozen keyless imagery lookups, a few minutes, daily) is free and stays out of the lock too: it must not wait behind a daily.
+if [ "${1:-}" = "satellite" ]; then exec $PY -m algent_backend.cli newsroom satellite run; fi
 exec 9>"$HOME/.ohmega-jobs.lock"
 flock -w 3600 9
 

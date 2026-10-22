@@ -30,6 +30,7 @@ const GLYPH: Record<string, GlyphName> = {
   "/intel/sanctions": "sanction",
   "/intel/maritime": "ship",
   "/intel/ai": "energy",
+  "/intel/satellite": "globe",
   "/developers": "event",
   "/feed.xml": "article",
   "/llms.txt": "record",

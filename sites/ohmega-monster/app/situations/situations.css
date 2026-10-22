@@ -4,7 +4,7 @@
    changed status); relation-kind colours reuse the .intel-k-* set of the brief pages; everything else is
    neutral greys. Structure comes from whitespace and alignment, not boxes and rules.
    Popover bodies are portaled to <body>, so nothing below may depend on a .th-page ancestor except link
-   colouring (popover links are styled by .geo-pd in geopolitics.css, which both pages import).
+   colouring (popover links are styled by .geo-pd in daily.css, which both pages import).
    Tokens come from globals.css; nothing here hard-codes a colour. */
 
 /* globals.css paints every .intel-page link in the accent; here the accent is reserved for change. */

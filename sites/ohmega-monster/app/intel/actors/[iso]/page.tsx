@@ -20,7 +20,7 @@ import { toWallPulse } from "@/lib/pulse-wall";
 import { sanctionsForCountry } from "@/lib/sanctions";
 
 import "@/app/daily/daily.css";
-import "../../theaters/theaters.css";
+import "@/app/situations/situations.css";
 
 type Params = { iso: string };
 
