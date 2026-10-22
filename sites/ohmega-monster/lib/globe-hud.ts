@@ -4,8 +4,9 @@ import { entityIndex, textLinker } from "./entities";
 import { dailyMentions } from "./globe-mentions";
 import type { HudAnomaly, HudComing, HudCounter, HudData, HudDaily, HudLive, HudPulse, HudSanction, HudTheater, HudTrader } from "./globe/hud-data";
 import { latestSnapshot, severitySorted, type Pulse } from "./intel";
-import { liveAnomalies, liveEvents, liveStats, type LiveStat } from "./live";
+import { liveAnomalies, liveEvents, liveStats, liveSummary, type LiveStat } from "./live";
 import { recentSanctions, SOURCES, typeLabel } from "./sanctions";
+import { historyOf, shortDate, statView, type Provenance } from "./stats/render";
 import { trackRecord } from "./track-record";
 
 // Builds the /globe HUD's panel data from what the site already publishes (no model calls, no new documents). Each block is built on its
@@ -66,33 +67,54 @@ function theatersBlock(d: Daily, dates: string[], ties: Map<string, Map<string, 
 }
 
 /** Per-day totals of one stat kind, oldest first, completed days only. */
-function dayTotals(stats: LiveStat[], kind: LiveStat["kind"]): number[] {
+function dayTotals(stats: LiveStat[], kind: LiveStat["kind"]): { days: number[]; periods: string[] } {
   const by = new Map<string, number>();
   for (const s of stats) if (s.kind === kind && !s.partial) by.set(s.period, (by.get(s.period) ?? 0) + s.value);
-  return Array.from(by.entries()).sort((a, b) => a[0].localeCompare(b[0])).map((e) => e[1]);
+  const rows = Array.from(by.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+  return { days: rows.map((e) => e[1]), periods: rows.map((e) => e[0]) };
 }
 
-function counter(key: HudCounter["key"], label: string, unit: string, days: number[]): HudCounter | null {
+type CounterIn = { key: HudCounter["key"]; statId: string; label: string; unit: string; layer?: "ships" | "aircraft" | "fires"; note?: string };
+
+/** One counter, worded by the stats registry: our counts are minimums, and "vs usual" waits until our own history is long enough. */
+function counter(i: CounterIn, t: { days: number[]; periods: string[] }, prov: Provenance | undefined): HudCounter | null {
+  const { days } = t;
   if (days.length < 2) return null;
   const value = days[days.length - 1];
   const before = days.slice(-15, -1);
   const usual = before.length >= 5 ? median(before) : null;
-  return { key, label, value, unit, pct: usual && usual > 0 ? Math.round(((value - usual) / usual) * 100) : null, spark: days.slice(-14), href: "/live" };
+  const pct = usual && usual > 0 ? Math.round(((value - usual) / usual) * 100) : null;
+  const v = statView({ id: i.statId, value, compare: { kind: "usual", pct }, history: historyOf(t.periods), provenance: prov, layer: i.layer, note: i.note });
+  return { key: i.key, label: i.label, value, text: v.text, unit: i.unit, delta: v.comparison, collecting: v.collecting, spark: days.slice(-14), href: "/live", statId: v.def.id, info: v.lines };
+}
+
+/** How much of the gate total one gate (Malacca) makes up on the latest completed day, in words for the hover. */
+function dominantGate(stats: LiveStat[]): string | undefined {
+  const ships = stats.filter((s) => s.kind === "ships" && !s.partial);
+  const last = ships.reduce((m, s) => (s.period > m ? s.period : m), "");
+  const day = ships.filter((s) => s.period === last);
+  const total = day.reduce((a, s) => a + s.value, 0);
+  const top = [...day].sort((a, b) => b.value - a.value)[0];
+  return total > 0 && top ? `On ${shortDate(last)}, ${top.name.split(" — ")[0]} was ${Math.round((top.value / total) * 100)}% of this total.` : undefined;
 }
 
 async function liveBlock(): Promise<HudLive | null> {
-  const [stats, events, anomalies] = await Promise.all([liveStats(), liveEvents(), liveAnomalies()]);
+  const [stats, events, anomalies, summary] = await Promise.all([liveStats(), liveEvents(), liveAnomalies(), liveSummary()]);
+  const prov = summary?.provenance;
   const now = Date.now();
+  const distinct = (kind: LiveStat["kind"]): number => new Set(stats.filter((s) => s.kind === kind).map((s) => s.region)).size;
   const counters = [
-    counter("aircraft", "Military aircraft", "seen / day", dayTotals(stats, "aircraft")),
-    counter("ships", "Chokepoint transits", "ships / day", dayTotals(stats, "ships")),
-    counter("fires", "Fire detections", "per day", dayTotals(stats, "fires")),
+    counter({ key: "aircraft", statId: "mil_aircraft_peak", label: "Military aircraft, busiest moment", unit: `at once, summed over ${distinct("aircraft")} regions`, layer: "aircraft" }, dayTotals(stats, "aircraft"), prov),
+    counter({ key: "ships", statId: "hud_gate_crossings", label: `Gate crossings, ${distinct("ships")} gates summed`, unit: "ships / day", layer: "ships", note: dominantGate(stats) }, dayTotals(stats, "ships"), prov),
+    counter({ key: "fires", statId: "hud_fire_detections", label: `Fire detections, ${distinct("fires")} watched boxes`, unit: "per day", layer: "fires" }, dayTotals(stats, "fires"), prov),
   ].filter((c): c is HudCounter => c !== null);
   const quakes = events.filter((e) => e.kind === "quake" && e.starts_at && now - Date.parse(e.starts_at) < 86400000).length;
   const outages = events.filter((e) => e.kind === "outage" && e.ends_at === null).length;
   if (events.length > 0) {
-    counters.push({ key: "quakes", label: "Quakes", unit: "last 24 h", value: quakes, pct: null, spark: [], href: "/live" });
-    counters.push({ key: "outages", label: "Outages", unit: "ongoing", value: outages, pct: null, spark: [], href: "/live" });
+    for (const [key, statId, label, unit, value] of [["quakes", "quakes_24h", "Quakes M4.5+", "last 24 h", quakes], ["outages", "outages_ongoing", "Outages", "ongoing", outages]] as const) {
+      const v = statView({ id: statId, value });
+      counters.push({ key, label, value, text: v.text, unit, delta: null, collecting: null, spark: [], href: "/live", statId, info: v.lines });
+    }
   }
   const flags: HudAnomaly[] = anomalies.filter((a) => a.active).slice(0, 6).map((a) => ({
     id: a.id, sentence: a.sentence, direction: a.direction, confidence: a.confidence, ongoing: a.ends_at === null, iso: a.countries.filter((c) => ISO_RE.test(c)),

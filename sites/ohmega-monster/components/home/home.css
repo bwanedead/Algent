@@ -28,6 +28,8 @@
 .hm-cell-main { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
 .hm-cell-num { color: var(--strong); font-size: clamp(28px, 3.4vw, 36px); font-weight: 600; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
 .hm-cell-unit { color: var(--muted); font-size: 11px; line-height: 14px; }
+.hm-cell-note { color: var(--faint); font-size: 11px; line-height: 14px; }
+.hm-cells .hm-cell-label { padding-right: 18px; }
 .hm-cell-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; min-height: 20px; }
 .hm-cell:hover .hm-cell-num, .hm-cell:focus-visible .hm-cell-num { color: var(--accent); }
 

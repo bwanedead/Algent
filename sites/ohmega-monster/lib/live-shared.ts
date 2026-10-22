@@ -3,7 +3,9 @@
 // series computed from them. Everything here degrades to "nothing": no database, an empty table or a failed
 // request yields empty lists, and the page says so instead of inventing a picture.
 
-export type LiveKind = "outage" | "quake" | "aircraft" | "fire";
+import type { Provenance } from "./stats/render";
+
+export type LiveKind ="outage" | "quake" | "aircraft" | "fire";
 export type LiveSeverity = "info" | "notable" | "major";
 
 export type LiveEvent = {
@@ -180,7 +182,9 @@ export type Summary = {
   headlines: Headline[];
   gates: Record<string, GateNow>;
   fresh: Partial<Record<"outage" | "quake" | "fire" | "ships" | "aircraft" | "aircraft_regions" | "energy", string>>;
-  fires?: { as_of?: string; detections?: number; occupied?: number };
+  fires?: { as_of?: string; detections?: number; occupied?: number; scope?: string };
+  /** Where each live number comes from and how long we have counted it (backend live/provenance.py); absent in older documents. */
+  provenance?: Provenance;
 };
 
 /** Fire heat: cells are [lon, lat, detections, strongest MW]. */
