@@ -184,7 +184,7 @@ button.th-res-btn:focus-visible { outline: 1px solid var(--accent-dim); outline-
 .th-group { margin-top: calc(var(--line) * 1.5); min-width: 0; }
 .th-group-h { margin: 0 0 4px; color: var(--muted); font-size: 10px; font-weight: 400; letter-spacing: 0.09em; text-transform: uppercase; }
 .th-rows { margin: 0; padding: 0; list-style: none; }
-.th-row { display: grid; grid-template-columns: minmax(0, 1.5fr) 280px 92px 210px 128px; gap: 0 20px; align-items: center; padding: 8px 0; min-width: 0; }
+.th-row { display: grid; grid-template-columns: minmax(0, 1.5fr) 260px 88px 190px 170px; gap: 0 16px; align-items: center; padding: 8px 0; min-width: 0; }
 .intel-page.th-page a.th-row-name { display: flex; flex-direction: column; gap: 1px; min-width: 0; text-decoration: none; overflow-wrap: anywhere; }
 .th-row-name b { color: var(--strong); font-size: 13px; line-height: 18px; }
 .th-row-name:hover b { text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
@@ -195,7 +195,7 @@ button.th-res-btn:focus-visible { outline: 1px solid var(--accent-dim); outline-
 .th-row-band { min-width: 0; }
 .th-row-cov { display: flex; align-items: center; gap: 8px; min-width: 0; white-space: nowrap; }
 .th-cbars { display: block; flex: none; width: auto; height: 22px; max-width: 100%; }
-.th-row-seen { min-width: 0; text-align: right; white-space: nowrap; }
+.th-row-seen { min-width: 0; text-align: right; line-height: 16px; }
 
 /* ---- phones ------------------------------------------------------------------------------ */
 @media (max-width: 980px) {

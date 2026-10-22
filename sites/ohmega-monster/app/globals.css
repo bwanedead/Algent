@@ -698,7 +698,7 @@ a { color: inherit; }
 
 @media (max-width: 700px) {
   body { --line: 22px; }
-  .shell { width: min(100% - 28px, 1120px); }
+  .shell { width: min(100% - 32px, 1120px); }
   /* Every section stays visible on a phone: brand on the first row, the links wrapping beneath it. */
   .header-row { min-height: calc(var(--line) * 2); flex-wrap: wrap; gap: 0 12px; padding: 4px 0; }
   .site-nav { flex: 1 1 100%; flex-wrap: wrap; gap: 0 14px; }

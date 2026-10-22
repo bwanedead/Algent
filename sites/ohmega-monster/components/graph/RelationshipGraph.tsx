@@ -184,7 +184,7 @@ export default function RelationshipGraph({ graph }: { graph: EntityGraph }) {
 
   const labelled = (i: number) => focus === null ? sim.nodes[i].kind === "t" || sim.nodes[i].r > 9 || view.k > 1.8 : near.has(i);
   const selNode = focus !== null ? sim.nodes[focus] : null;
-  const nodeHref = (n: Node) => (n.kind === "a" ? `/intel/actors/${n.key}` : n.linked ? `/intel/theaters/${n.key}` : null);
+  const nodeHref = (n: Node) => (n.kind === "a" ? `/intel/actors/${n.key}` : n.linked ? `/situations/${n.key}` : null);
 
   return (
     <div className="rg">

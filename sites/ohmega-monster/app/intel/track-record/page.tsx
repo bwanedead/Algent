@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import JudgmentsSwitch from "@/components/JudgmentsSwitch";
+import PageTag from "@/components/PageTag";
+
 import { BrierSeries, CalibrationChart } from "@/components/track/TrackCharts";
 import { EquityCurve, TraderPositions, TradeLog } from "@/components/track/TraderBook";
 import { Disagreements, OpenPositions, Resolved } from "@/components/track/TrackTables";
 import { trackRecord } from "@/lib/track-record";
 
-import "@/app/geopolitics/geopolitics.css";
-import "../theaters/theaters.css";
+import "@/app/daily/daily.css";
+import "@/app/situations/situations.css";
 import "@/components/track/track.css";
 
 export const metadata: Metadata = {
@@ -32,9 +35,10 @@ export default async function TrackRecordPage() {
   return (
     <div className="intel-page th-page">
       <p className="th-kicker">
-        <span>Intelligence</span> <Link href="/intel/situation" className="xt">situation room →</Link>
+        <PageTag kind="judgment" detail="Forecasts · scored" />
       </p>
       <h1 className="th-claim">Paper trader and track record</h1>
+      <JudgmentsSwitch current="scored" />
       <p className="tr-paper">
         <b>Paper trading only</b>
         A trading agent manages a pretend portfolio on a prediction market&apos;s questions, and our own probability forecasts are scored against the market&apos;s prices. No money is
@@ -141,7 +145,7 @@ export default async function TrackRecordPage() {
               {t.other.judgments && (
                 <p className="tr-note">
                   Desk judgments in briefs: {t.other.judgments.resolved} resolved, {t.other.judgments.open} open
-                  {t.other.judgments.brier !== null && `, Brier ${t.other.judgments.brier.toFixed(3)} (0.25 is a coin flip)`}. See <Link href="/intel/situation" className="xt">the situation room</Link>.
+                  {t.other.judgments.brier !== null && `, Brier ${t.other.judgments.brier.toFixed(3)} (0.25 is a coin flip)`}. See <Link href="/intel/forecasts" className="xt">the open forecasts</Link>.
                 </p>
               )}
               {t.other.watches && (

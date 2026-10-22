@@ -1,12 +1,12 @@
 import PageTag from "@/components/PageTag";
 import type { Metadata } from "next";
 
-import Crumbs, { INTEL_CRUMB } from "@/components/Crumbs";
+import Crumbs, { DATA_CRUMB } from "@/components/Crumbs";
 import RelationshipGraph from "@/components/graph/RelationshipGraph";
 import { entityGraph } from "@/lib/entities";
 
-import "@/app/geopolitics/geopolitics.css";
-import "../theaters/theaters.css";
+import "@/app/daily/daily.css";
+import "@/app/situations/situations.css";
 
 export const metadata: Metadata = {
   title: "Relationship browser",
@@ -21,9 +21,9 @@ export default async function GraphPage() {
   const graph = await entityGraph();
   return (
     <div className="intel-page th-page">
-      <Crumbs trail={[INTEL_CRUMB]} />
+      <Crumbs trail={[DATA_CRUMB]} />
       <p className="th-kicker">
-        <PageTag kind="tool" detail="Graph" />
+        <PageTag kind="data" detail="Graph" />
       </p>
       <h1 className="th-claim">Who is involved where</h1>
       {graph.theaters.length === 0 ? (

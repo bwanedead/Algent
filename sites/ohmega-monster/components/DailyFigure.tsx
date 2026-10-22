@@ -55,16 +55,6 @@ export default function DailyFigure({ v }: { v: DailyVisual }) {
       </figure>
     );
   }
-  if (v.kind === "timeline" && v.spec) {
-    // Opt-in: a timeline is reference material, not something to scroll past. Collapsed until the reader asks for it.
-    return (
-      <details className="geo-figure geo-figure-optin">
-        <summary className="xt">Timeline: {v.title}</summary>
-        <NativeTimeline src={assetUrl(v.spec)} preview={assetUrl(v.preview)} title={v.title} caption={v.caption} />
-        <FigCaption v={v} />
-      </details>
-    );
-  }
   const Native = NATIVE[v.kind];
   if (v.spec && Native) {
     return (

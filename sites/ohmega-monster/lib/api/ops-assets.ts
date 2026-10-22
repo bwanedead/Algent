@@ -11,7 +11,7 @@ const NOTE =
   "A status is somebody's word. claimed_struck = a party says it hit it; reported_damaged = damage reported by the owner, authorities or media; confirmed_damaged = confirmed by the operator, a neutral authority or imagery. " +
   "Every event names its claimant and sources. Positions are approximate unless precision says exact. Places: WRI Global Power Plant Database (CC BY 4.0) and OpenStreetMap contributors (ODbL); places and events found by Ohmega's own reading carry provenance=ohmega_derived.";
 
-const CITE = "/geopolitics";
+const CITE = "/daily/geopolitics";
 
 function bboxParam(v: string | undefined): [number, number, number, number] | undefined {
   if (!v) return undefined;

@@ -5,7 +5,7 @@ import { getMenus, hostOf, menuLabel } from "@/lib/radar";
 import "./pagetag.css";
 
 // "Today's headlines": the newest Headlines edition as a collapsed strip inside the Daily. It is the unverified
-// wire, so it sits closed, under the report, labelled as such; the full list lives at /headlines.
+// wire, so it sits closed, under the report, labelled as such; the full list lives at /daily/headlines.
 export default async function DailyHeadlines() {
   const menu = (await getMenus())[0];
   if (!menu) return null;
@@ -27,7 +27,7 @@ export default async function DailyHeadlines() {
           </li>
         ))}
       </ol>
-      <p className="dh-all"><Link href="/headlines">All headlines and earlier editions →</Link></p>
+      <p className="dh-all"><Link href="/daily/headlines">All headlines and earlier editions →</Link></p>
     </details>
   );
 }

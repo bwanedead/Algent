@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 
-import Crumbs, { INTEL_CRUMB } from "@/components/Crumbs";
+import Crumbs, { DATA_CRUMB } from "@/components/Crumbs";
 import { SourceLink } from "@/components/DailyVisuals";
 import { Section } from "@/components/dossier/parts";
 import { ActorLink, TheaterLink } from "@/components/entities/EntityLinks";
@@ -13,7 +13,7 @@ import { capacityLabel, STATUS_LABEL, STATUS_MEANING, statusTone, TYPE_LABEL } f
 import { imoOf, maritimeForVessel } from "@/lib/maritime";
 import { placeContext } from "@/lib/places";
 
-import "@/app/geopolitics/geopolitics.css";
+import "@/app/daily/daily.css";
 import "../../theaters/theaters.css";
 
 type Params = { id: string };
@@ -50,7 +50,7 @@ export default async function PlacePage({ params }: { params: Params }) {
   const spread = asset.loc_precision === "exact" ? 0.25 : asset.loc_precision === "city_level" ? 0.5 : 0.8;
   return (
     <div className="intel-page th-page">
-      <Crumbs trail={[INTEL_CRUMB]} />
+      <Crumbs trail={[DATA_CRUMB]} />
       <p className="th-kicker">
         <span>{TYPE_LABEL[asset.type]}</span>
         {asset.status && (

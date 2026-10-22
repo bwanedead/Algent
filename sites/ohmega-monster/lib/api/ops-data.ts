@@ -50,7 +50,7 @@ export async function instrumentsOp(a: Args): Promise<ApiResult> {
     unusual: t.unusual === true,
     source: str(t.source),
     source_url: str(t.source_url) || null,
-    cite_as: str(t.source_url) || abs("/geopolitics"),
+    cite_as: str(t.source_url) || abs("/daily/geopolitics"),
     api_url: apiUrl(`/instruments/${t.id}`),
   }));
   for (const [id, series] of Array.from(liveSeries(stats).entries())) {
@@ -74,7 +74,7 @@ export async function instrumentsOp(a: Args): Promise<ApiResult> {
   return {
     data: { instruments: p.items, total: p.total },
     as_of: newest(...rows.map((r) => str(r.as_of))),
-    cite_as: abs("/geopolitics"),
+    cite_as: abs("/daily/geopolitics"),
     source: "ohmega.instruments",
     verification: "measured",
     next_cursor: p.next_cursor,
@@ -87,9 +87,9 @@ export async function instrumentOp(a: Args): Promise<ApiResult> {
   const tracker = (await dailyTrackers()).find((t) => t.id === id);
   if (tracker) {
     return {
-      data: { ...tracker, cite_as: str(tracker.source_url) || abs("/geopolitics"), api_url: apiUrl(`/instruments/${id}`) },
+      data: { ...tracker, cite_as: str(tracker.source_url) || abs("/daily/geopolitics"), api_url: apiUrl(`/instruments/${id}`) },
       as_of: str(tracker.as_of) || null,
-      cite_as: str(tracker.source_url) || abs("/geopolitics"),
+      cite_as: str(tracker.source_url) || abs("/daily/geopolitics"),
       source: "ohmega.daily/1#numbers.trackers",
       verification: "measured",
       note: "changes{} are from -> to over each horizon; spark[] is the recent series (oldest first). An empty source_url marks an internal series: shown, never cited.",

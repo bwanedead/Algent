@@ -690,17 +690,15 @@ function parseDaily(raw: unknown, domain: string, date: string): Daily | null {
 }
 
 // ---- public readers -------------------------------------------------------------------------
-/** All dates with a daily report for the domain, newest first. */
+/** All dates with a daily report for the domain, newest first. Names only: it lists the folder and downloads no document (a file
+ *  that turns out unreadable 404s on its own page instead of being filtered here at the cost of reading every report). */
 export async function allDailyDates(domain: string): Promise<string[]> {
   if (!DOMAIN_RE.test(domain)) return [];
-  const dates = (await intelNames(`daily/${domain}`))
+  return (await intelNames(`daily/${domain}`))
     .filter((f) => f.endsWith(".json") && DATE_RE.test(f.slice(0, -5)))
     .map((f) => f.slice(0, -5))
     .sort()
     .reverse();
-  // Each lookup below is a cached read, so validating every report stays cheap.
-  const parsed = await Promise.all(dates.map((d) => daily(domain, d)));
-  return dates.filter((_, i) => parsed[i] !== null);
 }
 
 export async function daily(domain: string, date: string): Promise<Daily | null> {

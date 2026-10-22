@@ -11,7 +11,7 @@ import { toWallPulse, type WallPulse } from "@/lib/pulse-wall";
 
 // Visuals for the daily report (doctrine: docs/ethos/information-ergonomics-ethos.md). Server
 // components; inline SVG/CSS only. Everything renders nothing when its data is absent. Styles are in
-// app/geopolitics/geopolitics.css (geo-*). Detail never reflows the page: it opens in a Popover.
+// app/daily/daily.css (geo-*). Detail never reflows the page: it opens in a Popover.
 
 function host(url: string): string {
   try {
@@ -122,7 +122,7 @@ export function PulseTiles({ pulses, snap, limit, asOf, className = "geo-pulses"
 export function CoverSpark({ series, coverage, name }: { series: { day: string; count: number }[]; coverage: Coverage; name: string }) {
   const c = COVERAGE_DISPLAY[coverage];
   const week = series.slice(-7);
-  const title = `Coverage ${c.label}: headlines about this theater per day`;
+  const title = `Coverage ${c.label}: headlines about this situation per day`;
   if (week.length < 2) {
     return (
       <span className="geo-cov" title={title}>
@@ -302,7 +302,7 @@ export function DevelopmentDetail({ d, href }: { d: DailyDevelopment; href?: str
       )}
       {href && (
         <p className="geo-pd-foot">
-          <Link href={href} className="xt" title="This development on its own page, with its place, actors and theater">
+          <Link href={href} className="xt" title="This development on its own page, with its place, actors and situation">
             Open on its own page ↗
           </Link>
         </p>

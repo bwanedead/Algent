@@ -17,7 +17,7 @@ export default async function HeadlinesIndex() {
     return (
       <article className="radar-page">
         <header className="article-header">
-          <p className="ptag-row"><PageTag kind="headlines" detail="Not verified" /></p>
+          <p className="ptag-row"><PageTag kind="daily" detail="Headlines · not verified" /></p>
           <h1>Headlines</h1>
           <p className="dek">No headline editions yet.</p>
         </header>

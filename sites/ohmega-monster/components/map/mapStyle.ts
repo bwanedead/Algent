@@ -17,7 +17,7 @@ export function currentTheme(): MapTheme {
   return document.documentElement.getAttribute("data-theme") === "paper" ? "paper" : "dark";
 }
 
-// Colours shared with the static SVG map (app/geopolitics/geopolitics.css) on paper, so both read as one map.
+// Colours shared with the static SVG map (app/daily/daily.css) on paper, so both read as one map.
 const PALETTE = {
   paper: { background: "#f4f1e8", water: "#cfe3f1", border: "#7d8793", borderStrong: "#37424f", label: "#2b3440", halo: "#ffffff", quiet: "#c9c6bc" },
   dark: { background: "#1d2321", water: "#0a1217", border: "#6c7773", borderStrong: "#c4ccc7", label: "#a9b0ab", halo: "#0c0f0e", quiet: "#2a302e" },

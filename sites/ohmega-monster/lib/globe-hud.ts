@@ -13,7 +13,7 @@ import { trackRecord } from "./track-record";
 // Server only (reads documents). The shapes live in lib/globe/hud-data.ts.
 
 const DOMAIN = "geopolitics";
-const BASE = "/geopolitics";
+const BASE = "/daily/geopolitics";
 const ISO_RE = /^[A-Z]{2}$/;
 const DAILY_ITEMS = 10;
 const PULSES_SHOWN = 12;

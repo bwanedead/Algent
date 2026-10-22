@@ -22,7 +22,7 @@ export default async function LivePage() {
   return (
     <div className="intel-page live-page">
       <div className="intel-strip" role="group" aria-label="Live status">
-        <span className="intel-strip-title"><PageTag kind="tool" detail="Live" /></span>
+        <span className="intel-strip-title"><PageTag kind="data" detail="Live" /></span>
         <span className="live-muted">{updated ? `events updated ${whenUtc(updated)}` : "no live data yet"}</span>
       </div>
       <h1 className="live-h1">What the world&apos;s public sensors show right now</h1>

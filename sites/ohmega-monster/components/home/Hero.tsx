@@ -50,11 +50,11 @@ export function Masthead({ report }: { report: Daily | null }) {
         <h1 className="hm-claim">{report?.headline ? claimOf(report.headline, HEADLINE_MAX) : SITE_DESCRIPTION}</h1>
         {report && (
           <p className="hm-more">
-            <Link href="/geopolitics" className="xt">
+            <Link href="/daily/geopolitics" className="xt">
               Today&apos;s report
             </Link>
-            <Link href="/intel/theaters" className="xt">
-              {sections.length > 0 ? `${sections.length} theaters${up > 0 ? `, ${up} escalating` : ""}` : "All theaters"}
+            <Link href="/situations" className="xt">
+              {sections.length > 0 ? `${sections.length} situations in today's report${up > 0 ? `, ${up} escalating` : ""}` : "All situations"}
             </Link>
           </p>
         )}
@@ -73,9 +73,9 @@ export function TheaterRank({ report, snap }: { report: Daily | null; snap: Snap
   if (!report || rows.length === 0) return null;
   const maxHeat = Math.max(0, ...report.theaters.filter((t) => t.kind === "section").map((t) => t.temperature.heat));
   return (
-    <section className="hm-rank" aria-label="Theaters to watch">
+    <section className="hm-rank" aria-label="Situations in today's report">
       <p className="hm-sub">
-        <span>Theaters</span>
+        <span>In today&apos;s report</span>
         <span className="hm-sub-note">escalating first, then by heat</span>
       </p>
       <ol className="hm-rows">
@@ -84,7 +84,7 @@ export function TheaterRank({ report, snap }: { report: Daily | null; snap: Snap
           const flags = [...new Set(t.pulses.flatMap((p) => p.actors_iso2))].slice(0, FLAGS);
           return (
             <li key={anchor}>
-              <Link href={`/geopolitics#${anchor}`} className={`hm-row vl-cat-${cat}`} title={t.name}>
+              <Link href={`/daily/geopolitics#${anchor}`} className={`hm-row vl-cat-${cat}`} title={t.name}>
                 <DirTick direction={t.escalation.direction} />
                 <span className="hm-row-flags">
                   <IsoFlags codes={flags} />
@@ -109,8 +109,8 @@ export function TheaterRank({ report, snap }: { report: Daily | null; snap: Snap
         })}
       </ol>
       <p className="hm-all">
-        <Link href="/intel/theaters" className="xt">
-          All theaters
+        <Link href="/situations" className="xt">
+          All situations
         </Link>
       </p>
     </section>

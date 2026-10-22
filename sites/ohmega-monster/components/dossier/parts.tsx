@@ -5,7 +5,7 @@ import Popover from "@/components/Popover";
 import Term from "@/components/Term";
 import { linkTarget } from "@/lib/dossier";
 
-// Small shared pieces of the dossier pages. Server components; styled by app/intel/theaters/theaters.css.
+// Small shared pieces of the dossier pages. Server components; styled by app/situations/situations.css.
 
 /** One dossier section: a claim heading, one lead line that carries the finding, then the picture. */
 export function Section({ id, title, lead, children, aside }: { id: string; title: string; lead?: ReactNode; children: ReactNode; aside?: ReactNode }) {
