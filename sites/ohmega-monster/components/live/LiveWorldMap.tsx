@@ -315,7 +315,7 @@ export default function LiveWorldMap({ world, events, stats, summary: summary0, 
 
       <section aria-labelledby="live-choke">
         <h2 id="live-choke" className="live-h2">Chokepoints</h2>
-        <ChokepointTiles tiles={gateTile} gates={summary?.gates ?? {}} focus={gate} onFocus={focusGate} fresh={when(vessels?.as_of ?? summary?.fresh.ships)} />
+        <ChokepointTiles tiles={gateTile} gates={summary?.gates ?? {}} focus={gate} onFocus={focusGate} fresh={when(vessels?.as_of ?? summary?.fresh.ships)} provenance={summary?.provenance} />
       </section>
 
       <details className="live-events">

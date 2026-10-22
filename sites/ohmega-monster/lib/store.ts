@@ -48,6 +48,22 @@ export async function dbRows<T>(table: string, query: string): Promise<T[]> {
   return (await rest<T>(table, query)) ?? [];
 }
 
+/** The exact number of rows a PostgREST filter matches (`Prefer: count=exact`, read from Content-Range), so a total is never a page size.
+ *  PostgREST caps every response at its max-rows (1000 on Supabase), which is why `rows.length` is NOT a count. Null on any failure. */
+export async function dbCount(table: string, filter = ""): Promise<number | null> {
+  if (!dbEnabled()) return null;
+  try {
+    const res = await fetch(`${BASE}/rest/v1/${table}?select=id${filter ? `&${filter}` : ""}`, {
+      headers: { apikey: KEY, Authorization: `Bearer ${KEY}`, Prefer: "count=exact", Range: "0-0" },
+      next: { revalidate: REVALIDATE_SECONDS },
+    });
+    const total = /\/(\d+)$/.exec(res.headers.get("content-range") ?? "");
+    return res.ok && total ? Number(total[1]) : null;
+  } catch {
+    return null;
+  }
+}
+
 const enc = encodeURIComponent;
 
 // ---- documents (daily, theaters, actors, briefs, snapshots, record, radar, agent feeds) ------------

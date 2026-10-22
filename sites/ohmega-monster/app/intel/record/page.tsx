@@ -5,6 +5,7 @@ import { SAID_NOTE } from "@/components/OnRecord";
 import RecordBrowser from "@/components/RecordBrowser";
 import ToneChart from "@/components/ToneChart";
 import { recordLedger } from "@/lib/record";
+import { shortDate, statView } from "@/lib/stats/render";
 
 import "@/app/daily/daily.css";
 import "@/app/situations/situations.css";
@@ -20,11 +21,13 @@ export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
 
 export default async function RecordPage() {
   const ledger = await recordLedger();
+  // The export is capped (backend on_record.MAX_STATEMENTS): show the real window total when the document carries it, else "latest N".
+  const n = ledger ? statView({ id: "record_statements", value: ledger.statements.length, cap: { limit: 1500, total: ledger.total } }) : null;
   return (
     <div className="intel-page geo">
       <Crumbs trail={[DATA_CRUMB]} />
       <p className="ptag-row"><PageTag kind="data" detail="The record" /></p>
-      <h1 className="geo-headline">{ledger && ledger.statements.length > 0 ? `${ledger.statements.length} statements in the last ${ledger.window_days} days, in their own words` : "The record"}</h1>
+      <h1 className="geo-headline">{ledger && n && ledger.statements.length > 0 ? `${n.text} statements in the last ${ledger.window_days} days, in their own words` : "The record"}</h1>
       {!ledger || ledger.statements.length === 0 ? (
         <p className="intel-empty">No statements have been published yet. Check back soon.</p>
       ) : (
@@ -32,7 +35,10 @@ export default async function RecordPage() {
           <ToneChart series={ledger.tone} />
           <RecordBrowser rows={ledger.statements} />
           <p className="rec-note">
-            {SAID_NOTE} Wording is from official transcripts; links go to the original.
+            {SAID_NOTE} Wording is from official transcripts; links go to the original. Statements are extracted from those texts by a model, only from the feeds we collect
+            {ledger.collecting_since ? ` (collecting since ${shortDate(ledger.collecting_since)})` : ""}.
+            {ledger.total !== null && ledger.statements.length < ledger.total ? ` The window holds ${ledger.total.toLocaleString("en-US")}; this page lists the latest ${ledger.statements.length.toLocaleString("en-US")}.` : ""}
+            {" "}One speaker appears under one spelling.
           </p>
         </>
       )}

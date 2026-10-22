@@ -11,9 +11,9 @@ import type { CountryBrief, CountryHeadline, CountryPanel, GlobeData } from "@/l
 import { THEMES } from "@/lib/globe/themes";
 
 const COUNTS: { key: keyof CountryPanel["counts"]; one: string; many: string }[] = [
-  { key: "theaters", one: "theater involved", many: "theaters involved" },
+  { key: "theaters", one: "situation involved", many: "situations involved" },
   { key: "statements7d", one: "statement this week", many: "statements this week" },
-  { key: "sanctions30d", one: "sanctions event, 30 days", many: "sanctions events, 30 days" },
+  { key: "sanctions30d", one: "sanctions event, last 90 days (collected since 1 Oct)", many: "sanctions events, last 90 days (collected since 1 Oct)" },
   { key: "calendar", one: "item ahead on the calendar", many: "items ahead on the calendar" },
   { key: "anomalies", one: "live anomaly", many: "live anomalies" },
 ];
@@ -84,17 +84,17 @@ function CountryBody({ iso, fallback }: { iso: string; fallback: CountryHeadline
       {p.grid && <p className="gv-panel-grid"><span className="gv-panel-sub-inline">Grid impact</span> {p.grid.line}</p>}
       {p.stats.length > 0 && (
         <>
-          <p className="gv-panel-sub">Against the world median</p>
+          <p className="gv-panel-sub">Against the median of the {p.profiled} states we profile</p>
           <ul className="gv-stats">
             {p.stats.map((s) => (
-              <li key={s.id} title={s.median ? `World median ${s.median} (${s.year} figure)` : `${s.year} figure`}>
+              <li key={s.id} title={s.median ? `Median of the ${p.profiled} states we profile: ${s.median} (${s.year} figure)` : `${s.year} figure`}>
                 <span className="gv-stat-k">{s.label}</span>
                 <span className="gv-stat-v">{s.text}</span>
                 {s.pos !== null && <span className="gv-stat-bar" aria-hidden="true"><i style={{ width: `${Math.round(s.pos * 100)}%` }} /></span>}
               </li>
             ))}
           </ul>
-          <p className="gv-panel-fine">Bar: log scale, the tick is the world median, a factor of ten either side spans it.</p>
+          <p className="gv-panel-fine">Bar: log scale, the tick is the median of the states we profile (G20, P5 and countries in the news, not the world), a factor of ten either side spans it.</p>
         </>
       )}
     </>

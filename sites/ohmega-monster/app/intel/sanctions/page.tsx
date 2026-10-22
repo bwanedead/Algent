@@ -3,7 +3,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import SanctionsTable from "@/components/sanctions/SanctionsTable";
-import { recentSanctions } from "@/lib/sanctions";
+import { recentSanctions, SANCTIONS_WINDOW_DAYS } from "@/lib/sanctions";
+import { statDef } from "@/lib/stats/registry";
+import { shortDate } from "@/lib/stats/render";
 
 import "@/app/daily/daily.css";
 import "@/app/situations/situations.css";
@@ -20,7 +22,8 @@ export const metadata: Metadata = {
 export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
 
 export default async function SanctionsPage() {
-  const rows = await recentSanctions(90);
+  const rows = await recentSanctions(SANCTIONS_WINDOW_DAYS);
+  const since = statDef("sanctions_changes").baseline_since ?? "";
   const today = new Date().toISOString().slice(0, 10);
   const added = rows.filter((r) => r.action === "designated").length;
   return (
@@ -31,7 +34,7 @@ export default async function SanctionsPage() {
       <h1 className="th-claim">Sanctions designations</h1>
       <p className="th-asof">
         {rows.length > 0
-          ? `${added} added and ${rows.length - added} removed in the last 90 days across the US, UK and EU lists.`
+          ? `${added} added and ${rows.length - added} removed since we began collecting on ${shortDate(since)} (window: up to ${SANCTIONS_WINDOW_DAYS} days), across the US, UK and EU lists. "None removed" means none seen since then.`
           : "No designations have been read yet."}{" "}
         Each row is a change between two copies of an official list; it links to that list.
       </p>

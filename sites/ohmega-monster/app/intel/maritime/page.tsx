@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import MaritimeTable from "@/components/maritime/MaritimeTable";
-import { maritimeEvents } from "@/lib/maritime";
+import { maritimeCounts, maritimeEvents } from "@/lib/maritime";
+import { fmtNum, shortDate, statView } from "@/lib/stats/render";
 
 import "@/app/daily/daily.css";
 import "@/app/situations/situations.css";
@@ -20,9 +21,13 @@ export const metadata: Metadata = {
 export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
 
 export default async function MaritimePage() {
-  const rows = await maritimeEvents();
+  const [rows, counts] = await Promise.all([maritimeEvents(), maritimeCounts()]);
   const nowMs = Date.now();
-  const ongoing = rows.filter((e) => e.ended_at === null).length;
+  // The list is a capped fetch (PostgREST returns at most 1000 rows), so totals come from a count query; without one the list size is shown as "latest N".
+  const total = counts?.total ?? null;
+  const ongoing = counts?.ongoing ?? rows.filter((e) => e.ended_at === null).length;
+  const events = statView({ id: "maritime_events", value: rows.length, cap: { limit: 1000, total } });
+  const since = events.def.baseline_since ?? "";
   return (
     <div className="intel-page th-page">
       <p className="th-kicker">
@@ -31,11 +36,14 @@ export default async function MaritimePage() {
       <h1 className="th-claim">Maritime behaviour</h1>
       <p className="th-asof">
         {rows.length > 0
-          ? `${rows.length} events in the last 30 days, ${ongoing} still going. Ohmega's own analysis of the ship positions it hears, labelled with how sure it is and why.`
+          ? `${events.text} events since detectors started on ${shortDate(since)} (ended events are kept 30 days); ${fmtNum(ongoing)}${total === null ? "+" : ""} are open. "Open" means the ship has not been heard again, usually because it left our receivers' coverage, not that it is known to be dark. Ohmega's own analysis of the ship positions it hears, labelled with how sure it is and why.`
           : "No behaviour events have been derived yet."}{" "}
         A pattern seen, not a finding of intent: a silence, an encounter, a rename and a long dwell all have innocent explanations.
       </p>
-      <MaritimeTable rows={rows} nowMs={nowMs} />
+      <MaritimeTable rows={rows} nowMs={nowMs} kindTotals={counts?.byKind} />
+      {total !== null && rows.length < total && (
+        <p className="th-asof">The table lists the latest {fmtNum(rows.length)} of {fmtNum(total)}; the flag and area counts cover those.</p>
+      )}
       <p className="th-asof">
         How to read it. An AIS gap is reported only where other ships kept being heard, so a ship that sailed out of receiver coverage is not counted as going dark. Ship-to-ship
         candidates exclude ports, harbour approaches and crowds of waiting ships. A sanctioned-vessel match rests on the IMO number (high confidence) or on exact name plus flag

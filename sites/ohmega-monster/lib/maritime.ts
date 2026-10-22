@@ -1,6 +1,6 @@
-import { dbRows } from "@/lib/store";
+import { dbCount, dbRows } from "@/lib/store";
 
-import { asKind, type EvidencePoint, type MaritimeEvent } from "./maritime-shared";
+import { asKind, KIND_ORDER, type EvidencePoint, type MaritimeEvent } from "./maritime-shared";
 
 export * from "./maritime-shared";
 
@@ -64,6 +64,19 @@ function toEvent(r: Raw): MaritimeEvent | null {
 export async function maritimeEvents(limit = 1500): Promise<MaritimeEvent[]> {
   const rows = await dbRows<Raw>("maritime_events", `select=*&order=active.desc,started_at.desc&limit=${Math.min(Math.max(limit, 1), 3000)}`);
   return rows.map(toEvent).filter((e): e is MaritimeEvent => e !== null);
+}
+
+/** Real totals for the page lead: every event in the table, those still open, and per kind (a list fetch is capped, a count is not). */
+export type MaritimeCounts = { total: number; ongoing: number; byKind: Record<string, number> };
+
+export async function maritimeCounts(): Promise<MaritimeCounts | null> {
+  const [total, ongoing, ...kinds] = await Promise.all([
+    dbCount("maritime_events"),
+    dbCount("maritime_events", "ended_at=is.null"),
+    ...KIND_ORDER.map((k) => dbCount("maritime_events", `kind=eq.${k}`)),
+  ]);
+  if (total === null || ongoing === null) return null;
+  return { total, ongoing, byKind: Object.fromEntries(KIND_ORDER.map((k, i) => [k, kinds[i] ?? 0])) };
 }
 
 /** Events about one vessel, by IMO number or MMSI, newest first. */
