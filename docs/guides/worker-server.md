@@ -21,6 +21,7 @@ so it can be rebuilt from scratch instead of repaired by hand.
 | `ohmega-instruments` | every 6 h | public data series | free |
 | `ohmega-statements` | every 6 h | official statement transcripts (collection only) | free |
 | `ohmega-backup` | daily 06:15 | stores → private `algent-data` archive | free |
+| `ohmega-db-prune` | daily 03:40 | retention windows on the growing Postgres tables + `VACUUM` (`newsroom db prune --apply`) | free |
 | `ohmega-menu` | daily 05:00 | newsroom menu (`run --to menu`) | **paid** |
 | `ohmega-daily-1` | daily 05:30 | geopolitics daily, part 1 (Europe/Asia morning) | **paid** |
 | `ohmega-daily-2` | daily 17:30 | geopolitics daily, part 2 (Americas), appended to the same report | **paid** |
@@ -72,6 +73,9 @@ Logs: `journalctl -u ohmega-<job> -n 50`; timers: `systemctl list-timers 'ohmega
   rebuild or key change.
 - The server is not a dependency: `newsroom runner status|claim|release` records which machine runs paid work
   and publishes, and the laptop can take over. Procedure: `docs/guides/runner-handover.md`.
+- `newsroom db size` (also two lines in `newsroom doctor`: `database budget`, `storage budget`) is the free-plan guard: the database is capped
+  at 500 MB (warn 70%, fail 85%). The documents live in Storage, not Postgres; `newsroom db prune|diet|vacuum-full` and the recovery
+  order are in `docs/architecture/database-budget.md`. Never let a writer rewrite a big JSONB column on a timer.
 - `newsroom search-usage` shows how search is doing (who answers, free vs paid, failures).
 
 ## Watchdog
