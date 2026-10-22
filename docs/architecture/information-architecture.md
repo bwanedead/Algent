@@ -55,7 +55,11 @@ Rendering rules, enforced by one `<Stat>` component and the registry:
 - `model` numbers carry a "model-assessed" mark.
 - A cap is never shown as a total ("latest 1,500"); a window is always named.
 - An official figure is preferred over our count when both exist for the same thing (Hormuz: PortWatch leads, our AIS is secondary and labelled).
-- A check script lists every registered stat and every unregistered numeric render, so the surface can be audited in one place.
+- A check script lists every registered stat and every unregistered numeric render, so the surface can be audited in one place: `node sites/ohmega-monster/scripts/stats-audit.mjs` (add `--json` for machine output). It reads `registry.ts` as text, so it needs no install. It exits 1 for two real bugs only (a registry surface that does not exist; an id used in code that is not registered) and lists, as soft pressure, ids no code uses yet and files that format numbers by hand without importing `lib/stats` or being a registry surface.
+- A hit rate (share of closed positions in profit) is hidden until the closed count reaches `MIN_RESOLVED_FOR_VERDICT` (30, backend `markets/flags.py`, published as `rules.min_for_verdict`); `hitRateView` in `lib/stats/render.ts` does it.
+- A key figure's "vs" is one earlier value the writer picked, so it is worded "from one earlier figure", never "vs usual".
+- Calendar: a title that names a date (`Oct. 19`) which falls on none of the item's days marks the item unconfirmed, whoever supplied it (`titleDateConflict`, `lib/calendar-shared.ts`).
+- Backend provenance the site reads: `percentile_1y` is null unless history spans a year (`percentile_window` and `history_days` carry the real rank and span, `instruments/moves.py`); the record export publishes `total`, `capped`, `collecting_since` and folds speaker spellings; the live summary carries a `provenance` block.
 
 ## 5. Specific fixes from the audit
 Home Hormuz "−100%" (our AIS against an 8-day median) · "military aircraft seen/day" (actually a sum of simultaneous per-region maxima) · fires (4 boxes, not the world) · "world median" (104 profiled states) · grid impact showing 0% while reported damage has no figure · maritime 1000 = row cap · 1500 statements = cap · sanctions windows · `percentile_1y` on young series · duplicate speaker names · theater counts 4/26/20.
