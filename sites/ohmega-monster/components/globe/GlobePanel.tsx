@@ -12,8 +12,8 @@ import { THEMES } from "@/lib/globe/themes";
 
 const COUNTS: { key: keyof CountryPanel["counts"]; one: string; many: string }[] = [
   { key: "theaters", one: "situation involved", many: "situations involved" },
-  { key: "statements7d", one: "statement this week", many: "statements this week" },
-  { key: "sanctions30d", one: "sanctions event, last 90 days (collected since 1 Oct)", many: "sanctions events, last 90 days (collected since 1 Oct)" },
+  { key: "statements7d", one: "statement this week (of the latest 8 kept)", many: "statements this week (of the latest 8 kept)" },
+  { key: "sanctions", one: "sanctions event, last 90 days (collected since 1 Oct)", many: "sanctions events, last 90 days (collected since 1 Oct)" },
   { key: "calendar", one: "item ahead on the calendar", many: "items ahead on the calendar" },
   { key: "anomalies", one: "live anomaly", many: "live anomalies" },
 ];

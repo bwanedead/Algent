@@ -1,4 +1,5 @@
 import InfoHover from "@/components/stats/InfoHover";
+import { ModelMark } from "@/components/stats/ModelMark";
 import { Delta } from "@/components/vl/primitives";
 import { statView, type StatInput } from "@/lib/stats/render";
 
@@ -8,14 +9,6 @@ import "./stats.css";
 // it words the number by its basis (a minimum for our own counts, a mark for model readings, "latest N" for a cap), withholds any "vs usual"
 // until our own history is long enough (saying "collecting since 11 Oct" instead), and adds the info hover. Layouts that need their own markup
 // call `statView` and `ModelMark` / `InfoHover` directly.
-
-export function ModelMark() {
-  return (
-    <span className="stat-model" title="Model-assessed: a language model's reading, not a measurement">
-      model-assessed
-    </span>
-  );
-}
 
 export default function Stat({ hover = true, unit = false, ...input }: StatInput & { hover?: boolean; unit?: boolean }) {
   const v = statView(input);

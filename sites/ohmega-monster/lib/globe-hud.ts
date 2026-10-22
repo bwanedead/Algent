@@ -1,4 +1,4 @@
-import { addDays, ahead, calendarItems, kindOf, todayIso, untilWords } from "./calendar";
+import { addDays, ahead, calendarItems, isUnconfirmed, kindOf, todayIso, untilWords } from "./calendar";
 import { allDailyDates, claimOf, daily, dayHref, theaterAnchor, type Daily } from "./daily";
 import { entityIndex, textLinker } from "./entities";
 import { dailyMentions } from "./globe-mentions";
@@ -127,7 +127,7 @@ async function comingBlock(): Promise<HudComing[]> {
   const rows = ahead(await calendarItems(COMING_DAYS), today).filter((r) => r.on_date <= addDays(today, COMING_DAYS));
   return rows.slice(0, COMING_SHOWN).map((r) => ({
     date: r.on_date, end: r.end_date ?? "", title: r.title, kind: r.kind, label: kindOf(r.kind).label, iso: r.countries.map((c) => c.toUpperCase()).filter((c) => ISO_RE.test(c)),
-    url: web(r.source_url), ours: r.source === "corpus", until: untilWords(r.on_date, today),
+    url: web(r.source_url), ours: isUnconfirmed(r), until: untilWords(r.on_date, today),
   }));
 }
 

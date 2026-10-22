@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import IsoFlags from "@/components/IsoFlags";
 import Glyph from "@/components/vl/Glyph";
 import {
-  addDays, confidenceWord, countriesOf, density, kindOf, KINDS, shortDate, weekday, weeks, type CalendarKind, type CalendarRow,
+  addDays, confidenceWord, countriesOf, density, isUnconfirmed, kindOf, KINDS, shortDate, weekday, weeks, type CalendarKind, type CalendarRow,
 } from "@/lib/calendar-shared";
 import { countryName } from "@/lib/flags";
 
@@ -91,7 +91,7 @@ export default function CalendarView({ rows, today }: { rows: CalendarRow[]; tod
                   <ul>
                     {d.items.map((r) => {
                       const k = kindOf(r.kind);
-                      const ours = r.source === "corpus";
+                      const ours = isUnconfirmed(r);
                       return (
                         <li key={`${d.date}-${r.id}`} className="cal-item">
                           <span className={`cal-glyph cal-k-${r.kind}`} title={k.label}>

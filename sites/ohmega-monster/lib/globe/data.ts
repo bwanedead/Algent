@@ -42,7 +42,7 @@ export type CountryPanel = {
   stats: PanelStat[];
   /** How many states the stat medians are taken over (the profiled set, not the world). */
   profiled: number;
-  counts: { theaters: number; statements7d: number; sanctions30d: number; calendar: number; anomalies: number };
+  counts: { theaters: number; statements7d: number; sanctions: number; calendar: number; anomalies: number };
   grid: { line: string; asOf: string } | null;
   leaders: { head_of_state: string; head_of_government: string };
   /** Every brief item naming the country, newest first. */

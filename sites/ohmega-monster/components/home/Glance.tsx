@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import InfoHover from "@/components/stats/InfoHover";
-import { ModelMark } from "@/components/stats/Stat";
+import { ModelMark } from "@/components/stats/ModelMark";
 import { Delta, Spark } from "@/components/vl/primitives";
 import { fmtPct, type Cell, type DayChart, type Mover } from "@/lib/glance";
 import { assetUrl } from "@/lib/assets";

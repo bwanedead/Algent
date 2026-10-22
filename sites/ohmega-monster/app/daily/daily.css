@@ -179,6 +179,7 @@ button.geo-ev-btn { display: flex; align-items: baseline; gap: 8px; width: 100%;
 button.geo-ev-btn:hover .geo-ev-head { color: var(--strong); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
 button.geo-ev-btn:hover .geo-more { color: var(--strong); }
 
+.geo-pulses-mark { grid-column: 1 / -1; order: 99; margin: 0; }
 .geo-pulses { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; margin: 0 0 16px; min-width: 0; }
 
 .geo-next { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4px 24px; margin: 0 0 4px; font-size: 13px; min-width: 0; }

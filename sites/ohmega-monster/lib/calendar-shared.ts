@@ -26,8 +26,30 @@ export type CalendarRow = {
 /** The few fields a compact "coming up" line needs; a CalendarRow and a daily's stored `coming_up` row both satisfy it after `toComing`. */
 export type ComingRow = { date: string; end_date: string; title: string; kind: CalendarKind; countries: string[]; confidence: "high" | "medium" | "low"; url: string; ours: boolean };
 
+// ---- the title-date guard ---------------------------------------------------------------------------------------------------
+// Extracted items (source "corpus") are read from our own text and can be mis-dated: an item dated 21 Oct whose title says "Oct. 19" is an
+// extraction error. A date written in a title that falls on none of the days the item covers marks it unconfirmed, whoever supplied it.
+
+const MON = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+const MONTH_DAY = [/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+(\d{1,2})(?!\d)/gi, /\b(\d{1,2})(?:st|nd|rd|th)?\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*/gi];
+
+/** True when `title` names a month and day that none of the item's covered days (`start` to `end`, up to 14) falls on. False when it names none. */
+export function titleDateConflict(title: string, start: string, end: string | null): boolean {
+  const named = new Set<string>();
+  MONTH_DAY.forEach((re, i) => {
+    for (const m of title.matchAll(re)) named.add(`${MON.indexOf((i === 0 ? m[1] : m[2]).toLowerCase())}-${Number(i === 0 ? m[2] : m[1])}`);
+  });
+  if (named.size === 0) return false;
+  const covered = spans({ on_date: start, end_date: end }).map((d) => `${+d.slice(5, 7) - 1}-${+d.slice(8, 10)}`);
+  return !covered.some((c) => named.has(c));
+}
+
+/** Not an official schedule: extracted from our own reports (source "corpus"), or its title disagrees with its date. Shown as "unconfirmed". */
+export const isUnconfirmed = (r: { source: string; title: string; on_date: string; end_date: string | null }): boolean =>
+  r.source === "corpus" || titleDateConflict(r.title, r.on_date, r.end_date);
+
 export const toComing = (r: CalendarRow): ComingRow => ({
-  date: r.on_date, end_date: r.end_date ?? "", title: r.title, kind: r.kind, countries: r.countries, confidence: r.confidence, url: r.source_url, ours: r.source === "corpus",
+  date: r.on_date, end_date: r.end_date ?? "", title: r.title, kind: r.kind, countries: r.countries, confidence: r.confidence, url: r.source_url, ours: isUnconfirmed(r),
 });
 
 export const KINDS: { id: CalendarKind; label: string; glyph: GlyphName }[] = [

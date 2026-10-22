@@ -147,3 +147,10 @@ export function statView(i: StatInput): StatView {
     lines: infoLines(def, since, days, floor, prov, i.note),
   };
 }
+
+/** A hit rate (share of closed positions that ended in profit). A ratio on a handful of positions says nothing, so it is withheld until `n` reaches
+ *  `min` (the backend's MIN_RESOLVED_FOR_VERDICT, published as `rules.min_for_verdict`); until then the counts are the honest figure. */
+export function hitRateView(rate: number | null, n: number, min: number): { text: string; note: string } {
+  if (rate === null || n < min) return { text: "–", note: `rate shown once ${min} have closed` };
+  return { text: `${Math.round(rate * 100)}%`, note: "" };
+}

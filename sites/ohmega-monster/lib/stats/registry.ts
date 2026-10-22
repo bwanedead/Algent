@@ -96,7 +96,7 @@ export const STATS: StatDef[] = [
   def({
     id: "theaters_escalating", label: "Sections escalating", basis: "our_derived", source: { name: "Ohmega Daily (writer and heat board)", url: "/daily" }, unit: "sections",
     scope: "Sections of the newest Daily whose escalation direction is 'rising', out of the sections that Daily wrote; a situation with no news that day has no section.",
-    coverage: "Part 1 only until the second Daily run (17:30 UTC).", surfaces: ["lib/glance.ts", "app/intel/theaters/page.tsx"],
+    coverage: "Part 1 only until the second Daily run (17:30 UTC).", surfaces: ["lib/glance.ts", "app/situations/page.tsx"],
   }),
   def({
     id: "theater_heat", label: "Theater heat", basis: "our_derived", source: { name: "Ohmega heat board (share of headlines)" }, unit: "heat",
@@ -236,7 +236,7 @@ export const STATS: StatDef[] = [
   }),
   def({
     id: "world_median", label: "Median of the states we profile", basis: "our_derived", source: { name: "World Bank, IMF, OWID (Ohmega actors)", url: "/intel/actors" }, unit: "varies",
-    scope: "The median of this figure over the 104 states Ohmega profiles (G20, P5 and countries in the news). It is not a world median.",
+    scope: "The median of this figure over the states Ohmega profiles (the G20, the P5 and countries in the news; the panel states how many). It is not a world median.",
     coverage: "The set leans to large economies; each figure is the latest year the source has, shown with its year.", surfaces: ["lib/globe-country.ts", "components/globe"],
   }),
   def({
@@ -299,8 +299,8 @@ export const STATS: StatDef[] = [
   }),
   def({
     id: "theater_counts", label: "Theater counts", basis: "our_derived", source: { name: "Ohmega theater registry", url: "/intel/theaters" }, unit: "theaters",
-    scope: "Counts mix three universes: the sections in the newest Daily (about 4), the active theater files (about 26) and the legacy dossier set. Each count says which one it is.",
-    surfaces: ["app/intel/theaters/page.tsx", "lib/sections.ts"],
+    scope: "Counts mix universes: the sections in the newest Daily, the active situation files and the legacy dossier set. Each count says which one it is.",
+    surfaces: ["app/situations/page.tsx", "lib/sections.ts"],
   }),
 ];
 

@@ -1,5 +1,5 @@
 import { asStatus, asType, type AssetStatus, type AssetType } from "./geoledger-shared";
-import { KINDS as CALENDAR_KINDS, type ComingRow } from "./calendar-shared";
+import { KINDS as CALENDAR_KINDS, titleDateConflict, type ComingRow } from "./calendar-shared";
 import type { UnusualRow } from "./live-shared";
 import { parseOnRecord, type OnRecord } from "./record-model";
 import { intelDoc, intelNames } from "./store";
@@ -90,7 +90,11 @@ export type Tracker = {
   outside: boolean;
   /** Plain words for a long-run departure ("lowest in 6 years of data"); empty when not outside. */
   outside_note: string;
+  /** Rank of the latest value among the trailing 365 days; null unless the stored history really spans a year (backend instruments/moves.py). */
   percentile_1y: number | null;
+  /** Days of history behind the rank, and the rank under its true (shorter) window when there is no year yet; null in documents from before these existed. */
+  history_days: number | null;
+  percentile_window: { value: number; days: number; n: number } | null;
   /** How often the source publishes (a weekly feed is not stale between releases). */
   cadence: "daily" | "weekly" | "monthly" | "annual";
   /** "overdue" = older than the source's cadence and lag allow: a feed problem, not a quiet source. */
@@ -339,6 +343,14 @@ export function parseMap(raw: unknown): TheaterMap | null {
 
 const HORIZONS = ["prev", "7d", "30d", "1y"] as const;
 
+function percentileWindow(v: unknown): Tracker["percentile_window"] {
+  if (!isObj(v)) return null;
+  const value = num(v.value);
+  const days = num(v.days);
+  const n = num(v.n);
+  return value !== null && days !== null && n !== null ? { value, days, n } : null;
+}
+
 function parseTracker(raw: unknown): Tracker | null {
   if (!isObj(raw)) return null;
   const id = str(raw.id);
@@ -371,6 +383,8 @@ function parseTracker(raw: unknown): Tracker | null {
     outside: raw.outside === true,
     outside_note: str(raw.outside_note),
     percentile_1y: num(raw.percentile_1y),
+    history_days: num(raw.history_days),
+    percentile_window: percentileWindow(raw.percentile_window),
     cadence: oneOf(raw.cadence, ["daily", "weekly", "monthly", "annual"] as const, "daily"),
     status: raw.status === "overdue" ? "overdue" : "current",
     note: str(raw.note),
@@ -613,7 +627,7 @@ function parseComing(raw: unknown): ComingRow[] {
       countries: strs(r.countries).filter((c) => /^[A-Za-z]{2}$/.test(c)),
       confidence: (["high", "medium", "low"].includes(str(r.confidence)) ? str(r.confidence) : "low") as ComingRow["confidence"],
       url: /^https?:\/\//.test(str(r.url)) ? str(r.url) : "",
-      ours: str(r.source) === "corpus",
+      ours: str(r.source) === "corpus" || titleDateConflict(str(r.title), str(r.date), str(r.end_date) || null),
     }))
     .filter((r) => /^\d{4}-\d{2}-\d{2}$/.test(r.date) && r.title);
 }

@@ -7,6 +7,7 @@ import PageTag from "@/components/PageTag";
 import { BrierSeries, CalibrationChart } from "@/components/track/TrackCharts";
 import { EquityCurve, TraderPositions, TradeLog } from "@/components/track/TraderBook";
 import { Disagreements, OpenPositions, Resolved } from "@/components/track/TrackTables";
+import { hitRateView } from "@/lib/stats/render";
 import { trackRecord } from "@/lib/track-record";
 
 import "@/app/daily/daily.css";
@@ -32,6 +33,8 @@ export default async function TrackRecordPage() {
   const s = t?.scores;
   const early = !t || !s || s.compared < t.rules.min_for_verdict;
   const skill = s?.brier_skill ?? null;
+  const traderHit = t ? hitRateView(t.trader.summary.hit_rate, t.trader.summary.wins + t.trader.summary.losses, t.rules.min_for_verdict) : { text: "–", note: "" };
+  const paperHit = t ? hitRateView(t.portfolio.hit_rate, t.portfolio.wins + t.portfolio.losses, t.rules.min_for_verdict) : { text: "–", note: "" };
   return (
     <div className="intel-page th-page">
       <p className="th-kicker">
@@ -67,8 +70,8 @@ export default async function TrackRecordPage() {
             <li><span className="tr-stat-n">{t.trader.summary.open}</span><span className="tr-stat-l">positions held</span></li>
             <li><span className="tr-stat-n">{t.trader.summary.buys + t.trader.summary.sells}</span><span className="tr-stat-l">trades ({t.trader.summary.buys} buys, {t.trader.summary.sells} sells)</span></li>
             <li>
-              <span className="tr-stat-n">{t.trader.summary.hit_rate === null ? "n/a" : `${Math.round(t.trader.summary.hit_rate * 100)}%`}</span>
-              <span className="tr-stat-l">closed positions in profit ({t.trader.summary.wins}W {t.trader.summary.losses}L)</span>
+              <span className="tr-stat-n">{traderHit.text}</span>
+              <span className="tr-stat-l">closed positions in profit ({t.trader.summary.wins}W {t.trader.summary.losses}L){traderHit.note && `; ${traderHit.note}`}</span>
             </li>
             <li><span className="tr-stat-n">${Math.round(t.trader.summary.cash).toLocaleString("en-US")}</span><span className="tr-stat-l">cash</span></li>
           </ul>
@@ -103,8 +106,8 @@ export default async function TrackRecordPage() {
               <span className="tr-stat-l">paper P&amp;L on ${t.portfolio.bankroll.toLocaleString("en-US")}</span>
             </li>
             <li>
-              <span className="tr-stat-n">{t.portfolio.hit_rate === null ? "n/a" : `${Math.round(t.portfolio.hit_rate * 100)}%`}</span>
-              <span className="tr-stat-l">paper hit rate ({t.portfolio.wins}W {t.portfolio.losses}L)</span>
+              <span className="tr-stat-n">{paperHit.text}</span>
+              <span className="tr-stat-l">paper hit rate ({t.portfolio.wins}W {t.portfolio.losses}L){paperHit.note && `; ${paperHit.note}`}</span>
             </li>
             <li><span className="tr-stat-n">{t.markets.open}</span><span className="tr-stat-l">markets open, {t.forecasts} forecasts</span></li>
           </ul>

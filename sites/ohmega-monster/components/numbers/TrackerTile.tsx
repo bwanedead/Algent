@@ -34,6 +34,9 @@ function Detail({ t }: { t: Tracker }) {
         <p className="num-range">
           <span className="geo-micro">On the chart</span> low {fmtValue(lo)} · high {fmtValue(hi)}
           {t.percentile_1y !== null && <> · now above {Math.round(t.percentile_1y)}% of the past year</>}
+          {t.percentile_1y === null && t.percentile_window && t.percentile_window.days > 0 && (
+            <> · now above {Math.round(t.percentile_window.value)}% of the {t.percentile_window.days} days we hold (less than a year)</>
+          )}
         </p>
       )}
       <ul className="num-rows">

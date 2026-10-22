@@ -7,6 +7,7 @@ import type { WallPulse } from "@/lib/pulse-wall";
 import IsoFlags from "./IsoFlags";
 import Term from "./Term";
 import PulseSpectrum from "./PulseSpectrum";
+import { ModelMark } from "./stats/ModelMark";
 import "./pulse-tile.css";
 
 const day = (at: string) => at.slice(0, 10);
@@ -108,6 +109,7 @@ export default function PulseDetail({
       )}
       {p.rationale && <p className="pd-why">{p.rationale}</p>}
       <p className="intel-micro pd-foot">
+        <ModelMark />{" "}
         <Term id="pulse" label="a Pulse">
           What is a Pulse?
         </Term>

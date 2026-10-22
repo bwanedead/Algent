@@ -9,12 +9,14 @@ import { DESKS } from "./desks";
 import { CADENCE_HOURS, newest } from "./fresh";
 import { latestSnapshot } from "./intel";
 import { liveSummary } from "./live";
-import { maritimeEvents } from "./maritime";
+import { maritimeCounts, maritimeEvents } from "./maritime";
 import { getMenus } from "./radar";
 import { recordLedger } from "./record";
-import { recentSanctions } from "./sanctions";
+import { recentSanctions, SANCTIONS_WINDOW_DAYS } from "./sanctions";
 import { satelliteDoc } from "./satellite";
 import { situationsByDesk } from "./situations";
+import { statDef } from "./stats/registry";
+import { shortDate, statView } from "./stats/render";
 import { trackRecord } from "./track-record";
 
 // The site's sections as doors: one line saying what is behind each, a small live hint read from the published data
@@ -37,7 +39,7 @@ export type Door = {
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
 const hints = cache(async () => {
-  const [dailies, situations, actors, ledger, snap, articles, menus, live, upcoming, sanctions, maritime, track, ai, satellite] = await Promise.all([
+  const [dailies, situations, actors, ledger, snap, articles, menus, live, upcoming, sanctions, maritime, maritimeNewest, track, ai, satellite] = await Promise.all([
     Promise.all(DESKS.map((d) => latestDaily(d.id))),
     situationsByDesk(),
     actorIds(),
@@ -47,7 +49,8 @@ const hints = cache(async () => {
     getMenus(),
     liveSummary(),
     calendarItems(30),
-    recentSanctions(30),
+    recentSanctions(SANCTIONS_WINDOW_DAYS),
+    maritimeCounts(),
     maritimeEvents(300),
     trackRecord(),
     aiBenchmarks(),
@@ -68,9 +71,12 @@ const hints = cache(async () => {
     },
     actors: actors.length > 0 ? plural(actors.length, "state profile") : "",
     graph: active.length > 0 && actors.length > 0 ? `${plural(actors.length, "state")} · ${plural(active.length, "active situation")}` : "",
-    record: ledger && ledger.count > 0 ? `${plural(ledger.statements.length, "statement")} · last ${ledger.window_days} days` : "",
+    // The export is capped: the hint shows the window's real total when the document carries it, else "latest N".
+    record: ledger && ledger.count > 0
+      ? `${statView({ id: "door_statements", value: ledger.statements.length, cap: { limit: 1500, total: ledger.total } }).text} statements · last ${ledger.window_days} days`
+      : "",
     recordStamp: ledger?.as_of ?? "",
-    pulses: pulses.length > 0 ? `${plural(pulses.length, "Pulse")}${severe > 0 ? ` · ${severe} severe or worse` : ""}` : "",
+    pulses: pulses.length > 0 ? `${plural(pulses.length, "Pulse")}${severe > 0 ? ` · ${severe} severe or worse` : ""} · model-assessed` : "",
     pulsesStamp: snap?.built_at ?? "",
     articles: { hint: articles.length > 0 ? `${plural(articles.length, "article")}` : "", stamp: articles[0]?.published_at || articles[0]?.date || "" },
     headlines: { hint: menus[0] ? plural(menus[0].leads.length, "headline") : "", stamp: menus[0]?.builtAt ?? "" },
@@ -78,13 +84,14 @@ const hints = cache(async () => {
     satellite: satellite && satellite.counts.with_imagery > 0 ? `${plural(satellite.counts.with_imagery, "place")}${satellite.counts.changed > 0 ? ` · ${satellite.counts.changed} changed` : ""}` : "",
     calendar: ahead30.length > 0 ? `${plural(ahead30.length, "date")} · next 30 days` : "",
     maritime: {
-      hint: maritime.length > 0 ? `${plural(maritime.filter((m) => m.ended_at === null).length, "event")} going · last 30 days` : "",
-      stamp: newest(maritime.map((m) => m.updated_at)),
+      // A real count (a list fetch is capped at 1000 rows), over the detectors' own history rather than a "last 30 days" they have not run for.
+      hint: maritime && maritime.total > 0 ? `${plural(maritime.total, "event")} · since ${shortDate(statDef("maritime_events").baseline_since ?? "")}` : "",
+      stamp: newest(maritimeNewest.map((m) => m.updated_at)),
     },
     track: { hint: track ? `${plural(track.scores.compared, "market")} compared · ${plural(track.markets.open, "open market")}` : "", stamp: track?.as_of ?? "" },
     ai: { hint: ai ? `${plural(ai.benchmarks.length, "benchmark")} · ${plural(ai.labs.length, "lab")}` : "", stamp: ai?.as_of ?? "" },
     sanctions: {
-      hint: sanctions.length > 0 ? `${plural(sanctions.filter((s) => s.action === "designated").length, "addition")} · last 30 days` : "",
+      hint: sanctions.length > 0 ? `${plural(sanctions.filter((s) => s.action === "designated").length, "addition")} · since ${shortDate(statDef("sanctions_changes").baseline_since ?? "")}` : "",
       stamp: newest(sanctions.map((s) => s.observed_on)),
     },
   };
