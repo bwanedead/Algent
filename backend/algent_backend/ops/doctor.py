@@ -69,6 +69,16 @@ class Probes:
         with migrate.connect() as conn:
             conn.execute("select 1")
 
+    def db_budget(self) -> dict[str, Any]:
+        """Database size vs the free-plan quota (``database/size.report``): a few catalog reads."""
+        import importlib
+
+        migrate = importlib.import_module("algent_backend.database.migrate")
+        from algent_backend.database import size
+
+        with migrate.connect() as conn:
+            return size.report(conn, top=3)
+
     def http_get_json(self, url: str, timeout: float = 10.0) -> Any:
         import httpx
 
@@ -213,6 +223,27 @@ def check_database(env: dict[str, str], probes: Probes) -> dict[str, Any]:
     except Exception as exc:  # noqa: BLE001
         return {"database": _check(FAIL, f"not reachable: {scrub(exc, env)}")}
     return {"database": _check(OK, "connected, select 1 ok")}
+
+
+def check_db_budget(env: dict[str, str], probes: Probes) -> dict[str, Any]:
+    """The free plan's 500 MB database quota (docs/architecture/database-budget.md): warn at 70%, fail at 85%.
+    Skipped when the database itself is not reachable (``check_database`` already said so)."""
+    if not env.get("DATABASE_URL"):
+        return {}
+    from algent_backend.database import size
+
+    try:
+        rep = probes.db_budget()
+    except Exception as exc:  # noqa: BLE001
+        return {"database budget": _check(WARN, f"unknown: {scrub(exc, env)}")}
+    verdict = size.judge(rep["size_bytes"], rep.get("quota_bytes"))
+    hint = "" if verdict["status"] == OK else " - run `newsroom db size`, then `newsroom db prune --apply` (docs/architecture/database-budget.md)"
+    out = {"database budget": _check(verdict["status"], size.summary_line({**rep, **verdict}) + hint, share=verdict["share"])}
+    if (st := rep.get("storage")):
+        top = ", ".join(f"{k}/ {size.human(v)}" for k, v in list(st["by_prefix"].items())[:3])
+        out["storage budget"] = _check(st["status"], f"{size.human(st['size_bytes'])} of {size.human(st['quota_bytes'])} ({st['share'] * 100:.0f}%) in published-assets: {top}",
+                                       share=st["share"])
+    return out
 
 
 def check_search(env: dict[str, str], probes: Probes) -> dict[str, Any]:
@@ -565,6 +596,8 @@ def run_checks(env: dict[str, str] | None = None, probes: Probes | None = None,
                  check_harnesses(probes), check_publish(env, probes, repo), check_runner(probes),
                  check_system(probes), check_watchdog(probes), check_schedule(probes), check_quota(probes), check_instruments(), check_live(env), check_sanctions(), check_maritime(), check_calendar(), check_markets(), check_ai_benchmarks(), check_satellite(), check_basemap(probes)):
         checks.update(part)
+    if checks.get("database", {}).get("status") == OK:        # the size check needs a reachable database
+        checks.update(check_db_budget(env, probes))
     counts = {s: sum(1 for c in checks.values() if c["status"] == s) for s in (OK, WARN, FAIL)}
     return {"ok": counts[FAIL] == 0, "summary": f"{counts[OK]} ok, {counts[WARN]} warn, {counts[FAIL]} fail",
             "checks": checks}

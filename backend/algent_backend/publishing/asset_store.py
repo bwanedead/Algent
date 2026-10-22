@@ -80,9 +80,10 @@ def _load(path: Path) -> dict[str, str]:
 
 
 def upload(files: dict[str, bytes], *, http: Http | None = None, manifest: Path | None = None,
-           cache_control: str = "max-age=3600", workers: int = 1) -> dict[str, Any]:
+           cache_control: str = "max-age=3600", workers: int = 1, force: bool = False) -> dict[str, Any]:
     """Upload ``{site path: bytes}`` (``cache_control`` is the objects' CDN/browser cache header; the live snapshots
-    pass a short one; ``workers`` > 1 sends that many requests at once, for the live tiles). Returns ``{"assets": n_uploaded, "skipped": n, "failed": [paths], "ok": bool}``
+    pass a short one; ``workers`` > 1 sends that many requests at once, for the live tiles; ``force`` ignores and leaves untouched the local hash
+    manifest, for callers that decide "changed" themselves, as the document store does from the database's index). Returns ``{"assets": n_uploaded, "skipped": n, "failed": [paths], "ok": bool}``
     (``ok`` False only when a configured upload failed). Never raises."""
     if not files:
         return {"assets": 0, "skipped": 0, "failed": [], "ok": True}
@@ -91,7 +92,7 @@ def upload(files: dict[str, bytes], *, http: Http | None = None, manifest: Path 
                 "note": "asset upload off (no SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY)"}
     try:
         mpath = manifest or _manifest_path()
-        seen = _load(mpath)
+        seen = {} if force else _load(mpath)
         key_env = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
         send = http or _http
 
@@ -120,11 +121,12 @@ def upload(files: dict[str, bytes], *, http: Http | None = None, manifest: Path 
         uploaded = sum(r == "uploaded" for r, _ in results)
         skipped = sum(r == "skipped" for r, _ in results)
         failed = [what for r, what in results if r == "failed"]
-        try:
-            mpath.parent.mkdir(parents=True, exist_ok=True)
-            mpath.write_text(json.dumps(seen, indent=1, sort_keys=True), encoding="utf-8")
-        except OSError:
-            pass   # the manifest is an optimisation: losing it only costs re-uploads
+        if not force:
+            try:
+                mpath.parent.mkdir(parents=True, exist_ok=True)
+                mpath.write_text(json.dumps(seen, indent=1, sort_keys=True), encoding="utf-8")
+            except OSError:
+                pass   # the manifest is an optimisation: losing it only costs re-uploads
         return {"assets": uploaded, "skipped": skipped, "failed": failed, "ok": not failed}
     except Exception as exc:  # noqa: BLE001 — the article is the product; assets must never sink a run
         return {"assets": 0, "skipped": 0, "failed": [f"{type(exc).__name__}: {str(exc)[:120]}"], "ok": False}

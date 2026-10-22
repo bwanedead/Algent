@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # The server's scheduled jobs, one entry point so systemd units stay one-liners:
 #
-#   jobs.sh library | instruments | statements | sanctions | calendar | markets | ai-benchmarks | ai-discovery | backup | watchdog | flows | satellite | live <feed>   free
+#   jobs.sh library | instruments | statements | sanctions | calendar | markets | ai-benchmarks | ai-discovery | backup | db-prune | watchdog | flows | satellite | live <feed>   free
 #   jobs.sh menu | daily-1 | daily-2 | markets-daily                       PAID, unattended (operator-authorised)
 #
 # Free work: crawl, AI benchmark scores, a capped (<$0.10/day, ai_benchmarks/flags.py) discovery of lab-claimed scores, public data series, statement transcripts without extraction, the archive backup.
@@ -24,7 +24,7 @@ if [ "${1:-}" = "satellite" ]; then exec $PY -m algent_backend.cli newsroom sate
 exec 9>"$HOME/.ohmega-jobs.lock"
 flock -w 3600 9
 
-case "${1:?usage: jobs.sh library|instruments|statements|sanctions|calendar|markets|ai-benchmarks|ai-discovery|backup|live|menu|daily-1|daily-2|markets-daily}" in
+case "${1:?usage: jobs.sh library|instruments|statements|sanctions|calendar|markets|ai-benchmarks|ai-discovery|backup|db-prune|live|menu|daily-1|daily-2|markets-daily}" in
     library)     $PY -m algent_backend.cli newsroom library crawl --max 150 ;;
     instruments) $PY -m algent_backend.cli newsroom instruments fetch ;;
     statements)  $PY -m algent_backend.cli newsroom statements collect --no-extract --no-reported ;;
@@ -33,6 +33,7 @@ case "${1:?usage: jobs.sh library|instruments|statements|sanctions|calendar|mark
     markets)     $PY -m algent_backend.cli newsroom markets refresh ;;
     ai-benchmarks) $PY -m algent_backend.cli newsroom ai-benchmarks fetch ;;
     ai-discovery)  $PY -m algent_backend.cli newsroom ai-benchmarks discover ;;
+    db-prune)    $PY -m algent_backend.cli newsroom db prune --apply ;;
     backup)      $PY -c "from algent_backend.data_backup import sync; print(sync.backup(note='server nightly'))" ;;
     menu|daily-1|daily-2|markets-daily|ai-daily) $PY -m algent_backend.cli newsroom schedule run "$1" ;;
     *) echo "unknown job: $1" >&2; exit 2 ;;

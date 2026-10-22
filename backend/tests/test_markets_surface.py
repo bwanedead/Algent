@@ -33,13 +33,18 @@ def test_daily_view_is_labelled_mechanical_and_absent_without_a_gap():
 
 
 def test_publish_sends_one_document_and_never_raises():
-    sent: list = []
+    import gzip
+
+    index: list = []
+    uploads: dict = {}
 
     class Cur:
         def __enter__(self): return self
         def __exit__(self, *a): return False
-        def execute(self, sql, args): sent.append(args)
-        def fetchone(self): return (1,)
+        def execute(self, sql, args=()):
+            if sql.strip().startswith("insert"):
+                index.append(args)
+        def fetchall(self): return []
 
     class Conn:
         def __enter__(self): return self
@@ -47,12 +52,16 @@ def test_publish_sends_one_document_and_never_raises():
         def cursor(self): return Cur()
         def commit(self): pass
 
+    def http(method, url, headers, body):
+        uploads[url.split("/published-assets/", 1)[1]] = body
+        return 200
+
     seed_gap()
-    out = publish.publish(connect=lambda: Conn())
-    doc = json.loads(sent[0][2])
-    assert out["db"] is True and sent[0][0] == "data/track-record.json" and doc["paper_only"] is True and doc["forecasts"] == 1
+    out = publish.publish(connect=lambda: Conn(), http=http)
+    doc = json.loads(gzip.decompress(uploads["docs/data/track-record.json.gz"]))
+    assert out["db"] is True and index[0][0] == "data/track-record.json" and doc["paper_only"] is True and doc["forecasts"] == 1
     assert doc["disagreements"] == []                                                       # the 2026-10-01 forecast is long past DISAGREE_MAX_AGE_DAYS
-    assert publish.publish(connect=lambda: (_ for _ in ()).throw(RuntimeError("down")))["db"] is False
+    assert publish.publish(connect=lambda: (_ for _ in ()).throw(RuntimeError("down")), http=http)["db"] is False
 
 
 def test_the_daily_record_carries_the_view_without_the_writers_seeing_it():
