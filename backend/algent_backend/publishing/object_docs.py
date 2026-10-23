@@ -30,6 +30,9 @@ NAMES_DIR = "_names"
 _LOCK = threading.RLock()
 
 
+_BATCH = 500   # documents per upload call; the manifest is saved after each so an interrupted run resumes
+
+
 def manifest_path() -> Path:
 
     return object_store.held_dir() / "doc_hashes.json"
@@ -91,16 +94,23 @@ def publish(docs: dict[str, Any], *, http: Any = None, force: bool = False, mani
             if refused:
                 out["refused"] = refused
             failed: set[str] = set()
-            if todo:
-                res = asset_store.upload({p.site_path: p.gz for p in todo}, http=http, force=True, cache_control=doc_store.CACHE_CONTROL,
-                                         workers=budget.UPLOAD_WORKERS)
-                failed = {f.split(" (", 1)[0] for f in res["failed"]}
-                if failed and not all(f.startswith("/" + doc_store.PREFIX) for f in failed):
-                    failed = {p.site_path for p in todo}          # a whole-call failure: nothing is known to have landed
-            sent = [p for p in todo if p.site_path not in failed]
             had = {k.split("|", 1)[1] for k in state if k.startswith(ident + "|")}
-            for p in sent:
-                state[f"{ident}|{p.path}"] = p.sha256
+            sent: list[Any] = []
+            # Upload in batches and record each batch's hashes as it lands: a long first publish (tens of thousands of views) that is killed part way
+            # keeps what it already sent, instead of re-sending everything on the next run.
+            for i in range(0, len(todo), _BATCH):
+                batch = todo[i:i + _BATCH]
+                res = asset_store.upload({p.site_path: p.gz for p in batch}, http=http, force=True, cache_control=doc_store.CACHE_CONTROL,
+                                         workers=budget.UPLOAD_WORKERS)
+                bad = {f.split(" (", 1)[0] for f in res["failed"]}
+                if bad and not all(f.startswith("/" + doc_store.PREFIX) for f in bad):
+                    bad = {p.site_path for p in batch}            # a whole-call failure: nothing in this batch is known to have landed
+                failed |= bad
+                landed = [p for p in batch if p.site_path not in bad]
+                for p in landed:
+                    state[f"{ident}|{p.path}"] = p.sha256
+                sent += landed
+                _save(mpath, state)
             out["documents"] = len(sent)
             _save(mpath, state)
             if names and sent:
