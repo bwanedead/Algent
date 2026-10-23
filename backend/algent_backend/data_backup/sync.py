@@ -19,7 +19,6 @@ Restore on a new machine: clone the repo and copy its folders back (``restore()`
 
 from __future__ import annotations
 
-import filecmp
 import os
 import shutil
 import subprocess
@@ -67,6 +66,21 @@ def _checkout() -> tuple[Path | None, str]:
     return wt, "cloned"
 
 
+def _same_bytes(a: Path, b: Path) -> bool:
+    """True when two files hold the same bytes. Deliberately not ``filecmp.cmp``: that caches its verdict by (size, mtime) signature, so a same-size
+    rewrite inside one filesystem timestamp tick (and ``copy2`` gives the mirror the source's mtime) is answered from the cache as "unchanged" - a
+    missed backup, and the cause of ``test_mirror_adds_and_updates_but_never_deletes`` failing now and then."""
+    if a.stat().st_size != b.stat().st_size:
+        return False
+    with a.open("rb") as fa, b.open("rb") as fb:
+        while True:
+            ca, cb = fa.read(1 << 20), fb.read(1 << 20)
+            if ca != cb:
+                return False
+            if not ca:
+                return True
+
+
 def mirror(sources: dict[str, Path], dest: Path, skipped: list[str] | None = None) -> int:
     """Copy new and changed files from each source into ``dest/<name>/``. Returns files copied. A file over ``flags.MIRROR_MAX_FILE_BYTES`` is
     not mirrored (it is in the R2 snapshot, ``snapshot.py``); its path is appended to ``skipped`` when given."""
@@ -84,7 +98,7 @@ def mirror(sources: dict[str, Path], dest: Path, skipped: list[str] | None = Non
                 if skipped is not None:
                     skipped.append(f"{name}/{path.relative_to(src).as_posix()}")
                 continue
-            if target.exists() and filecmp.cmp(path, target, shallow=False):
+            if target.exists() and _same_bytes(path, target):
                 continue
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(path, target)
