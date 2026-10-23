@@ -12,12 +12,13 @@ Rules:
   an accident, and an accident must not propagate into the only other copy.
 - Never raises. A backup that fails leaves the run's result untouched and says why.
 - Off in tests (``ALGENT_DATA_BACKUP=0``, set by conftest) — a test must never push data.
-Restore on a new machine: clone the repo and copy its folders back (``restore()``).
+Files over ``flags.MIRROR_MAX_FILE_BYTES`` are not mirrored: the R2 snapshot (``snapshot.py``) is the primary copy and covers them. What is
+irreplaceable is decided once, in the product registry (``ops/products``); ``_sources()`` reads it and so does the snapshot.
+Restore on a new machine: clone the repo and copy its folders back (``restore()``), or ``newsroom backup restore`` from the latest snapshot.
 """
 
 from __future__ import annotations
 
-import filecmp
 import os
 import shutil
 import subprocess
@@ -37,56 +38,12 @@ def _repo_root() -> Path:
     return Path(__file__).resolve().parents[3]          # …/Algent
 
 
-def _env_dir(env: str, default: str) -> Path:
-    return Path(os.environ.get(env) or default)
-
-
 def _sources() -> dict[str, Path]:
-    """What is backed up, by the folder name it gets in the data repo."""
-    from algent_backend.agent_system.agents.pulse import PulseStore
-    from algent_backend.agent_system.agents.research.store import JsonProfileStore
+    """What is backed up, by the folder name it gets in the data repo: every backed-up store of an irreplaceable product in the product registry
+    (``ops/products/registry.py``) - the single list, read by the mirror, the R2 snapshot, the restore and the coverage test."""
+    from algent_backend.ops.products import views
 
-    backend = _repo_root() / "backend"
-
-    def resolve(p: Path) -> Path:
-        return p if p.is_absolute() else backend / p
-
-    from algent_backend.agent_system.agents.intel.heat import store_dir as intel_dir
-    from algent_backend.actors.store import store_dir as actors_dir
-    from algent_backend.agent_system.agents.statements.store import store_dir as statements_dir
-    from algent_backend.ai_benchmarks.store import root as ai_benchmarks_dir
-    from algent_backend.instruments.store import store_dir as instruments_dir
-
-    from algent_backend.geoledger.store import root as geoledger_dir
-    from algent_backend.lookahead.store import root as calendar_dir
-    from algent_backend.maritime.store import root as maritime_dir
-    from algent_backend.markets.store import root as markets_dir
-    from algent_backend.publishing import site_git
-    from algent_backend.sanctions.store import root as sanctions_dir
-
-    # The server is the system of record (no database): every corpus store is mirrored, plus what was PUBLISHED (the dailies and articles
-    # exist nowhere else once the database is gone). The raw maritime positions (GB) are not mirrored; their daily summaries are.
-    site = site_git.live_site_dir(_repo_root())
-    return {"profile_store": resolve(JsonProfileStore().root),
-            "pulse_store": resolve(PulseStore().root),
-            "geoledger_store": resolve(geoledger_dir()),
-            "sanctions_store": resolve(sanctions_dir()),
-            "calendar_store": resolve(calendar_dir()),
-            "markets_store": resolve(markets_dir()),
-            "maritime_daily": resolve(maritime_dir()) / "daily",
-            # paid editorial work the pipeline must never redo (memory: never-redo-paid-work)
-            "draft_store": resolve(_env_dir("ALGENT_DRAFT_STORE", "draft_store")),
-            "treatment_store": resolve(_env_dir("ALGENT_TREATMENT_STORE", "treatment_store")),
-            "lead_store": resolve(_env_dir("ALGENT_LEAD_STORE", "lead_store")),
-            "site_articles": site / "content" / "articles",
-            "site_intel": site / "content" / "intel",
-            "site_radar": site / "content" / "radar",
-            "site_data": site / "public" / "data",
-            "intel_store": resolve(intel_dir()),
-            "instruments_store": resolve(instruments_dir()),
-            "ai_benchmarks_store": resolve(ai_benchmarks_dir()),   # forward-captured Arena snapshots and lab claims cannot be re-fetched
-            "statements_store": resolve(statements_dir()),
-            "actors_store": resolve(actors_dir())}
+    return views.backup_sources()
 
 
 def _git(cwd: Path, *args: str) -> tuple[bool, str]:
@@ -109,8 +66,26 @@ def _checkout() -> tuple[Path | None, str]:
     return wt, "cloned"
 
 
-def mirror(sources: dict[str, Path], dest: Path) -> int:
-    """Copy new and changed files from each source into ``dest/<name>/``. Returns files copied."""
+def _same_bytes(a: Path, b: Path) -> bool:
+    """True when two files hold the same bytes. Deliberately not ``filecmp.cmp``: that caches its verdict by (size, mtime) signature, so a same-size
+    rewrite inside one filesystem timestamp tick (and ``copy2`` gives the mirror the source's mtime) is answered from the cache as "unchanged" - a
+    missed backup, and the cause of ``test_mirror_adds_and_updates_but_never_deletes`` failing now and then."""
+    if a.stat().st_size != b.stat().st_size:
+        return False
+    with a.open("rb") as fa, b.open("rb") as fb:
+        while True:
+            ca, cb = fa.read(1 << 20), fb.read(1 << 20)
+            if ca != cb:
+                return False
+            if not ca:
+                return True
+
+
+def mirror(sources: dict[str, Path], dest: Path, skipped: list[str] | None = None) -> int:
+    """Copy new and changed files from each source into ``dest/<name>/``. Returns files copied. A file over ``flags.MIRROR_MAX_FILE_BYTES`` is
+    not mirrored (it is in the R2 snapshot, ``snapshot.py``); its path is appended to ``skipped`` when given."""
+    from algent_backend.data_backup import flags
+
     copied = 0
     for name, src in sources.items():
         if not src.is_dir():
@@ -119,7 +94,11 @@ def mirror(sources: dict[str, Path], dest: Path) -> int:
             if not path.is_file() or path.suffix == ".tmp":
                 continue
             target = dest / name / path.relative_to(src)
-            if target.exists() and filecmp.cmp(path, target, shallow=False):
+            if path.stat().st_size > flags.MIRROR_MAX_FILE_BYTES:
+                if skipped is not None:
+                    skipped.append(f"{name}/{path.relative_to(src).as_posix()}")
+                continue
+            if target.exists() and _same_bytes(path, target):
                 continue
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(path, target)
@@ -135,15 +114,17 @@ def backup(note: str = "") -> dict:
         wt, how = _checkout()
         if wt is None:
             return {"backed_up": False, "note": how}
-        copied = mirror(_sources(), wt)
+        too_big: list[str] = []
+        copied = mirror(_sources(), wt, too_big)
+        extra = {"too_big_for_git": too_big} if too_big else {}
         if not copied:
-            return {"backed_up": True, "copied": 0, "note": "already current"}
+            return {"backed_up": True, "copied": 0, "note": "already current", **extra}
         _git(wt, "add", "-A")
         ok, out = _git(wt, "commit", "-m", f"backup: {copied} file(s){' — ' + note if note else ''}")
         if not ok and "nothing to commit" not in out:
             return {"backed_up": False, "note": f"commit failed: {out[:160]}"}
         ok, out = _git(wt, "push", "-u", "origin", BRANCH)
-        return {"backed_up": ok, "copied": copied, "note": "pushed" if ok else f"push failed: {out[:160]}"}
+        return {"backed_up": ok, "copied": copied, "note": "pushed" if ok else f"push failed: {out[:160]}", **extra}
     except Exception as exc:  # noqa: BLE001 — a failed backup must never fail the run
         return {"backed_up": False, "note": f"{type(exc).__name__}: {str(exc)[:160]}"}
 

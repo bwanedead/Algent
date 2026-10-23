@@ -34,3 +34,7 @@ RECENCY_WEIGHT = 0.3
 RECENCY_HALF_LIFE_DAYS = 30.0
 #: Reciprocal-rank-fusion constant when lexical and dense rankings are combined.
 RRF_K = 60
+
+#: Use the corpus index (``algent_backend/corpus``, built by ``newsroom corpus build``) as the document source and lexical ranker when one exists.
+#: Absent, empty or unreadable: the in-process loaders and BM25 below run exactly as before.
+USE_CORPUS_INDEX = True

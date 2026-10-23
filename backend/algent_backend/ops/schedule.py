@@ -2,7 +2,7 @@
 ``newsroom schedule run <job>`` — the unattended PAID jobs: the geopolitics daily's two editions, the menu, and the Polymarket paper trader.
 
 The operator authorised these to run on a timer, protected by the watchdog (``ops/watchdog.py``). This wrapper is
-what each paid systemd unit starts (via ``infra/server/jobs.sh``, which holds the shared job lock first, so paid
+what each paid systemd unit starts (via ``newsroom products run``, which holds the shared job lock first, so paid
 jobs never overlap each other or the free ones). It spends nothing itself; it only decides WHETHER the real
 command runs, then runs it as a child process (so the watchdog sees and limits the child on its own command line)
 and writes down what happened.
@@ -50,22 +50,10 @@ class Job:
 
 
 def jobs() -> dict[str, Job]:
-    """The paid jobs. Edition times come from the daily's own flags so there is one place to change them."""
-    from algent_backend.agent_system.agents.intel import flags as intel_flags
-    from algent_backend.markets import flags as markets_flags
+    """The paid jobs: every registry job marked ``spend="paid"`` (ops/products/registry.py). Edition times come from the daily's own flags there, so there is one place to change them."""
+    from algent_backend.ops.products import views
 
-    out = {"menu": Job("menu", ("run", "--to", "menu"), flags.MENU_UTC, "newsroom menu")}
-    for e in intel_flags.EDITIONS:
-        # Refresh of instruments/statements happens before edition 1 only (the CLI skips it for later parts: their
-        # collectors already run on timers).
-        out[f"daily-{e.n}"] = Job(f"daily-{e.n}", ("intel", "daily", "--domain", "geopolitics", "--research",
-                                                  "--edition", str(e.n)), e.utc, f"geopolitics daily, part {e.n} ({e.label})")
-    # The paper trader's day: refresh prices, blind forecasts, the agent's trades, marks, publish. After daily part 1 so the forecast reads
-    # today's sections; capped by markets/flags (TRADE_MAX_USD_PER_DAY, MAX_FORECAST_USD_PER_DAY).
-    if intel_flags.AI_DAILY_SCHEDULED:      # the operator's switch (intel/flags.py): the AI domain's daily, one part a day
-        out["ai-daily"] = Job("ai-daily", ("intel", "daily", "--domain", "ai", "--research"), intel_flags.AI_DAILY_UTC, "AI daily")
-    out["markets-daily"] = Job("markets-daily", ("markets", "daily"), markets_flags.DAILY_UTC, "Polymarket paper trader: forecasts, trades, marks")
-    return out
+    return {j.name: Job(j.name, j.argv, j.hhmm(), j.what) for _p, j in views.paid_jobs()}
 
 
 def paid_runs_enabled() -> bool:

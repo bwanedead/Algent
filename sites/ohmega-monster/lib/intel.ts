@@ -235,7 +235,7 @@ function parseForecasts(raw: unknown): Forecasts {
   };
 }
 
-function parseSnapshot(raw: unknown, slug: string): Snapshot | null {
+export function parseSnapshot(raw: unknown, slug: string): Snapshot | null {
   if (!isObj(raw)) return null;
   return {
     slug: str(raw.slug) || slug,

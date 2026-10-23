@@ -13,14 +13,14 @@ import { DossierPrimer, DossierTop } from "@/components/dossier/DossierTop";
 import { RelatedTheaters, StatesInvolved } from "@/components/entities/EntityLinks";
 import UnusualHere from "@/components/live/UnusualHere";
 import SituationStream from "@/components/situations/SituationStream";
-import { actorsForTheater } from "@/lib/actors";
 import { headlineOf } from "@/lib/daily";
 import { situationHref } from "@/lib/desks";
 import { dossier, dossierIds, situationIds } from "@/lib/dossier";
-import { relatedTheaters, theaterStates } from "@/lib/entities";
-import { latestSnapshot } from "@/lib/intel";
+import { toTheaterRef } from "@/lib/entities";
+import { parseSnapshot } from "@/lib/intel";
 import { anomaliesIn, toUnusual } from "@/lib/live";
-import { situationStream } from "@/lib/situations";
+import { streamOf } from "@/lib/situations";
+import { situationView } from "@/lib/views";
 
 import "@/app/daily/daily.css";
 import "../situations.css";
@@ -30,7 +30,7 @@ type Params = { id: string };
 // A situation published after the last deploy renders on demand (dynamicParams stays on): publishing is a database write.
 export const revalidate = 1800; // lib/store.ts TTL.daily: a desk publishes twice a day
 
-const PRERENDERED = 8; // each page reads every Daily that covers it; the rest render on first request and are cached (ISR)
+const PRERENDERED = 8; // each page reads its dossier and its view (the server built the stream); the rest render on first request and are cached (ISR)
 
 export async function generateStaticParams(): Promise<Params[]> {
   return (await situationIds()).slice(0, PRERENDERED).map((id) => ({ id }));
@@ -46,17 +46,20 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   };
 }
 
-// One living file per situation: the claim first, then THE STREAM (every Daily section about it, newest first, newest fully open,
-// every day with its own pictures), then the map, the actors, the record, the numbers and the outlook. Doctrine:
+// One living file per situation: the claim first, then THE STREAM (every Daily section about it, newest first; the newest days fully open with their
+// pictures, the earlier ones a row into their Daily), then the map, the actors, the record, the numbers and the outlook. The dossier is one document; the
+// stream, the actors it involves, the states tied to it and the related situations are one server-built view (backend views/situation.py). Doctrine:
 // docs/ethos/information-ergonomics-ethos.md and docs/architecture/information-architecture.md §2.
 export default async function SituationPage({ params }: { params: Params }) {
   const d = await dossier(params.id);
   if (!d) notFound();
-  const snap = await latestSnapshot();
-  const [all, linkable] = await Promise.all([dossierIds(), situationIds()]);
+  const [view, all, linkable, unusual] = await Promise.all([situationView(d.theater_id), dossierIds(), situationIds(), anomaliesIn(d.map?.bbox)]);
   const known = new Set(all);
-  const involved = await actorsForTheater(d.theater_id);
-  const [states, related, unusual, days] = await Promise.all([theaterStates(d.theater_id), relatedTheaters(d.theater_id), anomaliesIn(d.map?.bbox), situationStream(d.theater_id)]);
+  const snap = view?.snapshot ? parseSnapshot(view.snapshot, "") : null;
+  const stream = streamOf(view);
+  const involved = view?.involved ?? [];
+  const states = view?.states ?? [];
+  const related = (view?.related ?? []).map((r) => ({ ...toTheaterRef(r), shared: r.shared }));
   const briefs = [...d.briefs].sort((a, b) => (a.as_of < b.as_of ? 1 : a.as_of > b.as_of ? -1 : 0));
   return (
     <div className="intel-page th-page">
@@ -66,7 +69,7 @@ export default async function SituationPage({ params }: { params: Params }) {
 
       <DossierPulses pulses={d.pulses} snap={snap} />
 
-      <SituationStream days={days} briefs={briefs} snap={snap} dossiers={new Set(linkable)} />
+      <SituationStream stream={stream} briefs={briefs} snap={snap} dossiers={new Set(linkable)} />
 
       {d.map && (
         <div className="th-screen">

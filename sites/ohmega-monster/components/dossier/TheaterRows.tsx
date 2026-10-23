@@ -14,7 +14,7 @@ import { EscalationMini } from "./EscalationTrack";
 // band, coverage bars, last report) on the same day axis and the same bar scale (one desk at a time: desks' scales differ), so the
 // eye learns one row and reads the differences.
 
-export type TheaterRow = { item: DossierIndexItem; dossier: Dossier | null };
+export type TheaterRow = { item: DossierIndexItem; dossier: Pick<Dossier, "escalation_history" | "coverage_series"> | null };
 
 function CoverBars({ series, days, max, name }: { series: { day: string; count: number }[]; days: string[]; max: number; name: string }) {
   const CW = 6;

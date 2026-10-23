@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+
 from algent_backend.data_backup import backup, mirror
 
 
@@ -25,3 +27,19 @@ def test_mirror_adds_and_updates_but_never_deletes(tmp_path) -> None:
 
 def test_backup_is_off_in_tests() -> None:
     assert backup()["note"] == "disabled"
+
+
+def test_mirror_sees_a_same_size_rewrite_inside_one_timestamp_tick(tmp_path) -> None:
+    """The flake: ``filecmp.cmp`` answers from a cache keyed by (size, mtime), so a same-size edit with an identical mtime looked unchanged."""
+    src, dest = tmp_path / "s", tmp_path / "d"
+    src.mkdir()
+    f = src / "a.json"
+    f.write_text("v1", encoding="utf-8")
+    stamp = (1_700_000_000, 1_700_000_000)
+    os.utime(f, stamp)
+    assert mirror({"s": src}, dest) == 1
+    assert mirror({"s": src}, dest) == 0                  # primes any signature cache
+    f.write_text("v2", encoding="utf-8")
+    os.utime(f, stamp)                                    # same size, same mtime: only the bytes differ
+    assert mirror({"s": src}, dest) == 1
+    assert (dest / "s" / "a.json").read_text(encoding="utf-8") == "v2"

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
@@ -11,7 +12,7 @@ import pytest
 
 from algent_backend.agent_system.tools.sourcing.search import quota, search_ledger
 from algent_backend.data_backup import runner, sync
-from algent_backend.ops import doctor
+from algent_backend.ops import doctor, envelope
 
 _ROOT = Path(__file__).resolve().parents[2]
 
@@ -110,7 +111,28 @@ def test_publish_run_refuses_on_non_runner(machines, tmp_path):
 
 # ---------------------------------------------------------------- doctor
 
+class _HealthyEnvelope(envelope.Probes):
+    """The envelope rows the doctor embeds (stores, journald, backup, drill, spend) on a box with a good backup."""
+
+    def journal_mb(self):
+        return 100.0
+
+    def store_roots(self):
+        return {}
+
+    def snapshot_state(self):
+        return {"state": {"last_snapshot": {"date": "d", "files": 1}, "last_drill": {"ok": True, "snapshot": "d", "files": 1}}, "age_h": 1.0, "drill_age_days": 1.0}
+
+    def spend_by_day(self):
+        return {}
+
+    def state_path(self):
+        return Path(os.environ["ALGENT_RUNS_DIR"]) / "envelope_state.json"
+
+
 class FakeProbes(doctor.Probes):
+    envelope_probes = _HealthyEnvelope()
+
     def __init__(self, **kw):
         self.kw = kw
 

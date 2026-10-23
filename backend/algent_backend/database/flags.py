@@ -90,6 +90,24 @@ R2_STOP_SHARE = 0.90
 #: stopped after ~3 days' worth of operations instead of eating the month.
 R2_DAILY_STOP_MULT = 3.0
 
+# ── the staging channel: a preview site reads ``<R2 base>/staging/…`` instead of production (docs/guides/deploy.md) ────────────────────────
+#: Staging objects live in the same bucket under this prefix and go through the SAME meter (so the free-tier guard sees them) plus their own,
+#: much lower allowance below. Selected per process with ``ALGENT_PUBLISH_TARGET=staging`` (the ``--target staging`` CLI option sets it).
+STAGING_PREFIX = "staging"
+#: Class A operations (PUT / DELETE) staging may use in one UTC day: ~9% of the even daily share of the free tier, ~a full ``stage-from-prod``.
+STAGING_CLASS_A_PER_DAY = 3_000
+#: Bytes staging may hold in the bucket at once (the sum of what its ledger says it wrote and has not pruned).
+STAGING_MAX_BYTES = 200 * 1024 ** 2
+#: A staged object not rewritten for this many days is deleted by ``newsroom publish staging-prune`` (the daily ``staging-prune`` job). Set the
+#: same number as an R2 lifecycle rule on the ``staging/`` prefix (docs/guides/deploy.md) so the bucket cleans itself even if the job stops.
+STAGING_KEEP_DAYS = 14
+#: ``stage-from-prod`` copies a SAMPLE of the published documents, enough for every kind of page to render on a preview. Per directory of documents the
+#: newest N names are kept (names sort newest-first: dates, ids); a directory not listed is copied whole; ``index``/``latest`` documents always are.
+STAGING_DIR_CAPS = (("daily/", 3), ("theaters", 10), ("briefs", 6), ("actors", 6), ("snapshots", 4), ("radar", 4), ("pulses", 6), ("geo/c", 4), ("geo/a", 4),
+                    ("geo/events", 2), ("geo/grid", 4), ("maritime/vessel", 4), ("sanctions/country", 4), ("data/actors", 4))
+#: ... and of the views, per family: the N largest (the richest pages); a family not listed is copied whole.
+STAGING_VIEW_CAPS = {"country": 8, "situation": 8, "entity": 12, "event": 6, "series": 6}
+
 
 def postgres_publish() -> bool:
     """Whether the Postgres publish paths are on: the flag, overridable per process by ``ALGENT_POSTGRES_PUBLISH`` (1/0)."""

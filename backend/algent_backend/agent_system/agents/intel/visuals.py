@@ -27,6 +27,7 @@ from pydantic import BaseModel, Field
 
 from . import flags
 from . import visuals_facts as vf
+from . import visuals_store
 from .visuals_grounding import ungrounded as _ungrounded      # the one grounding rule (scene_spec shares it)
 
 #: What a visual can BE. ``kind`` in the record. Chart-like forms are drawn as charts, the rest as illustrations.
@@ -262,9 +263,10 @@ def _ready() -> tuple[bool, str]:
 
 
 def _upload(files: dict[str, bytes]) -> dict:
+    """Local first (``visuals_store``: the server keeps a copy under intel_store/visuals/), then the bucket."""
     from algent_backend.publishing import asset_store
 
-    return asset_store.upload(files)
+    return visuals_store.local_first(asset_store.upload)(files)
 
 
 def _record(art: Any, ask: VisualAsk, cited: list[vf.Fact], path: str, raster: str) -> dict:
@@ -315,6 +317,7 @@ def attach(sections: list[dict], *, ctx: Any, domain: str, as_of: str, ask: Call
         if len(facts) < MIN_FACTS or sum(f.has_number for f in facts) < 2:
             return None
         cap = flags.visuals_max()
+        uploader = visuals_store.local_first(uploader) if uploader else _upload     # every producer below publishes through this, never around it
         plan = ask(VisualPlan, PLAN_ROLE, _message(facts, sections, cap))
         kept, dropped = validate(plan, facts, {s.get("theater_id") for s in sections}, cap)
         report: dict[str, Any] = {"planned": len(getattr(plan, "visuals", []) or []), "produced": 0, "skipped": dropped,
@@ -324,7 +327,7 @@ def attach(sections: list[dict], *, ctx: Any, domain: str, as_of: str, ask: Call
         specs = [k for k in kept if k[0].form == "scene3d" or k[0].form in _NATIVE]
         kept = [k for k in kept if k not in specs]           # what remains goes to the coding harness: static charts only
         if specs:
-            _spec_forms(specs, sections, ask=ask, domain=domain, as_of=as_of, uploader=uploader or _upload, report=report,
+            _spec_forms(specs, sections, ask=ask, domain=domain, as_of=as_of, uploader=uploader, report=report,
                         first=len(kept) + 1)
         if not kept:
             return report
@@ -334,7 +337,7 @@ def attach(sections: list[dict], *, ctx: Any, domain: str, as_of: str, ask: Call
             return report
         profile = vf.profile_of(facts, domain=domain, as_of=as_of)
         _draw_all(kept, profile, sections, ctx=ctx, domain=domain, as_of=as_of, runner=runner,
-                  uploader=uploader or _upload, report=report)
+                  uploader=uploader, report=report)
         return report
     except Exception as exc:  # noqa: BLE001 - a visual is an addition to the day, never its gate
         return {"produced": 0, "skipped": [f"visuals failed: {type(exc).__name__}: {str(exc)[:160]}"]}

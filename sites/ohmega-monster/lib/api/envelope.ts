@@ -3,7 +3,7 @@ import { SITE_URL } from "@/lib/site";
 import { ApiError, type ApiResult } from "./util";
 
 // The response contract of /api/v1: one envelope, one set of headers, in one place.
-//   { data, meta: { as_of, source, version, cite_as, license, verification?, note?, next? } }
+//   { data, meta: { as_of, source, version, cite_as, license, verification?, note?, provenance?, basis?, next? } }
 // Errors: { error: { code, message }, meta: { version } }. Docs: docs/architecture/agent-api.md.
 
 export const API_VERSION = "v1";
@@ -44,6 +44,8 @@ export function respond(req: Request, r: ApiResult): Response {
     license: LICENSE,
     ...(r.verification ? { verification: r.verification } : {}),
     ...(r.note ? { note: r.note } : {}),
+    ...(r.provenance ? { provenance: r.provenance } : {}),
+    ...(r.basis && r.basis.length > 0 ? { basis: r.basis } : {}),
   };
   const next = nextUrl(req, r.next_cursor);
   if (next) meta.next = next;

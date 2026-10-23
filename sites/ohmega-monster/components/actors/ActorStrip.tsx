@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import type { Actor } from "@/lib/actors";
+import type { ActorLite } from "@/lib/actors";
 
 import { ActorFlag, ActorScales } from "./ActorParts";
 
@@ -9,7 +9,7 @@ import { ActorFlag, ActorScales } from "./ActorParts";
 
 const SHOWN = 5;
 
-export default function ActorStrip({ actors }: { actors: Actor[] }) {
+export default function ActorStrip({ actors }: { actors: ActorLite[] }) {
   if (actors.length === 0) return null;
   const shown = actors.slice(0, SHOWN);
   const names = shown.map((a) => a.name);

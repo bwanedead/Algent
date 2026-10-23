@@ -1,81 +1,44 @@
-import { actor, allActors, compact, fieldOf, fmt, type Actor } from "./actors";
-import { calendarForCountry } from "./calendar";
-import { getGrid } from "./geoledger";
+import { compact, fmt, type Unit } from "./actors";
+import { claimOf } from "./daily";
 import type { CountryPanel, PanelStat } from "./globe/data";
-import { countryBriefs } from "./globe-briefs";
 import { liveAnomalies } from "./live";
-import { sanctionsForCountry, SANCTIONS_WINDOW_DAYS } from "./sanctions";
+import { countryView, type RawPanelStat } from "./views";
 
-// The globe's country panel: supplemental stats and counts for one country, fetched when it is picked (so the globe payload stays small).
-// Stats come from the published actor profiles; each bar places the value against the MEDIAN OF THE PROFILED STATES (G20, P5, countries in the news; not the world) for the same field on a log track
-// (tick at the middle, a factor of ten either side spans it), so heavy-tailed fields (GDP, population) stay readable. Server only.
+// The globe's country panel: supplemental stats and counts for one country, fetched when it is picked (so the globe payload stays small). The worker
+// server builds the panel with the rest of the country (backend `views/country.py`): each stat bar places the value against the MEDIAN OF THE PROFILED
+// STATES (G20, P5, countries in the news; not the world) for the same field on a log track (tick at the middle, a factor of ten either side spans it),
+// so heavy-tailed fields (GDP, population) stay readable; the brief history is the country's own section of the one view, not a walk over thirty
+// dailies. This module reads that view, words the numbers and brings the one live count (anomalies going on now). Server only.
 
-const STATS: { id: string; label: string }[] = [
-  { id: "population", label: "Population" },
-  { id: "gdp", label: "GDP" },
-  { id: "gdp_pc", label: "GDP per person" },
-  { id: "milex", label: "Military spending" },
-  { id: "milex_pct", label: "Military, share of GDP" },
-  { id: "energy_import_pct", label: "Net energy imports, share of use" },
-  { id: "fuel_exports_pct", label: "Fuels, share of exports" },
-  { id: "gov_debt", label: "Government debt, share of GDP" },
-  { id: "reserves_usd", label: "Foreign reserves" },
-];
+const BRIEF_MAX = 150;
 
-const MEDIAN_TTL_MS = 3600000;
-let medians: { at: number; by: Map<string, number>; n: number } | null = null;
+const medianText = (m: number, unit: string): string => (unit === "pct" ? `${m.toFixed(1)}%` : unit === "usd" ? `$${compact(m)}` : compact(m));
 
-const median = (xs: number[]): number => {
-  const s = [...xs].sort((a, b) => a - b);
-  const m = Math.floor(s.length / 2);
-  return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
-};
-
-async function profiledMedians(): Promise<{ by: Map<string, number>; n: number }> {
-  if (medians && Date.now() - medians.at < MEDIAN_TTL_MS) return medians;
-  const all = await allActors();
-  const by = new Map<string, number>();
-  for (const { id } of STATS) {
-    const vals = all.map((a) => fieldOf(a, id)?.value).filter((v): v is number => typeof v === "number" && v > 0);
-    if (vals.length >= 5) by.set(id, median(vals));
-  }
-  medians = { at: Date.now(), by, n: all.length };
-  return medians;
-}
-
-const pos = (v: number, med: number | undefined): number | null =>
-  med && v > 0 ? Math.min(1, Math.max(0, 0.5 + 0.5 * Math.log10(v / med))) : null;
-
-function statsOf(a: Actor, med: Map<string, number>): PanelStat[] {
-  const out: PanelStat[] = [];
-  for (const { id, label } of STATS) {
-    const f = fieldOf(a, id);
-    if (!f) continue;
-    const m = med.get(id);
-    out.push({ id, label, text: fmt(f.value, f.unit), year: f.year, pos: pos(f.value, m), median: m === undefined ? "" : f.unit === "pct" ? `${m.toFixed(1)}%` : f.unit === "usd" ? `$${compact(m)}` : compact(m) });
-  }
-  return out;
-}
+const statOf = (s: RawPanelStat): PanelStat => ({
+  id: s.id,
+  label: s.label,
+  text: fmt(s.value, s.unit as Unit),
+  year: s.year,
+  pos: s.pos,
+  median: s.median === null ? "" : medianText(s.median, s.unit),
+});
 
 export async function countryPanel(iso: string): Promise<CountryPanel | null> {
   if (!/^[A-Z]{2}$/.test(iso)) return null;
-  const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString().slice(0, 10);
-  const [a, med, sanctions, calendar, anomalies, grid, briefs] = await Promise.all([
-    actor(iso), profiledMedians(), sanctionsForCountry(iso, SANCTIONS_WINDOW_DAYS), calendarForCountry(iso, 45, 60), liveAnomalies(), getGrid(iso), countryBriefs(iso),
-  ]);
+  const [view, anomalies] = await Promise.all([countryView(iso), liveAnomalies()]);
+  const hot = anomalies.filter((x) => x.active && x.countries.includes(iso)).length;
+  if (!view) {
+    // A state with nothing on record yet: an honest empty panel, not an error (the globe lets any country be picked).
+    return { iso, stats: [], profiled: 0, counts: { theaters: 0, statements7d: 0, sanctions: 0, calendar: 0, anomalies: hot }, grid: null, leaders: { head_of_state: "", head_of_government: "" }, briefs: [] };
+  }
+  const p = view.panel;
   return {
     iso,
-    stats: a ? statsOf(a, med.by) : [],
-    profiled: med.n,
-    counts: {
-      theaters: a?.involved.theaters.length ?? 0,
-      statements7d: a?.statements.filter((s) => s.date >= weekAgo).length ?? 0,
-      sanctions: sanctions.length,
-      calendar: calendar.length,
-      anomalies: anomalies.filter((x) => x.active && x.countries.includes(iso)).length,
-    },
-    grid: grid && grid.line ? { line: grid.line, asOf: grid.as_of } : null,
-    leaders: { head_of_state: a?.leadership.head_of_state?.name ?? "", head_of_government: a?.leadership.head_of_government?.name ?? "" },
-    briefs,
+    stats: p.stats.map(statOf),
+    profiled: p.profiled,
+    counts: { ...p.counts, anomalies: hot },
+    grid: p.grid,
+    leaders: p.leaders,
+    briefs: p.briefs.map((b) => ({ ...b, text: claimOf(b.text, BRIEF_MAX) })),
   };
 }

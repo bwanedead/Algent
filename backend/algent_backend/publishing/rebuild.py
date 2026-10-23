@@ -72,15 +72,19 @@ def article_items(roots: list[Path]) -> list[tuple[str, str, str, str]]:
     return out
 
 
-def _docs_step(build: Callable[[], dict[str, Any]], dry_run: bool, http: Any) -> dict[str, Any]:
+def _docs_step(build: Callable[[], dict[str, Any]], dry_run: bool, http: Any, keep: Callable[[dict[str, Any]], dict[str, Any]] | None = None) -> dict[str, Any]:
     docs = build()
+    if keep is not None:
+        docs = keep(docs)
     if dry_run:
         return object_docs.dry_run_report(docs)
     return site_data.publish(docs, http=http)
 
 
-def run(*, dry_run: bool = False, only: list[str] | None = None, roots: list[Path] | None = None, http: Any = None) -> dict[str, Any]:
-    """Run every step (or just ``only``). Returns one result per step; never raises (a step that fails is reported, the rest still run)."""
+def run(*, dry_run: bool = False, only: list[str] | None = None, roots: list[Path] | None = None, http: Any = None,
+        keep: Callable[[dict[str, Any]], dict[str, Any]] | None = None) -> dict[str, Any]:
+    """Run every step (or just ``only``). Returns one result per step; never raises (a step that fails is reported, the rest still run).
+    ``keep`` narrows each step's documents before they are sent (``staging_docs.sample``: the staging channel copies a sample, not everything)."""
     roots = roots if roots is not None else site_roots()
     out: dict[str, Any] = {"dry_run": dry_run, "roots": [str(r) for r in roots], "steps": {}}
 
@@ -92,7 +96,7 @@ def run(*, dry_run: bool = False, only: list[str] | None = None, roots: list[Pat
         except Exception as exc:  # noqa: BLE001 - one broken store must not stop the others
             out["steps"][name] = {"ok": False, "note": f"{type(exc).__name__}: {str(exc)[:160]}"}
 
-    step("site-documents", lambda: _docs_step(lambda: site_documents(roots), dry_run, http))
+    step("site-documents", lambda: _docs_step(lambda: site_documents(roots), dry_run, http, keep))
     step("articles", lambda: object_docs.publish_articles(article_items(roots), http=http, dry_run=dry_run))
 
     def images() -> dict[str, Any]:
@@ -113,7 +117,7 @@ def run(*, dry_run: bool = False, only: list[str] | None = None, roots: list[Pat
 
         docs = live_publish.documents()
         docs.update(anomalies.documents(anomalies.read_current()))
-        res = _docs_step(lambda: docs, dry_run, http)
+        res = _docs_step(lambda: docs, dry_run, http, keep)
         if not dry_run:
             res["world"] = live_publish.publish_world(force=True)
         return res
@@ -122,17 +126,17 @@ def run(*, dry_run: bool = False, only: list[str] | None = None, roots: list[Pat
     def maritime() -> dict[str, Any]:
         from algent_backend.maritime import publish as maritime_publish
 
-        return _docs_step(maritime_publish.documents, dry_run, http)
+        return _docs_step(maritime_publish.documents, dry_run, http, keep)
 
     def sanctions() -> dict[str, Any]:
         from algent_backend.sanctions import publish as sanctions_publish
 
-        return _docs_step(sanctions_publish.documents, dry_run, http)
+        return _docs_step(sanctions_publish.documents, dry_run, http, keep)
 
     def calendar() -> dict[str, Any]:
         from algent_backend.lookahead import publish as calendar_publish
 
-        return _docs_step(calendar_publish.documents, dry_run, http)
+        return _docs_step(calendar_publish.documents, dry_run, http, keep)
 
     step("maritime", maritime)
     step("sanctions", sanctions)
@@ -144,8 +148,8 @@ def run(*, dry_run: bool = False, only: list[str] | None = None, roots: list[Pat
 
         ledger = Ledger()
         docs = site_docs.documents(ledger)
-        res = _docs_step(lambda: docs, dry_run, http)
-        if not dry_run:
+        res = _docs_step(lambda: docs, dry_run, http, keep)
+        if not dry_run and keep is None:                       # the grid rollups are published whole: a sampled (staging) run leaves them to site_docs' own grid documents
             res["grid"] = grid.publish_rollups(ledger)
         return res
 
@@ -155,12 +159,12 @@ def run(*, dry_run: bool = False, only: list[str] | None = None, roots: list[Pat
         from algent_backend.markets import publish as markets_publish
         from algent_backend.markets import score
 
-        return _docs_step(lambda: {markets_publish.PATH: score.track_record()}, dry_run, http)
+        return _docs_step(lambda: {markets_publish.PATH: score.track_record()}, dry_run, http, keep)
 
     def ai_benchmarks() -> dict[str, Any]:
         from algent_backend.ai_benchmarks import publish as ai_publish
 
-        return _docs_step(lambda: {ai_publish.PATH: ai_publish.document()}, dry_run, http)
+        return _docs_step(lambda: {ai_publish.PATH: ai_publish.document()}, dry_run, http, keep)
 
     step("markets", markets)
     step("ai-benchmarks", ai_benchmarks)

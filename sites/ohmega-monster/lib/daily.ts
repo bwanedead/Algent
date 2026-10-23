@@ -454,7 +454,7 @@ function parsePlace(raw: unknown): DailyPlace | null {
   return name ? { name, country: str(raw.country), lat: num(raw.lat), lon: num(raw.lon) } : null;
 }
 
-function parseDevelopment(raw: unknown): DailyDevelopment | null {
+export function parseDevelopment(raw: unknown): DailyDevelopment | null {
   if (!isObj(raw)) return null;
   const headline = str(raw.headline);
   if (!headline) return null;
@@ -529,7 +529,7 @@ function parseAssetEvent(raw: unknown): DailyAssetEvent | null {
   };
 }
 
-function parseTheater(raw: unknown, nested = false): DailyTheater | null {
+export function parseTheater(raw: unknown, nested = false): DailyTheater | null {
   if (!isObj(raw)) return null;
   const name = str(raw.name);
   if (!name) return null;
@@ -674,7 +674,7 @@ function parseMarketView(raw: unknown): MarketView | null {
   return lines.length > 0 ? { note: str(raw.note), page: str(raw.page) === "/intel/track-record" ? "/intel/track-record" : "", lines } : null;
 }
 
-function parseDaily(raw: unknown, domain: string, date: string): Daily | null {
+export function parseDaily(raw: unknown, domain: string, date: string): Daily | null {
   if (!isObj(raw)) return null;
   const summary = isObj(raw.summary) ? raw.summary : {};
   return {
@@ -701,6 +701,11 @@ function parseDaily(raw: unknown, domain: string, date: string): Daily | null {
     sweep: parseSweep(raw.sweep),
     market_view: parseMarketView(raw.market_view),
   };
+}
+
+/** A daily carried inside a server-built view (a digest, or a full report): the same parser, the date taken from the document itself. */
+export function dailyFromView(raw: unknown, domain: string): Daily | null {
+  return parseDaily(raw, domain, isObj(raw) ? str(raw.date) : "");
 }
 
 // ---- public readers -------------------------------------------------------------------------

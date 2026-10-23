@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import FlagRow from "@/components/FlagRow";
-import { fmt, type Actor, type Field } from "@/lib/actors";
+import { fmt, type ActorLite, type Field } from "@/lib/actors";
 import { isoToFlagEmoji } from "@/lib/flags";
 
 import "./actors.css";
@@ -40,16 +40,16 @@ export const COMPARE_METRICS: [string, string][] = [
   ["milex", "Military spending"],
 ];
 
-export function headline(a: Actor, id: string): Field | null {
+export function headline(a: ActorLite, id: string): Field | null {
   return a.headline.find((f) => f.id === id) ?? null;
 }
 
 /** Actors side by side: one row per metric, one bar per actor, every bar on the metric's shared scale. */
-export function ActorScales({ actors }: { actors: Actor[] }) {
+export function ActorScales({ actors }: { actors: ActorLite[] }) {
   return (
     <div className="ac-scales">
       {COMPARE_METRICS.map(([id, label]) => {
-        const rows = actors.map((a) => ({ a, f: headline(a, id) })).filter((r): r is { a: Actor; f: Field } => r.f !== null);
+        const rows = actors.map((a) => ({ a, f: headline(a, id) })).filter((r): r is { a: ActorLite; f: Field } => r.f !== null);
         if (rows.length === 0) return null;
         const max = Math.max(...rows.map((r) => r.f.value));
         return (

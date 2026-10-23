@@ -146,6 +146,10 @@ class PulseStore:
     def event(self, event_id: str) -> Event | None:
         return self._read(self._dir / "events" / f"{_safe(event_id)}.json", Event)
 
+    def events(self) -> list[Event]:
+        """Every recorded event (the corpus index reads the whole set)."""
+        return [e for e in (self._read(p, Event) for p in self._glob("events")) if e is not None]
+
     # ── radar sightings (freshness) ──────────────────────────────────────────────────────────
     def add_sightings(self, situation_id: str, rows: list[dict]) -> int:
         """Append radar sightings ({key, at, edition, headline}); keys already seen are skipped."""

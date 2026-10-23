@@ -91,3 +91,11 @@ Everything public passes `middleware.ts` (`matcher: /api/:path*`) via one functi
 Written without a build or runtime: Next 14 handler signatures follow the existing `app/feeds/[...path]` route, but
 `next build`, the CDN headers and an MCP client handshake still need a first run. No tests (handlers are thin and
 the site has no TS test harness).
+
+## Corpus tools and rate limits (2026-10-23)
+`lib/api/ops-corpus.ts` adds `/api/v1/entity`, `/about`, `/timeline`, `/related`, `/series` and widens `/search`, with MCP tools `entity`, `about`, `timeline`, `related`, `series`, `search`. They read server-built
+views (precomputed per entity, country, situation and metric, plus a compact search index): Vercel cannot open the corpus SQLite, and a public query service on the droplet was the costlier alternative. The choice, what it
+limits (newest material per entity, names and titles but not bodies) and how to reverse it are in `views.md`. Every result's `meta` carries `provenance` (the products and documents it derives from) and `basis` (official,
+our_count, our_derived, model, reported); records keep `product`, `origin`, source URLs; series keep `unit` and `basis`.
+
+Rate limits per client IP (in memory per edge instance; `middleware.ts`, `lib/api/ratelimit.ts`): `/api/v1` burst 40 and 120 a minute; `/api/mcp` burst 30 and 60 a minute; `429` with `Retry-After`.

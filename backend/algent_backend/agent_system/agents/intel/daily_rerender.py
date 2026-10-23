@@ -82,7 +82,7 @@ def rerender(domain: str, as_of: str, *, only: list[str] | tuple[str, ...] = (),
         new, _ = daily.finish_section(saved["draft"], saved["inputs"], tid=tid, countries=countries, store=store,
                                       now=now, as_of=as_of, brief=desk.previous_brief(tid))
         new["edition"] = n
-        for key in ("spotlight", "kind", "update_of"):      # what the slot is, not what the text says
+        for key in ("spotlight", "kind", "update_of", "visuals"):      # what the slot is and what was drawn for it, not what the text says
             if sec.get(key):
                 new[key] = sec[key]
         redone.append(tid)

@@ -11,13 +11,13 @@ import { ActorDevelopments, ActorOnRecord, InvolvedIn, RelatedActors } from "@/c
 import PulseTile from "@/components/PulseTile";
 import { actor, actorIds, CREDIT_SOURCE_ORDER, fieldOf, fmt, GROUPS, type Actor, type Field, type GroupId } from "@/lib/actors";
 import { dayLabel } from "@/lib/dossier-view";
+import { ahead, todayIso } from "@/lib/calendar";
 import { actorContext } from "@/lib/entities";
-import { calendarForCountry, todayIso } from "@/lib/calendar";
 import { countryName } from "@/lib/flags";
-import { getGrid } from "@/lib/geoledger";
-import { latestSnapshot } from "@/lib/intel";
+import { gridFromDoc } from "@/lib/geoledger";
+import { parseSnapshot } from "@/lib/intel";
 import { toWallPulse } from "@/lib/pulse-wall";
-import { sanctionsForCountry } from "@/lib/sanctions";
+import { countryView, type CountryView } from "@/lib/views";
 
 import "@/app/daily/daily.css";
 import "@/app/situations/situations.css";
@@ -142,11 +142,24 @@ const TITLE: Record<GroupId, (a: Actor) => string> = {
 };
 const ANCHOR: Record<GroupId, string> = { people: "people", economy: "economy", trade: "trade", energy: "energy", military: "military" };
 
+const UPCOMING_SHOWN = 6;
+
+/** What an actor page lists besides the profile, from the country view the server built: the grid line, the sanctions rows, what is coming up and the
+ *  Pulses its actor page involves (a snapshot holding only those). The view's rows are raw; "still ahead" is judged here, against the viewer's day. */
+function watchOf(iso: string, view: CountryView | null) {
+  const snap = view?.snapshot ? parseSnapshot(view.snapshot, "") : null;
+  return {
+    grid: gridFromDoc(iso, view?.grid ?? null),
+    sanctions: view?.sanctions ?? [],
+    upcoming: ahead(view?.calendar ?? [], todayIso()).slice(0, UPCOMING_SHOWN),
+    pulses: (snap?.situations ?? []).flatMap((s) => s.pulses.map((p) => toWallPulse(p, s.title))),
+  };
+}
+
 /** A state with no power profile yet but a place in the news: the same linked sections, without the numbers. */
 async function ActorStub({ iso }: { iso: string }) {
-  const ctx = await actorContext(iso);
-  const grid = await getGrid(iso);
-  const [sanctions, upcoming] = await Promise.all([sanctionsForCountry(iso), calendarForCountry(iso)]);
+  const [ctx, view] = await Promise.all([actorContext(iso), countryView(iso)]);
+  const { grid, sanctions, upcoming } = watchOf(iso, view);
   if (!ctx) notFound();
   return (
     <div className="intel-page th-page">
@@ -174,11 +187,9 @@ export default async function ActorPage({ params }: { params: Params }) {
     if (!/^[A-Z]{2}$/.test(params.iso)) notFound();
     return <ActorStub iso={params.iso} />;
   }
-  const ctx = await actorContext(a.iso2);
-  const grid = await getGrid(a.iso2);
-  const [sanctions, upcoming] = await Promise.all([sanctionsForCountry(a.iso2), calendarForCountry(a.iso2)]);
-  const snap = await latestSnapshot();
-  const lookup = new Map((snap?.situations ?? []).flatMap((s) => s.pulses.map((p) => [p.id, toWallPulse(p, s.title)] as const)));
+  const [ctx, view] = await Promise.all([actorContext(a.iso2), countryView(a.iso2)]);
+  const { grid, sanctions, upcoming, pulses: involved } = watchOf(a.iso2, view);
+  const lookup = new Map(involved.map((p) => [p.id, p] as const));
   const pulses = a.involved.pulses.map((p) => lookup.get(p.id)).filter((p): p is NonNullable<typeof p> => !!p);
   const { head_of_state: hos, head_of_government: hog, nuclear: nuke } = a.leadership;
   const credits = [...a.credits].sort((x, y) => CREDIT_SOURCE_ORDER.indexOf(x.source) - CREDIT_SOURCE_ORDER.indexOf(y.source));

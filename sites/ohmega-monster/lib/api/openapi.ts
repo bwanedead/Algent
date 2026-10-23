@@ -22,6 +22,8 @@ const envelope = {
         license: { type: "string" },
         verification: { type: "string", description: "Present when the whole response has one verification level; items carry their own otherwise." },
         note: { type: "string", description: "A caveat to keep when you repeat the data." },
+        provenance: { type: "object", description: "Corpus-backed endpoints: the products and documents the server-built view was derived from. Records inside also carry their own product, origin and source URLs." },
+        basis: { type: "array", items: { type: "string" }, description: "Corpus-backed endpoints: the kinds of number in the data, in the stats-registry vocabulary (official, our_count, our_derived, model, reported ...)." },
         next: { type: "string", format: "uri", description: "URL of the next page, when there is one." },
       },
     },
