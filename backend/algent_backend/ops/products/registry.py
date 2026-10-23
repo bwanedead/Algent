@@ -294,7 +294,7 @@ PRODUCTS: tuple[Product, ...] = (
         id="site", title="Site hubs and surfaces", owner="sites/ohmega-monster",
         what="Pages that are navigation or presentation over other products: home, the Data hub, the globe HUD and the 3D lab.",
         retention=(Retention("derived", "presentation only; no data of its own", "", "on-write"),),
-        why="reads the other products' published documents", site_routes=("/", "/data", "/globe", "/lab/scene"),
+        why="reads the other products' published documents", site_routes=("/", "/explore", "/globe", "/lab/scene"),
         jobs=(Job("site-smoke", ("site", "smoke", "--log"), "*:17", every_min=60, lock=False, est_mb=60,
                   priority=2, what="smoke test of the production site: every route, sampled dynamic pages, the agent API, freshness (hourly, and after each publish job)"),),
         feeds_from=("dailies", "situations", "live", "flows", "maritime", "actors", "geoledger", "pulses")),

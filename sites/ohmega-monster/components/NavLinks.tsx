@@ -19,7 +19,8 @@ const LINKS: { href: string; label: string; match: (p: string) => boolean }[] = 
   { href: "/articles", label: "Articles", match: isArticle },
   { href: "/globe", label: "Globe", match: isGlobe },
   // Data is everything else that is not Home: the hub, the tool routes under /intel, Pulses, the calendar, the live map, the developers' page.
-  { href: "/data", label: "Data", match: (p) => p !== "/" && ![isDaily, isSituation, isArticle, isGlobe].some((m) => m(p)) },
+  { href: "/calendar", label: "Calendar", match: (p) => p.startsWith("/calendar") },
+  { href: "/explore", label: "Explore", match: (p) => p !== "/" && !p.startsWith("/calendar") && ![isDaily, isSituation, isArticle, isGlobe].some((m) => m(p)) },
 ];
 
 export default function NavLinks() {

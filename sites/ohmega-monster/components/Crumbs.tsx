@@ -15,6 +15,6 @@ export default function Crumbs({ trail }: { trail: { href: string; label: string
   );
 }
 
-export const DATA_CRUMB = { href: "/data", label: "Data" } as const;
+export const DATA_CRUMB = { href: "/explore", label: "Explore" } as const;
 export const SITUATIONS_CRUMB = { href: "/situations", label: "Situations" } as const;
 export const ACTORS_CRUMB = { href: "/intel/actors", label: "Actors" } as const;

@@ -36,7 +36,7 @@ Header: **Daily · Situations · Articles · Globe · Data** (logo → Home)
 | `/situations/<id>` | The living file (see §2) |
 | `/articles` | as now |
 | `/globe` | The HUD (in the nav now, no longer behind the spinner) |
-| `/data` | Hub, grouped: **Measured** (live map, maritime, sanctions, calendar, AI benchmarks, countries, statements record) · **Judgments** (Pulses, forecasts + track record merged into one scored page) · **For machines** (API, MCP, feeds) |
+| `/explore` | Hub (was `/data`; the label "Explore" since 2026-10-24), grouped: **Measured** (live map, maritime, sanctions, calendar, AI benchmarks, countries, statements record) · **Judgments** (Pulses, forecasts + track record merged into one scored page) · **For machines** (API, MCP, feeds) |
 
 Entity pages (events, places, countries) stay where they are, linked from text. Every hub row carries an **as-of age** and a "new since your last visit" dot (localStorage).
 

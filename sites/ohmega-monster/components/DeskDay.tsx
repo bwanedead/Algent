@@ -47,7 +47,7 @@ export default async function DeskDay({ desk, report }: { desk: Desk; report: Da
           </>
         )}
         {" "}
-        · <Link href="/data">Data →</Link>
+        · <Link href="/explore">Explore →</Link>
       </p>
     </div>
   );

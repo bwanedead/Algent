@@ -42,7 +42,7 @@ export default async function DeskPage({ params }: { params: Params }) {
       </div>
       <p className="intel-empty">No {desk.label} report has been published yet. Check back soon.</p>
       <p className="geo-xlink">
-        <Link href="/daily">All dailies →</Link> · <Link href="/data">Data →</Link>
+        <Link href="/daily">All dailies →</Link> · <Link href="/explore">Explore →</Link>
       </p>
     </div>
   );

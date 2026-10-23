@@ -62,7 +62,7 @@ export default async function AiBenchmarksPage() {
   return (
     <div className="intel-page th-page">
       <p className="th-kicker">
-        <PageTag kind="data" detail="AI benchmarks" /> <Link href="/daily/ai" className="xt">AI daily →</Link> <Link href="/data" className="xt">all data →</Link>
+        <PageTag kind="data" detail="AI benchmarks" /> <Link href="/daily/ai" className="xt">AI daily →</Link> <Link href="/explore" className="xt">explore →</Link>
       </p>
       <h1 className="th-claim">AI benchmarks</h1>
       <p className="th-asof">

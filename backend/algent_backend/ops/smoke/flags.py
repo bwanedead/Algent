@@ -34,7 +34,7 @@ FALLBACK_PATTERNS = (
 MAY_BE_EMPTY: dict[str, str] = {}
 #: Retired routes that must keep redirecting, to exactly this place (next.config.mjs).
 REDIRECTS = (("/geopolitics", "/daily/geopolitics"), ("/ai", "/daily/ai"), ("/headlines", "/daily/headlines"), ("/radar", "/daily/headlines"),
-             ("/intel/theaters", "/situations"), ("/intel", "/data"))
+             ("/intel/theaters", "/situations"), ("/intel", "/explore"), ("/data", "/explore"))
 #: Freshness probes on the agent API: (path template, registry product whose cadence applies, severity of lateness). ``{desk}`` runs over the desks.
 FRESHNESS = (("/api/v1/daily/{desk}/latest", "dailies", "fail"), ("/api/v1/track-record", "markets", "warn"), ("/api/v1/sanctions", "sanctions", "warn"),
              ("/api/v1/calendar", "calendar", "warn"), ("/api/v1/ai-benchmarks", "ai_benchmarks", "warn"))
@@ -43,7 +43,7 @@ FRESHNESS = (("/api/v1/daily/{desk}/latest", "dailies", "fail"), ("/api/v1/track
 #: only the fallback while no status file is published yet. Dailies are not here on purpose: a missing report is a failure whatever the job did.
 STATUS_JUDGED = ("markets", "sanctions", "calendar", "ai_benchmarks")
 #: Pages that also carry a visible stale marker (components/Fresh.tsx renders ``is-stale``): seeing it there is a warning.
-STALE_MARKER_PAGES = ("/", "/daily", "/situations", "/data")
+STALE_MARKER_PAGES = ("/", "/daily", "/situations", "/explore")
 #: The state file's neighbours: the checker keeps the last report here so the doctor row and the ops-log transitions can read it.
 STATE_FILE = "site_smoke.json"
 #: The doctor row warns when the last run is older than this many hours (the job is hourly).

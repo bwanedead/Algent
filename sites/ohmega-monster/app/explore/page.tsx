@@ -10,9 +10,9 @@ import "@/app/situations/situations.css";
 import "@/components/hubs.css";
 
 export const metadata: Metadata = {
-  title: "Data",
+  title: "Explore",
   description: "Everything behind the Daily and the Situations: measured layers, our scored judgments, and feeds for machines.",
-  alternates: { canonical: "/data" },
+  alternates: { canonical: "/explore" },
 };
 
 // The Data hub: three groups and nothing else. Measured layers have no editorial voice; Judgments are what we think will happen, kept
@@ -28,7 +28,7 @@ export default async function DataHub() {
       <p className="th-kicker">
         <PageTag kind="data" detail="All layers" />
       </p>
-      <h1 className="th-claim">Data</h1>
+      <h1 className="th-claim">Explore</h1>
       <p className="th-lead">What we measure, what we judge, and how to read it from code. Each row says how old it is; a dimmed age means it is late for how often it is meant to refresh.</p>
       {groups.map((g) => (
         <section key={g.id} className="hub-group" aria-labelledby={`data-${g.id}`}>

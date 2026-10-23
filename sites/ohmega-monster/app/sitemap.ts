@@ -19,7 +19,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
   const intel = [
     { url: `${SITE_URL}/articles`, lastModified: new Date() },
-    { url: `${SITE_URL}/data`, lastModified: new Date() },
+    { url: `${SITE_URL}/explore`, lastModified: new Date() },
     { url: `${SITE_URL}/daily`, lastModified: new Date() },
     { url: `${SITE_URL}/situations`, lastModified: new Date() },
     { url: `${SITE_URL}/intel/actors`, lastModified: new Date() },

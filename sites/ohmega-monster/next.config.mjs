@@ -31,8 +31,9 @@ const nextConfig = {
       { source: "/intel/theaters/:id", destination: "/situations/:id", permanent: true },
       { source: "/intel/briefs", destination: "/situations", permanent: true },
       // The Intelligence directory is the Data hub.
-      { source: "/intel", destination: "/data", permanent: true },
-      { source: "/intel/situation", destination: "/data", permanent: true },
+      { source: "/intel", destination: "/explore", permanent: true },
+      { source: "/data", destination: "/explore", permanent: true },
+      { source: "/intel/situation", destination: "/explore", permanent: true },
     ];
   },
 
