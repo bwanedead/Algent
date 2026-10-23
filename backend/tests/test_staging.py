@@ -158,7 +158,7 @@ def test_stage_from_prod_copies_a_sample_from_local_stores_and_is_hash_skipped(e
     assert "staging/docs/views/home.json.gz" in bucket.objects and "staging/docs/views/country/BB.json.gz" in bucket.objects   # the largest country only
     assert "staging/docs/views/country/AA.json.gz" not in bucket.objects
     assert "staging/docs/daily/geopolitics/2026-10-01.json.gz" not in bucket.objects and "staging/docs/daily/geopolitics/2026-10-05.json.gz" in bucket.objects
-    assert json.loads(gzip.decompress(bucket.objects["staging/docs/views/home.json.gz"])) == {"h": 1}
+    assert json.loads(gzip.decompress(bucket.objects["staging/docs/views/home.json.gz"])) == {"h": 1, "schema": "ohmega.view.home/1"}
     assert not staging.is_staging()                                                          # the target is restored after the call
     n = len(bucket.objects)
     again = staging_docs.stage_from_prod(only=["site-documents", "views"], roots=[root])

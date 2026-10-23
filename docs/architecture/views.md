@@ -22,7 +22,7 @@ agent endpoint reads the one that answers its question. Nothing on the read path
 
 ## The views
 
-Every view opens with the same envelope: `schema` (`ohmega.view.<family>/1`), `built_at` (when this *content* was first built: an unchanged view keeps it, so it is
+Every view opens with the same envelope: `schema` (`ohmega.view.<family>/<major>`; the major of each family is declared in the product registry as `Contract("ohmega.view.<family>", 1, ...)` and the builder takes it from there, `contracts.view_schema`; shapes in `contracts/shapes.py`, checked against every view the builders make by `tests/test_contracts.py`; the rule for a breaking change is foundation.md section 6a), `built_at` (when this *content* was first built: an unchanged view keeps it, so it is
 byte-identical and costs no upload), `as_of` (date of the newest input), `provenance` (`{builder, sources:[{product, from}]}`). Records inside keep their own
 `product`, `origin` and source URLs; series keep their `basis` (the stats-registry vocabulary: official, our_count, our_derived, model, reported ...).
 
@@ -131,6 +131,12 @@ a speaker and its organisation ("UN Security Council"), a chokepoint declared by
   (rows already folded together cannot be un-merged in place; `identity.merge_is_monotone`).
 * Measured on the dev corpus (2,464 entities): unresolved names 469 -> 460, "Strait of Hormuz" (20 uses) and "Houthis" (11) no longer ambiguous. The server's 1,177 is re-measured by the
   first build after deploy: the schema version moved to 2, so `corpus-build` rebuilds from nothing and prints `unresolved names:` (and `newsroom corpus stats` lists the rest with reasons).
+
+## Orphans
+
+A view the builder stopped producing stays in the bucket (the writer never lists it). The first build published ~36,700 `views/entity/place/*` views for geoledger assets without events.
+`newsroom publish prune-orphans --prefix views/ [--dry-run]` removes the documents that the local manifest says were published and the last complete build (`views_store/_state.json`) no longer
+owns; the daily `orphan-prune` job does at most 4,000 a day (about nine days for the backlog, 0.4% of Class A a day). See `published-content.md`.
 
 ## Server commands
 

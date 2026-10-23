@@ -62,12 +62,12 @@ def test_documents_are_gzipped_at_docs_path_and_unchanged_ones_cost_no_request(b
     docs = {"daily/geopolitics/2026-10-01.json": {"a": 1}, "record.json": {"b": [1, 2]}}
     out = published_db.publish_documents(docs)
     assert out["db"] is True and out["ok"] is True and out["documents"] == 2 and out["unchanged"] == 0
-    assert bucket.doc("daily/geopolitics/2026-10-01.json") == {"a": 1}
+    assert bucket.doc("daily/geopolitics/2026-10-01.json") == {"a": 1, "schema": "ohmega.daily/1"}   # stamped with its contract
     puts = bucket.puts
     again = published_db.publish_documents(docs)
     assert again["documents"] == 0 and again["unchanged"] == 2 and bucket.puts == puts          # hash-skip: nothing sent, nothing read back
     changed = published_db.publish_documents({"record.json": {"b": [1, 2, 3]}})
-    assert changed["documents"] == 1 and bucket.doc("record.json") == {"b": [1, 2, 3]}
+    assert changed["documents"] == 1 and bucket.doc("record.json") == {"b": [1, 2, 3], "schema": "ohmega.record/1"}
     forced = published_db.publish_documents({"record.json": {"b": [1, 2, 3]}}, force=True)
     assert forced["documents"] == 1
 

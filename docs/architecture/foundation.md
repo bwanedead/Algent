@@ -51,6 +51,7 @@ it. Everything operational is *derived* from that entry instead of being told by
 | retention / prune entry points | `Product.retention` (`ref`, `by`) | `ops/products/validate.py` (unbounded growth with no policy fails a test) |
 | the table below | the registry | `newsroom products table --write` (a test fails when it drifts) |
 | site routes and publications | `site_routes`, `publishes` | `sites/ohmega-monster/lib/products.json` (`newsroom products contract --write`); a test requires every page route to belong to a product |
+| document schemas and versions | `contracts` (schema id, major, path patterns, accepted older majors) | `sites/ohmega-monster/lib/contracts.json` (same command); the stamp on every published document (`publishing/object_docs`); the site's version gate (`lib/contract.ts`); a test keeps the file equal |
 | live-machine verdict | everything above | `newsroom products check`, embedded in `newsroom doctor` |
 
 Adding a product: add its entry (stores with budgets and a reason for any store not backed up, a retention policy that names the code that applies it, jobs
@@ -75,17 +76,17 @@ possible: `tests/test_products_registry.py` and `tests/test_backup_coverage.py` 
 | **Calendar (look-ahead)** (`calendar`) | `calendar_store` 2 → 500 | **yes**: revision history (a moved or withdrawn date) cannot be re-fetched | append-only: items.jsonl keeps every revision; status.json is replaced | `calendar` `*-*-* 04:40` | `calendar/` | `/calendar` |
 | **AI benchmarks** (`ai_benchmarks`) | `ai_benchmarks_store` 3 → 200 | **yes**: forward-captured Arena snapshots and lab claims cannot be re-fetched | append-only: results.jsonl is never edited; the catalog and status are replaced | `ai-bench` `0/12:55`<br>`ai-discovery` `*-*-* 06:50` (capped) | `data/ai-benchmarks.json` | `/intel/ai` |
 | **Instruments (public data series)** (`instruments`) | `instruments_store` 9 → 500 | **yes**: forward capture of revisions and the live-feed daily counts (the baselines' history) | append-only: a fetch appends only a new or revised period; nothing is edited or removed | `instruments` `0/6:40` | `data/` | - |
-| **Statements (on the record)** (`statements`) | `statements_store` 15 → 500 | **yes**: extractions are paid model work and the record is the product | append-only: statements.jsonl is append-only (ids dedupe); raw transcripts are internal and kept with it | `statements` `1/6:10` | `data/` | `/intel/record` |
+| **Statements (on the record)** (`statements`) | `statements_store` 15 → 500 | **yes**: extractions are paid model work and the record is the product | append-only: statements.jsonl is append-only (ids dedupe); raw transcripts are internal and kept with it | `statements` `1/6:10` | `data/`, `record.json` | `/intel/record` |
 | **Actors (state profiles)** (`actors`) | `actors_store` 17 → 500 | **yes**: refetchable but cheap to keep, and revisions are forward capture | append-only: a fetch appends only a never-seen or changed (country, year); no line is edited | manual: `newsroom actors fetch` by hand: indicators change yearly, no timer is needed | `actors/`, `data/actors/` | `/intel/actors`, `/intel/actors/[iso]` |
 | **Geoledger (assets and status events)** (`geoledger`) | `geoledger_store` 17 → 500 | **yes**: status events are partly forward capture | append-only: assets/events/merges.jsonl are never rewritten; cache/overpass is keyed by query hash (overwritten, finite) | manual: `newsroom geo ...` seeds and updates by hand; nothing in it changes between operator actions | `geo/` | `/intel/places/[id]` |
 | **Markets and the paper trader** (`markets`) | `markets_store` 8 → 500 | **yes**: our forecasts and trades are the scored record; they cannot be reconstructed | append-only: history is never rewritten so the record cannot be quietly improved; ~2 MB a week estimated | `markets` `3/4:50`<br>`markets-daily` 07:30 UTC (paid) | `data/track-record.json` | `/intel/forecasts`, `/intel/track-record` |
 | **Source library (crawl cache)** (`library`) | `library_store` 123 → 1,000 (not backed up) | no: re-crawled by the timer (about a day to refill) | prune: enforce_retention drops the oldest pages past MAX_DB_BYTES (400 MB), news before analysis before primary | `library` `0/4:20` | - | - |
 | **Corpus index (queryable view of the record)** (`corpus_index`) | `corpus_store` 75 → 1,500 (not backed up) | no: derived: every row comes from another product's store; deleting it loses nothing | derived: rebuilt from the record; --full builds a fresh compact file, incremental builds VACUUM past 25% free pages | `corpus-build` `2/4:25` | - | - |
-| **Views (server-built pages and agent data)** (`views`) | `views_store` 120 → 1,500 (not backed up) | no: derived: every field comes from another product's published documents or the corpus index; deleting the store loses nothing | derived: rebuilt each run from the record; a full build prunes keys it no longer produces from the store (bucket objects are overwritten, never listed) | `views` `2/4:50`<br>`views-fast` `*:10/30` | `views/` | - |
+| **Views (server-built pages and agent data)** (`views`) | `views_store` 120 → 1,500 (not backed up) | no: derived: every field comes from another product's published documents or the corpus index; deleting the store loses nothing | derived: rebuilt each run from the record; a full build prunes keys it no longer produces from the store (bucket objects are overwritten, never listed) | `views` `2/4:50`<br>`views-fast` `*:10/30`<br>`orphan-prune` `*-*-* 05:20` | `views/` | - |
 | **Staging channel (preview data)** (`staging`) | - | no: derived: rebuilt from the local stores by `newsroom publish stage-from-prod`; deleting it loses nothing | prune: staged objects not rewritten for STAGING_KEEP_DAYS (14) are deleted; a daily-operations cap and a byte cap bound it between prunes | `staging-prune` `*-*-* 05:05` | `staging/` | - |
 | **Agent feeds and API** (`agent_feeds`) | `site_data` 10 → 1,000 | **yes**: what was published exists nowhere else once the database is gone (the served copy is the only copy of the documents) | derived: built from the dailies, profiles and Pulses on publish; the bucket holds the served copy | manual: rebuilt on every publish by the daily and article runs | `data/`, `feeds/` | `/developers` |
 | **Site hubs and surfaces** (`site`) | - | no: reads the other products' published documents | derived: presentation only; no data of its own | `site-smoke` `*:17` | - | `/`, `/data`, `/globe`, `/lab/scene` |
-| **Operations (deploy, watchdog, envelope, housekeeping)** (`ops`) | - | no: code and logs only; ~/ops-log.md grows by a few lines a day | prune: housekeeping deletes fetch-cache files past their TTL and per-job run logs older than 30 days | `update` `*:0/5`<br>`watchdog` `*:0/2`<br>`envelope` `*-*-* 07:10`<br>`housekeeping` `*-*-* 03:55` | - | - |
+| **Operations (deploy, watchdog, envelope, housekeeping)** (`ops`) | - | no: code and logs only; ~/ops-log.md grows by a few lines a day | prune: housekeeping deletes fetch-cache files past their TTL and per-job run logs older than 30 days | `update` `*:0/5`<br>`watchdog` `*:0/2`<br>`envelope` `*-*-* 07:10`<br>`housekeeping` `*-*-* 03:55` | `status/` | - |
 | **Backups** (`backup`) | - | no: it is the backup (state in backup_state.json, objects in the private R2 bucket) | prune: snapshots are thinned to 14 daily + 8 weekly + 12 monthly | `backup` `*-*-* 06:15`<br>`backup-snapshot` `*-*-* 06:40`<br>`backup-drill` `*-*-01 07:30:00` | - | - |
 | **Legacy Postgres tables** (`database`) | - | no: publication moved to the server and R2 (Supabase paused 10-22) | prune: retention windows on the growing tables + VACUUM | `db-prune` `*-*-* 03:40` | - | - |
 | **Caches and scratch** (`caches`) | `fetch_cache` 50 → 2,000 (not backed up)<br>`retrieval_store` 5 → 2,000 (not backed up)<br>`ingestion_store` 0 → 8,000 (not backed up) | no: every store here is rebuilt on demand | prune: fetch cache entries past the 6 h TTL are deleted daily; ingestion raw batches are pruned by the CLI | manual: refilled on demand; expired by the ops housekeeping job | - | - |
@@ -130,6 +131,68 @@ copying a changed file whole, now bounded by the 10 MB mirror threshold). Every 
 6. `... newsroom envelope --text`; fix whatever is warn/fail (disk numbers, feeds, the unrecorded accounts).
 7. For the lost charts: `... newsroom intel daily --date 2026-10-14 --rerender` first (free: re-sends anything saved, nothing is yet), then per date `--visuals-only --fresh-visuals` if you want them redrawn (paid, small).
 
+## 6a. Contracts between server and site, and "checked" vs "changed" (2026-10-23)
+
+**The gap this closes.** The server publishes ~25 families of JSON documents and the site's parsers read them by field name. Nothing tied the two sides: a renamed field was
+found in production as an empty section, and a parser could not tell a document in a newer format from a broken one. Both sides now share one declaration.
+
+**The declaration** lives in the product registry, on the product that publishes the family: `Product.contracts = (Contract(schema, version, paths, accepts), ...)`, e.g.
+`Contract("ohmega.sanctions", 1, ("sanctions/recent.json", "sanctions/country/*.json"))`. `version` is the current MAJOR; `paths` are logical document paths (`*` one segment, `**`
+the rest; `docs/` and `.gz` never matter; the most specific pattern wins, so `theaters/index.json` is not a dossier); `accepts` lists older majors the site still reads.
+Current families (schema id / major; the views are `ohmega.view.<family>/1` for country, situation, situations, entity, event, series, series-index, home, hud, daily-hub, graph,
+search-index, manifest):
+
+| Family | Schema |
+|---|---|
+| daily reports, agent twins | `ohmega.daily/1` (`daily/*/*.json`, `data/daily/*/*.json`) |
+| briefs, snapshots | `ohmega.brief/1`, `ohmega.snapshot/1` |
+| dossiers (situations), their index | `ohmega.dossier/1`, `ohmega.dossier.index/1` |
+| Pulses, the Pulse catalog | `ohmega.pulse/1`, `ohmega.pulses/1` |
+| articles (source, index), headline menus | `ohmega.article.source/1`, `ohmega.article.index/1`, `ohmega.radar/1` |
+| record, actors (page, index) | `ohmega.record/1`, `ohmega.actor/1`, `ohmega.actor.index/1` |
+| forecasts, changes, intel index (agent feeds) | `ohmega.forecasts/1`, `ohmega.changes/1`, `ohmega.intel.index/1` |
+| live events, stats, anomalies, world map | `ohmega.live.events/1`, `.stats/1`, `.anomalies/1`, `.world/1` |
+| live snapshots the map polls | `ohmega.live.summary/1`, `.energy/1`, `.fires/1`, `.vessels/1`, `.aircraft/1`, `.coverage/1`, `.points/1`, `.tiles.index/1`, `.tile/1`, `.tracks/1` |
+| flows, satellite | `ohmega.flows/1`, `ohmega.satellite/1` |
+| maritime | `ohmega.maritime.events/1` (recent, live, per vessel), `ohmega.maritime.counts/1` |
+| sanctions, calendar | `ohmega.sanctions/1`, `ohmega.calendar/1` |
+| geoledger | `ohmega.geo.place/1`, `.assets/1`, `.countries/1`, `.grid/1`, `.events/1` |
+| AI benchmarks, track record | `ohmega.ai-benchmarks/1`, `ohmega.track-record/2` (the site also reads /1: `accepts=(1,)`) |
+| status files | `ohmega.status/1` |
+
+**The shape** of each schema (the fields the site reads, in a tiny stdlib-validated language) is `backend/algent_backend/contracts/shapes.py`; one typed example per non-view schema is
+`contracts/examples.py`. They are held to the writers by `tests/test_contracts.py` (the sanctions, calendar, maritime, geoledger and live builders, the test record the views are
+built from and every view the builders make are validated against the shapes) and to the site's parsers by `tests/test_site_contracts.py`, which serves the examples from a fake
+bucket to the site's OWN readers (`scripts/contract-check.mjs`, the `view-check.mjs` mechanism; skipped without node + typescript). A field renamed on the server fails the first;
+one renamed in a TypeScript parser fails the second.
+
+**The stamp.** Every dict document carries `"schema": "<id>/<major>"`. The one place that adds it is `object_docs.publish` (`doc_store.pack` with the schema from the registry);
+the live snapshot writer does the same for the objects the map polls; views take their stamp from the registry too (`contracts.view_schema`). The hash of a major-1 document is
+computed WITHOUT the stamp, so adding stamps re-uploads nothing: a document gains its stamp the next time its content changes. From major 2 the hash includes the schema, so a bump
+re-sends everything once. A document with no `schema` is a legacy v1.
+
+**The rule.** A breaking change (a field renamed, removed or retyped, a meaning changed) bumps the MAJOR; an additive change (a new optional field) does not. Rolling a bump out is
+expand/contract: (1) ship the site that reads the new major (add it to `accepts`, keep the old parser path), (2) flip the registry `version` and the writer, (3) when the old
+documents are gone, drop the old major from `accepts`. Never flip the server first.
+
+**What the site does on a mismatch.** `lib/contract.ts` is the single gate: `publishedDoc` (every document), the live snapshot readers and the satellite reader pass their
+document through it. A document whose major is not in `accepts`, or whose schema id is not its path's family, is NOT parsed: the reader returns `null` ("not published", every page's
+existing empty state), the reason is remembered and logged once, and the hub pages (`UpdatePending`) say "update pending". It never throws and never renders a field of a format it
+does not know. The smoke test then flags the empty state as a fallback-copy failure, which is the operational alarm.
+
+**Checked vs changed.** `ops/status.py`: the job runner ends every successful run of a publishing product by writing `status/<product>.json` locally (`<held>/status/`) and publishing
+`docs/status/<product>.json.gz` (`{checked_at, last_changed_at, last_ok, last_failed_at, next_due, cadence_min}`). `checked_at` is the end of the last successful run; `last_changed_at` is
+the last time a run of that product really uploaded a new object (the two uploaders note it through `publishing/changed.py`; a hash-skipped upload is not a change); `next_due` is
+`checked_at` plus the registry's shortest job interval. A skipped, coalesced, preempted or policy-held run is not a check. A failed run only writes the local note.
+The smoke test judges liveness of markets, sanctions, calendar and AI benchmarks on `checked_at` (the `as_of` of the data is the fallback until a status exists; dailies stay judged on
+the report itself), and the hubs show the age of the last CHANGE while dimming only when the CHECK is late (`lib/status.ts`, `components/Fresh.tsx`). Sanctions with no new
+designation is therefore "checked 2 h ago, last change 11 days ago", not stale.
+Cost: one PUT per successful run per publishing product (hash-skip cannot help: `checked_at` moves). Products running hourly or slower write every run; faster ones (live feeds, the
+30-minute views build) at most every `MIN_GAP_MIN` (30). Worst case from the registry: `newsroom products status` (about 170 PUT a day, 5,000 a month = 0.5% of the 1 M Class A tier).
+
+**Orphans.** `newsroom publish prune-orphans [--prefix views/] [--dry-run] [--list]` (daily job `orphan-prune`) deletes published documents no current build produces, within the R2 guard;
+see `published-content.md`.
+
 ## 6. Threats not yet covered (operator review, 2026-10-23)
 Ranked by likelihood × damage. Each needs a guard or a written decision to accept it.
 
@@ -144,7 +207,7 @@ Ranked by likelihood × damage. Each needs a guard or a written decision to acce
 | 7 | **Free data feeds die or change terms** | aisstream, adsb.lol, OpenSky, FIRMS, search engines or Comtrade go away or block us | Per-feed freshness already alerts; record each source's licence/ToS and attribution duty in one table |
 | 8 | **Content and legal risk** | Auto-published AI journalism makes a false claim about a real person or company | Corrections ledger + kill switch (exist); a publish floor for named-person claims; a visible corrections page |
 | 9 | **Corpus quality drift** | Errors compound in the profile and claim corpus, which is the asset | Contradiction checks on new claims vs existing; periodic sampled audits; provenance on every claim (exists) |
-| 10 | ~~**Front-end has no local checks**~~ **closed 10-23** | Only Vercel's build type-checks the site; nothing checked the site after a deploy, and previews read production data, so every break was found in production | **Built:** the staging data channel (`staging/` prefix, previews read it; `newsroom publish stage-from-prod`, `--target staging`), the smoke test (`newsroom site smoke`, hourly and after each publish job, the `site` envelope row) and the deploy routine `../guides/deploy.md` (merge, preview, `site deploy-check`, promote). Still open: no UI tests or lint (the Vercel build is the type-check) |
+| 10 | ~~**Front-end has no local checks**~~ **closed 10-23** (and the contracts between the two sides: section 6a) | Only Vercel's build type-checks the site; nothing checked the site after a deploy, and previews read production data, so every break was found in production | **Built:** the staging data channel (`staging/` prefix, previews read it; `newsroom publish stage-from-prod`, `--target staging`), the smoke test (`newsroom site smoke`, hourly and after each publish job, the `site` envelope row) and the deploy routine `../guides/deploy.md` (merge, preview, `site deploy-check`, promote). Still open: no UI tests or lint (the Vercel build is the type-check) |
 | 11 | **Public repo** | A secret or unpublished corpus committed by mistake is world-readable | Pre-commit secret scan; corpus paths in `.gitignore` (exist); never `git add -A` blindly |
 | 12 | **Server maintenance** | OS security updates, reboots and Python deps age; a reboot mid-run kills a paid job | Monthly patch window outside the paid-job hours; services restart on boot (systemd, exists) |
 | 13 | **Dev throughput** | The Claude usage limits stall builders mid-work | One builder at a time; builders commit WIP often (no lost work) |

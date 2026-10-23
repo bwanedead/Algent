@@ -190,7 +190,7 @@ def test_snapshots_upload_compact_json_with_a_short_cache_header_and_skip_unchan
     assert r["assets"] == 2
     assert {u.rsplit("/published-assets/", 1)[1] for u, _, _ in sent} == {"live/vessels.json.gz", "live/tracks/v0.json.gz"}
     assert all(c == flags.SNAPSHOT_CACHE for _, c, _ in sent)
-    assert gzip.decompress(next(b for u, _, b in sent if u.endswith("vessels.json.gz"))) == b'{"v":1,"rows":[[1,2.5,3.5]]}'
+    assert gzip.decompress(next(b for u, _, b in sent if u.endswith("vessels.json.gz"))) == b'{"schema":"ohmega.live.vessels/1","v":1,"rows":[[1,2.5,3.5]]}'  # stamped with its contract
     assert store.read_doc("vessels") == doc
     assert snapshots.publish({"vessels": doc}, http=http)["skipped"] == 1                  # unchanged: not re-uploaded
 

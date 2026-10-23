@@ -44,6 +44,19 @@ Document paths (`kind` = first segment). The table-shaped products are listed in
 | `live/events|stats|anomalies.json`, `live/world.json` | live products | `live.ts` |
 | `maritime/…`, `sanctions/…`, `calendar/next.json`, `geo/…`, `articles/…` | table-shaped products | `maritime.ts`, `sanctions.ts`, `calendar.ts`, `geoledger.ts`, `articles.ts` |
 
+## Contracts and status files
+
+Every dict document is stamped `"schema": "<id>/<major>"` on publish (declared per product in the registry; `foundation.md` section 6a has the family list, the version rule and what
+the site does on an unknown major). `docs/status/<product>.json.gz` (`ohmega.status/1`) says when a product's job last ran fine (`checked_at`) and when it last published something new
+(`last_changed_at`); one PUT per successful run, throttled to every 30 minutes for the fast feeds.
+
+## Orphans
+
+`newsroom publish prune-orphans [--prefix views/] [--dry-run] [--list] [--limit N]` (module `publishing/orphans.py`, daily job `orphan-prune`). Orphans = documents the local hash manifest says
+were published under a prefix minus what the current build produces; only prefixes with a registered owner (`views/`: the keys of the last complete build) can be pruned, and nothing the
+registry has no contract for is touched. No bucket LIST unless `--list` (one bounded pass, Class A about 1 per 1,000 objects, for a lost manifest). DELETEs are Class A through the R2
+guard, capped per run (`ORPHAN_PRUNE_MAX_PER_RUN` = 4,000); a refusal stops the run. Each run appends to `<held>/orphan_prune.jsonl`.
+
 ## Write path
 
 `publish_run` / `retract` (articles), `write_intel` (desk documents + agent feeds), `publish_menu` (radar), `_write_agent_twin`, and each domain's

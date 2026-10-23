@@ -90,6 +90,11 @@ R2_STOP_SHARE = 0.90
 #: stopped after ~3 days' worth of operations instead of eating the month.
 R2_DAILY_STOP_MULT = 3.0
 
+# ── orphaned objects (publishing/orphans.py, ``newsroom publish prune-orphans``) ───────────────────────────────────────────────────────────
+#: Orphans one run deletes at most. A DELETE is a Class A operation: 4,000 a day is 0.4% of the monthly free tier, an eighth of the even daily share, so the ~36,700
+#: place views of the first views build go over ~9 days without ever coming near the daily stop (``R2_DAILY_STOP_MULT``).
+ORPHAN_PRUNE_MAX_PER_RUN = 4_000
+
 # ── the staging channel: a preview site reads ``<R2 base>/staging/…`` instead of production (docs/guides/deploy.md) ────────────────────────
 #: Staging objects live in the same bucket under this prefix and go through the SAME meter (so the free-tier guard sees them) plus their own,
 #: much lower allowance below. Selected per process with ``ALGENT_PUBLISH_TARGET=staging`` (the ``--target staging`` CLI option sets it).

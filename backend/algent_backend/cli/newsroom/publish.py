@@ -50,6 +50,12 @@ def add_parser(sub: Any) -> None:
     sp.add_argument("--dry-run", action="store_true")
     sp.add_argument("--days", type=float, default=None, help="default: database/flags.STAGING_KEEP_DAYS")
     sp.set_defaults(handler=run_staging_prune)
+    po = verbs.add_parser("prune-orphans", help="delete published documents the current build no longer produces (views/ today), within the R2 budget guard")
+    po.add_argument("--prefix", default="views/", help="document prefix with a registered owner (default views/)")
+    po.add_argument("--dry-run", action="store_true", help="report what would be deleted; delete nothing")
+    po.add_argument("--list", dest="list_bucket", action="store_true", help="also LIST the bucket once under the prefix (Class A, ~1 per 1,000 objects), for a lost manifest")
+    po.add_argument("--limit", type=int, default=None, help="most deletes this run (default: database/flags.ORPHAN_PRUNE_MAX_PER_RUN)")
+    po.set_defaults(handler=run_prune_orphans)
     verbs.add_parser("staging-status", help="what staging holds and today's allowance").set_defaults(handler=run_staging_status)
 
 
@@ -76,6 +82,14 @@ def run_staging_prune(args: Any) -> int:
     from algent_backend.publishing import staging
 
     report = staging.prune(days=args.days, dry_run=args.dry_run)
+    print(json.dumps(report, indent=2, ensure_ascii=False))
+    return 0 if report.get("ok", True) else 1
+
+
+def run_prune_orphans(args: Any) -> int:
+    from algent_backend.publishing import orphans
+
+    report = orphans.prune(args.prefix, dry_run=args.dry_run, list_bucket=args.list_bucket, limit=args.limit)
     print(json.dumps(report, indent=2, ensure_ascii=False))
     return 0 if report.get("ok", True) else 1
 
