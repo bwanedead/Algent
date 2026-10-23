@@ -29,6 +29,7 @@ UPLOADERS = {
     "publishing/published_db.py": "documents are built from the staged files under .site-live (site_* stores are backed up)",
     "publishing/rebuild.py": "rebuild-all republishes FROM the local stores; it never originates a document",
     "publishing/site_data.py": "documents built from the domain stores (geoledger, sanctions, ...), all backed up",
+    "views/publish.py": "every view is written to views_store/ before it is sent (store() then object_docs.publish); derived from backed-up stores, so a lost store is a rebuild",
 }
 _SENDERS = ("asset_store.upload", "object_docs.publish", "object_docs.publish_article", "object_docs.publish_articles")
 

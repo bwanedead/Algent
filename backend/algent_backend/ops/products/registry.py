@@ -234,6 +234,17 @@ PRODUCTS: tuple[Product, ...] = (
         jobs=(Job("corpus-build", ("corpus", "build"), "2/4:25", every_min=240, what="incremental corpus index build (after the daily, AI and markets runs)"),),
         feeds_from=("dailies", "pulses", "profiles", "articles", "statements", "sanctions", "calendar", "geoledger", "maritime", "markets", "instruments", "actors", "ai_benchmarks"),
         heartbeat=("corpus_store/corpus.db",)),
+    Product(
+        id="views", title="Views (server-built pages and agent data)", owner="views",
+        what="Small versioned JSON views the server builds from the staged documents and the corpus index (country, situation, entity, event, home, hud, daily hub, theater-state graph, search index) and publishes to R2, so no page and no agent aggregates raw documents at request time.",
+        stores=(Store("views_store", loc.views, "ALGENT_VIEWS_STORE", False, "derived; `newsroom views build` rebuilds every view from the other products' stores",
+                      budget=_b(60, 400, 1500, 80, 2, "estimate: ~12 k entity views of ~4 KB, ~250 country views of ~20 KB, situation views of up to 450 KB; replace with `newsroom views stats` from the server")),),
+        retention=(Retention("derived", "rebuilt each run from the record; a full build prunes keys it no longer produces from the store (bucket objects are overwritten, never listed)", "views/build.py::build_all", "job:views"),),
+        why="derived: every field comes from another product's published documents or the corpus index; deleting the store loses nothing",
+        jobs=(Job("views", ("views", "build"), "2/4:50", every_min=240, what="build every view and publish the changed ones (after corpus-build)"),
+              Job("views-fast", ("views", "build", "--only", "home,hud,daily-hub"), "*:10/30", every_min=30, lock=False, what="refresh the home, globe HUD and daily-hub views (no corpus; a changed daily shows within half an hour)")),
+        publishes=("views/",), feeds_from=("dailies", "situations", "pulses", "actors", "articles", "statements", "sanctions", "calendar", "geoledger", "markets", "corpus_index"),
+        heartbeat=("views_store/manifest.json",)),
     # ── the machine itself ────────────────────────────────────────────────────────────────────────
     Product(
         id="agent_feeds", title="Agent feeds and API", owner="publishing",

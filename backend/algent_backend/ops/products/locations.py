@@ -104,6 +104,12 @@ def corpus() -> Path:
     return store_dir()
 
 
+def views() -> Path:
+    from algent_backend.views.publish import store_dir
+
+    return store_dir()
+
+
 def runs() -> Path:
     from algent_backend.agent_system.runs.control_plane.layout import runs_data_root
 

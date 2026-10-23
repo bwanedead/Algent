@@ -293,6 +293,28 @@
       "refresh_minutes": 240
     },
     {
+      "id": "views",
+      "title": "Views (server-built pages and agent data)",
+      "routes": [],
+      "publishes": [
+        "views/"
+      ],
+      "feeds_from": [
+        "dailies",
+        "situations",
+        "pulses",
+        "actors",
+        "articles",
+        "statements",
+        "sanctions",
+        "calendar",
+        "geoledger",
+        "markets",
+        "corpus_index"
+      ],
+      "refresh_minutes": 30
+    },
+    {
       "id": "agent_feeds",
       "title": "Agent feeds and API",
       "routes": [
