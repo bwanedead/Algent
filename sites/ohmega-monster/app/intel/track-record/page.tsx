@@ -5,6 +5,7 @@ import JudgmentsSwitch from "@/components/JudgmentsSwitch";
 import PageTag from "@/components/PageTag";
 
 import { BrierSeries, CalibrationChart } from "@/components/track/TrackCharts";
+import { AccuracyByEvidence, BookComparison, EvidenceStats, GapsList, HorizonTable } from "@/components/track/EvidencePanel";
 import { EquityCurve, TraderPositions, TradeLog } from "@/components/track/TraderBook";
 import { Disagreements, OpenPositions, Resolved } from "@/components/track/TrackTables";
 import { hitRateView } from "@/lib/stats/render";
@@ -85,9 +86,50 @@ export default async function TrackRecordPage() {
           <h2 className="tr-h2">What it holds now</h2>
           <TraderPositions rows={t.trader.open_positions} />
 
+          {t.fast && (
+            <>
+              <h2 className="tr-h2">The fast book</h2>
+              <p className="tr-note">
+                The same trader on a short clock: only markets that settle within {t.fast.horizon_days} days, decided every {t.fast.every_hours} hours with its own $
+                {t.fast.limits.bankroll.toLocaleString("en-US")} of paper money, so its wins and losses arrive in days instead of months. Set beside the daily trader it shows how well the same
+                judgement predicts at different time scales.
+                {t.fast.since ? ` Trading since ${t.fast.since}.` : " It has not traded yet."}
+              </p>
+              <BookComparison daily={t.trader} fast={t.fast} h={t.horizons} />
+              <EquityCurve curve={t.fast.curve} bankroll={t.fast.limits.bankroll} name="Fast book" id="tr-fast" showRule={false} />
+              <TraderPositions rows={t.fast.open_positions} empty="The fast book holds nothing right now." />
+              {t.horizons && (
+                <>
+                  <h3 className="tr-h3">Forecast accuracy by time to resolution</h3>
+                  <HorizonTable h={t.horizons} />
+                </>
+              )}
+            </>
+          )}
+
           <h2 className="tr-h2">Every trade, newest first</h2>
           <p className="tr-note">Green: the position paid off or was closed at a profit. Red: it lost. Reasons are the trader&apos;s own, written when it acted.</p>
           <TradeLog rows={t.trader.log} />
+
+          {t.evidence && (
+            <>
+              <h2 className="tr-h2">Evidence</h2>
+              <p className="tr-note">
+                The bots read only our own corpus: a planning step picks up to {t.evidence.caps.queries_per_round} queries per market over {t.evidence.caps.rounds} rounds, they run against the corpus
+                index, and the decision reads the results. There is no web search in the decision. Each decision says whether that evidence was sufficient, thin or a gap, and which items it
+                used, so this measures how much of the outcome the corpus explains.
+              </p>
+              <EvidenceStats e={t.evidence} />
+              <AccuracyByEvidence e={t.evidence} />
+
+              <h2 className="tr-h2">What it looked for</h2>
+              <p className="tr-note">
+                When the corpus lacked something a decision needed, the bot asked for it. A daily job (at most ${t.evidence.caps.gap_fill_usd_per_day.toFixed(2)} a day) researches the most-asked
+                topics into the corpus; the bots never see that research directly, only what lands in the corpus afterwards.
+              </p>
+              <GapsList rows={t.evidence.top_gaps} />
+            </>
+          )}
 
           <h2 className="tr-h2">How good are our forecasts</h2>
           <p className={`tr-verdict${early ? " is-early" : ""}`}>{s.verdict}</p>
