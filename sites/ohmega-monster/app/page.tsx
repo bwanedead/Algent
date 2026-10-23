@@ -7,14 +7,14 @@ import { Masthead, TheaterRank } from "@/components/home/Hero";
 import ArticleRows from "@/components/home/ArticleRows";
 import Today from "@/components/home/Today";
 import { getAllMeta } from "@/lib/articles";
-import { addDays, calendarItems, toComing, todayIso } from "@/lib/calendar";
-import { latestDaily } from "@/lib/daily";
-import { DESKS } from "@/lib/desks";
+import { addDays, ahead, toComing, todayIso } from "@/lib/calendar";
+import { dailyFromView } from "@/lib/daily";
+import { DESKS, deskById } from "@/lib/desks";
 import { chartOfDay, glanceCells, topMovers } from "@/lib/glance";
-import { latestSnapshot } from "@/lib/intel";
+import { parseSnapshot } from "@/lib/intel";
 import { liveEnergy, liveStats, liveSummary } from "@/lib/live";
 import { homeDoors } from "@/lib/sections";
-import { situationsByDesk } from "@/lib/situations";
+import { homeView } from "@/lib/views";
 
 import "@/app/daily/daily.css";
 import "@/components/home/home.css";
@@ -24,31 +24,28 @@ import "@/components/home/home.css";
 // at-a-glance band of numerals against their own normal, the day's sections ranked beside the chart of the day, a compact index of
 // doors into every section, and the latest three articles as thin rows. Every number links to where it lives; running text is
 // the headline and short names. Visual language: app/visual.css. Band data: lib/glance.ts.
-export const revalidate = 300; // lib/store.ts: mixes the daily with the live strip, so it follows the faster of the two (live 120 s, daily 1800 s)
+// Everything that is not live is ONE server-built view (backend views/home.py: each desk's newest report as a digest, the situations moving, the next two
+// weeks of the calendar, the counts behind the doors); the live strip is read beside it.
+export const revalidate = 300; // lib/store.ts TTL.fast: the home view is rebuilt every half hour and the page mixes it with the live strip (live 120 s)
 
 const LATEST_ARTICLES = 3;
 
 export default async function Home() {
-  const [report, summary, stats, energy, snap, doors, articles, upcoming, reports, situations] = await Promise.all([
-    latestDaily("geopolitics"),
-    liveSummary(),
-    liveStats(),
-    liveEnergy(),
-    latestSnapshot(),
-    homeDoors(),
-    getAllMeta(),
-    calendarItems(14),
-    Promise.all(DESKS.map((d) => latestDaily(d.id))),
-    situationsByDesk(),
-  ]);
+  const [view, summary, stats, energy, doors, articles] = await Promise.all([homeView(), liveSummary(), liveStats(), liveEnergy(), homeDoors(), getAllMeta()]);
   const today = todayIso();
-  const coming = upcoming.filter((r) => r.on_date <= addDays(today, 14)).map(toComing);
+  const reports = DESKS.map((d) => dailyFromView(view?.reports[d.id] ?? null, d.id));
+  const report = reports[DESKS.findIndex((d) => d.id === "geopolitics")] ?? null;
+  const snap = view?.snapshot ? parseSnapshot(view.snapshot, "") : null;
+  const moving = (view?.moving ?? []).map((m) => ({ id: m.id, name: m.name, deskLabel: deskById(m.desk)?.label ?? m.desk, stamp: m.stamp }));
+  const coming = ahead(view?.coming ?? [], today)
+    .filter((r) => r.on_date <= addDays(today, 14))
+    .map(toComing);
   const cells = glanceCells({ stats, summary, energy, snap, report });
   const chart = chartOfDay(report);
   return (
     <div className="index-page">
       <Masthead report={report} />
-      <Today desks={DESKS} reports={reports} situations={situations} article={articles[0] ?? null} />
+      <Today desks={DESKS} reports={reports} moving={moving} article={articles[0] ?? null} />
       <GlanceBand cells={cells} />
       <ComingStrip rows={coming} today={today} heading="Coming up, next 14 days" limit={4} />
       <div className="hm-pair">

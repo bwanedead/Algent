@@ -58,9 +58,10 @@ def candidates(ctx: ViewContext) -> list[tuple[str, int]]:
     if ctx.corpus is None:
         return []
     uses = usage(ctx.corpus.db)
-    keep = [(i, n) for i, n in uses.items() if n >= flags.SEARCH_MIN_USES or i.startswith("asset:")]
-    keep.sort(key=lambda x: (-x[1], x[0]))
-    return keep[:ENTITY_VIEWS_MAX]
+    ordered = sorted(uses.items(), key=lambda x: (-x[1], x[0]))
+    places = [x for x in ordered if x[0].startswith("asset:")]                # a place with status events has a page: it always gets its view
+    rest = [x for x in ordered if not x[0].startswith("asset:") and x[1] >= flags.SEARCH_MIN_USES]
+    return sorted([*places, *rest[: max(0, ENTITY_VIEWS_MAX - len(places))]], key=lambda x: (-x[1], x[0]))
 
 
 def _strip(obj: Any) -> Any:

@@ -29,7 +29,8 @@ export const TTL = {
   snapshot: 180, //    the live map's first paint (summary, energy, satellite): the stream republishes every 3 min
   maritime: 600, //    the maritime analysis page (30 days of events)
   articles: 900, //    article list and bodies: a handful a day
-  daily: 1800, //      daily reports, dossiers, actors, feeds: published twice a day at most
+  fast: 300, //        the views the server refreshes every half hour (home, the globe HUD): they follow the page that mixes them with the live strip
+  daily: 1800, //      daily reports, dossiers, actors, feeds, and every other view: published twice a day at most
   tables: 1800, //     sanctions, calendar, geoledger: change a few times a day
   static: 3600, //     basemap, track record, benchmarks, radar editions: slow
 } as const;

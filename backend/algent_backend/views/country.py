@@ -9,7 +9,7 @@ sanctions, calendar, grid and snapshot reads. One country, one small file:
     profile     name, region, capital, leaders (the actor page itself still reads ``actors/<ISO>.json`` for the figures)
     context     the actor page's links: theaters it is tied to, what its officials said, recent developments, related states
     sanctions / calendar / grid   the country's rows (raw, as their products publish them; the site filters "still ahead" at render)
-    pulses      the Pulses its theaters carry, as the snapshot publishes them
+    snapshot    the Pulses its actor page lists, as a snapshot holding only those
     relations / series / about   from the corpus index when one exists: top typed relations, key series (with basis), how much the record says about it
 """
 
@@ -23,7 +23,7 @@ from typing import Any
 
 from algent_backend.actors import registry
 
-from . import dailies, flags, graph, mentions
+from . import dailies, flags, graph, mentions, situation
 from .base import View, make
 from .context import ISO, ViewContext
 
@@ -115,14 +115,10 @@ def calendar_of(ctx: ViewContext, iso: str) -> list[dict[str, Any]]:
     return rows[: flags.COUNTRY_CALENDAR]
 
 
-def pulses_of(ctx: ViewContext, actor: dict[str, Any] | None) -> list[dict[str, Any]]:
-    """The snapshot's Pulses an actor page lists (its ``involved.pulses`` ids), each with the title of its situation."""
-    if not actor:
-        return []
-    want = [str(p.get("id")) for p in dailies.objs((actor.get("involved") or {}).get("pulses"))]
-    snap = ctx.snapshot() or {}
-    have = {p.get("id"): {**p, "situation": s.get("title", "")} for s in dailies.objs(snap.get("situations")) for p in dailies.objs(s.get("pulses"))}
-    return [have[i] for i in want if i in have]
+def pulses_of(ctx: ViewContext, actor: dict[str, Any] | None) -> dict[str, Any] | None:
+    """The Pulses an actor page lists (its ``involved.pulses`` ids) as a snapshot holding only those, so the site parses them with the snapshot parser."""
+    ids = {str(p.get("id")) for p in dailies.objs(((actor or {}).get("involved") or {}).get("pulses"))}
+    return situation.mini_snapshot(ctx, ids, set()) if ids else None
 
 
 def developments_of(ctx: ViewContext, iso: str) -> list[dict[str, Any]]:
@@ -220,7 +216,7 @@ def build_one(ctx: ViewContext, iso: str, g: dict[str, Any], briefs: dict[str, l
     body = {
         "iso": iso, "name": name, "region": (actor or {}).get("region") or (country.region if country else ""), "capital": (actor or {}).get("capital") or (country.capital if country else ""),
         "profiled": actor is not None, "panel": panel, "context": context, "sanctions": sanctions, "sanctionsTotal": sanctions_total, "calendar": calendar, "grid": grid,
-        "pulses": pulses_of(ctx, actor),
+        "snapshot": pulses_of(ctx, actor),
         "anomalies": [{k: a.get(k) for k in ("id", "sentence", "direction", "confidence", "series", "starts_at", "ends_at")} for a in anomalies[:10]],
         **corpus_block(ctx, iso),
     }

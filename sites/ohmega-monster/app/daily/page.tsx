@@ -5,10 +5,11 @@ import Age from "@/components/Fresh";
 import NewDot from "@/components/NewDot";
 import PageTag from "@/components/PageTag";
 import { DirMark } from "@/components/vl/primitives";
-import { allDailyDates, claimOf, fmtDay, headlineOf, latestDaily, shortTheater, theaterAnchor, type Daily } from "@/lib/daily";
+import { claimOf, dailyFromView, fmtDay, headlineOf, shortTheater, theaterAnchor, type Daily } from "@/lib/daily";
 import { cadenceLine, dailyBase, dailyHref, DESKS, type Desk } from "@/lib/desks";
 import { CADENCE_HOURS, isStale, newest } from "@/lib/fresh";
 import { getMenus } from "@/lib/radar";
+import { dailyHubView, type DailyHubView } from "@/lib/views";
 
 import "@/app/situations/situations.css";
 import "@/components/hubs.css";
@@ -47,8 +48,10 @@ function PartLine({ p, single }: { p: Part; single: boolean }) {
   return <li className="is-late">{name} not run</li>;
 }
 
-async function DeskCard({ desk, now }: { desk: Desk; now: Date }) {
-  const [report, dates] = await Promise.all([latestDaily(desk.id), allDailyDates(desk.id)]);
+type HubEntry = DailyHubView["desks"][number];
+
+function DeskCard({ desk, now, entry }: { desk: Desk; now: Date; entry: HubEntry | undefined }) {
+  const report = dailyFromView(entry?.report ?? null, desk.id);
   const base = dailyBase(desk.id);
   if (!report) {
     return (
@@ -106,11 +109,11 @@ async function DeskCard({ desk, now }: { desk: Desk; now: Date }) {
       )}
       <p className="hub-foot">
         <Link href={base}>Read the {desk.label} Daily →</Link>
-        <Link href={`${base}/archive`}>All {dates.length} days →</Link>
+        <Link href={`${base}/archive`}>All {entry?.dates_total ?? 0} days →</Link>
       </p>
-      {dates.length > 1 && (
+      {entry && entry.recent.length > 0 && (
         <ul className="hub-days" aria-label="Recent days">
-          {dates.slice(1, RECENT_DAYS + 1).map((d) => (
+          {entry.recent.slice(0, RECENT_DAYS).map((d) => (
             <li key={d}>
               <Link href={dailyHref(desk.id, d)}>{d.slice(5)}</Link>
             </li>
@@ -122,10 +125,12 @@ async function DeskCard({ desk, now }: { desk: Desk; now: Date }) {
 }
 
 // The Daily hub: mostly navigation. One card per desk (generated from the desk list, so a new desk appears on its own) with today's
-// headline, its sections, where the day's parts stand, how old it is, and the way into the archive by date.
+// headline, its sections, where the day's parts stand, how old it is, and the way into the archive by date. The cards come from one server-built view
+// (backend views/daily_hub.py: each desk's newest report as a digest and its list of days), not from the reports themselves.
 export default async function DailyHub() {
   const now = new Date();
-  const headlines = (await getMenus())[0];
+  const [view, menus] = await Promise.all([dailyHubView(), getMenus()]);
+  const headlines = menus[0];
   return (
     <div className="intel-page th-page">
       <p className="th-kicker">
@@ -135,7 +140,7 @@ export default async function DailyHub() {
       <p className="th-lead">One report per desk per day. Each section covers one situation that had news that day; follow a section into its situation for the whole story.</p>
       <div className="hub-cards">
         {DESKS.map((d) => (
-          <DeskCard key={d.id} desk={d} now={now} />
+          <DeskCard key={d.id} desk={d} now={now} entry={view?.desks.find((e) => e.desk === d.id)} />
         ))}
       </div>
       {headlines && (

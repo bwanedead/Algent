@@ -121,7 +121,7 @@ export function linkTarget(u: string): { href: string; external: boolean } | nul
 }
 
 // ---- parsers --------------------------------------------------------------------------------
-function parseIndexItem(raw: Obj): DossierIndexItem | null {
+export function parseIndexItem(raw: Obj): DossierIndexItem | null {
   const id = str(raw.theater_id);
   if (!id || !ID_RE.test(id)) return null;
   return {
@@ -208,6 +208,20 @@ function parseForecast(raw: Obj, i: number): DossierForecast | null {
   };
 }
 
+export function parseEscalationHistory(v: unknown): EscalationPoint[] {
+  return objs(v)
+    .map((e) => ({ date: str(e.date), direction: oneOf(e.direction, DIRECTIONS, "unclear"), pace: oneOf(e.pace, PACES, "flat") }))
+    .filter((e) => e.date)
+    .sort(byDate((e) => e.date));
+}
+
+export function parseCoverageSeries(v: unknown): CoveragePoint[] {
+  return objs(v)
+    .map((c) => ({ day: str(c.day), count: num(c.count) ?? 0, editions: num(c.editions) ?? 0 }))
+    .filter((c) => c.day)
+    .sort(byDate((c) => c.day));
+}
+
 function parseDossier(raw: unknown, id: string): Dossier | null {
   if (!isObj(raw)) return null;
   const cur = isObj(raw.current) ? raw.current : null;
@@ -236,14 +250,8 @@ function parseDossier(raw: unknown, id: string): Dossier | null {
         }
       : null,
     pulses: objs(raw.pulses).map(parsePulse).filter((p): p is DossierPulse => p !== null),
-    escalation_history: objs(raw.escalation_history)
-      .map((e) => ({ date: str(e.date), direction: oneOf(e.direction, DIRECTIONS, "unclear"), pace: oneOf(e.pace, PACES, "flat") }))
-      .filter((e) => e.date)
-      .sort(byDate((e) => e.date)),
-    coverage_series: objs(raw.coverage_series)
-      .map((c) => ({ day: str(c.day), count: num(c.count) ?? 0, editions: num(c.editions) ?? 0 }))
-      .filter((c) => c.day)
-      .sort(byDate((c) => c.day)),
+    escalation_history: parseEscalationHistory(raw.escalation_history),
+    coverage_series: parseCoverageSeries(raw.coverage_series),
     timeline: objs(raw.timeline).map(parseTimelineItem).filter((t) => t.headline),
     places: objs(raw.places)
       .map((p) => ({ name: str(p.name), country: str(p.country), count: num(p.count) ?? 0, last_date: str(p.last_date) }))

@@ -106,19 +106,45 @@ export async function actor(iso2: string): Promise<Actor | null> {
   return ISO_RE.test(iso2) ? parseActor(await intelDoc(`actors/${iso2}.json`)) : null;
 }
 
-export async function allActors(): Promise<Actor[]> {
-  const all = await Promise.all((await actorIds()).map(actor));
-  return all.filter((a): a is Actor => a !== null);
+/** One row of the published index (`actors/index.json`, backend `publishing/actors_feed.py`): the headline figures of every published actor in ONE document,
+ *  so the index table needs no per-actor read. A figure is `null` when the profile has none. */
+export type ActorIndexRow = {
+  iso2: string;
+  name: string;
+  region: string;
+  theaters: number;
+  statements: number;
+  figures: Record<string, { value: number; unit: Unit; year: number } | null>;
+};
+export type ActorIndex = { data_as_of: string; actors: ActorIndexRow[] };
+
+const HEADLINE_IDS = ["population", "gdp", "gdp_pc", "energy_production", "milex"] as const;
+
+export async function actorIndex(): Promise<ActorIndex> {
+  const raw = await intelDoc("actors/index.json");
+  const rows = isObj(raw) ? objs(raw.actors) : [];
+  const actors = rows
+    .filter((r) => ISO_RE.test(str(r.iso2)))
+    .map((r): ActorIndexRow => ({
+      iso2: str(r.iso2),
+      name: str(r.name) || str(r.iso2),
+      region: str(r.region),
+      theaters: num(r.theaters) ?? 0,
+      statements: num(r.statements) ?? 0,
+      figures: Object.fromEntries(
+        HEADLINE_IDS.map((id) => {
+          const f = isObj(r[id]) ? r[id] : null;
+          const value = f ? num(f.value) : null;
+          const year = f ? num(f.year) : null;
+          return [id, f && value !== null && year !== null ? { value, unit: (str(f.unit) || "number") as Unit, year } : null];
+        }),
+      ),
+    }));
+  return { data_as_of: isObj(raw) ? str(raw.data_as_of) : "", actors };
 }
 
-/** The published actors a theater involves, most mentioned first. */
-export async function actorsForTheater(theaterId: string): Promise<Actor[]> {
-  return (await allActors())
-    .map((a) => ({ a, n: a.involved.theaters.find((t) => t.id === theaterId)?.mentions ?? 0 }))
-    .filter((x) => x.n > 0)
-    .sort((x, y) => y.n - x.n || x.a.name.localeCompare(y.a.name))
-    .map((x) => x.a);
-}
+/** What the scale strips and tables need of an actor: name and headline figures. A full `Actor` satisfies it, and so does the slim form a view carries. */
+export type ActorLite = Pick<Actor, "iso2" | "name" | "headline">;
 
 export const headlineOf = (a: Actor, id: string): Field | null => a.headline.find((f) => f.id === id) ?? null;
 export const fieldOf = (a: Actor, id: string): Field | null => GROUPS.flatMap((g) => a.groups[g]).find((f) => f.id === id) ?? null;

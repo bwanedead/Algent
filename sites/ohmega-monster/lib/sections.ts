@@ -1,29 +1,24 @@
 import { cache } from "react";
 
-import { actorIds } from "./actors";
 import { aiBenchmarks } from "./ai-benchmarks";
 import { getAllMeta } from "./articles";
-import { addDays, calendarItems, todayIso } from "./calendar";
-import { latestDaily } from "./daily";
-import { DESKS } from "./desks";
 import { CADENCE_HOURS, newest } from "./fresh";
-import { latestSnapshot } from "./intel";
 import { liveSummary } from "./live";
 import { maritimeCounts, maritimeLive } from "./maritime";
 import { getMenus } from "./radar";
-import { recordLedger } from "./record";
-import { recentSanctions, SANCTIONS_WINDOW_DAYS } from "./sanctions";
 import { satelliteDoc } from "./satellite";
-import { situationsByDesk } from "./situations";
 import { statDef } from "./stats/registry";
 import { shortDate, statView } from "./stats/render";
 import { trackRecord } from "./track-record";
+import { homeView } from "./views";
 
 // The site's sections as doors: one line saying what is behind each, a small live hint read from the published data
 // ("12 active situations · 3 escalating"), and the product's as-of stamp so every row can say how old it is and whether that is late for
 // its own cadence (components/Doors.tsx renders both). Home and the Data hub share this, so the two never describe a section
 // differently. A hint is "" when its data is missing: a door never shows a zero it does not know. The map of what exists is
 // docs/architecture/information-architecture.md; a new product is placed there before it gets a door here.
+// The counts that need many documents (active situations, state profiles, statements on file, Pulses, calendar, sanctions) come from the home view's
+// `facts` (backend views/home.py); the rest are single small documents read here.
 
 export type Door = {
   href: string;
@@ -39,50 +34,47 @@ export type Door = {
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
 const hints = cache(async () => {
-  const [dailies, situations, actors, ledger, snap, articles, menus, live, upcoming, sanctions, maritime, maritimeNewest, track, ai, satellite] = await Promise.all([
-    Promise.all(DESKS.map((d) => latestDaily(d.id))),
-    situationsByDesk(),
-    actorIds(),
-    recordLedger(),
-    latestSnapshot(),
+  const [home, articles, menus, live, maritime, maritimeNewest, track, ai, satellite] = await Promise.all([
+    homeView(),
     getAllMeta(),
     getMenus(),
     liveSummary(),
-    calendarItems(30),
-    recentSanctions(SANCTIONS_WINDOW_DAYS),
     maritimeCounts(),
     maritimeLive(300),
     trackRecord(),
     aiBenchmarks(),
     satelliteDoc(),
   ]);
-  const ahead30 = upcoming.filter((r) => r.on_date <= addDays(todayIso(), 30));
+  const f = home?.facts;
   // One universe for every situation count: the active ones (not quiet, not merged, not a one-day Spotlight), across all desks.
-  const active = situations.flatMap((g) => g.active);
-  const rising = active.filter((r) => r.item.escalation_direction === "rising").length;
-  const pulses = (snap?.situations ?? []).flatMap((s) => s.pulses);
-  const severe = pulses.filter((p) => p.band === "severe" || p.band === "critical").length;
-  const reports = dailies.filter((r): r is NonNullable<typeof r> => r !== null);
+  const active = f?.situations.active ?? 0;
+  const rising = f?.situations.rising ?? 0;
+  const actors = f?.actors ?? 0;
+  const pulses = f?.pulses.total ?? 0;
+  const severe = f?.pulses.severe ?? 0;
+  const ledger = f?.record ?? null;
+  const calendar30 = f?.calendar_30d ?? 0;
+  const additions = f?.sanctions.additions ?? 0;
   return {
-    daily: { hint: "", stamp: newest(reports.map((r) => r.built_at || r.date)) },
+    daily: { hint: "", stamp: f?.daily_stamp ?? "" },
     situations: {
-      hint: active.length > 0 ? `${plural(active.length, "active situation")}${rising > 0 ? ` · ${rising} escalating` : ""}` : "",
-      stamp: newest(active.map((r) => r.item.last_seen)),
+      hint: active > 0 ? `${plural(active, "active situation")}${rising > 0 ? ` · ${rising} escalating` : ""}` : "",
+      stamp: f?.situations.stamp ?? "",
     },
-    actors: actors.length > 0 ? plural(actors.length, "state profile") : "",
-    graph: active.length > 0 && actors.length > 0 ? `${plural(actors.length, "state")} · ${plural(active.length, "active situation")}` : "",
+    actors: actors > 0 ? plural(actors, "state profile") : "",
+    graph: active > 0 && actors > 0 ? `${plural(actors, "state")} · ${plural(active, "active situation")}` : "",
     // The export is capped: the hint shows the window's real total when the document carries it, else "latest N".
     record: ledger && ledger.count > 0
-      ? `${statView({ id: "door_statements", value: ledger.statements.length, cap: { limit: 1500, total: ledger.total } }).text} statements · last ${ledger.window_days} days`
+      ? `${statView({ id: "door_statements", value: ledger.shown, cap: { limit: 1500, total: ledger.total } }).text} statements · last ${ledger.window_days} days`
       : "",
     recordStamp: ledger?.as_of ?? "",
-    pulses: pulses.length > 0 ? `${plural(pulses.length, "Pulse")}${severe > 0 ? ` · ${severe} severe or worse` : ""} · model-assessed` : "",
-    pulsesStamp: snap?.built_at ?? "",
+    pulses: pulses > 0 ? `${plural(pulses, "Pulse")}${severe > 0 ? ` · ${severe} severe or worse` : ""} · model-assessed` : "",
+    pulsesStamp: f?.pulses.built_at ?? "",
     articles: { hint: articles.length > 0 ? `${plural(articles.length, "article")}` : "", stamp: articles[0]?.published_at || articles[0]?.date || "" },
     headlines: { hint: menus[0] ? plural(menus[0].leads.length, "headline") : "", stamp: menus[0]?.builtAt ?? "" },
     live: { hint: live && live.headlines.length > 0 ? `${plural(live.headlines.length, "signal")} now` : "", stamp: live?.as_of ?? "" },
     satellite: satellite && satellite.counts.with_imagery > 0 ? `${plural(satellite.counts.with_imagery, "place")}${satellite.counts.changed > 0 ? ` · ${satellite.counts.changed} changed` : ""}` : "",
-    calendar: ahead30.length > 0 ? `${plural(ahead30.length, "date")} · next 30 days` : "",
+    calendar: calendar30 > 0 ? `${plural(calendar30, "date")} · next 30 days` : "",
     maritime: {
       // A real count (a list fetch is capped at 1000 rows), over the detectors' own history rather than a "last 30 days" they have not run for.
       hint: maritime && maritime.total > 0 ? `${plural(maritime.total, "event")} · since ${shortDate(statDef("maritime_events").baseline_since ?? "")}` : "",
@@ -91,8 +83,8 @@ const hints = cache(async () => {
     track: { hint: track ? `${plural(track.scores.compared, "market")} compared · ${plural(track.markets.open, "open market")}` : "", stamp: track?.as_of ?? "" },
     ai: { hint: ai ? `${plural(ai.benchmarks.length, "benchmark")} · ${plural(ai.labs.length, "lab")}` : "", stamp: ai?.as_of ?? "" },
     sanctions: {
-      hint: sanctions.length > 0 ? `${plural(sanctions.filter((s) => s.action === "designated").length, "addition")} · since ${shortDate(statDef("sanctions_changes").baseline_since ?? "")}` : "",
-      stamp: newest(sanctions.map((s) => s.observed_on)),
+      hint: additions > 0 ? `${plural(additions, "addition")} · since ${shortDate(statDef("sanctions_changes").baseline_since ?? "")}` : "",
+      stamp: f?.sanctions.newest_observed ?? "",
     },
   };
 });

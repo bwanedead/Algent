@@ -1,9 +1,9 @@
 import PageTag from "@/components/PageTag";
 import type { Metadata } from "next";
 import ActorTable, { type TableRow } from "@/components/actors/ActorTable";
-import { COMPARE_METRICS, headline } from "@/components/actors/ActorParts";
+import { COMPARE_METRICS } from "@/components/actors/ActorParts";
 import Crumbs, { DATA_CRUMB } from "@/components/Crumbs";
-import { allActors, fmt } from "@/lib/actors";
+import { actorIndex, fmt } from "@/lib/actors";
 
 import "@/app/daily/daily.css";
 import "@/app/situations/situations.css";
@@ -15,11 +15,12 @@ export const metadata: Metadata = {
 };
 
 // The index: every published actor as one row of a small-multiples table, each column on one shared
-// scale. The claim names the biggest of each kind, so the first screen answers "who is big at what".
+// scale. The claim names the biggest of each kind, so the first screen answers "who is big at what". It reads the ONE published index
+// (`actors/index.json`, which carries every actor's headline figures), not the eighty actor pages.
 export const revalidate = 1800; // lib/store.ts TTL.daily: a desk publishes twice a day
 
 export default async function ActorsIndexPage() {
-  const actors = await allActors();
+  const { actors, data_as_of: asOf } = await actorIndex();
   if (actors.length === 0) {
     return (
       <div className="intel-page th-page">
@@ -31,10 +32,10 @@ export default async function ActorsIndexPage() {
   const rows: TableRow[] = actors.map((a) => ({
     iso2: a.iso2,
     name: a.name,
-    theaters: a.involved.theaters.length,
+    theaters: a.theaters,
     cells: Object.fromEntries(
       COMPARE_METRICS.map(([id]) => {
-        const f = headline(a, id);
+        const f = a.figures[id];
         return [id, f ? { value: f.value, text: fmt(f.value, f.unit), year: f.year } : null];
       }),
     ),
@@ -42,7 +43,6 @@ export default async function ActorsIndexPage() {
   const top = (id: string) => [...rows].filter((r) => r.cells[id]).sort((x, y) => (y.cells[id]?.value ?? 0) - (x.cells[id]?.value ?? 0))[0];
   const biggest = top("gdp");
   const spender = top("milex");
-  const asOf = actors.map((a) => a.data_as_of).sort().pop() ?? "";
   return (
     <div className="intel-page th-page">
       <Crumbs trail={[DATA_CRUMB]} />

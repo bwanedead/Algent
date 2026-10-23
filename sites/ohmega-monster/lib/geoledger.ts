@@ -27,7 +27,7 @@ const strs = (v: unknown): string[] => (Array.isArray(v) ? v.filter((x): x is st
 
 type Raw = Record<string, unknown>;
 
-function toAsset(r: Raw): GeoAsset | null {
+export function toAsset(r: Raw): GeoAsset | null {
   const id = str(r.id);
   if (!ID.test(id)) return null;
   const prec = str(r.loc_precision);
@@ -54,7 +54,7 @@ function toAsset(r: Raw): GeoAsset | null {
   };
 }
 
-function toEvent(r: Raw): GeoEvent | null {
+export function toEvent(r: Raw): GeoEvent | null {
   const status = asStatus(r.status);
   if (!status || !ID.test(str(r.id)) || !DAY.test(str(r.occurred_on))) return null;
   const conf = str(r.confidence);
@@ -150,9 +150,14 @@ export async function assetHistory(id: string): Promise<GeoEvent[]> {
 export async function getGrid(iso: string): Promise<GridDoc | null> {
   const code = iso.toUpperCase();
   if (!/^[A-Z]{2}$/.test(code)) return null;
-  const doc = await tableDoc<GridDoc>(`geo/grid/${code}.json`, TTL.tables);
-  if (!doc || typeof doc !== "object" || !doc.windows || !doc.windows["30"] || !doc.windows["7"] || !doc.installed) return null;
-  return { ...doc, iso: code, provenance: "ohmega_derived" };
+  return gridFromDoc(code, await tableDoc<GridDoc>(`geo/grid/${code}.json`, TTL.tables));
+}
+
+/** The grid rollup of a country from a document that carries it (the published file, or a country view's copy of it): trusted only in shape. */
+export function gridFromDoc(iso: string, doc: unknown): GridDoc | null {
+  const g = doc as GridDoc | null;
+  if (!g || typeof g !== "object" || !g.windows || !g.windows["30"] || !g.windows["7"] || !g.installed) return null;
+  return { ...g, iso, provenance: "ohmega_derived" };
 }
 
 /** The country most of these places are in ("" when none): where a theater map's struck power plants are. */

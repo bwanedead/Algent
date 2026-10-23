@@ -6,30 +6,19 @@ import { claimOf, type Daily } from "@/lib/daily";
 import { dailyBase, situationHref, type Desk } from "@/lib/desks";
 import { CADENCE_HOURS, isStale } from "@/lib/fresh";
 import type { ArticleMeta } from "@/lib/articles";
-import type { DeskSituations } from "@/lib/situations";
 
 import "@/components/hubs.css";
 
 // "Today": the site's present tense across desks, in four kinds of row, each one a link with its own age: the newest Daily headline of
 // every desk (so a new desk appears here by itself), the situations moving (escalating ones first, ranked WITHIN each desk, never
-// across desks), and the newest article. Navigation, not content: the Daily hub, /situations and /articles hold the rest.
+// across desks; the server picks them, backend views/home.py), and the newest article. Navigation, not content: the Daily hub, /situations
+// and /articles hold the rest.
 
 const HEADLINE_MAX = 150;
-const MOVING_PER_DESK = 2;
 
-type Moving = { id: string; name: string; deskLabel: string; stamp: string };
+export type Moving = { id: string; name: string; deskLabel: string; stamp: string };
 
-function moving(groups: DeskSituations[]): Moving[] {
-  return groups.flatMap((g) =>
-    g.active
-      .filter((r) => r.item.escalation_direction === "rising")
-      .slice(0, MOVING_PER_DESK)
-      .map((r) => ({ id: r.item.theater_id, name: r.item.name, deskLabel: g.desk.label, stamp: r.item.last_seen })),
-  );
-}
-
-export default function Today({ desks, reports, situations, article }: { desks: Desk[]; reports: (Daily | null)[]; situations: DeskSituations[]; article: ArticleMeta | null }) {
-  const rows = moving(situations);
+export default function Today({ desks, reports, moving: rows, article }: { desks: Desk[]; reports: (Daily | null)[]; moving: Moving[]; article: ArticleMeta | null }) {
   return (
     <section className="hm-today" aria-label="Today across desks">
       <p className="hm-sub">

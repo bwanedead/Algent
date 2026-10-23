@@ -52,7 +52,7 @@ def test_country_panel_stats_counts_briefs_and_context():
     assert [t["id"] for t in ctx["theaters"]] == ["thr_hormuz"] and ctx["saidAbout"] == 1 and len(ctx["said"]) == 2
     assert ctx["developments"][0]["event"].startswith("/intel/events/2026-10-23/thr_hormuz/")
     assert {r["iso2"] for r in ctx["related"]} >= {"US", "SA"}
-    assert iran["calendar"][0]["title"] == "Gulf summit" and iran["sanctions"][0]["name"] == "MAR AZUL" and iran["pulses"][0]["id"] == "pls_thr_hormuz"
+    assert iran["calendar"][0]["title"] == "Gulf summit" and iran["sanctions"][0]["name"] == "MAR AZUL" and iran["snapshot"]["situations"][0]["pulses"][0]["id"] == "pls_thr_hormuz"
     assert not iran["panel"]["briefs"] or iran["panel"]["briefsTotal"] >= len(iran["panel"]["briefs"])
 
 
