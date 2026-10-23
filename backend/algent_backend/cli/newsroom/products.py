@@ -4,6 +4,8 @@
     newsroom products table [--write]         the register as a markdown table (--write: refresh it inside docs/architecture/foundation.md)
     newsroom products timers                  "<name>\\t<command>\\t<OnCalendar>" per timer: what infra/server/install_schedules.sh installs
     newsroom products run <job>               what a timer starts: take the job lock, run the job (paid jobs through the spend gates)
+    newsroom products runs [--days N] [--json]  the run ledger: per job runs, p50/p95 duration, lock wait, peak RSS, skips (ops/jobq)
+    newsroom products capacity [--json] [--new-desk JOB]  lock busy share, tight windows, memory floor, what one more desk costs, the split rule
     newsroom products check [--text]          validate the registry and judge this machine against it (also embedded in `newsroom doctor`)
     newsroom products contract [--write]      the JSON the site reads (routes, publications, refresh cadence); --write refreshes sites/ohmega-monster/lib/products.json
     newsroom products housekeeping [--apply]  expire the fetch cache and old per-job run logs (daily timer; dry run without --apply)
@@ -33,6 +35,14 @@ def add_parser(sub: Any) -> None:
     r = verbs.add_parser("run", help="run one registered job (what its systemd timer starts)")
     r.add_argument("job")
     r.set_defaults(handler=run_run)
+    u = verbs.add_parser("runs", help="the run ledger: durations, lock waits, skips, peak memory per job")
+    u.add_argument("--days", type=float, default=7)
+    u.add_argument("--json", action="store_true")
+    u.set_defaults(handler=run_runs)
+    cap = verbs.add_parser("capacity", help="busy share, tight windows, memory floor, one-more-desk projection, split rule")
+    cap.add_argument("--json", action="store_true")
+    cap.add_argument("--new-desk", default="ai-daily", help="the job whose size the projected desk copies (default ai-daily)")
+    cap.set_defaults(handler=run_capacity)
     c = verbs.add_parser("check", help="validate the registry and judge this machine against it")
     c.add_argument("--text", action="store_true", help="one line per row instead of JSON")
     c.set_defaults(handler=run_check)
@@ -67,6 +77,22 @@ def run_run(args: Any) -> int:
     from algent_backend.ops.products import run
 
     return run.run_job(args.job)
+
+
+def run_runs(args: Any) -> int:
+    from algent_backend.ops.jobq import render
+
+    data = render.runs_data(days=args.days)
+    print(json.dumps(data, indent=2) if args.json else render.runs_text(data))
+    return 0
+
+
+def run_capacity(args: Any) -> int:
+    from algent_backend.ops.jobq import capacity, render
+
+    rep = capacity.report(new_desk=args.new_desk)
+    print(json.dumps(rep, indent=2, default=str) if args.json else render.capacity_text(rep))
+    return 0
 
 
 def run_check(args: Any) -> int:

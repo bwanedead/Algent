@@ -51,7 +51,7 @@ def _calendar_every(minutes: int) -> str:
 def _live_jobs() -> tuple[Job, ...]:
     from algent_backend.live import flags as f
 
-    feeds = tuple(Job(f"live-{feed}", ("live", "run", "--feed", feed), _calendar_every(m), every_min=m, lock=False, what=f"live feed {feed}")
+    feeds = tuple(Job(f"live-{feed}", ("live", "run", "--feed", feed), _calendar_every(m), every_min=m, lock=False, est_mb=120, what=f"live feed {feed}")
                   for feed, m in f.CADENCE_MINUTES.items())
     return (*feeds, Job("ais", ("live", "ais"), kind="service", lock=False, what="AIS chokepoint counter (always on; needs ALGENT_AISSTREAM_KEY)"))
 
@@ -133,14 +133,14 @@ PRODUCTS: tuple[Product, ...] = (
         what="Lane aggregates from the AIS service plus the weekly Comtrade trade picture, as one document. Stored under live_store/flows.",
         retention=(Retention("overwrite", "tracker and days.json are bounded aggregates replaced atomically", "flows/store.py::root", "on-write"),),
         why="aggregates of the live stream, rebuilt as it runs",
-        jobs=(Job("flows", ("flows", "publish"), "*:7/15", every_min=15, lock=False, what="ship-lane + grain/money flows document"),),
+        jobs=(Job("flows", ("flows", "publish"), "*:7/15", every_min=15, lock=False, est_mb=150, what="ship-lane + grain/money flows document"),),
         publishes=("live/",), site_routes=(), feeds_from=("live",), heartbeat=("live_store/flows/days.json",)),
     Product(
         id="satellite", title="Satellite (Sentinel-2 chips, night lights)", owner="satellite",
         what="Change detection on watched sites from keyless imagery; stored under live_store/satellite.",
         retention=(Retention("prune", "dated chips are pruned to the KEEP_DATED (3) newest scenes per site plus the baseline", "satellite/store.py::KEEP_DATED", "on-write"),),
         why="re-observed daily; the append-only records.jsonl is small and re-derivable from imagery",
-        jobs=(Job("satellite", ("satellite", "run"), "*-*-* 03:20", every_min=1440, lock=False, what="Sentinel-2 chips + night lights of watched sites"),),
+        jobs=(Job("satellite", ("satellite", "run"), "*-*-* 03:20", every_min=1440, lock=False, est_min=5, est_mb=300, what="Sentinel-2 chips + night lights of watched sites"),),
         publishes=("live/", "/satellite/"), site_routes=("/intel/satellite",), feeds_from=(), heartbeat=("live_store/satellite/doc.json",)),
     Product(
         id="maritime", title="Maritime behaviour", owner="maritime",
@@ -248,7 +248,7 @@ PRODUCTS: tuple[Product, ...] = (
         retention=(Retention("derived", "rebuilt each run from the record; a full build prunes keys it no longer produces from the store (bucket objects are overwritten, never listed)", "views/build.py::build_all", "job:views"),),
         why="derived: every field comes from another product's published documents or the corpus index; deleting the store loses nothing",
         jobs=(Job("views", ("views", "build"), "2/4:50", every_min=240, priority=2, est_min=2, deadline_min=60, what="build every view and publish the changed ones (after corpus-build)", then=("site-smoke",)),
-              Job("views-fast", ("views", "build", "--only", "home,hud,daily-hub"), "*:10/30", every_min=30, lock=False, priority=2, what="refresh the home, globe HUD and daily-hub views (no corpus; a changed daily shows within half an hour)")),
+              Job("views-fast", ("views", "build", "--only", "home,hud,daily-hub"), "*:10/30", every_min=30, lock=False, priority=2, est_min=1.5, est_mb=300, what="refresh the home, globe HUD and daily-hub views (no corpus; a changed daily shows within half an hour)")),
         publishes=("views/",), feeds_from=("dailies", "situations", "pulses", "actors", "articles", "statements", "sanctions", "calendar", "geoledger", "markets", "corpus_index"),
         heartbeat=("views_store/manifest.json",)),
     Product(
@@ -272,7 +272,7 @@ PRODUCTS: tuple[Product, ...] = (
         what="Pages that are navigation or presentation over other products: home, the Data hub, the globe HUD and the 3D lab.",
         retention=(Retention("derived", "presentation only; no data of its own", "", "on-write"),),
         why="reads the other products' published documents", site_routes=("/", "/data", "/globe", "/lab/scene"),
-        jobs=(Job("site-smoke", ("site", "smoke", "--log"), "*:17", every_min=60, lock=False,
+        jobs=(Job("site-smoke", ("site", "smoke", "--log"), "*:17", every_min=60, lock=False, est_mb=60,
                   priority=2, what="smoke test of the production site: every route, sampled dynamic pages, the agent API, freshness (hourly, and after each publish job)"),),
         feeds_from=("dailies", "situations", "live", "flows", "maritime", "actors", "geoledger", "pulses")),
     Product(
@@ -280,8 +280,8 @@ PRODUCTS: tuple[Product, ...] = (
         what="The jobs that keep the machine honest: deploy-on-push, the spend watchdog, the envelope log, daily housekeeping.",
         retention=(Retention("prune", "housekeeping deletes fetch-cache files past their TTL and per-job run logs older than 30 days", "ops/housekeeping.py::run", "job:housekeeping"),),
         why="code and logs only; ~/ops-log.md grows by a few lines a day",
-        jobs=(Job("update", script="update.sh", calendar="*:0/5", every_min=5, lock=False, what="deploy-on-push"),
-              Job("watchdog", ("watchdog",), "*:0/2", every_min=2, lock=False, what="kills paid runs over their time/spend limits"),
+        jobs=(Job("update", script="update.sh", calendar="*:0/5", every_min=5, lock=False, est_mb=80, what="deploy-on-push"),
+              Job("watchdog", ("watchdog",), "*:0/2", every_min=2, lock=False, est_min=0.2, est_mb=50, what="kills paid runs over their time/spend limits"),
               Job("envelope", ("envelope", "--log"), "*-*-* 07:10", every_min=1440, priority=4, what="one-line operating-envelope summary to ~/ops-log.md"),
               Job("housekeeping", ("products", "housekeeping", "--apply"), "*-*-* 03:55", every_min=1440, priority=4, preemptible=True, what="expire the fetch cache and old per-job run logs"))),
     Product(
