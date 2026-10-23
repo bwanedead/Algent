@@ -16,6 +16,7 @@ from algent_backend.ops import flags as ops_flags, housekeeping, schedule
 from algent_backend.ops.products import run as products_run, validate, views
 from algent_backend.ops.products.model import Budget, Product, Retention
 from algent_backend.ops.products.registry import PRODUCTS
+from tests.jobq_fakes import queue
 
 REPO = Path(__file__).resolve().parents[2]
 INFRA = REPO / "infra" / "server"
@@ -168,26 +169,24 @@ def test_run_unknown_and_service_jobs_are_refused(capsys) -> None:
     assert products_run.run_job("ais") == 2
 
 
-def test_run_takes_the_lock_only_when_the_job_asks_and_runs_its_command(monkeypatch) -> None:
+def test_run_takes_the_lock_only_when_the_job_asks_and_runs_its_command(monkeypatch, tmp_path) -> None:
     calls, locked = [], []
-    monkeypatch.setattr(products_run.subprocess, "call", lambda cmd, cwd=None: calls.append(cmd) or 0)
-
-    class Handle:
-        def close(self) -> None:
-            locked.append("released")
-
-    monkeypatch.setattr(products_run, "acquire_lock", lambda: locked.append("taken") or Handle())
+    q, env, _ledger = queue(tmp_path)
+    real = env.try_lock
+    env.try_lock = lambda: locked.append("taken") or real()                    # type: ignore[method-assign]
+    monkeypatch.setattr(products_run, "make_queue", lambda: q)
+    monkeypatch.setattr(products_run.measure, "call", lambda cmd, cwd=None: calls.append(cmd) or 0)
     assert products_run.run_job("library") == 0
-    assert calls[-1][-4:] == ["library", "crawl", "--max", "150"] and locked == ["taken", "released"]
+    assert calls[-1][-4:] == ["library", "crawl", "--max", "150"] and locked == ["taken"] and not env.mine
     locked.clear()
     assert products_run.run_job("watchdog") == 0 and locked == [] and calls[-1][-1] == "watchdog"
 
 
-def test_run_sends_a_paid_job_through_the_spend_gates(monkeypatch) -> None:
+def test_run_sends_a_paid_job_through_the_spend_gates(monkeypatch, tmp_path) -> None:
     seen = []
-    monkeypatch.setattr(products_run, "acquire_lock", lambda: None)
-    monkeypatch.setattr(schedule, "run_job", lambda name: seen.append(name) or 0)
-    monkeypatch.setattr(products_run.subprocess, "call", lambda *a, **k: pytest.fail("a paid job must not bypass ops/schedule.py"))
+    monkeypatch.setattr(products_run, "make_queue", lambda: queue(tmp_path)[0])
+    monkeypatch.setattr(schedule, "run_job", lambda name, **k: seen.append(name) or 0)
+    monkeypatch.setattr(products_run.measure, "call", lambda *a, **k: pytest.fail("a paid job must not bypass ops/schedule.py"))
     assert products_run.run_job("menu") == 0 and seen == ["menu"]
 
 

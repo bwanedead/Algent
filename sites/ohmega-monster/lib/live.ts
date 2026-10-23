@@ -1,5 +1,6 @@
 import { intelDoc, tableDoc, TTL } from "@/lib/store";
 
+import { gate } from "./contract";
 import { DATA_BASE } from "./data-base";
 import { snapshotUrl, type EnergyDoc, type LiveAnomaly, type LiveEvent, type LiveStat, type LiveWorld, type Summary } from "./live-shared";
 
@@ -58,7 +59,7 @@ async function snapshot<T>(name: string, revalidate: number): Promise<T | null> 
     if (process.env.NEXT_PHASE === "phase-production-build") return null;
     throw new Error(`live snapshot ${name} answered ${res.status}`);
   }
-  return (await res.json()) as T;
+  return gate(`live/${name}.json`, (await res.json()) as T);
 }
 
 export const liveSummary = () => snapshot<Summary>("summary", TTL.snapshot);

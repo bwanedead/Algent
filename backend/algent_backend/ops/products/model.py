@@ -92,6 +92,17 @@ class Job:
     what: str = ""
     script: str = ""
     then: tuple[str, ...] = ()            # after-hook: jobs run once this one has succeeded (``products/run.py``), each as its own run: its own lock and spend gates
+    # ── capacity (ops/jobq): who goes first when the lock is taken, and what a run is expected to need ──
+    priority: int = 0                     # 1 editorial, 2 publication/views, 3 collector, 4 housekeeping; 0 = derive (paid -> 1, else 3)
+    deadline_min: int = 0                 # finish within this many minutes of the slot (an `at` time, else the moment it fired); 0 = none. Orders equal-priority waiters, is counted when missed
+    max_wait_min: float = 0.0             # skip as busy after waiting this long for the lock; 0 = the class default (ops/jobq/flags.MAX_WAIT_MIN), capped at every_min
+    est_min: float = 0.0                  # expected duration until the ledger has measured it; 0 = the class default
+    est_mb: float = 0.0                   # expected peak RSS for the memory guard until the ledger has measured it; 0 = the class default
+    preemptible: bool = False             # idempotent housekeeping a higher-priority waiter may SIGTERM (ops/jobq/flags.PREEMPT_HOUSEKEEPING)
+
+    @property
+    def prio(self) -> int:
+        return self.priority or (1 if self.spend == "paid" else 3)
 
     def hhmm(self) -> str:
         return (self.at() if callable(self.at) else self.at) or ""
@@ -101,6 +112,25 @@ class Job:
         if self.hhmm():
             return f"*-*-* {self.hhmm()}:00"
         return self.calendar() if callable(self.calendar) else self.calendar
+
+
+@dataclass(frozen=True)
+class Contract:
+    """One published document family and the schema its readers can rely on (docs/architecture/foundation.md, "Contracts between server and site").
+
+    ``schema`` is the family id (``ohmega.sanctions``), ``version`` its current MAJOR: documents carry ``"schema": "<id>/<version>"``. ``paths`` are the logical
+    document paths it covers (``*`` is one path segment, ``**`` the rest; a ``.gz`` suffix never matters; the most specific pattern wins). ``accepts`` lists
+    the older majors the site still reads while a breaking change is rolled out (the site learns the new major first, the server flips second). The shape
+    itself (required fields and types) is ``contracts/shapes.py``; a test keeps the two in step."""
+
+    schema: str
+    version: int
+    paths: tuple[str, ...]
+    accepts: tuple[int, ...] = ()
+
+    @property
+    def stamp(self) -> str:
+        return f"{self.schema}/{self.version}"
 
 
 @dataclass(frozen=True)
@@ -116,6 +146,7 @@ class Product:
     jobs: tuple[Job, ...] | Callable[[], tuple[Job, ...]] = ()
     manual: str = ""                                      # no timer on purpose: the command a person runs, and why
     publishes: tuple[str, ...] = ()                       # key prefixes in the publication bucket (R2)
+    contracts: tuple[Contract, ...] = ()                  # the document families under ``publishes`` that have a versioned schema (the site's parsers assert their major)
     site_routes: tuple[str, ...] = ()                     # app routes that read it, in Next.js notation (/daily/[desk]/[date])
     feeds_from: tuple[str, ...] = ()                      # product ids it reads (for later dependency ordering)
     heartbeat: tuple[str, ...] = ()                       # "<store name>/<glob>": files whose newest mtime shows the product ran (the freshness check)

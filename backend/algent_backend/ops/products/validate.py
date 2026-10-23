@@ -80,6 +80,12 @@ def _product_problems(p: Product, job_names: set[str]) -> list[str]:
             out.append(f"{tag} job {j.name}: spend {j.spend!r}")
         if j.kind == "timer" and (not j.when() or not j.every_min or not (j.argv or j.script)):
             out.append(f"{tag} timer {j.name} needs a calendar, an every_min and a command")
+        if j.prio not in (1, 2, 3, 4) or (j.spend == "paid" and j.prio != 1):
+            out.append(f"{tag} job {j.name}: priority must be 1-4 (1 editorial, 2 publication, 3 collector, 4 housekeeping); paid jobs are always 1")
+        if j.preemptible and j.prio != 4:
+            out.append(f"{tag} job {j.name}: only housekeeping (priority 4) may be preemptible")
+        if min(j.deadline_min, j.max_wait_min, j.est_min, j.est_mb) < 0:
+            out.append(f"{tag} job {j.name}: deadline_min, max_wait_min, est_min and est_mb must not be negative")
         if j.spend == "paid" and not j.hhmm():
             out.append(f"{tag} paid job {j.name} must be a daily `at` time (ops/schedule.py runs it)")
     return out

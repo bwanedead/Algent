@@ -6,6 +6,7 @@ import { ChartOfDay, GlanceBand } from "@/components/home/Glance";
 import { Masthead, TheaterRank } from "@/components/home/Hero";
 import ArticleRows from "@/components/home/ArticleRows";
 import Today from "@/components/home/Today";
+import UpdatePending from "@/components/UpdatePending";
 import { getAllMeta } from "@/lib/articles";
 import { addDays, ahead, toComing, todayIso } from "@/lib/calendar";
 import { dailyFromView } from "@/lib/daily";
@@ -67,6 +68,7 @@ export default async function Home() {
           <ArticleRows articles={articles.slice(0, LATEST_ARTICLES)} />
         </section>
       )}
+      <UpdatePending />
     </div>
   );
 }

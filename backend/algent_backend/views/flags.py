@@ -8,7 +8,6 @@ from __future__ import annotations
 
 #: Documents are published through ``publishing/object_docs`` under ``docs/<path>.gz``; the views live under this document prefix.
 PREFIX = "views"
-SCHEMA = "ohmega.view.{name}/1"
 
 # ── byte budgets (uncompressed canonical JSON; ~5-8x smaller gzipped) ─────────────────────────────────────────────────────────────────────
 #: Why each number: what the page it feeds can actually show, with headroom of ~2x over the measured fat case in tests/test_views_*.py.

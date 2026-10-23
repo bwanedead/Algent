@@ -1,47 +1,31 @@
 """
 ``newsroom products run <job>`` - what every systemd timer starts (through ``infra/server/jobs.sh``, a one-line router).
 
-It looks the job up in the registry, takes the shared job lock when the job asks for it (one heavy job at a time on this 4 GB machine; jobs that
-must not wait - the watchdog, live feeds, flows, satellite - skip it), then runs the job's command. A paid job goes through ``ops/schedule.py``
-(kill switch, runner claim, spend halt, one retry) exactly as before.
+It looks the job up in the registry and hands it to the job queue (``ops/jobq``): a priority line for the shared job lock (one heavy job at a time on this
+4 GB machine; jobs that must not wait - the watchdog, live feeds, flows, satellite - skip it), a memory guard, and a run ledger. The job's command then runs;
+a paid job goes through ``ops/schedule.py`` (kill switch, runner claim, spend halt, one retry) exactly as before.
 """
 
 from __future__ import annotations
 
-import subprocess
+import os
 import sys
-import time
-from pathlib import Path
 from typing import Any
+
+from algent_backend.ops import flags as ops_flags, status
+from algent_backend.ops.jobq import measure
+from algent_backend.ops.jobq.runner import JobQueue
+from algent_backend.publishing import changed
 
 from . import views
 from .model import REPO
 
-LOCK_WAIT_S = 3600
 MAX_THEN_DEPTH = 3                      # validate.py rejects chains that loop; this bounds one that slipped through
 
 
-def lock_path() -> Path:
-    return Path.home() / ".ohmega-jobs.lock"
-
-
-def acquire_lock(wait_s: float = LOCK_WAIT_S) -> Any | None:
-    """Hold the shared lock until the returned handle is closed. None where file locks do not exist (a laptop): there is nothing to overlap with."""
-    try:
-        import fcntl
-    except ImportError:
-        return None
-    fh = lock_path().open("w")
-    deadline = time.monotonic() + wait_s
-    while True:
-        try:
-            fcntl.flock(fh, fcntl.LOCK_EX | fcntl.LOCK_NB)
-            return fh
-        except OSError:
-            if time.monotonic() >= deadline:
-                fh.close()
-                raise TimeoutError(f"job lock still held after {wait_s:.0f} s") from None
-            time.sleep(5)
+def make_queue() -> JobQueue:
+    """The job queue this process uses (tests replace this with one on a fake machine)."""
+    return JobQueue()
 
 
 def command(job: Any) -> list[str]:
@@ -50,28 +34,59 @@ def command(job: Any) -> list[str]:
     return [sys.executable, "-m", "algent_backend.cli", "newsroom", *job.argv]
 
 
-def run_job(name: str, *, _depth: int = 0) -> int:
-    """Run one job, then its ``then`` after-hooks when it succeeded. Each runs as a job of its own (own lock, own spend gates) after this one's lock is
-    released, so a hook that needs the lock cannot wait on the job that started it. A hook that fails never changes this job's exit code."""
+def _run_paid(queue: JobQueue, job: Any, name: str, parent: str) -> int:
+    """A paid job: the first attempt through the line; if it failed transiently, the lock is already released while the back-off runs and the one retry
+    queues again at the job's own (editorial) priority. The kill switch, runner claim and spend halt are re-checked by the retry itself (ops/schedule.py)."""
+    from algent_backend.ops import schedule
+
+    schedule.clear_last()
+    carry: list[dict[str, Any]] = []
+    rc = queue.run(job, lambda: schedule.run_job(name, attempt=1, carry=carry), parent=parent)
+    if rc != schedule.RETRY_LATER:
+        return rc
+    print(f"{name}: transient failure; the lock is free for {ops_flags.SCHEDULED_RETRY_DELAY_MIN:g} min, then one retry queues again", flush=True)
+    queue.env.sleep(ops_flags.SCHEDULED_RETRY_DELAY_MIN * 60)
+    return queue.run(job, lambda: schedule.run_job(name, attempt=2, carry=carry), parent=f"{name} (retry)")
+
+
+def _verdict(queue: JobQueue, job: Any) -> str:
+    """"ok" / "failed" when the job really ran to a result, "" when it was skipped, coalesced, preempted or (paid) held back by policy: those never
+    count as the product having been checked."""
+    if job.spend == "paid":
+        from algent_backend.ops import schedule
+
+        return {"published": "ok", "failed": "failed"}.get(str(schedule.last_event().get("outcome")), "")
+    return queue.outcome if queue.outcome in ("ok", "failed") else ""
+
+
+def run_job(name: str, *, _depth: int = 0, _parent: str = "") -> int:
+    """Run one job through the capacity-aware queue (ops/jobq/runner.py: priority line for the shared lock, memory guard, run ledger), then its ``then``
+    after-hooks when it succeeded. Each hook is a job of its own (own priority, own lock turn, own spend gates) queued after this one's lock is released, so
+    a hook that needs the lock cannot wait on the job that started it. A hook that fails never changes this job's exit code."""
     found = views.job(name)
     if found is None or found[1].kind != "timer":
         print(f"unknown job: {name}", file=sys.stderr)
         return 2
-    job = found[1]
-    lock = acquire_lock() if job.lock else None
+    product, job = found
+
+    queue = make_queue()
+    previous = os.environ.get(changed.ENV)
+    os.environ[changed.ENV] = product.id if product else ""            # the job's process notes what it really uploads under this product (publishing/changed.py)
     try:
         if job.spend == "paid":
-            from algent_backend.ops import schedule
-
-            rc = schedule.run_job(name)
+            rc = _run_paid(queue, job, name, _parent)
         else:
-            rc = subprocess.call(command(job), cwd=str(REPO / "backend"))
+            rc = queue.run(job, lambda: measure.call(command(job), cwd=str(REPO / "backend")), parent=_parent)
     finally:
-        if lock is not None:
-            lock.close()
+        if previous is None:
+            os.environ.pop(changed.ENV, None)
+        else:
+            os.environ[changed.ENV] = previous
+    if product and (verdict := _verdict(queue, job)):
+        status.record(product, name, verdict == "ok")  # one PUT per successful run per publishing product (ops/status.py)
     if rc == 0 and _depth < MAX_THEN_DEPTH:
         for hook in job.then:
-            hook_rc = run_job(hook, _depth=_depth + 1)
+            hook_rc = run_job(hook, _depth=_depth + 1, _parent=name)
             if hook_rc != 0:
                 print(f"after-hook {hook} of {name} exited {hook_rc}", file=sys.stderr)
     return rc

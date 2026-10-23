@@ -4,7 +4,7 @@ judged ok / warn / fail against the budgets in ``envelope_flags.py``. Spends not
 spend, so a month total survives the heartbeat files' three-day retention). The doctor embeds the rows it does not already have.
 
 Rows: disk, memory, journald, store:<name> (size + 7-day written; budgets from the product registry), r2, backup, restore_drill, feeds, search, site (the last
-smoke test of the production site), spend_day, spend_month.
+smoke test of the production site), queue_waits / queue_busy / queue_memory (the job runner, ops/jobq), spend_day, spend_month.
 Every measurement is a method on ``Probes`` so tests substitute fakes; a probe that cannot measure returns None and its row says "unknown"
 (warn), never a guess.
 """
@@ -121,6 +121,12 @@ class Probes(doctor.Probes):
         from algent_backend.ops.smoke import state
 
         return state.read()
+
+    def queue_rows(self) -> list[dict[str, Any]]:
+        """The job-run ledger (ops/jobq): what the three queue rows judge."""
+        from algent_backend.ops.jobq.ledger import Ledger
+
+        return Ledger().rows()
 
     def state_path(self) -> Path:
         from algent_backend.agent_system.foundation import live_spend
@@ -246,6 +252,30 @@ def row_site(p: Probes, now: datetime) -> dict[str, Any]:
     return _row(OK, f"{st.get('summary')} ({age:.1f} h ago)", value=round(age, 1), budget=f"warn > {smoke_flags.STATE_STALE_H:g} h old or any failed check")
 
 
+def rows_queue(p: Probes, now: datetime) -> dict[str, dict[str, Any]]:
+    """The job runner (ops/jobq): lock waits and skips, how busy the one lock is, memory-guard breaches. Budgets are in ``jobq/flags.py`` with the split rule."""
+    from algent_backend.ops.jobq import capacity, flags as q
+
+    rows = p.queue_rows()
+    if not rows:
+        none = _row(WARN, "no job runs recorded yet (ops/jobq ledger fills once the timers fire on the new runner)")
+        return {"queue_waits": none, "queue_busy": none, "queue_memory": none}
+    h = capacity.queue_health(rows, now)
+    d, w = h["24h"], h["7d"]
+    missed = d["deadline_missed"]
+    hard = [s for s in d["skipped"] if s["prio"] <= q.PUBLICATION]
+    waits = _row(FAIL if hard else WARN if d["skipped"] or missed else OK,
+                 f"{d['runs']} runs in 24 h: {d['waited']} waited for the lock (p95 {d['wait_p95_min']:.0f} min), {len(d['skipped'])} skipped busy"
+                 + (f" ({', '.join(s['job'] for s in d['skipped'][:4])})" if d["skipped"] else "") + f", {d['coalesced']} coalesced, {len(missed)} past their deadline"
+                 + (f" ({', '.join(missed[:3])})" if missed else ""), value=len(d["skipped"]), budget="fail if an editorial/publication job is skipped; warn on any skip or missed deadline")
+    busy = _row(_band(h["busy_24h"], q.BUSY_WARN, q.BUSY_FAIL), f"lock busy {h['busy_24h']:.0%} of the last 24 h ({h['busy_7d']:.0%} over 7 d)", value=round(h["busy_24h"], 3),
+                budget=f"warn >= {q.BUSY_WARN:.0%}, fail >= {q.BUSY_FAIL:.0%}; split onto a second droplet at {q.SPLIT_BUSY_7D:.0%} sustained (docs/guides/worker-server.md)")
+    mem = _row(FAIL if w["breaches"] >= q.SPLIT_MEM_BREACHES_WEEK else WARN if d["breaches"] else OK,
+               f"{d['breaches']} memory-floor breaches in 24 h, {w['breaches']} in 7 d", value=d["breaches"],
+               budget=f"warn on any in 24 h, fail at {q.SPLIT_MEM_BREACHES_WEEK} in 7 d (the split trigger)")
+    return {"queue_waits": waits, "queue_busy": busy, "queue_memory": mem}
+
+
 def rows_spend(p: Probes, now: datetime) -> dict[str, dict[str, Any]]:
     from algent_backend.ops import flags as ops_flags
 
@@ -285,7 +315,7 @@ def run(env: dict[str, str] | None = None, probes: Probes | None = None, now: da
         ("disk", lambda: row_disk(p)), ("memory", lambda: row_memory(p)), ("journald", lambda: row_journal(p)),
         ("stores", lambda: rows_stores(p, time.time())), ("r2", lambda: row_r2(p)), ("backup", lambda: row_backup(p)),
         ("restore_drill", lambda: row_drill(p)), ("feeds", lambda: row_feeds(p, env, now)), ("search", lambda: row_search(p, env)),
-        ("site", lambda: row_site(p, now)), ("spend", lambda: rows_spend(p, now)),
+        ("site", lambda: row_site(p, now)), ("queue", lambda: rows_queue(p, now)), ("spend", lambda: rows_spend(p, now)),
     ]
     rows: dict[str, dict[str, Any]] = {}
     for name, step in steps:
@@ -293,7 +323,7 @@ def run(env: dict[str, str] | None = None, probes: Probes | None = None, now: da
             continue
         try:
             got = step()
-            rows.update(got if name in ("stores", "spend") else {name: got})
+            rows.update(got if name in ("stores", "spend", "queue") else {name: got})
         except Exception as exc:  # noqa: BLE001 - one probe failing must not blank the report
             rows[name] = _row(WARN, f"could not measure: {doctor.scrub(exc, env)}")
     counts = {s: sum(1 for r in rows.values() if r["status"] == s) for s in (OK, WARN, FAIL)}

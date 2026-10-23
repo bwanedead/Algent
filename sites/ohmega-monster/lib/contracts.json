@@ -1,0 +1,640 @@
+{
+  "schema": "ohmega.contracts/1",
+  "contracts": [
+    {
+      "schema": "ohmega.daily",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "daily/*/*.json",
+        "data/daily/*/*.json"
+      ],
+      "product": "dailies"
+    },
+    {
+      "schema": "ohmega.brief",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "briefs/*.json",
+        "data/briefs/*.json"
+      ],
+      "product": "dailies"
+    },
+    {
+      "schema": "ohmega.snapshot",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "snapshots/*.json"
+      ],
+      "product": "dailies"
+    },
+    {
+      "schema": "ohmega.dossier",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "theaters/*.json"
+      ],
+      "product": "situations"
+    },
+    {
+      "schema": "ohmega.dossier.index",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "theaters/index.json"
+      ],
+      "product": "situations"
+    },
+    {
+      "schema": "ohmega.pulse",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "pulses/*.json",
+        "data/pulses/*.json"
+      ],
+      "product": "pulses"
+    },
+    {
+      "schema": "ohmega.article.source",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "articles/*.json"
+      ],
+      "product": "articles"
+    },
+    {
+      "schema": "ohmega.article.index",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "articles/index.json"
+      ],
+      "product": "articles"
+    },
+    {
+      "schema": "ohmega.radar",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "radar/*.json"
+      ],
+      "product": "menu"
+    },
+    {
+      "schema": "ohmega.live.events",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "live/events.json"
+      ],
+      "product": "live"
+    },
+    {
+      "schema": "ohmega.live.stats",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "live/stats.json"
+      ],
+      "product": "live"
+    },
+    {
+      "schema": "ohmega.live.anomalies",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "live/anomalies.json"
+      ],
+      "product": "live"
+    },
+    {
+      "schema": "ohmega.live.world",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "live/world.json"
+      ],
+      "product": "live"
+    },
+    {
+      "schema": "ohmega.live.summary",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "live/summary.json"
+      ],
+      "product": "live"
+    },
+    {
+      "schema": "ohmega.live.energy",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "live/energy.json"
+      ],
+      "product": "live"
+    },
+    {
+      "schema": "ohmega.live.fires",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "live/fires.json"
+      ],
+      "product": "live"
+    },
+    {
+      "schema": "ohmega.live.vessels",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "live/vessels.json"
+      ],
+      "product": "live"
+    },
+    {
+      "schema": "ohmega.live.aircraft",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "live/aircraft.json"
+      ],
+      "product": "live"
+    },
+    {
+      "schema": "ohmega.live.coverage",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "live/coverage.json"
+      ],
+      "product": "live"
+    },
+    {
+      "schema": "ohmega.live.points",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "live/points.json"
+      ],
+      "product": "live"
+    },
+    {
+      "schema": "ohmega.live.tiles.index",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "live/tiles/index.json"
+      ],
+      "product": "live"
+    },
+    {
+      "schema": "ohmega.live.tile",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "live/tiles/*.json"
+      ],
+      "product": "live"
+    },
+    {
+      "schema": "ohmega.live.tracks",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "live/tracks/**"
+      ],
+      "product": "live"
+    },
+    {
+      "schema": "ohmega.flows",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "live/flows.json"
+      ],
+      "product": "flows"
+    },
+    {
+      "schema": "ohmega.satellite",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "live/satellite.json"
+      ],
+      "product": "satellite"
+    },
+    {
+      "schema": "ohmega.maritime.events",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "maritime/recent.json",
+        "maritime/live.json",
+        "maritime/vessel/*.json"
+      ],
+      "product": "maritime"
+    },
+    {
+      "schema": "ohmega.maritime.counts",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "maritime/counts.json"
+      ],
+      "product": "maritime"
+    },
+    {
+      "schema": "ohmega.sanctions",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "sanctions/recent.json",
+        "sanctions/country/*.json"
+      ],
+      "product": "sanctions"
+    },
+    {
+      "schema": "ohmega.calendar",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "calendar/next.json"
+      ],
+      "product": "calendar"
+    },
+    {
+      "schema": "ohmega.ai-benchmarks",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "data/ai-benchmarks.json"
+      ],
+      "product": "ai_benchmarks"
+    },
+    {
+      "schema": "ohmega.record",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "record.json"
+      ],
+      "product": "statements"
+    },
+    {
+      "schema": "ohmega.actor",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "actors/*.json"
+      ],
+      "product": "actors"
+    },
+    {
+      "schema": "ohmega.actor.index",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "actors/index.json"
+      ],
+      "product": "actors"
+    },
+    {
+      "schema": "ohmega.geo.place",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "geo/a/*.json"
+      ],
+      "product": "geoledger"
+    },
+    {
+      "schema": "ohmega.geo.assets",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "geo/c/*.json",
+        "geo/events-assets.json"
+      ],
+      "product": "geoledger"
+    },
+    {
+      "schema": "ohmega.geo.countries",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "geo/countries.json"
+      ],
+      "product": "geoledger"
+    },
+    {
+      "schema": "ohmega.geo.grid",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "geo/grid/*.json"
+      ],
+      "product": "geoledger"
+    },
+    {
+      "schema": "ohmega.geo.events",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "geo/events/*.json"
+      ],
+      "product": "geoledger"
+    },
+    {
+      "schema": "ohmega.track-record",
+      "version": 2,
+      "accepts": [
+        1,
+        2
+      ],
+      "paths": [
+        "data/track-record.json"
+      ],
+      "product": "markets"
+    },
+    {
+      "schema": "ohmega.view.country",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "views/country/*.json"
+      ],
+      "product": "views"
+    },
+    {
+      "schema": "ohmega.view.situation",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "views/situation/*.json"
+      ],
+      "product": "views"
+    },
+    {
+      "schema": "ohmega.view.situations",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "views/situations.json"
+      ],
+      "product": "views"
+    },
+    {
+      "schema": "ohmega.view.entity",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "views/entity/*/*.json"
+      ],
+      "product": "views"
+    },
+    {
+      "schema": "ohmega.view.event",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "views/event/*/*.json"
+      ],
+      "product": "views"
+    },
+    {
+      "schema": "ohmega.view.series",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "views/series/*.json"
+      ],
+      "product": "views"
+    },
+    {
+      "schema": "ohmega.view.series-index",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "views/series-index.json"
+      ],
+      "product": "views"
+    },
+    {
+      "schema": "ohmega.view.home",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "views/home.json"
+      ],
+      "product": "views"
+    },
+    {
+      "schema": "ohmega.view.hud",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "views/hud.json"
+      ],
+      "product": "views"
+    },
+    {
+      "schema": "ohmega.view.daily-hub",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "views/daily-hub.json"
+      ],
+      "product": "views"
+    },
+    {
+      "schema": "ohmega.view.graph",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "views/graph.json"
+      ],
+      "product": "views"
+    },
+    {
+      "schema": "ohmega.view.search-index",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "views/search-index.json"
+      ],
+      "product": "views"
+    },
+    {
+      "schema": "ohmega.view.manifest",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "views/manifest.json"
+      ],
+      "product": "views"
+    },
+    {
+      "schema": "ohmega.forecasts",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "data/forecasts.json"
+      ],
+      "product": "agent_feeds"
+    },
+    {
+      "schema": "ohmega.changes",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "data/changes.json"
+      ],
+      "product": "agent_feeds"
+    },
+    {
+      "schema": "ohmega.intel.index",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "data/intel.json"
+      ],
+      "product": "agent_feeds"
+    },
+    {
+      "schema": "ohmega.pulses",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "data/pulses.json"
+      ],
+      "product": "agent_feeds"
+    },
+    {
+      "schema": "ohmega.status",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "status/*.json"
+      ],
+      "product": "ops"
+    }
+  ]
+}

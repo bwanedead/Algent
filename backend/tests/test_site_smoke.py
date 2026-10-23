@@ -286,3 +286,49 @@ def test_deploy_check_cli_smokes_the_preview_url(monkeypatch, capsys) -> None:
     args = type("A", (), {"url": BASE, "ref": "organic-dev", "sha": "", "wait_min": 0, "json": False})()
     assert cli.run_deploy_check(args) == 0
     assert "preview is healthy" in capsys.readouterr().out
+
+
+# ── checked vs changed: liveness from the published status file (ops/status.py) ──────────────────
+BUCKET = "https://bucket.example"
+
+
+def _with_status(site, **docs):
+    """The fake site plus a public bucket that serves ``docs/status/<product>.json.gz`` for the given products."""
+    import gzip
+
+    def fetch(url: str) -> Reply:
+        if url.startswith(BUCKET):
+            pid = url.rsplit("/", 1)[1].removesuffix(".json.gz")
+            return Reply(200, body=gzip.compress(json.dumps(docs[pid]).encode())) if pid in docs else Reply(404)
+        return site(url)
+
+    return fetch
+
+
+def test_a_quiet_product_that_was_checked_recently_is_alive_although_its_as_of_is_old() -> None:
+    old = {"/api/v1/sanctions": Reply(200, body=envelope(as_of="2026-09-01"), ms=5)}
+    assert by_path(smoke(FakeSite(**old)), "/api/v1/sanctions").severity == "warn"                    # no status published: the as_of fallback is the old false-stale warning
+    fetch = _with_status(FakeSite(**old), sanctions={"checked_at": "2026-10-23T09:00:00+00:00", "last_changed_at": "2026-09-01T00:00:00+00:00"})
+    rep = run.run(BASE, fetch=fetch, now=NOW, pace=0, sleep=lambda _s: None, status_base=BUCKET)
+    assert by_path(rep, "/api/v1/sanctions").severity == "ok" and rep.ok
+
+
+def test_a_product_that_stopped_being_checked_is_late_whatever_its_data_says() -> None:
+    fresh_data = {"/api/v1/sanctions": Reply(200, body=envelope(as_of="2026-10-23"), ms=5)}
+    fetch = _with_status(FakeSite(**fresh_data), sanctions={"checked_at": "2026-10-20T00:00:00+00:00"})        # sanctions run every 6 h: 3 cadences is 18 h
+    rep = run.run(BASE, fetch=fetch, now=NOW, pace=0, sleep=lambda _s: None, status_base=BUCKET)
+    r = by_path(rep, "/api/v1/sanctions")
+    assert r.severity == "warn" and "last checked 2026-10-20" in r.notes[0]
+
+
+def test_dailies_are_not_judged_on_the_status_file() -> None:
+    fetch = _with_status(FakeSite(**{"/api/v1/daily/geopolitics/latest": Reply(200, body=envelope(as_of="2026-10-10"), ms=5)}),
+                         dailies={"checked_at": "2026-10-23T09:00:00+00:00"})
+    rep = run.run(BASE, fetch=fetch, now=NOW, pace=0, sleep=lambda _s: None, status_base=BUCKET)
+    assert by_path(rep, "/api/v1/daily/geopolitics/latest").severity == "fail"
+
+
+def test_a_preview_never_reads_status_files() -> None:
+    asked = []
+    run.run(BASE, fetch=lambda u: asked.append(u) or FakeSite()(u), now=NOW, pace=0, sleep=lambda _s: None)
+    assert not [u for u in asked if "/docs/status/" in u]

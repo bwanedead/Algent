@@ -19,7 +19,7 @@ import mimetypes
 from pathlib import Path
 from typing import Any, Callable
 
-from . import object_store
+from . import changed, object_store
 
 #: Supabase Storage's bucket (kept for the switch-back path); R2's bucket is ``R2_BUCKET``.
 BUCKET = object_store.SUPABASE_BUCKET
@@ -112,6 +112,7 @@ def upload(files: dict[str, bytes], *, http: Http | None = None, manifest: Path 
         if hasattr(store, "meter"):
             store.meter().flush()            # the usage counter reaches disk at the end of every batch (object_budget.py)
         uploaded = sum(r == "uploaded" for r, _ in results)
+        changed.note(what for r, what in results if r == "uploaded")
         skipped = sum(r == "skipped" for r, _ in results)
         failed = [what for r, what in results if r == "failed"]
         if not force:

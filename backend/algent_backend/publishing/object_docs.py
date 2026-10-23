@@ -25,6 +25,7 @@ from typing import Any
 from algent_backend.database import flags as budget
 
 from . import asset_store, doc_store, object_store
+from . import changed as run_changes
 
 NAMES_DIR = "_names"
 _LOCK = threading.RLock()
@@ -54,6 +55,13 @@ def _save(path: Path, data: dict[str, str]) -> None:
         pass   # an optimisation: losing it costs one re-upload round
 
 
+def _pack(path: str, body: Any) -> doc_store.Packed:
+    """Pack one document, stamping the schema its contract declares (contracts/resolve.py) when it has none."""
+    from algent_backend import contracts
+
+    return doc_store.pack(path, body, contracts.stamp_for(path, body))
+
+
 def names_path(directory: str) -> str:
     return f"{NAMES_DIR}/{directory}.json"
 
@@ -81,7 +89,7 @@ def publish(docs: dict[str, Any], *, http: Any = None, force: bool = False, mani
         with _LOCK:
             state = _load(mpath)
             ident = store.ident
-            packed = [doc_store.pack(path, body) for path, body in sorted(docs.items())]
+            packed = [_pack(path, body) for path, body in sorted(docs.items())]
             changed = [p for p in packed if force or state.get(f"{ident}|{p.path}") != p.sha256]
             refused, todo = [], []
             for p in changed:                  # the size cap needs the gzip, which only a changed document ever pays for
@@ -112,6 +120,7 @@ def publish(docs: dict[str, Any], *, http: Any = None, force: bool = False, mani
                 sent += landed
                 _save(mpath, state)
             out["documents"] = len(sent)
+            run_changes.note(p.path for p in sent)
             _save(mpath, state)
             if names and sent:
                 paths = {k.split("|", 1)[1] for k in state if k.startswith(ident + "|")}
@@ -191,7 +200,7 @@ def dry_run_report(docs: dict[str, Any], *, manifest: Path | None = None) -> dic
     """What ``publish(docs)`` would send, without sending or recording anything: counts and gzipped bytes of the changed documents."""
     store = asset_store._store_for(None) or object_store.select(allow_unconfigured=True)  # noqa: SLF001
     state = _load(manifest or manifest_path())
-    packed = [doc_store.pack(p, b) for p, b in sorted(docs.items())]
+    packed = [_pack(p, b) for p, b in sorted(docs.items())]
     changed = [p for p in packed if state.get(f"{store.ident}|{p.path}") != p.sha256]
     return {"ok": True, "dry_run": True, "of": len(docs), "would_upload": len(changed), "unchanged": len(docs) - len(changed),
             "bytes_gz": sum(len(p.gz) for p in changed), "refused": [w for p in changed if (w := doc_store.over_cap(p))]}

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import Doors from "@/components/Doors";
 import PageTag from "@/components/PageTag";
+import UpdatePending from "@/components/UpdatePending";
 import { dataGroups } from "@/lib/sections";
 
 import "@/app/daily/daily.css";
@@ -36,6 +37,7 @@ export default async function DataHub() {
           <Doors doors={g.doors} label={g.title} />
         </section>
       ))}
+      <UpdatePending />
     </div>
   );
 }

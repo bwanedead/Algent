@@ -17,6 +17,12 @@ A failed run is retried once after ``flags.SCHEDULED_RETRY_DELAY_MIN`` minutes, 
 failure transient (a network or provider hiccup), never for a code error or a watchdog kill, and only if 1-3 still
 hold. A retry is the same command: the daily reuses its saved research, so nothing is bought twice.
 
+The back-off is NOT spent holding the shared job lock (a 30 minute sleep used to stall every other job). Under the job
+queue (``ops/products/run.py``) ``run_job(..., attempt=1)`` runs the first attempt and, on a transient failure, returns
+``RETRY_LATER`` having recorded nothing final; the queue releases the lock, waits out the back-off in the line-less
+process, and queues ``run_job(..., attempt=2, carry=...)`` again at the job's own (editorial) priority. Called bare
+(``newsroom schedule run``, tests) with no ``attempt`` it does both attempts itself, sleeping in between, as before.
+
 Every job ends with one line in ``~/ops-log.md`` (who = ``scheduler``) and a record in
 ``runs_data/scheduler.jsonl`` (what ``newsroom doctor`` reads for the ``schedule`` check). The child's output goes
 to the journal and to ``~/runlogs/<job>-<date>.log``.
@@ -36,8 +42,11 @@ from pathlib import Path
 from typing import Any
 
 from . import flags
+from .jobq import measure
 
 SITE = "https://www.ohmega.monster"
+#: Exit code of an attempt that failed transiently and wants its one retry run by the caller after the back-off (sysexits EX_TEMPFAIL).
+RETRY_LATER = 75
 _KILLED_RC = (-15, -9, 143, 137)        # SIGTERM / SIGKILL as a child's return code (raw and shell-style)
 
 
@@ -125,7 +134,7 @@ class Probes:
                 fh.write(line)
                 tail.append(line)
                 del tail[:-flags.OUTCOME_TAIL_LINES]
-            rc = proc.wait()
+            rc = measure.reap(proc)                 # waits, and notes the job's peak RSS for the run ledger (ops/jobq)
         return rc, "".join(tail)
 
     def sleep(self, seconds: float) -> None:
@@ -144,7 +153,22 @@ def journal_path() -> Path:
     return live_spend.halt_path().parent / "scheduler.jsonl"
 
 
+_LAST: dict[str, Any] = {}
+
+
+def last_event() -> dict[str, Any]:
+    """The final outcome this process recorded (``published`` / ``skipped`` / ``failed``): how the job runner tells a run that checked its product from one
+    that was skipped by policy (both exit 0)."""
+    return dict(_LAST)
+
+
+def clear_last() -> None:
+    _LAST.clear()
+
+
 def _record(event: dict[str, Any]) -> None:
+    _LAST.clear()
+    _LAST.update(event)
     event = {"ts": datetime.now(UTC).isoformat(timespec="seconds"), **event}
     try:
         p = journal_path()
@@ -192,8 +216,12 @@ def _may_spend(probes: Probes) -> str:
     return ""
 
 
-def run_job(name: str, probes: Probes | None = None) -> int:
-    """Run one scheduled paid job (see module doc). Exit code: 0 published or skipped by policy, 1 failed."""
+def run_job(name: str, probes: Probes | None = None, *, attempt: int = 0, carry: list[dict[str, Any]] | None = None) -> int:
+    """Run one scheduled paid job (see module doc). Exit code: 0 published or skipped by policy, 1 failed.
+
+    ``attempt=0`` (the default) runs the whole job: the first attempt, the back-off sleep and the one retry. ``attempt=1`` runs only the first and returns
+    ``RETRY_LATER`` when a retry is due; ``attempt=2`` is that retry. ``carry`` is the list of attempts so far, shared between the two calls so the
+    retried run reports both attempts' spend."""
     probes = probes or Probes()
     job = jobs().get(name)
     if job is None:
@@ -209,8 +237,8 @@ def run_job(name: str, probes: Probes | None = None) -> int:
         _ops_log(probes, f"{job.name}: skipped, part 1 of today's daily does not exist yet")
         print(json.dumps(outcome))
         return 0
-    attempts: list[dict[str, Any]] = []
-    for attempt in (1, 2):
+    attempts: list[dict[str, Any]] = carry if carry is not None else []
+    for n in range(attempt or 1, 3):
         if why := _may_spend(probes):
             outcome = {"job": job.name, "outcome": "skipped", "why": why, "attempts": len(attempts)}
             _record(outcome)
@@ -223,15 +251,17 @@ def run_job(name: str, probes: Probes | None = None) -> int:
         spent = round(max(0.0, probes.day_spend() - before), 2)
         if rc == 0:
             spent = round(spent + sum(a["usd"] for a in attempts), 2)      # a retried run reports both attempts
-            outcome = {"job": job.name, "outcome": "published", "usd": spent, "attempts": attempt, "log": str(log)}
+            outcome = {"job": job.name, "outcome": "published", "usd": spent, "attempts": len(attempts) + 1, "log": str(log)}
             _record(outcome)
             _ops_log(probes, f"{job.name}: published, ${spent:.2f} spent (settled), {_link(job, day)}; log {log}")
             print(json.dumps(outcome))
             return 0
         kind = classify_failure(rc, tail)
         attempts.append({"rc": rc, "why": f"exit {rc}, {kind}", "usd": spent})
-        if kind == "transient" and attempt == 1:
+        if kind == "transient" and n == 1:
             print(json.dumps({"job": job.name, "retry_in_min": flags.SCHEDULED_RETRY_DELAY_MIN, "after": attempts[-1]}))
+            if attempt == 1:
+                return RETRY_LATER                    # the caller releases the lock, waits and queues attempt 2
             probes.sleep(flags.SCHEDULED_RETRY_DELAY_MIN * 60)
             continue
         break

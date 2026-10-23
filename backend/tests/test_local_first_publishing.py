@@ -30,6 +30,7 @@ UPLOADERS = {
     "publishing/rebuild.py": "rebuild-all republishes FROM the local stores; it never originates a document",
     "publishing/staging_docs.py": "stage-from-prod re-sends a sample READ FROM the local stores (rebuild steps, views_store/); it originates nothing",
     "publishing/site_data.py": "documents built from the domain stores (geoledger, sanctions, ...), all backed up",
+    "ops/status.py": "the status document is derived operational state: its local copy (<held>/status/<product>.json) is written in the same call and is the memory for the next run",
     "views/publish.py": "every view is written to views_store/ before it is sent (store() then object_docs.publish); derived from backed-up stores, so a lost store is a rebuild",
 }
 _SENDERS = ("asset_store.upload", "object_docs.publish", "object_docs.publish_article", "object_docs.publish_articles")
