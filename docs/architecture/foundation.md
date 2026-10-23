@@ -2,7 +2,7 @@
 
 Why this exists: in October we re-platformed twice under pressure (Supabase disk full → crash loop → egress overage → move to server + R2) and lost
 data twice (two weeks of Pulse rationale; 42 daily chart files). Both were foreseeable. This page is the register of **every resource we depend on,
-its limit, what we actually use, how it fails, and the guard**. Rule: **a new product or job must add its rows here before it ships**, and a guard must
+its limit, what we actually use, how it fails, and the guard**. Rule: **a product exists only if it is in the registry (section 3); a new product or job adds its entry there before it ships**, and a guard must
 exist for every limit we could plausibly hit within a year.
 
 Companion docs: storage mechanics `database-budget.md`, site structure `information-architecture.md`, machine `../guides/worker-server.md`, accounts `../guides/accounts.md`.
@@ -15,7 +15,7 @@ Measured figures in the register are from 10-23 on the server; figures marked *e
 1. **Tier.** Where does its data live? Pick one of: server store (the record) · R2 (publication) · nothing (derived, rebuildable).
    Nothing is stored only in a third-party service.
 2. **Growth.** What is the steady-state size and the growth per day, measured? Every append-only file has a retention or a rollup, or it says why not.
-3. **Backup.** Is it irreplaceable? If yes, it is in the nightly backup (tested by `tests/test_backup_coverage.py`) and restorable by a runbook we
+3. **Backup.** Is it irreplaceable? If yes, it is in the nightly backup (derived from the registry, tested by `tests/test_backup_coverage.py`) and restorable by a runbook we
    have actually run (`newsroom backup restore-drill`, monthly).
 4. **Failure.** What does the reader see when its source or job fails? The site keeps the last good page and says it's stale. It never goes blank, and it
    never shows a cached error as truth.
@@ -36,24 +36,63 @@ Measured figures in the register are from 10-23 on the server; figures marked *e
 | **Cloudflare / DO / GitHub / Vercel accounts** | — | — | one lost login = lost access | `../guides/accounts.md` inventory + quarterly recovery pass | the registrar and recovery locations are marked **unrecorded** in it; operator fills them in |
 | **Supabase** | paused 10-22; delete after 90 days (~2027-01-20) | 0 | — | off by flags | delete when sure |
 
-## 3. Register of data on the server (measured 10-23; "now" = after steps 1-5)
+## 3. Register of products and their data (generated from the product registry)
 
-| Store | Size | Written last 7 d | Irreplaceable? | Backed up | Growth control |
-|---|---|---|---|---|---|
-| `maritime_store/log.jsonl` | **1.7 GB** → *expected a few MB* after `compact-log --apply` | 1.7 GB (~250 k lines/day) → *expected < 1 MB/day* | no (nothing reads it) | no (daily summaries are) | **transitions only** (compact line per open/ended/unresolved, never "ongoing"), dedupe ledger + per-vessel cooldown, `LOG_KEEP_DAYS = 7`, then the daily summary (`database-budget.md`) |
-| `library_store` | 123 MB (1 file) | 129 MB | no (crawl cache) | no | it is one **SQLite** file (page-level writes, `MAX_DB_BYTES` 400 MB retention), not a whole-file rewrite: nothing to change (see step 5) |
-| `live_store` | 46 MB | 46 MB | no (relearns ~3 wk) | no | snapshots overwrite |
-| `profile_store` | 34 MB | 5 MB | **yes: the corpus** | yes | append-only, small |
-| `intel_store` (dailies, boards, drafts, **visuals/**) | 21 MB | 10 MB | **yes** | yes | ~1.4 MB/day + saved visuals ~0.3 MB/day |
-| `actors_store` | 17 MB | 0 | refetchable | yes | — |
-| `geoledger_store` | 17 MB | 16 MB | partly (status events = yes) | yes | already **append-only JSONL** (`assets.jsonl`, `events.jsonl`); the churn was the git mirror copying a changed file whole, now bounded by the 10 MB mirror threshold |
-| `statements_store` | 15 MB | 7 MB | yes (extractions) | yes | — |
-| `instruments_store`, `markets_store`, `sanctions_store`, `ai_benchmarks_store` | 9 / 8 / 7 / 3 MB | ~25 MB | partly (forward capture) | yes | rewrite churn, small |
-| `pulse_store` | 2 MB | 0.5 MB | **yes** | yes | — |
-| `/var/log/journal` | 562 MB | — | no | no | **capped at 200 MB** by `infra/server/journald-ohmega.conf` (installed by `install_schedules.sh`) |
-| R2 `backups/daily/` (private bucket) | *expected 20-35 MB × ≤ 34* | one object a night | — | is the backup | 14 daily + 8 weekly + 12 monthly, `snapshot.plan_retention` |
+**A product exists only if it is in the registry** (`backend/algent_backend/ops/products/registry.py`). One typed entry per product says where its data
+lives, whether losing it is permanent, how its growth is bounded, how big it may get, which jobs run it and when, what it publishes and which pages read
+it. Everything operational is *derived* from that entry instead of being told by hand in six places:
 
-Every row above has a budget in `ops/envelope_flags.py` and a line in `newsroom envelope`.
+| Derived thing | From | Where it is read |
+|---|---|---|
+| nightly mirror to the data repo, R2 snapshot, restore, coverage | stores of `irreplaceable` products | `data_backup/sync.py::_sources()` -> `views.backup_sources()` |
+| per-store size budgets and the `store:*` envelope rows | `Store.budget` | `ops/envelope.py` |
+| every systemd timer (name, command, calendar) | `Product.jobs` | `newsroom products timers` -> `infra/server/install_schedules.sh`; `jobs.sh <job>` -> `newsroom products run <job>` |
+| the unattended paid jobs | jobs with `spend="paid"` | `ops/schedule.py::jobs()` (kill switch, runner claim and spend halt unchanged) |
+| retention / prune entry points | `Product.retention` (`ref`, `by`) | `ops/products/validate.py` (unbounded growth with no policy fails a test) |
+| the table below | the registry | `newsroom products table --write` (a test fails when it drifts) |
+| site routes and publications | `site_routes`, `publishes` | `sites/ohmega-monster/lib/products.json` (`newsroom products contract --write`); a test requires every page route to belong to a product |
+| live-machine verdict | everything above | `newsroom products check`, embedded in `newsroom doctor` |
+
+Adding a product: add its entry (stores with budgets and a reason for any store not backed up, a retention policy that names the code that applies it, jobs
+or a `manual` note, routes, publications), then `newsroom products table --write` and `newsroom products contract --write`. Forgetting a place is no longer
+possible: `tests/test_products_registry.py` and `tests/test_backup_coverage.py` fail first. Budgets marked "estimate" have no measurement yet: run
+`newsroom envelope --text` on the server and replace them.
+
+<!-- products:table:start (generated: `newsroom products table`) -->
+| Product | Stores (steady → fail, MB) | Irreplaceable | Growth control | Jobs | Publishes | Pages |
+|---|---|---|---|---|---|---|
+| **Dailies (geopolitics, AI)** (`dailies`) | `intel_store` 21 → 1,500<br>`site_intel` 5 → 1,000 | **yes**: paid editorial work and published reports; the saved visuals exist only here (42 charts were lost when they were upload-only) | append-only: dailies, boards, drafts and visuals are the record; ~10 MB a week is 2.8 years of headroom at the fail line | `daily-1` 05:30 UTC (paid)<br>`daily-2` 17:30 UTC (paid)<br>`ai-daily` 09:00 UTC (paid) | `daily/`, `briefs/`, `snapshots/`, `theaters/`, `/analytics/daily/` | `/daily`, `/daily/[desk]`, `/daily/[desk]/[date]`, `/daily/[desk]/archive`, `/intel/briefs/[slug]`, `/intel/events/[date]/[theater]/[n]` |
+| **Situations (living files)** (`situations`) | - | no: derived from the dailies (intel_store holds the source) | derived: rebuilt from the dailies on every daily run (theaters/<id>.json); clearing it loses nothing | manual: rebuilt on every daily run and by `newsroom publish`; no timer of its own | `theaters/` | `/situations`, `/situations/[id]`, `/intel/graph` |
+| **Pulses (0-100 gauges)** (`pulses`) | `pulse_store` 2 → 200 | **yes**: two weeks of Pulse reasoning were lost once when it was missing from the backup | append-only: influences are never rewritten or removed; ~0.5 MB a week | manual: written by the daily runs (no timer of its own) | `pulses/` | `/pulses` |
+| **Articles** (`articles`) | `draft_store` 5 → 500<br>`treatment_store` 5 → 500<br>`lead_store` 2 → 500<br>`site_articles` 10 → 1,000 | **yes**: paid editorial work (memory: never redo paid work) and the published articles | append-only: every draft, treatment and lead is kept (lineage to its profile); a few MB a week | manual: `newsroom run` by hand, irregular: an article is the operator's call | `articles/`, `docs/`, `/analytics/` | `/articles`, `/articles/[slug]` |
+| **Research profiles (the corpus)** (`profiles`) | `profile_store` 34 → 1,500 | **yes**: the corpus: it cannot be re-bought cheaply and sixteen profiles were once silently overwritten | append-only: every save also writes _history/<id>/<rev>; nothing is overwritten or deleted | manual: written by article and daily research runs | - | - |
+| **Menu (headlines) and run logs** (`menu`) | `runs_store` 200 → 4,000 (not backed up)<br>`site_radar` 2 → 500 | **yes**: the published menus exist nowhere else once the database is gone; the run logs themselves are expendable | prune: only the newest 5 runs are kept; older history stays in runs_index.jsonl | `menu` 05:00 UTC (paid) | `radar/` | `/daily/headlines`, `/daily/headlines/[slug]` |
+| **Live feeds (ships, aircraft, quakes, fires, outages)** (`live`) | `live_store` 46 → 500 (not backed up) | no: re-collectable from public feeds | prune: hour files older than HOUR_KEEP_DAYS (60) are deleted; event snapshots are replaced each run | `live-ioda` `*:0/15`<br>`live-usgs` `*:0/10`<br>`live-adsb` `*:0/15`<br>`live-firms` `*-*-* 0/3:00:00`<br>`ais` always on | `live/` | `/live` |
+| **Flows (ship lanes, grain, money)** (`flows`) | - | no: aggregates of the live stream, rebuilt as it runs | overwrite: tracker and days.json are bounded aggregates replaced atomically | `flows` `*:7/15` | `live/` | - |
+| **Satellite (Sentinel-2 chips, night lights)** (`satellite`) | - | no: re-observed daily; the append-only records.jsonl is small and re-derivable from imagery | prune: dated chips are pruned to the KEEP_DATED (3) newest scenes per site plus the baseline | `satellite` `*-*-* 03:20` | `live/`, `/satellite/` | `/intel/satellite` |
+| **Maritime behaviour** (`maritime`) | `maritime_store` 50 → 3,000 (not backed up)<br>`maritime_daily` 1 → 500 | **yes**: the daily summaries are the only long record of ship behaviour (backed up as maritime_daily) | rollup: daily ship summaries are written then the raw event log is cut to LOG_KEEP_DAYS (7) | `maritime-rollup` `*-*-* 04:05` | `maritime/` | `/intel/maritime` |
+| **Sanctions** (`sanctions`) | `sanctions_store` 7 → 500 | **yes**: forward capture: the diff history of the lists cannot be re-fetched | append-only: events.jsonl is never rewritten; snapshots/<src>.json are replaced atomically | `sanctions` `2/6:25` | `sanctions/` | `/intel/sanctions` |
+| **Calendar (look-ahead)** (`calendar`) | `calendar_store` 2 → 500 | **yes**: revision history (a moved or withdrawn date) cannot be re-fetched | append-only: items.jsonl keeps every revision; status.json is replaced | `calendar` `*-*-* 04:40` | `calendar/` | `/calendar` |
+| **AI benchmarks** (`ai_benchmarks`) | `ai_benchmarks_store` 3 → 200 | **yes**: forward-captured Arena snapshots and lab claims cannot be re-fetched | append-only: results.jsonl is never edited; the catalog and status are replaced | `ai-bench` `0/12:55`<br>`ai-discovery` `*-*-* 06:50` (capped) | `data/ai-benchmarks.json` | `/intel/ai` |
+| **Instruments (public data series)** (`instruments`) | `instruments_store` 9 → 500 | **yes**: forward capture of revisions and the live-feed daily counts (the baselines' history) | append-only: a fetch appends only a new or revised period; nothing is edited or removed | `instruments` `0/6:40` | `data/` | - |
+| **Statements (on the record)** (`statements`) | `statements_store` 15 → 500 | **yes**: extractions are paid model work and the record is the product | append-only: statements.jsonl is append-only (ids dedupe); raw transcripts are internal and kept with it | `statements` `1/6:10` | `data/` | `/intel/record` |
+| **Actors (state profiles)** (`actors`) | `actors_store` 17 → 500 | **yes**: refetchable but cheap to keep, and revisions are forward capture | append-only: a fetch appends only a never-seen or changed (country, year); no line is edited | manual: `newsroom actors fetch` by hand: indicators change yearly, no timer is needed | `actors/`, `data/actors/` | `/intel/actors`, `/intel/actors/[iso]` |
+| **Geoledger (assets and status events)** (`geoledger`) | `geoledger_store` 17 → 500 | **yes**: status events are partly forward capture | append-only: assets/events/merges.jsonl are never rewritten; cache/overpass is keyed by query hash (overwritten, finite) | manual: `newsroom geo ...` seeds and updates by hand; nothing in it changes between operator actions | `geo/` | `/intel/places/[id]` |
+| **Markets and the paper trader** (`markets`) | `markets_store` 8 → 500 | **yes**: our forecasts and trades are the scored record; they cannot be reconstructed | append-only: history is never rewritten so the record cannot be quietly improved; ~2 MB a week estimated | `markets` `3/4:50`<br>`markets-daily` 07:30 UTC (paid) | `data/track-record.json` | `/intel/forecasts`, `/intel/track-record` |
+| **Source library (crawl cache)** (`library`) | `library_store` 123 → 1,000 (not backed up) | no: re-crawled by the timer (about a day to refill) | prune: enforce_retention drops the oldest pages past MAX_DB_BYTES (400 MB), news before analysis before primary | `library` `0/4:20` | - | - |
+| **Agent feeds and API** (`agent_feeds`) | `site_data` 10 → 1,000 | **yes**: what was published exists nowhere else once the database is gone (the served copy is the only copy of the documents) | derived: built from the dailies, profiles and Pulses on publish; the bucket holds the served copy | manual: rebuilt on every publish by the daily and article runs | `data/`, `feeds/` | `/developers` |
+| **Site hubs and surfaces** (`site`) | - | no: reads the other products' published documents | derived: presentation only; no data of its own | - | - | `/`, `/data`, `/globe`, `/lab/scene` |
+| **Operations (deploy, watchdog, envelope, housekeeping)** (`ops`) | - | no: code and logs only; ~/ops-log.md grows by a few lines a day | prune: housekeeping deletes fetch-cache files past their TTL and per-job run logs older than 30 days | `update` `*:0/5`<br>`watchdog` `*:0/2`<br>`envelope` `*-*-* 07:10`<br>`housekeeping` `*-*-* 03:55` | - | - |
+| **Backups** (`backup`) | - | no: it is the backup (state in backup_state.json, objects in the private R2 bucket) | prune: snapshots are thinned to 14 daily + 8 weekly + 12 monthly | `backup` `*-*-* 06:15`<br>`backup-snapshot` `*-*-* 06:40`<br>`backup-drill` `*-*-01 07:30:00` | - | - |
+| **Legacy Postgres tables** (`database`) | - | no: publication moved to the server and R2 (Supabase paused 10-22) | prune: retention windows on the growing tables + VACUUM | `db-prune` `*-*-* 03:40` | - | - |
+| **Caches and scratch** (`caches`) | `fetch_cache` 50 → 2,000 (not backed up)<br>`retrieval_store` 5 → 2,000 (not backed up)<br>`ingestion_store` 0 → 8,000 (not backed up) | no: every store here is rebuilt on demand | prune: fetch cache entries past the 6 h TTL are deleted daily; ingestion raw batches are pruned by the CLI | manual: refilled on demand; expired by the ops housekeeping job | - | - |
+<!-- products:table:end -->
+
+Not products (resources, see section 2): `/var/log/journal` (562 MB, **capped at 200 MB** by `infra/server/journald-ohmega.conf`, installed by `install_schedules.sh`);
+R2 `backups/daily/` in the private bucket (*expected 20-35 MB x <= 34*: 14 daily + 8 weekly + 12 monthly, `snapshot.plan_retention`).
+Measured 10-23 (server): `library_store` 123 MB is one SQLite file (page-level writes, `MAX_DB_BYTES` 400 MB); the 1.7 GB `maritime_store/log.jsonl` was the incident
+(transitions only now, `LOG_KEEP_DAYS = 7`, then the daily summary: `database-budget.md`); `geoledger_store` is already append-only JSONL (its 16 MB "written" was the mirror
+copying a changed file whole, now bounded by the 10 MB mirror threshold). Every store row above has a budget in the registry and a line in `newsroom envelope`.
 
 ## 4. Risks, ranked (state after steps 1-5)
 1. **The maritime log was the next disk incident.** Fixed in code (transitions only, dedupe, 7 days). *Still to run:* `newsroom maritime compact-log --apply` to shrink the existing 1.7 GB.

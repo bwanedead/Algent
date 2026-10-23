@@ -41,7 +41,7 @@ Docs sprawl is a real failure mode. To prevent it:
 - `agent-ergonomics-ethos.md` – fit the action seam to the agent's natural grammar; discover it empirically.
 
 ### Architecture — `architecture/`
-- `foundation.md` – **start here for ops**: the operating envelope. Every external dependency and server store with its limit, measured use, failure mode, guard and gap; ranked risks and the hardening plan. New products add their rows before shipping.
+- `foundation.md` – **start here for ops**: the operating envelope. Every external dependency and server store with its limit, measured use, failure mode, guard and gap; ranked risks and the hardening plan. **A product exists only if it is in the product registry** (`backend/algent_backend/ops/products/registry.py`); §3 is generated from it and the backup, envelope budgets, timers, paid jobs and site contract are derived from it. New products add their entry before shipping.
 - `run-control-plane.md` – run directory contract, runs CLI, observability weave.
 - `map-analytics-stack.md` – accurate country-scale map figures for the newsroom analytics path.
 - `pulse-system.md` – Ohmega Pulse: situations, anchored Pulses, append-only influences, watches, storage.

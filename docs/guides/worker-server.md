@@ -26,17 +26,26 @@ so it can be rebuilt from scratch instead of repaired by hand.
 | `ohmega-backup-snapshot` | daily 06:40 | tar.gz of every irreplaceable store -> the private R2 bucket, 14 daily / 8 weekly / 12 monthly (`newsroom backup snapshot`) | free |
 | `ohmega-backup-drill` | monthly, day 1, 07:30 | restore the latest snapshot to a temp dir and verify counts + hashes; ok/FAIL to `~/ops-log.md` (`newsroom backup restore-drill`) | free |
 | `ohmega-envelope` | daily 07:10 | one-line operating-envelope summary to `~/ops-log.md` (`newsroom envelope --log`) | free |
+| `ohmega-housekeeping` | daily 03:55 | expire the page-fetch cache and per-job run logs older than 30 days (`newsroom products housekeeping --apply`) | free |
 | `ohmega-menu` | daily 05:00 | newsroom menu (`run --to menu`) | **paid** |
 | `ohmega-daily-1` | daily 05:30 | geopolitics daily, part 1 (Europe/Asia morning) | **paid** |
 | `ohmega-daily-2` | daily 17:30 | geopolitics daily, part 2 (Americas), appended to the same report | **paid** |
 | `ohmega-watchdog` | every 2 min | kills paid runs over their time/spend limits | free |
 | SearXNG (Docker) | always | our own metasearch on 127.0.0.1:8080 | free |
 
+### Timers come from the product registry (do not edit units by hand)
+
+Every timer, its command, its calendar and its lock behaviour is an entry in `backend/algent_backend/ops/products/registry.py` (docs/architecture/foundation.md §3);
+`install_schedules.sh` writes one service+timer per line of `newsroom products timers`, and `jobs.sh <job>` is a one-line router to `newsroom products run <job>`
+(which takes the shared job lock unless the job opts out: watchdog, live feeds, flows, satellite). To add a job: add it to its product's `jobs`, push, then run
+`install_schedules.sh` once. After a deploy: `newsroom products check --text` (registry rules, stores present, every registered timer installed and enabled, orphan
+timers, snapshot coverage, freshness, budgets). `ohmega-housekeeping` (daily 03:55, free) expires the page-fetch cache and per-job run logs older than 30 days
+(`newsroom products housekeeping [--apply]`).
+
 ### The paid timers (operator-authorised, unattended): menu, daily 1, daily 2, markets-daily
 
 Times are in-repo flags: the editions in `intel/flags.py` (`EDITIONS`), the menu in `ops/flags.py` (`MENU_UTC`);
-`markets-daily` (the Polymarket paper trader: forecasts, trades, marks; `markets/flags.py` `DAILY_UTC`, 07:30) is the fourth; change one and re-run `infra/server/install_schedules.sh`. Each unit runs `jobs.sh <job>` → `newsroom schedule run
-<job>` (`ops/schedule.py`), under the same job lock as everything else, so paid jobs never overlap (the menu, then
+`markets-daily` (the Polymarket paper trader: forecasts, trades, marks; `markets/flags.py` `DAILY_UTC`, 07:30) is the fourth; change one and re-run `infra/server/install_schedules.sh`. Each unit runs `jobs.sh <job>` → `newsroom products run <job>` → `ops/schedule.py` (the kill switch, runner claim and spend halt), under the same job lock as everything else, so paid jobs never overlap (the menu, then
 daily 1, simply queue). Before it spends, a job checks, and on any "no" exits 0 having spent nothing and says why:
 
 1. the kill switch (`SCHEDULED_PAID_RUNS` in `ops/flags.py`, or `ALGENT_SCHEDULED_PAID_RUNS=0`);
@@ -275,7 +284,7 @@ a count is flagged only when it beats every day in its recent window and sits ou
 
 A keyed feed without its key reports `needs <KEY> (free registration at <url>)` in `newsroom live status` and `newsroom doctor`
 (check `live:<feed>`) and nothing else breaks. Timers are installed by `infra/server/install_schedules.sh` from
-`newsroom live schedule`; the stream service restarts always.
+`newsroom products timers` (the live cadences come from `live/flags.py` through the registry); the stream service restarts always.
 
 Where it goes: numeric results are `live_*` instrument series (completed UTC days only; the day being counted sits in
 `live_store/running_*.json`, so a half-counted today never reads as a collapse), which flow through the numbers, freshness
