@@ -67,14 +67,45 @@ def normalise(base: str) -> str:
     return base
 
 
+def published_statuses(fetch: Fetch, status_base: str | None) -> dict[str, Any]:
+    """The published status documents (ops/status.py) of the products judged on them, by product id; a missing, unreadable or unreachable one is simply absent
+    (the check then falls back to the data's own ``as_of``). Read from the public bucket, so what is judged is what readers can see."""
+    import gzip
+    import json
+
+    base = status_base if status_base is not None else _status_base()
+    out: dict[str, Any] = {}
+    for pid in flags.STATUS_JUDGED if base else ():
+        try:
+            reply = fetch(f"{base.rstrip('/')}/docs/status/{pid}.json.gz")
+            if reply.status == 200:
+                raw = reply.body
+                out[pid] = json.loads(gzip.decompress(raw) if raw[:2] == bytes((0x1F, 0x8B)) else raw)
+        except Exception:  # noqa: BLE001 - a status that cannot be read is a fallback, not a failure
+            continue
+    return out
+
+
+def _status_base() -> str:
+    try:
+        from algent_backend.publishing import object_store
+
+        store = object_store.select(allow_unconfigured=True)
+        return store.public_url("").rstrip("/") if store else ""
+    except Exception:  # noqa: BLE001
+        return ""
+
+
 def run(base: str | None = None, *, fetch: Fetch = default_fetch, now: datetime | None = None, pace: float = flags.PACE_S,
-        sleep: Callable[[float], None] = time.sleep) -> Report:
-    """Check every probe against ``base`` (default: production). Never raises: a request that cannot be made is a failed check."""
+        sleep: Callable[[float], None] = time.sleep, status_base: str | None = None) -> Report:
+    """Check every probe against ``base`` (default: production). Never raises: a request that cannot be made is a failed check. ``status_base`` is the public
+    bucket URL the status files are read from (default: the configured object store; none configured means the ``as_of`` fallback)."""
     base = normalise(base or flags.PRODUCTION_BASE)
     now = now or datetime.now(UTC)
     t0 = time.monotonic()
     report = Report(base=base, at=now.isoformat(timespec="seconds"))
     probes = static_probes()
+    statuses = published_statuses(fetch, status_base) if base == flags.PRODUCTION_BASE or status_base is not None else {}   # a preview reads staging data: no status there
     replies: dict[str, Reply] = {}
 
     def ask(probe: Probe) -> None:
@@ -85,7 +116,7 @@ def run(base: str | None = None, *, fetch: Fetch = default_fetch, now: datetime 
         except Exception as exc:  # noqa: BLE001 - a broken fetcher is a failed check, not a crashed job
             reply = Reply(0, error=f"{type(exc).__name__}: {str(exc)[:120]}")
         replies[probe.path] = reply
-        report.results.append(judge(probe, reply, now=now))
+        report.results.append(judge(probe, reply, now=now, statuses=statuses))
 
     sitemap = next(p for p in probes if p.path == "/sitemap.xml")
     ask(sitemap)

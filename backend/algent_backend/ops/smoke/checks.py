@@ -5,7 +5,8 @@ testable with a fake reply. The rules:
 * page: status 200, a real HTML document, none of the "not published" / error copy (``flags.FALLBACK_PATTERNS``), no stale marker on the hubs (warn);
 * agent API: status 200, a JSON ``{data, meta}`` envelope with a version, source, cite_as, license and a non-empty ``data``; an ``{error}`` body fails;
 * redirect: a 3xx to exactly the expected place;
-* freshness (``meta.as_of``): not older than ``FRESH_CADENCES`` x the product's registry cadence;
+* freshness (``meta.as_of``): not older than ``FRESH_CADENCES`` x the product's registry cadence; for the products in ``flags.STATUS_JUDGED`` the published status
+  file's ``checked_at`` is judged the same way and ``as_of`` is only the fallback (a quiet product is alive, not stale);
 * every request: time recorded; slower than ``SLOW_MS`` warns; no answer at all fails.
 """
 
@@ -88,6 +89,20 @@ def lateness(stamp: str, product_id: str, now: datetime) -> str:
     return f"{product_id} as of {stamp[:16]} is {age_h:.0f} h old; its cadence is {cad / 60:g} h, late after {allowed_h:g} h" if age_h > allowed_h else ""
 
 
+def status_lateness(doc: Any, product_id: str, now: datetime) -> str:
+    """Why a published status document (``ops/status.py``) says the product is not being checked, or "". Judged on ``checked_at`` against the registry cadence
+    (never less than twice the status publish gap, so a fast product is not late between its throttled writes)."""
+    from algent_backend.ops import status
+
+    got = parse_stamp(str(doc.get("checked_at") or "")) if isinstance(doc, dict) else None
+    if got is None:
+        return f"{product_id} status file has no readable checked_at"
+    cad = max(cadence_minutes(product_id), 2 * status.MIN_GAP_MIN)
+    age_h = max(0.0, (now - got[0]).total_seconds() / 3600)
+    allowed_h = flags.FRESH_CADENCES * cad / 60
+    return f"{product_id} last checked {str(doc.get('checked_at'))[:16]}: {age_h:.0f} h ago; its cadence is {cad / 60:g} h, late after {allowed_h:g} h" if age_h > allowed_h else ""
+
+
 def envelope_problems(doc: Any) -> list[str]:
     """What is wrong with an agent API body: ``{data, meta:{as_of, source, version, cite_as, license}}`` with non-empty data."""
     if not isinstance(doc, dict):
@@ -121,7 +136,7 @@ def _check_page(probe: Probe, reply: Reply, res: Result) -> None:
         res.flag(WARN, "the page shows a stale marker (a product is late for its own cadence)")
 
 
-def _check_api(probe: Probe, reply: Reply, res: Result, now: datetime) -> None:
+def _check_api(probe: Probe, reply: Reply, res: Result, now: datetime, statuses: dict[str, Any] | None) -> None:
     try:
         doc = json.loads(reply.body)
     except ValueError:
@@ -133,13 +148,16 @@ def _check_api(probe: Probe, reply: Reply, res: Result, now: datetime) -> None:
         return
     for problem in envelope_problems(doc):
         res.flag(FAIL, problem)
-    if probe.fresh and isinstance(doc, dict) and isinstance(doc.get("meta"), dict):
+    if probe.fresh and probe.fresh[0] in flags.STATUS_JUDGED and statuses and isinstance(statuses.get(probe.fresh[0]), dict):
+        if (late := status_lateness(statuses[probe.fresh[0]], probe.fresh[0], now)):
+            res.flag(probe.fresh[1], late)
+    elif probe.fresh and isinstance(doc, dict) and isinstance(doc.get("meta"), dict):
         late = lateness(str(doc["meta"].get("as_of") or ""), probe.fresh[0], now)
         if late:
             res.flag(probe.fresh[1], late)
 
 
-def judge(probe: Probe, reply: Reply, *, now: datetime | None = None) -> Result:
+def judge(probe: Probe, reply: Reply, *, now: datetime | None = None, statuses: dict[str, Any] | None = None) -> Result:
     now = now or datetime.now(UTC)
     res = Result(probe.path, probe.kind, reply.status, reply.ms, why=probe.why)
     if reply.status == 0:
@@ -154,7 +172,7 @@ def judge(probe: Probe, reply: Reply, *, now: datetime | None = None) -> Result:
     elif probe.kind == "page":
         _check_page(probe, reply, res)
     elif probe.kind in ("api", "json"):
-        _check_api(probe, reply, res, now)
+        _check_api(probe, reply, res, now, statuses)
     elif probe.kind == "xml":
         try:
             ET.fromstring(reply.body)

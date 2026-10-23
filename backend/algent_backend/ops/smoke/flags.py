@@ -38,6 +38,10 @@ REDIRECTS = (("/geopolitics", "/daily/geopolitics"), ("/ai", "/daily/ai"), ("/he
 #: Freshness probes on the agent API: (path template, registry product whose cadence applies, severity of lateness). ``{desk}`` runs over the desks.
 FRESHNESS = (("/api/v1/daily/{desk}/latest", "dailies", "fail"), ("/api/v1/track-record", "markets", "warn"), ("/api/v1/sanctions", "sanctions", "warn"),
              ("/api/v1/calendar", "calendar", "warn"), ("/api/v1/ai-benchmarks", "ai_benchmarks", "warn"))
+#: Products whose liveness is judged from their published status file (``ops/status.py``: ``checked_at``, the end of their last successful run) instead of the
+#: ``as_of`` of their data: a product with nothing new to say (no new sanctions designation) keeps an old ``as_of`` while its job runs fine, so ``as_of`` is
+#: only the fallback while no status file is published yet. Dailies are not here on purpose: a missing report is a failure whatever the job did.
+STATUS_JUDGED = ("markets", "sanctions", "calendar", "ai_benchmarks")
 #: Pages that also carry a visible stale marker (components/Fresh.tsx renders ``is-stale``): seeing it there is a warning.
 STALE_MARKER_PAGES = ("/", "/daily", "/situations", "/data")
 #: The state file's neighbours: the checker keeps the last report here so the doctor row and the ops-log transitions can read it.
