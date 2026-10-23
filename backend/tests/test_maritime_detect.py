@@ -313,7 +313,7 @@ def test_the_store_upserts_logs_state_changes_and_stays_bounded(monkeypatch):
     closed_ev = a.model_copy(update={"state": "ended", "ended_at": "2027-02-20T00:00:00+00:00"})
     assert store.upsert([closed_ev], now + 120) == {"new": 0, "changed": 1, "kept": 1}
     log = (store.root() / "log.jsonl").read_text(encoding="utf-8").splitlines()
-    assert [__import__("json").loads(x)["event"] for x in log] == ["open", "ended"]
+    assert [__import__("json").loads(x)["state"] for x in log] == ["open", "ended"]
     old = mk(mmsi=7, ended_at="2026-01-01T00:00:00+00:00", state="ended")
     store.upsert([old], now)
     assert old.id not in store.read_current()                                   # ended long ago: expired from the picture
@@ -321,6 +321,50 @@ def test_the_store_upserts_logs_state_changes_and_stays_bounded(monkeypatch):
     store.upsert([mk(mmsi=100 + i, last_seen=f"2027-02-{10 + i:02d}T00:00:00+00:00", ended_at=None) for i in range(6)], now)
     cur = store.read_current()
     assert len(cur) == 3 and all(e.mmsi >= 103 for e in cur.values())            # the newest kept
+
+
+def _lines():
+    return [__import__("json").loads(x) for x in (store.root() / "log.jsonl").read_text(encoding="utf-8").splitlines()]
+
+
+def test_the_log_writes_transitions_only_and_never_ongoing_or_a_repeat(monkeypatch):
+    now = T0 + 40 * 86400
+    sanc = mk("sanctioned", conf=0.95, started_at="2027-02-09T00:00:00+00:00", last_seen="2027-02-09T00:00:00+00:00")
+    store.upsert([sanc], now)
+    stale = sanc.model_copy(update={"state": "ended", "ended_at": "2027-02-09T01:00:00+00:00"})
+    store.upsert([stale], now + 300)                                              # went quiet
+    store.upsert([sanc.model_copy(update={"last_seen": "2027-02-09T02:00:00+00:00"})], now + 600)       # seen again: back to ongoing, not a transition
+    store.upsert([stale.model_copy(update={"last_seen": "2027-02-09T03:00:00+00:00"})], now + 900)      # flapped to ended again
+    rows = _lines()
+    assert [(r["id"], r["state"]) for r in rows] == [(sanc.id, "open"), (sanc.id, "ended")]
+    assert set(rows[0]) == {"id", "kind", "state", "mmsi", "imo", "name", "ship_class", "at", "lat", "lon", "area", "confidence"}
+    assert len((store.root() / "log.jsonl").read_text(encoding="utf-8")) < 600     # compact, not the 1.9 KB object
+
+
+def test_an_event_the_picture_let_go_of_is_not_logged_again_when_a_detector_finds_it(monkeypatch):
+    now = T0 + 40 * 86400
+    monkeypatch.setattr(flags, "EVENTS_MAX", 2)
+    done = [mk("identity", mmsi=500 + i, state="ended", started_at=f"2027-02-0{i + 1}T00:00:00+00:00", ended_at=f"2027-02-0{i + 1}T00:00:00+00:00",
+               last_seen=f"2027-02-0{i + 1}T00:00:00+00:00") for i in range(4)]
+    store.upsert(done, now)
+    assert len(store.read_current()) == 2                                          # the cap cut the two oldest
+    for _ in range(3):                                                             # every later pass re-derives all four
+        assert store.upsert(done, now + 300)["new"] == 0
+    assert [r["state"] for r in _lines()] == ["open"] * 4                          # one open each, never again
+
+
+def test_cooldown_is_per_vessel_and_kind_and_derived_from_the_detector_minimum():
+    now = T0 + 40 * 86400
+    a = mk(mmsi=900, id="mb-g1")
+    b = mk(mmsi=900, id="mb-g2", started_at="2027-02-09T00:30:00+00:00")           # same vessel, same kind, half an hour on: the same gap
+    c = mk("sts", mmsi=900, id="mb-s1")                                           # same vessel, other kind
+    store.upsert([a], now)
+    store.upsert([b, c], now + 1800)
+    assert [(r["id"], r["state"]) for r in _lines()] == [("mb-g1", "open"), ("mb-s1", "open")]
+    assert "mb-g2" in store.read_current()                                         # still in the picture, only the log skips it
+    d = mk(mmsi=900, id="mb-g3")
+    store.upsert([d], now + flags.LOG_COOLDOWN_S["ais_gap"] + 60)
+    assert _lines()[-1]["id"] == "mb-g3"
 
 
 class FakeBoard:

@@ -35,12 +35,12 @@ def test_old_lines_become_a_day_summary_and_recent_lines_stay() -> None:
     write_log([line("open", "2026-08-01T01:00:00+00:00", 1), line("open", "2026-08-01T02:00:00+00:00", 2, kind="sts", conf=0.9),
                line("ended", "2026-08-01T05:00:00+00:00", 1), line("open", "2026-10-21T01:00:00+00:00", 3, started="2026-10-21T00:00:00+00:00")])
     dry = rollup.compact_log(now=NOW.timestamp(), apply=False)
-    assert dry["lines"] == 4 and dry["kept"] == 1 and dry["summarised"] == 3 and (store.root() / "log.jsonl").exists()
+    assert dry["lines"] == 4 and dry["kept"] == 1 and dry["summarised"] == 4 and (store.root() / "log.jsonl").exists()
     assert not (store.root() / "daily").exists()                                    # a dry run writes nothing
     done = rollup.compact_log(now=NOW.timestamp(), apply=True)
-    assert done["days"] == ["2026-08-01"] and done["bytes_after"] < done["bytes_before"]
+    assert done["days"] == ["2026-08-01", "2026-10-21"] and done["bytes_after"] < done["bytes_before"]    # a complete day is summarised before it ages out
     kept = (store.root() / "log.jsonl").read_text(encoding="utf-8").splitlines()
-    assert len(kept) == 1 and json.loads(kept[0])["e"]["id"] == "mb-3"
+    assert len(kept) == 1 and json.loads(kept[0])["id"] == "mb-3" and "e" not in json.loads(kept[0])    # rewritten as a compact transition
     day = rollup.read_day("2026-08-01")
     assert day["events"]["opened"] == 2 and day["events"]["by_kind"] == {"ais_gap": 1, "sts": 1} and day["events"]["outcomes"] == {"ended": 1}
     assert day["events"]["gaps_by_area"] == {"Hormuz": 1}
@@ -105,3 +105,30 @@ def test_the_store_report_names_the_big_files() -> None:
     write_log([line("open", "2026-08-01T01:00:00+00:00", 1)])
     rep = rollup.store_report()
     assert rep["files"][0]["path"] == "log.jsonl" and rep["total_bytes"] > 0
+
+
+def test_legacy_churn_collapses_to_transitions_and_counts_once() -> None:
+    """The measured shape: opens repeated for one id, 'ongoing' flips. After compaction one open + one end per id, nothing summarised twice."""
+    lines = [line("open", f"2026-10-20T0{h}:00:00+00:00", 1, kind="identity") for h in range(5)]                  # same event re-opened 5 times
+    lines += [line("ongoing", "2026-10-20T06:00:00+00:00", 2), line("open", "2026-10-20T05:00:00+00:00", 2),
+              line("ongoing", "2026-10-20T07:00:00+00:00", 2), line("ended", "2026-10-20T08:00:00+00:00", 2), line("ongoing", "2026-10-20T09:00:00+00:00", 2)]
+    write_log(lines)
+    dry = rollup.compact_log(now=NOW.timestamp(), apply=False)
+    assert dry["opens_before"] == 6 and dry["opens_after"] == 2 and dry["by_kind_after"] == {"identity": 1, "ais_gap": 1}
+    done = rollup.compact_log(now=NOW.timestamp(), apply=True)
+    out = [json.loads(x) for x in (store.root() / "log.jsonl").read_text(encoding="utf-8").splitlines()]
+    assert [(o["id"], o["state"]) for o in out] == [("mb-1", "open"), ("mb-2", "open"), ("mb-2", "ended")]
+    assert set(out[0]) == {"id", "kind", "state", "mmsi", "imo", "name", "ship_class", "at", "lat", "lon", "area", "confidence"}
+    ev = rollup.read_day("2026-10-20")["events"]
+    assert ev["opened"] == 2 and ev["outcomes"] == {"ended": 1} and ev["through"] == "2026-10-20T08:00:00+00:00" and done["bytes_after"] < done["bytes_before"]
+    rollup.compact_log(now=NOW.timestamp(), apply=True)                                                          # idempotent
+    assert rollup.read_day("2026-10-20")["events"]["opened"] == 2
+
+
+def test_a_day_counted_while_complete_is_not_counted_again_when_it_ages_out() -> None:
+    write_log([line("open", "2026-10-20T01:00:00+00:00", 1)])
+    rollup.compact_log(now=NOW.timestamp(), apply=True)                                                          # day 10-20 is complete: summarised, line kept
+    assert rollup.read_day("2026-10-20")["events"]["opened"] == 1
+    later = datetime(2026, 11, 5, tzinfo=timezone.utc).timestamp()
+    rollup.compact_log(now=later, apply=True)                                                                    # now it ages out
+    assert rollup.read_day("2026-10-20")["events"]["opened"] == 1 and not (store.root() / "log.jsonl").read_text(encoding="utf-8")

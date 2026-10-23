@@ -4,6 +4,7 @@
     newsroom maritime events [--kind K] [--min-confidence C] [--limit N]   the current events (what the site and the daily read)
     newsroom maritime status                                               profile book size, event counts by kind, last pass
     newsroom maritime vessel MMSI                                          one vessel's profile: identity, changes, position history
+    newsroom maritime compact-log [--apply]                                one-shot: rewrite the old log as compact transitions, summarise, cut to 7 days
     newsroom maritime publish [--full]                                     push events to the site database and link them into the ledger
 
 The detectors run inside the stream service (``newsroom live ais``); these commands only read what it wrote. Every command prints one JSON
@@ -34,6 +35,9 @@ def add_parser(sub: Any) -> None:
     ru = verbs.add_parser("rollup", help="daily per-zone summaries + retention of the raw event log (dry run unless --apply)")
     ru.add_argument("--apply", action="store_true", help="write the summaries and compact log.jsonl (default: report only)")
     ru.set_defaults(handler=run_rollup)
+    cl = verbs.add_parser("compact-log", help="one-shot: summarise unrolled days, rewrite log.jsonl as compact transitions, cut to LOG_KEEP_DAYS (dry run unless --apply)")
+    cl.add_argument("--apply", action="store_true", help="do it (default: report what it would do, with opens before / after dedupe)")
+    cl.set_defaults(handler=run_compact_log)
     verbs.add_parser("store", help="size of every file in the maritime store").set_defaults(handler=run_store)
 
 
@@ -41,6 +45,14 @@ def run_rollup(args: Any) -> int:
     from algent_backend.maritime import rollup
 
     return _emit(rollup.run(apply=args.apply))
+
+
+def run_compact_log(args: Any) -> int:
+    from datetime import datetime, timezone
+
+    from algent_backend.maritime import rollup
+
+    return _emit(rollup.compact_log(now=datetime.now(timezone.utc).timestamp(), apply=args.apply))
 
 
 def run_store(_args: Any) -> int:
