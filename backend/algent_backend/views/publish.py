@@ -30,8 +30,13 @@ STORE_ENV = "ALGENT_VIEWS_STORE"
 STATE_FILE = "_state.json"
 
 
-def store_dir() -> Path:
-    return Path(os.environ.get(STORE_ENV) or "views_store")
+def store_dir(target: str | None = None) -> Path:
+    """The server's views store. A staging build (``ALGENT_PUBLISH_TARGET=staging``) has a sibling store of its own (``views_store_staging``), so it
+    never rewrites the production store or its change-stamps; ``target`` names one explicitly (stage-from-prod reads the production one)."""
+    from algent_backend.publishing import staging
+
+    root = Path(os.environ.get(STORE_ENV) or "views_store")
+    return root.with_name(root.name + "_staging") if (target or staging.target()) == staging.STAGING else root
 
 
 def _canonical(body: dict[str, Any]) -> bytes:

@@ -1,7 +1,7 @@
 """
 ``newsroom views`` - the server-built views the site and the agent API read (docs/architecture/views.md).
 
-    newsroom views build [--only a,b] [--dry-run] [--json]   build every view (or the named families), store them in views_store/, send the changed ones to R2
+    newsroom views build [--only a,b] [--dry-run] [--json] [--target staging]   build every view (or the named families), store them in views_store/, send the changed ones to R2
     newsroom views stats [--json]                            per family: count, bytes, the largest view; the R2 guard's month so far
     newsroom views show <key>                                print one stored view (country/FR, situation/<id>, entity/org/<id>, home, hud, ...)
 
@@ -20,6 +20,9 @@ def add_parser(sub: Any) -> None:
     b.add_argument("--only", default="", help="comma-separated families (graph,country,situation,event,entity,home,hud,daily-hub,search-index)")
     b.add_argument("--dry-run", action="store_true", help="build and report what would be sent (Class A operations, gzipped bytes); store and send nothing")
     b.add_argument("--json", action="store_true")
+    from .publish import add_target_arg
+
+    add_target_arg(b)
     b.set_defaults(handler=run_build)
     s = verbs.add_parser("stats", help="what the local store holds, and the R2 guard")
     s.add_argument("--json", action="store_true")
@@ -32,6 +35,9 @@ def add_parser(sub: Any) -> None:
 def run_build(args: Any) -> int:
     from algent_backend.views import cli
 
+    from .publish import apply_target
+
+    apply_target(args)
     return cli.run_build(only=args.only, dry_run=args.dry_run, as_json=args.json)
 
 

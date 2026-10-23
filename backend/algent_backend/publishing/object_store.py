@@ -273,10 +273,22 @@ def paused(env: Mapping[str, str] | None = None) -> bool:
 def select(backend: str | None = None, *, env: Mapping[str, str] | None = None, call: Call | None = None,
            allow_unconfigured: bool = False) -> ObjectStore | None:
     """The configured store for ``backend`` (default: the flag), or None when its env names are not all set (or publishing is paused).
-    ``allow_unconfigured`` builds a store with empty credentials for tests that inject their own transport."""
-    from algent_backend.database import flags
+    ``allow_unconfigured`` builds a store with empty credentials for tests that inject their own transport. With ``ALGENT_PUBLISH_TARGET=staging`` the
+    store is wrapped so every key lands under ``staging/`` (``staging.py``); any other non-production target publishes nothing."""
+    from . import staging
 
     env = os.environ if env is None else env
+    tgt = staging.target(env)
+    if tgt not in staging.TARGETS:
+        print(f"[object_store] unknown {staging.ENV}={tgt!r} (production or staging): publishing is off", flush=True)
+        return None
+    store = _select_production(backend, env=env, call=call, allow_unconfigured=allow_unconfigured)
+    return staging.StagingStore(store) if store is not None and tgt == staging.STAGING else store
+
+
+def _select_production(backend: str | None, *, env: Mapping[str, str], call: Call | None, allow_unconfigured: bool) -> ObjectStore | None:
+    from algent_backend.database import flags
+
     backend = backend or flags.object_backend()
     if paused(env) and not allow_unconfigured:
         return None

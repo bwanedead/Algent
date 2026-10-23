@@ -20,12 +20,13 @@ def add_parser(sub: Any) -> None:
 
 
 def run_status(_args: Any) -> int:
-    from algent_backend.publishing import object_budget, object_store
+    from algent_backend.publishing import object_budget, object_store, staging
 
     rep = object_budget.meter().status()
     store = object_store.select(allow_unconfigured=True)
     rep["backend"] = store.name if store else "none"
     rep["configured"] = object_store.configured()
     rep["public_base"] = object_store.public_base()
+    rep["staging"] = staging.ledger().status()          # its own, lower allowance inside the same bucket (docs/guides/deploy.md)
     print(json.dumps(rep, indent=2))
     return 1 if rep["level"] == "stop" else 0
