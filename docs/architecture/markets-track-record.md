@@ -13,7 +13,7 @@ CLI `newsroom markets ...`; site `/intel/track-record`, `/api/v1/track-record`; 
    backfills a new market's daily history. Gamma `GET /markets/{id}` is how a tracked market that left the sweep is seen to have **resolved**: closed with a
    final price at or beyond `RESOLVED_YES_AT`/`RESOLVED_NO_AT` is yes/no; a settled 50-50 is `void`. All append-only (`markets_store/`, `ALGENT_MARKETS_STORE`).
 2. **Forecast** (`forecast.py`, **paid, manual**: `newsroom markets forecast`). One structured call per market: the question, the market's own resolution rules and
-   `evidence.py`'s blind evidence. Capped per day (`MAX_FORECASTS_PER_DAY`, `MAX_FORECAST_USD_PER_DAY`) and per call (`FORECAST_CALL_CAP_USD`), under the budget gate
+   the evidence (since 10-23 the corpus's results for planned queries, see *Corpus-only research*; before, `evidence.py`'s blind evidence). Capped per day (`MAX_FORECASTS_PER_DAY`, `MAX_FORECAST_USD_PER_DAY`) and per call (`FORECAST_CALL_CAP_USD`), under the budget gate
    (a spend halt refuses it). Cost is roughly a few thousandths of a dollar to a cent a market at low effort, so a full 40-market day is well under the $1 cap.
 3. **Paper portfolio** (`paper.py`, free; runs after every mirror pass). **Score** (`score.py`). **Publish** (`publish.py`: `data/track-record.json` in
    `published_intel_documents`, no new migration). **Daily line** (`desk.py`).
@@ -80,6 +80,51 @@ daily are the real numbers.
 **The page** (`/intel/track-record`, payload schema `ohmega.track-record/2`, `trader` object): equity curve (trader, rule book, flat), positions held with the agent's last
 words, every trade newest first with its outcome once resolved (green won, red lost), then the existing calibration and misses. A schema-1 document still parses (empty trader).
 
+## Corpus-only research (`research.py`, `trace.py`, `trail.py`; 10-23)
+The goal: the bots decide from OUR corpus, so the track record measures what the corpus knows and nothing else drives an outcome. **No open-web search is in the decision
+path.** The model harness (`forecast.default_ask`) is one structured call with no tool calling, so this is **planned retrieval**, not a tool loop:
+1. A cheap planning call (`research.PLAN_ROLE`, `RESEARCH_PLAN_EFFORT`, capped at `RESEARCH_PLAN_CAP_USD`) is shown the question(s) (never a price) and names corpus queries over the
+   six tools of `corpus/query` (`entity`, `about(since, kinds)`, `search`, `timeline`, `related`, `series`). A trade batch of 8 markets is ONE plan call.
+2. We run them against the index (`Corpus.open()`, read-only). Round two sees round one's result lines and may ask for more. Caps (flags): `RESEARCH_MAX_ROUNDS` (2),
+   `RESEARCH_QUERIES_PER_ROUND` (4 per market), `RESEARCH_ROWS_PER_QUERY` (6), `RESEARCH_CHARS_PER_MARKET` (3200; the trader `TRADE_EVIDENCE_CHARS`), `RESEARCH_LOOKBACK_DAYS`.
+3. The decision call reads the rendered results (each row has a bracketed, citable id) and answers with `cited`, `evidence` (`sufficient | thin | gap`, its own verdict) and,
+   when it needed something the corpus lacked, `gap_topic` + `gap_why`. Only ids that were actually shown are kept as cited.
+With `CORPUS_ONLY` (default) the decision sees only those rows; off, `evidence.py`'s blocks are added. If no corpus index exists on the machine the pass falls back to `evidence.py`
+and the trace says `base-fallback` (such a decision has no verdict and files no gap). `RESEARCH_ENABLED = False` restores the old path wholesale.
+**Blindness is enforced in the tool layer.** The corpus also ingests the Polymarket mirror, our forecasts and decisions (`corpus/sources/markets.py`); `research._blocked` drops any
+row of product `markets`, any `market:` entity and any `market.*` series, whichever tool returned it, so a price or our earlier call can never reach a forecaster.
+Planning cost is added to the forecast's/decision's `usd`, so the existing per-day caps still bound everything.
+
+**The trace** (`research_trace.jsonl`, one line per forecast or trade: queries with tool/arg/results/ids/ms/errors, ids returned, ids shown, ids cited, the verdict, estimated tokens
+(chars/4: the harness reports cost, not tokens), planning and total USD, latency). Observability only, so it is **pruned after `TRACE_KEEP_DAYS` (60)** by the free refresh pass;
+forecasts and decisions carry their own cited ids, which is all scoring reads.
+
+## Gaps feed the corpus, never the bot (`gaps.py`)
+A thin/gap verdict with a `gap_topic` appends one line to the append-only `gaps.jsonl` (once per market and topic). `gaps.clusters` merges near-duplicate asks (token-set overlap,
+60%) and ranks by how many markets asked. The registry job **`markets-gaps`** (paid, 08:45 UTC, `newsroom markets gaps`) takes the most-asked unfilled clusters and runs each as a
+`signal_profile` research run (the existing profile pipeline: web research -> profile store -> corpus index on the next build) with `requested_by: "markets"` on the vector, copied
+onto the `SignalProfile`, and a per-run USD cap (`GAP_FILL_RUN_CAP_USD`, honoured by `research/loop._run_cap`). **Caps:** `GAP_FILL_USD_PER_DAY = 0.50` (operator-authorised),
+runs booked at `GAP_FILL_EST_USD = 0.25` whether or not they succeed, `GAP_FILL_MAX_PER_DAY = 2`, a filled topic is not run again for `GAP_REFILL_DAYS`, a topic that failed twice is
+parked. Each run is one line in `gap_fills.jsonl`. The bots see the answer only when the next corpus build ingests the profile.
+
+## The fast book (`books.py`; `trader.run(book_name="fast")`)
+The same trader code, guards, ledger format and arithmetic on a short clock, to compare predictive ability by horizon. Only markets ending within `FAST_HORIZON_DAYS` (7) and no sooner
+than `FAST_MIN_HOURS_LEFT`; decided every `FAST_EVERY_H` (4) hours (a market is not asked again within `FAST_RECHECK_H`); its own $10k `BANKROLL`, ledger lines tagged `book: "fast"` in
+`decisions.jsonl` (lines without the tag are `daily`), equity series `fast` (written by `book.mark` once it has traded). Registry job **`markets-fast`**, `newsroom markets fast`,
+at :20 every 4 h (30 min after the free mirror pass), priority 2 so the editorial dailies win the job lock, `max_wait_min` 45 then skipped as busy. Spend: `FAST_MAX_USD_PER_RUN`
+(0.12; forecasts take at most half of it) and `FAST_MAX_USD_PER_DAY` (0.60), forecasts + trade call together. A fast market needs a blind forecast no older than
+`FAST_FORECAST_MAX_AGE_H`; the run first forecasts up to `FAST_FORECASTS_PER_RUN` that lack one (blind as ever, `Forecast.book = "fast"`). The scheduler's paid class is daily-only
+(`ops/products/validate.py`), so the job is registered `capped` and `markets fast` applies the same gate as a paid job (`ops.schedule._may_spend`: kill switch, runner claim, spend halt).
+
+## Evidence on the page (`research_report.py`)
+Additive fields of `ohmega.track-record/2` (no major bump: optional, parsers default them): `evidence` (coverage = share of rated decisions that found the corpus sufficient vs thin vs
+gap, citations per decision, tool usage from the traces, `top_gaps` with their status open/tried/filled, accuracy split by evidence richness, caps, gap spend), `fast` (shaped like
+`trader` plus horizon/cadence), `horizons` (forecast Brier by time to resolution; median days to resolution per book), and each open position carries `evidence` and a `trail`
+(the cited items resolved against the corpus, with a same-site link for countries, situations and places). **Richness split:** decisions that cited at least `RICH_MIN_CITED` (3) items
+vs fewer, Brier for forecasts and realised P&L for closed positions (attributed to the first buy), and a group's numbers appear only once it holds
+`MIN_RESOLVED_FOR_VERDICT` resolved items (the counts always do). The page adds an "Evidence" section, a "What it looked for" gaps list, a collapsible evidence trail per position and
+"The fast book" beside the daily trader (comparison table, its own equity curve, time-to-resolution stats). `newsroom markets evidence` prints the same section.
+
 ## Retrieval (`backend/algent_backend/retrieval/`)
 A general corpus search, not a markets feature: `docs.py` turns every source into citable `Doc`s (`daily:<date>:<theater>` over the last `DAILY_DAYS`, `statement:`,
 `sanction:`, `calendar:`, `geo:` status events; profile claims come from `research/corpus.related` under `CLAIMS_K`), `lexical.py` ranks with in-process BM25 (title counted
@@ -111,5 +156,5 @@ other paid timers through `newsroom schedule times` (no per-job edit) and `jobs.
 
 ## Operating it
 `newsroom markets refresh` (mirror + paper + trader settlement + publish; free), `daily` (the paid job above), `trade [--limit N] [--dry-run]`, `forecast [--limit N] [--dry-run]`,
-`paper`, `score [--full]`, `list`, `status`, `publish`. Doctor check `markets` (a good pass within 10 h). The unattended paid jobs are an operator authorisation (`ops/flags.py`,
+`paper`, `score [--full]`, `list`, `status`, `publish`, `fast [--dry-run]` (the fast book), `gaps [--list]` (fill the most-asked corpus gaps), `evidence` (how the corpus served the bots). Server: `markets-fast` every 4 h (`capped`) and `markets-gaps` 08:45 UTC (`paid`, the fifth operator-authorised paid job, <= $0.50/day) are registry jobs, so `newsroom products table`/`timers` and the installer pick them up. Doctor check `markets` (a good pass within 10 h). The unattended paid jobs are an operator authorisation (`ops/flags.py`,
 `infra/server/jobs.sh`); the operator has authorised `markets-daily` as the fourth (`tests/test_ops_schedule.py` pins the set).
