@@ -45,6 +45,12 @@ curl "${API}/search?q=hormuz"`}</pre>
         Spec: <a href={`${API}/openapi.json`}>OpenAPI 3.1</a>. Machine guides: <a href="/llms.txt">llms.txt</a> and <a href="/llms-full.txt">llms-full.txt</a>.
         Poll <code>/api/v1/changes</code> (or <a href="/data/changes.json">/data/changes.json</a>) to see what moved without re-reading everything.
       </p>
+      <p>
+        <strong>Rate limits.</strong> Per client address: the REST API allows a burst of 40 and 120 requests a minute, the MCP endpoint a burst of 30 and 60 a minute.
+        Over the limit you get <code>429</code> with <code>Retry-After</code> (seconds); <code>X-RateLimit-Limit</code> and <code>X-RateLimit-Remaining</code> come
+        with every reply. The corpus tools (<code>entity</code>, <code>about</code>, <code>timeline</code>, <code>related</code>, <code>series</code>, <code>search</code>) answer
+        from server-built views and put their provenance in <code>meta.provenance</code> and the kinds of number they hold in <code>meta.basis</code>.
+      </p>
 
       <h2 id="endpoints">Endpoints</h2>
       <table>

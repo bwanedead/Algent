@@ -63,3 +63,23 @@ Rendering rules, enforced by one `<Stat>` component and the registry:
 
 ## 5. Specific fixes from the audit
 Home Hormuz "−100%" (our AIS against an 8-day median) · "military aircraft seen/day" (actually a sum of simultaneous per-region maxima) · fires (4 boxes, not the world) · "world median" (104 profiled states) · grid impact showing 0% while reported damage has no figure · maritime 1000 = row cap · 1500 statements = cap · sanctions windows · `percentile_1y` on young series · duplicate speaker names · theater counts 4/26/20.
+
+## 6. Where each page gets its data: views (2026-10-23)
+A page reads **one** server-built view (`docs/architecture/views.md`), not the raw documents behind it. A new page is placed on this map, with its view, before it ships.
+
+| Page / surface | Reads | Refresh |
+|---|---|---|
+| `/` Home (today block, doors' counts) | `views/home` + the live strip | 30 min |
+| `/daily` | `views/daily-hub` | 30 min |
+| `/globe` (map rows, HUD panels) | `views/hud` + the live counters | 30 min + live |
+| `/api/globe/country/[iso]` (country panel) | `views/country/<ISO>` + live anomaly count | 4 h |
+| `/situations` | `views/situations` | 4 h |
+| `/situations/[id]` | the dossier + `views/situation/<id>` | 4 h |
+| `/intel/actors/[iso]` | the actor document + `views/country/<ISO>` | 4 h |
+| `/intel/actors` | the published `actors/index.json` | per publish |
+| `/intel/events/<date>/<theater>/<n>` | `views/event/<date>/<theater>` | 4 h |
+| `/intel/places/[id]` | `views/entity/place/<id>` | 4 h |
+| every entity link in prose, `/intel/graph` | `views/graph` | 4 h |
+| `/api/v1/{entity,about,timeline,related,series,search}`, MCP tools of the same names | `views/entity/*`, `country/*`, `situation/*`, `series/*`, `search-index` | 4 h |
+
+Stats rule unchanged: a view's numbers keep their `basis`; the site words them through the stats registry.

@@ -41,12 +41,19 @@ an event place) are resolved against the alias table afterwards, only when exact
 does, so the tag "Russia" never competes with Russia). Everything else is **reported, not guessed**: `newsroom corpus stats` lists the most-used unresolved
 names with the reason (`unknown` / `ambiguous`). No model calls.
 
+## Identity: one entity per real thing, and which one a bare name means (`identity.py`)
+Two deterministic, data-driven rules (tables in `flags.py`) run in the link pass. **Precedence** (`KIND_TIER`): when a normalised name answers to several entities the best kind tier wins (country, then typed
+entities, then an untyped speaker, then a free-text topic): "France" is the country, not the place of the same name. **Merging** (`MERGE_FAMILY`): declarations of one family whose *name* is a name or alias of
+the other are one entity (two profiles' "Houthis" / "Houthi movement"; the chokepoint a profile and the instruments both declare; an acronym and its spelled-out body), and a speaker folds into the one typed entity
+of its name; the lowest-ranked declaration names the result, `entity_merge` keeps the old ids resolvable and every asserted id is rewritten to the canonical one. Geoledger assets and registry capitals never merge
+on a name. A revision that would *split* an identity restarts the incremental build from nothing (`merge_is_monotone`). What still collides across typed kinds stays reported as `ambiguous`. Schema version 2.
+
 ## Query API (`corpus.Corpus`, read-only connection; every row carries provenance)
 `entity(name|id)` profile (aliases, latest status/series values/leaders, linked situations, top relations, timeline, alternatives when ambiguous) /
 `about(entity, since, kinds)` documents, claims, events with source URLs / `timeline(entity|situation)` / `search(text)` FTS across documents, claims, events /
 `related(entity)` typed edges + shared claims, events, documents, with the parts shown / `series(entity|metric)` with basis and unit / `stats()`.
 CLI: `newsroom corpus ask entity|about|timeline|search|related|series <text> [--since D] [--kinds a,b] [--limit N] [--metric M]` prints JSON.
-The next job (server-built views, agent endpoints, MCP) wraps these methods; they return plain dicts.
+The server-built views (`views.md`) wrap these methods for the site and the agent endpoints (a view per entity, country, situation and metric, published to R2); they return plain dicts. `graph.RelatedIndex` is the bulk form of `related` (one pass, then lookups) that the entity views use.
 
 ## Wiring
 `retrieval/corpus_backend.py`: when an index exists, retrieval's documents (same ids, windows and text as `docs.py`) and its lexical ranking come from the
