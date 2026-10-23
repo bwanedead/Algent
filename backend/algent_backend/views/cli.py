@@ -17,7 +17,7 @@ from .context import open_context
 
 def run_build(*, only: str = "", dry_run: bool = False, as_json: bool = False) -> int:
     names = [n for n in only.split(",") if n] or None
-    needs_corpus = names is None or any(n in names for n in ("country", "entity", "search-index"))
+    needs_corpus = names is None or any(n in names for n in ("country", "entity", "series", "search-index"))
     ctx = open_context(with_corpus=needs_corpus)
     try:
         res = build.build_all(ctx, names)

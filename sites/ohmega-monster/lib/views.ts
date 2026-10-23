@@ -1,5 +1,5 @@
 import { publishedDoc, TTL } from "./store";
-import type { CountryView, DailyHubView, EntityView, EventView, GraphView, HomeView, HudView, SearchIndexView, SituationsView, SituationView } from "./views-types";
+import type { CountryView, DailyHubView, EntityView, EventView, GraphView, HomeView, HudView, SearchIndexView, SeriesIndexView, SituationsView, SituationView } from "./views-types";
 
 export * from "./views-types";
 
@@ -18,7 +18,8 @@ const KEY = /^[\w~-]+(?:[./][\w~-]+)*$/;
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const ID = /^[\w.-]+$/;
 
-type Family = "country" | "situation" | "situations" | "entity" | "event" | "home" | "hud" | "daily-hub" | "graph" | "search-index" | "manifest";
+export type ViewFamily = "country" | "situation" | "situations" | "entity" | "event" | "series" | "series-index" | "home" | "hud" | "daily-hub" | "graph" | "search-index" | "manifest";
+type Family = ViewFamily;
 
 /** One view by key ("country/FR", "home"), checked against its family's schema. */
 export async function viewDoc<T>(family: Family, key: string, revalidate: number = TTL.daily): Promise<T | null> {
@@ -50,6 +51,8 @@ export const dailyHubView = (): Promise<DailyHubView | null> => viewDoc<DailyHub
 export const graphView = (): Promise<GraphView | null> => viewDoc<GraphView>("graph", "graph");
 
 export const searchIndex = (): Promise<SearchIndexView | null> => viewDoc<SearchIndexView>("search-index", "search-index", TTL.static);
+
+export const seriesIndex = (): Promise<SeriesIndexView | null> => viewDoc<SeriesIndexView>("series-index", "series-index", TTL.static);
 
 /** Any view by its key and family, for the agent API (which serves them with their provenance). */
 export const anyView = <T>(family: Family, key: string): Promise<T | null> => viewDoc<T>(family, key);

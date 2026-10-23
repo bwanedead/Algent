@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from views_fixture import context
 
-from algent_backend.views import build, country, entity, flags, search
+from algent_backend.views import build, country, entity, flags, search, series
 
 
 def views_by_key(ctx) -> dict:
@@ -68,7 +68,7 @@ def test_the_search_index_points_only_at_views_this_run_emits(tmp_path):
     rows = {r[0]: r for r in idx["entities"]}
     assert rows["Iran"][2] == "country/IR" and rows["IRGC"][2] == "entity/org/irgc" and "Revolutionary Guards" in rows["IRGC"][4]
     assert all(r[2] in keys for r in idx["entities"])
-    assert idx["documents"][0][3] == "Hormuz closure"
+    assert [d[3] for d in idx["documents"]][:2] == ["Hormuz crisis (daily of 2026-10-23)", "Hormuz closure"]          # newest first
     assert not [v for v in res.views if v.over_budget()]
 
 
@@ -85,3 +85,23 @@ def test_country_view_gains_relations_and_series_with_a_corpus(tmp_path):
     iran = next(v.body for v in country.build(ctx) if v.key == "country/IR")
     assert iran["series"][0]["metric"] == "gdp" and iran["series"][0]["basis"] == "official" and iran["series"][0]["points"][-1] == ["2024", 4e11]
     assert iran["relations"][0]["rel"] == "head_of_state" and iran["about"]["documents"] == 1
+
+
+def test_a_metric_view_carries_every_entity_that_has_it_with_unit_and_basis(tmp_path):
+    ctx = context(tmp_path, with_corpus=True)
+    ctx.corpus.db.isolation_level = None
+    from algent_backend.corpus.sink import Sink
+
+    s = Sink(ctx.corpus.db, "actors", "ind:gdp2", "2026-10-23T00:00:00+00:00")
+    for iso, base in (("country:US", 2.5e13), ("country:FR", 3e12)):
+        for y in range(2020, 2025):
+            s.observation("gdp", str(y), base + y, entity=iso, unit="usd", basis="official", label="GDP")
+    views = {v.key: v for v in series.build(ctx)}
+    gdp = views["series/gdp"].body
+    assert gdp["metric"] == "gdp" and gdp["unit"] == "usd" and gdp["basis"] == "official" and gdp["product"] == "actors" and gdp["entities_total"] == 3
+    iran = next(e for e in gdp["entities"] if e["entity"] == "country:IR")
+    assert iran["name"] == "Iran" and iran["points"][-1] == ["2024", 4e11] and iran["latest"]["value"] == 4e11
+    idx = views["series-index"].body
+    assert {m["metric"] for m in idx["metrics"]} == {"gdp"} and idx["metrics"][0]["key"] == "series/gdp"
+    assert series.metric_key("kf.oil disrupted/day") == "series/kf.oil_disrupted_day"
+    assert not [v for v in views.values() if v.over_budget()]

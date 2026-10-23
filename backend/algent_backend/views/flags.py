@@ -22,6 +22,8 @@ BUDGET_BYTES = {
     "hud": 300_000,            # globe rows for ~250 countries + report block + theaters + pulses + calendar + sanctions + trader curve
     "daily-hub": 60_000,       # per desk: 12 section rows + a date list
     "graph": 80_000,           # theater refs + state names + theater-state ties
+    "series": 120_000,         # one metric across <= 60 entities x <= 24 points
+    "series-index": 300_000,   # <= 1500 metrics x ~180 B
     "search-index": 2_000_000,  # entity names/aliases + document titles; the client searches it in memory
     "manifest": 200_000,       # the list of every published view key with size and hash
 }
@@ -35,6 +37,8 @@ COUNTRY_DEVELOPMENTS = 6       # the actor page's "recent developments" (the pag
 COUNTRY_SAID = 5
 SERIES_PER_ENTITY = 12
 SERIES_POINTS = 24             # yearly indicators: 24 years; daily series: ~3 weeks of sparkline
+SERIES_METRICS = 1500          # metrics with a view of their own (>= 3 points), most observed first
+SERIES_ENTITIES = 60           # entities a metric view carries (most recently updated first); an entity view has the entity's own series
 STREAM_FULL_DAYS = 3           # newest days of a situation stream sent as full Daily sections; older days are index rows linking into the Daily
 STREAM_INDEX_DAYS = 400        # index rows kept per situation (a year and more of daily coverage)
 ENTITY_DOCS = 15               # newest documents mentioning the entity (an agent asks `about` with a window for more)

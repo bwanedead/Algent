@@ -187,6 +187,26 @@ export type GraphView = ViewEnvelope & {
   linkable: string[];
 };
 
+/** One measured metric across the entities that have it (`series/<metric>`); `basis` is the stats-registry vocabulary (official, our_count, our_derived, model, reported ...). */
+export type SeriesView = ViewEnvelope & {
+  metric: string;
+  key: string;
+  label: string;
+  unit: string;
+  basis: string;
+  product: string;
+  n: number;
+  entities_total: number;
+  first: string;
+  last: string;
+  entities: { entity: string; name: string; n: number; first: string; last: string; points: [string, number][]; latest: { ts: string; value: number; source: string } | null }[];
+};
+
+export type SeriesIndexView = ViewEnvelope & {
+  metrics: { metric: string; key: string; label: string; unit: string; basis: string; product: string; n: number; entities_total: number; first: string; last: string }[];
+  metrics_total: number;
+};
+
 /** `fields` names the columns of each row, so the index can grow a column without breaking readers. */
 export type SearchIndexView = ViewEnvelope & {
   fields: { entities: string[]; documents: string[] };

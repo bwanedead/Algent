@@ -12,7 +12,7 @@ import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
-from . import country, daily_hub, entity, event, graph, home, hud, search, situation
+from . import country, daily_hub, entity, event, graph, home, hud, search, series, situation
 from .base import View
 from .context import ViewContext
 
@@ -23,6 +23,7 @@ BUILDERS: dict[str, Callable[[ViewContext], list[View]]] = {
     "situation": situation.build,
     "event": event.build,
     "entity": entity.build,
+    "series": series.build,                  # also emits `series-index`
     "home": home.build,
     "hud": hud.build,
     "daily-hub": daily_hub.build,

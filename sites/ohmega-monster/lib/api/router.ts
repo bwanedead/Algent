@@ -3,6 +3,7 @@ import { SITE_URL } from "@/lib/site";
 
 import { assetOp, assetsOp, gridOp } from "./ops-assets";
 import { articleOp, articlesOp, searchOp } from "./ops-content";
+import { aboutOp, entityOp, relatedOp, seriesOp, timelineOp } from "./ops-corpus";
 import { anomaliesOp, instrumentOp, instrumentsOp, liveEventsOp } from "./ops-data";
 import { calendarOp, sanctionsOp } from "./ops-forward";
 import { maritimeOp } from "./ops-maritime";
@@ -38,6 +39,9 @@ const Q_CURSOR: QueryParam = { name: "cursor", description: "Opaque cursor from 
 export const pagingParams = (): QueryParam[] => [Q_LIMIT, Q_CURSOR];
 
 const SINCE = "Only items on or after this date or instant (YYYY-MM-DD or ISO 8601).";
+const Q_ENTITY: QueryParam = { name: "entity", description: "A name or alias of a country, organisation, person, place, vessel, lab, model or situation.", example: "Strait of Hormuz" };
+const Q_KEY: QueryParam = { name: "key", description: "A view key from a previous result's match.key (exact; wins over the name), e.g. entity/org/nato or country/FR." };
+const Q_LIST_LIMIT: QueryParam = { name: "limit", description: "How many items per list (default 30, max 200).", example: "20" };
 const BANDS = ["calm", "elevated", "severe", "critical", "unassessed"] as const;
 
 export const ROUTES: Route[] = [
@@ -263,13 +267,53 @@ export const ROUTES: Route[] = [
   },
   {
     path: "/search",
-    summary: "Text search over titles, headlines and names of articles, theaters, Pulses, briefs, daily reports and actors.",
+    summary:
+      "Text search over titles, headlines and names of articles, theaters, Pulses, briefs, daily reports and actors, and over the corpus index: every country, organisation, person, place, vessel, lab, model and situation by name or alias (type=entity) and the titles of published documents (type=document). Names and titles only, never document bodies.",
     paged: true,
     query: [
       { name: "q", description: "Query words (all must match), 2-200 characters.", example: "hormuz" },
-      { name: "type", description: "Restrict to one kind.", enum: ["article", "theater", "pulse", "brief", "daily", "actor"] },
+      { name: "type", description: "Restrict to one kind.", enum: ["article", "theater", "pulse", "brief", "daily", "actor", "entity", "document"] },
     ],
     run: (_p, q) => searchOp(q),
+  },
+  {
+    path: "/entity",
+    summary:
+      "Who or what a name is, from the corpus: aliases, counts, the latest status, typed relations (head of state, affiliated with, stance...), what it is most connected to, its measured series (each with a basis) and the newest documents, claims and events with their sources. A country, an organisation, a person, a place, a vessel, a lab, a model or a situation. Ambiguous names return alternatives; a country wins over a same-named place.",
+    query: [{ ...Q_ENTITY, name: "name", description: "A name or alias to resolve (or pass key)." }, Q_KEY],
+    run: (_p, q) => entityOp(q),
+  },
+  {
+    path: "/about",
+    summary:
+      "Everything the corpus holds about an entity since a date: documents (dailies, briefs, profiles, statements, articles), claims (with grounding, confidence and their source URLs) and events, newest first, each with the product and record it came from.",
+    query: [Q_ENTITY, Q_KEY, { name: "since", description: SINCE, example: "2026-10-01" }, { name: "kinds", description: "Comma-separated: claim, event, document select whole sections; any other value filters by item kind (daily, brief, profile, development, status_damaged ...).", example: "claim,event" }, Q_LIST_LIMIT],
+    run: (_p, q) => aboutOp(q),
+  },
+  {
+    path: "/timeline",
+    summary: "An entity's documents and events in date order (oldest first); a development repeated by several reports appears once.",
+    query: [Q_ENTITY, Q_KEY, { name: "since", description: SINCE, example: "2026-10-01" }, Q_LIST_LIMIT],
+    run: (_p, q) => timelineOp(q),
+  },
+  {
+    path: "/related",
+    summary: "What an entity is most connected to and why: typed edges x3, shared claims x2, shared events x1.5, shared documents x1 (the parts are shown), plus the typed relations with their evidence.",
+    query: [Q_ENTITY, Q_KEY, { name: "kinds", description: "Only related entities of these kinds (comma-separated: country, org, person, place, ...).", example: "country,org" }, Q_LIST_LIMIT],
+    run: (_p, q) => relatedOp(q),
+  },
+  {
+    path: "/series",
+    summary:
+      "A measured series from the corpus with its unit and basis (official, our_count, our_derived, model, reported): one metric across the entities that have it (gdp, population, chk_hormuz_transits, bench.* ...), or an entity's own series (pass entity or key). A metric name that matches several returns the candidates.",
+    query: [
+      { name: "metric", description: "A metric id, or the start of one ending in . or * to list a family.", example: "gdp" },
+      Q_ENTITY,
+      Q_KEY,
+      { name: "since", description: SINCE, example: "2020-01-01" },
+    ],
+    paged: true,
+    run: (_p, q) => seriesOp(q),
   },
   {
     path: "/changes",
