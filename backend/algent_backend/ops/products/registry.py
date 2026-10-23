@@ -224,6 +224,16 @@ PRODUCTS: tuple[Product, ...] = (
         why="re-crawled by the timer (about a day to refill)",
         jobs=(Job("library", ("library", "crawl", "--max", "150"), "0/4:20", every_min=240, what="source-library crawl (150 pages)"),),
         feeds_from=(), heartbeat=("library_store/library.db",)),
+    Product(
+        id="corpus_index", title="Corpus index (queryable view of the record)", owner="corpus",
+        what="One rebuildable SQLite index over the other products' stores: entities, relations, documents, claims, sources, events and series with provenance; the query API agents and retrieval use.",
+        stores=(Store("corpus_store", loc.corpus, "ALGENT_CORPUS_STORE", False, "derived; `newsroom corpus build --full` rebuilds it from the other products' stores",
+                      budget=_b(75, 400, 1500, 80, 3, "measured 10-23 on the dev stores: 74 MB (130 k observations dominate); estimate for the server until `newsroom corpus stats` runs there")),),
+        retention=(Retention("derived", "rebuilt from the record; --full builds a fresh compact file, incremental builds VACUUM past 25% free pages", "corpus/build.py::build", "job:corpus-build"),),
+        why="derived: every row comes from another product's store; deleting it loses nothing",
+        jobs=(Job("corpus-build", ("corpus", "build"), "2/4:25", every_min=240, what="incremental corpus index build (after the daily, AI and markets runs)"),),
+        feeds_from=("dailies", "pulses", "profiles", "articles", "statements", "sanctions", "calendar", "geoledger", "maritime", "markets", "instruments", "actors", "ai_benchmarks"),
+        heartbeat=("corpus_store/corpus.db",)),
     # ── the machine itself ────────────────────────────────────────────────────────────────────────
     Product(
         id="agent_feeds", title="Agent feeds and API", owner="publishing",

@@ -271,6 +271,28 @@
       "refresh_minutes": 240
     },
     {
+      "id": "corpus_index",
+      "title": "Corpus index (queryable view of the record)",
+      "routes": [],
+      "publishes": [],
+      "feeds_from": [
+        "dailies",
+        "pulses",
+        "profiles",
+        "articles",
+        "statements",
+        "sanctions",
+        "calendar",
+        "geoledger",
+        "maritime",
+        "markets",
+        "instruments",
+        "actors",
+        "ai_benchmarks"
+      ],
+      "refresh_minutes": 240
+    },
+    {
       "id": "agent_feeds",
       "title": "Agent feeds and API",
       "routes": [

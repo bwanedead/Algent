@@ -9,8 +9,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import date
 from typing import Any
+from collections.abc import Callable
 
-from . import docs, embed, flags
+from . import corpus_backend, docs, embed, flags
 from .docs import Doc
 from .lexical import BM25
 
@@ -40,9 +41,11 @@ def _recency(doc_date: str, today: date) -> float:
 
 
 class Index:
-    def __init__(self, documents: list[Doc], *, today: date, embedder: embed.CachedEmbedder | None = None, claims: bool = True) -> None:
+    def __init__(self, documents: list[Doc], *, today: date, embedder: embed.CachedEmbedder | None = None, claims: bool = True,
+                 ranker: Callable[[str], list[int]] | None = None) -> None:
         self.docs, self.today, self.embedder, self.claims = documents, today, embedder, claims
-        self.bm25 = BM25(documents)
+        self.ranker = ranker                      # the corpus index's full-text ranking (doc indices, best first); None = in-process BM25
+        self.bm25 = BM25(documents) if ranker is None else None
         self.vecs: list[list[float]] | None = None
         if embedder is not None and documents:
             try:
@@ -53,10 +56,17 @@ class Index:
     @classmethod
     def build(cls, today: date, *, embedder: Any = "auto", claims: bool = True) -> Index:
         """The index over everything the desk holds as of ``today``. ``embedder="auto"`` follows ``flags.EMBEDDINGS_ENABLED``."""
-        return cls(docs.load_all(today), today=today, embedder=embed.load() if embedder == "auto" else embedder, claims=claims)
+        emb = embed.load() if embedder == "auto" else embedder
+        backed = corpus_backend.load(today)
+        if backed is not None:
+            return cls(backed[0], today=today, embedder=emb, claims=claims, ranker=backed[1])
+        return cls(docs.load_all(today), today=today, embedder=emb, claims=claims)
 
     # ── ranking ─────────────────────────────────────────────────────────────────────────────────
     def _lexical(self, query: str) -> list[int]:
+        if self.ranker is not None:
+            order = self.ranker(query)
+            return sorted(order, key=lambda i: -(1.0 / (order.index(i) + 1)) * _recency(self.docs[i].date, self.today))
         s = self.bm25.scores(query)
         order = [i for i in range(len(s)) if s[i] > 0]
         return sorted(order, key=lambda i: -s[i] * _recency(self.docs[i].date, self.today))

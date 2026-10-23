@@ -98,6 +98,12 @@ def library() -> Path:
     return store_dir()
 
 
+def corpus() -> Path:
+    from algent_backend.corpus.paths import store_dir
+
+    return store_dir()
+
+
 def runs() -> Path:
     from algent_backend.agent_system.runs.control_plane.layout import runs_data_root
 

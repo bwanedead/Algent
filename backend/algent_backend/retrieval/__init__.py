@@ -8,6 +8,7 @@ status events and profile claims that bear on it.
     embed.py     the OPTIONAL dense ranker (EmbeddingGemma), import-guarded and cached on disk; absent unless switched on AND installed
     search.py    ``Index``: build once per run, ``search(query, k)`` -> ``Hit`` rows; lexical, or lexical+dense fused when embeddings are on
 
+When the corpus index exists (corpus_backend.py) it supplies the documents and the lexical ranking; BM25 over docs.py is the fallback.
 Consumers (the markets forecaster and trader today) ask for hits; they never see how they were ranked. The module knows nothing about prices.
 Docs: ``docs/architecture/markets-track-record.md`` (retrieval section).
 """

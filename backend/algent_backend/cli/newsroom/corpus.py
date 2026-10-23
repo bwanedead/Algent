@@ -30,11 +30,19 @@ from algent_backend.agent_system.agents.research.store import JsonProfileStore
 def add_parser(sub: Any) -> None:
     p = sub.add_parser("corpus", help="show the profile knowledge base: size, growth, links, integrity")
     p.add_argument("--json", action="store_true", help="machine-readable output")
-    p.add_argument("verb", nargs="?", choices=["related", "repair"],
-                   help="related: preview corpus retrieval for TEXT; repair: restore profiles a failed run emptied")
-    p.add_argument("text", nargs="?", default="", help="the query text for `related`")
+    p.add_argument("verb", nargs="?", choices=["related", "repair", "build", "stats", "ask"],
+                   help="related: preview corpus retrieval for TEXT; repair: restore profiles a failed run emptied; "
+                        "build: (re)build the queryable SQLite index; stats: its row counts; ask: query it (ask entity|about|timeline|search|related|series TEXT)")
+    p.add_argument("text", nargs="?", default="", help="the query text for `related`; for `ask`, the query kind")
+    p.add_argument("target", nargs="?", default="", help="`ask`: the entity name/id, metric or search text")
+    p.add_argument("--full", action="store_true", help="build: rebuild from nothing and swap the new file in")
+    p.add_argument("--since", default="", help="build: only units dated on/after this day; ask: only material on/after it")
+    p.add_argument("--until", default="", help="ask: only material on/before this day")
+    p.add_argument("--only", default="", help="build: comma-separated sources (e.g. profiles,statements)")
+    p.add_argument("--kinds", default="", help="ask: comma-separated kinds (daily,statement,claim,event,...)")
+    p.add_argument("--metric", default="", help="ask series: narrow to one metric id (prefix with trailing . or *)")
     p.add_argument("--budget", type=int, default=None, help="related: character budget for claims")
-    p.add_argument("--limit", type=int, default=None, help="related: max profiles consulted")
+    p.add_argument("--limit", type=int, default=None, help="related: max profiles consulted; ask: how many rows")
     p.add_argument("--apply", action="store_true", help="repair: write the restorations (default is a dry run)")
     p.set_defaults(handler=run_corpus)
 
@@ -156,6 +164,17 @@ def run_repair(args: Any) -> int:
 
 
 def run_corpus(args: Any) -> int:
+    if getattr(args, "verb", None) in ("build", "stats", "ask"):
+        from algent_backend.corpus import cli as index_cli
+
+        if args.verb == "build":
+            return index_cli.run_build(full=args.full, since=args.since, only=args.only, as_json=args.json)
+        if args.verb == "stats":
+            return index_cli.run_stats(as_json=args.json)
+        if args.text not in index_cli.ASK or not args.target:
+            print(f"usage: newsroom corpus ask {{{'|'.join(index_cli.ASK)}}} <text>")
+            return 2
+        return index_cli.run_ask(args.text, args.target, since=args.since, until=args.until, kinds=args.kinds, limit=args.limit or 0, metric=args.metric)
     if getattr(args, "verb", None) == "related":
         return run_related(args)
     if getattr(args, "verb", None) == "repair":
