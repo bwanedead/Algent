@@ -204,10 +204,11 @@ def run(*, ask: Ask | None = None, now: datetime | None = None, limit: int | Non
     record = record if record is not None else evidence_mod.latest_record()
     role = ROLE + (RESEARCH_ADDENDUM if flags.RESEARCH_ENABLED else "")
     ask = ask or default_ask(role)
-    index = index if index is not None else evidence_index(now.date())
     if flags.RESEARCH_ENABLED:
         corpus = corpus if corpus is not None else research.open_corpus()
         plan_ask = plan_ask or (research.default_plan_ask() if corpus is not None else None)
+    if index is None and not (corpus is not None and flags.RESEARCH_ENABLED and flags.CORPUS_ONLY):         # evidence.py's retrieval index is only read when its blocks are
+        index = evidence_index(now.date())
     spent_run = 0.0
     for m in todo[:quota]:
         if usd_today >= usd_cap or spent_run >= run_cap:
