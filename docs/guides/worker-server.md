@@ -42,6 +42,20 @@ Every timer, its command, its calendar and its lock behaviour is an entry in `ba
 timers, snapshot coverage, freshness, budgets). `ohmega-housekeeping` (daily 03:55, free) expires the page-fetch cache and per-job run logs older than 30 days
 (`newsroom products housekeeping [--apply]`).
 
+### After-hooks, the smoke test and staging (`Job.then`)
+
+A job may name `then` jobs in the registry; once it exits 0 they run as jobs of their own (own lock and gates, after the parent's lock is released), and a failing hook
+never changes the parent's result. The dailies and `markets-daily` end with `views-fast` (Home, the globe HUD and the daily hub reflect the new report within minutes) and
+`site-smoke`; `views` ends with `site-smoke`. `site-smoke` (hourly at :17, free, no lock) runs `newsroom site smoke --log` against production: about 60 paced requests (registry pages,
+sampled dynamic pages, `/api/v1`, redirects, freshness). It writes `~/ops-log.md` only when a run fails and when it recovers, keeps the last report for the `site` row of `newsroom envelope`
+(fail while failing, warn after 3 h without a run), and needs no Node (stdlib Python, so it also runs here). `staging-prune` (daily 05:05) deletes preview data older than 14 days. Deploy routine: `deploy.md`.
+
+```
+newsroom site smoke [--base https://<preview>] [--json]       newsroom site deploy-check [--url URL | --ref organic-dev]
+newsroom publish stage-from-prod [--dry-run]                  newsroom publish staging-prune [--dry-run]     newsroom publish staging-status
+newsroom views build --target staging                         newsroom publish rebuild-all --target staging
+```
+
 ### The paid timers (operator-authorised, unattended): menu, daily 1, daily 2, markets-daily
 
 Times are in-repo flags: the editions in `intel/flags.py` (`EDITIONS`), the menu in `ops/flags.py` (`MENU_UTC`);

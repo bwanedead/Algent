@@ -181,6 +181,17 @@ only for files under `flags.MIRROR_MAX_FILE_BYTES` (a tenth of GitHub's 100 MB h
 dailies (`provenance: reconstructed_from_daily`, no rationale, low confidence, and the text says so). Idempotent; never overwrites; the published reading
 carries its `provenance`.
 
+## The staging channel (previews do not read production)
+
+Same bucket, `staging/` prefix. `ALGENT_PUBLISH_TARGET=staging` (set by `--target staging` on `publish rebuild-all` and `views build`, or exported for any other publisher) makes
+`object_store.select()` return a `StagingStore` (`publishing/staging.py`) that prefixes every key, so documents, views, live snapshots and images all land under `staging/` with no change
+in the publishers. Its `ident` differs, so the local hash manifests keep staging and production apart (staging is hash-skipped by itself; production's "already sent" never hides a document staging lacks).
+Staging goes through the same R2 meter (the hard stop sees it) plus its own allowance (`database/flags.py`): `STAGING_CLASS_A_PER_DAY = 3000`, `STAGING_MAX_BYTES = 200 MB`;
+past either, a put is refused (429) and retried next run. Retention: the ledger (`publish_held/staging_ledger.json`) records when each key was last written; `newsroom publish staging-prune`
+(daily job `staging-prune`) deletes keys older than `STAGING_KEEP_DAYS = 14` and forgets their hashes, and an R2 lifecycle rule on `staging/` is the second line. `newsroom publish stage-from-prod`
+publishes a sample of production (`STAGING_DIR_CAPS`, `STAGING_VIEW_CAPS`) built from the local stores; nothing is read back. A staging views build uses its own sibling store `views_store_staging`.
+The preview site reads it with `NEXT_PUBLIC_DATA_BASE = <R2 base>/staging` (Vercel, Preview target); production keeps the bare base. Flow and settings: `../guides/deploy.md`.
+
 ## Operator runbook: R2 keys → rebuild-all → site env → deploy
 
 1. **Server** (`~/algent.env`, chmod 600): `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` (=`ohmega`), `R2_PUBLIC_BASE`

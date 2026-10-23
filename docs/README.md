@@ -65,6 +65,7 @@ Docs sprawl is a real failure mode. To prevent it:
 ### Guides — `guides/`
 - `run-operator-entrypoint.md` – **start here** to operate runs; short hub that routes to the rest.
 - `worker-server.md` – the always-on server: what runs where (free jobs on timers, paid runs on request), how to trigger a run over SSH, access it holds, rebuild from nothing; `newsroom doctor` and the runner claim.
+- `deploy.md` – the deploy routine: merge, staging data, preview, `site deploy-check` + smoke test, promote; the Vercel env settings (`NEXT_PUBLIC_DATA_BASE` per target), what the hourly smoke test covers, after-hooks.
 - `accounts.md` – the account inventory (DigitalOcean, Cloudflare, GitHub, Vercel, registrar, Supabase paused, model/search/data providers, X): what each holds and where recovery lives; names only, plus the quarterly recovery pass.
 - `runner-handover.md` – move Ohmega between the server and the laptop (one runner at a time): release/claim, restore stores, search without the server, what lives where, `doctor`, `search-usage`.
 - `agent-cli-testing.md` – **canonical CLI guide**: full `runs` command/flag set, newsroom rail,

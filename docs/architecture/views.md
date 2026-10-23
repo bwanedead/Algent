@@ -81,7 +81,7 @@ there is deliberately **no file fallback** (the old content files cannot build t
   pair table (`corpus/query/graph.RelatedIndex`), which is what makes 8,000 entities minutes, not hours.
 * `views-fast` (`*:10/30`, free, no lock): `home`, `hud`, `daily-hub` only, no corpus. A daily that finishes shows on Home within half an hour, not four.
 
-`newsroom views build [--only a,b] [--dry-run]`; a partial build never prunes the local store.
+`newsroom views build [--only a,b] [--dry-run] [--target staging]`; a partial build never prunes the local store. `--target staging` publishes under `staging/` for a preview deployment and keeps its own local store (`views_store_staging`), so a changed view shape can be checked before production gets it (`../guides/deploy.md`).
 
 ## Publishing and the R2 budget
 
