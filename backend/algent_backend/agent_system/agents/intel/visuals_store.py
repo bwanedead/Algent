@@ -9,7 +9,7 @@ uploaded. The store is part of ``intel_store``, so the nightly snapshot backs it
 ``republish`` is the free repair behind ``intel daily --date D --rerender``: it re-uploads the saved files of a record's visuals, and for the
 native forms rebuilds the SVG still from the saved spec with no model call (so a renderer improvement reaches old days). What it cannot do: a
 visual whose spec was never saved (everything published before this module existed) has nothing to rebuild from; it is reported by name and
-needs the planning + structured-model calls again (``intel daily --date D --visuals-only --fresh``).
+needs the planning + structured-model calls again (``intel daily --date D --visuals-only --fresh-visuals``).
 """
 
 from __future__ import annotations
@@ -110,7 +110,7 @@ def republish(domain: str, as_of: str, record: dict, upload: Upload) -> dict[str
                 out["rebuilt"].append(v.get("id"))
             if not have:
                 out["missing"].append({"id": v.get("id"), "kind": v.get("kind"), "theater": sec.get("theater_id"),
-                                       "why": "no saved files (published before visuals were kept locally); needs the model calls again: intel daily --visuals-only --fresh"})
+                                       "why": "no saved files (published before visuals were kept locally); needs the model calls again: intel daily --date D --visuals-only --fresh-visuals"})
                 continue
             if len(have) < len(paths):
                 out["missing"].append({"id": v.get("id"), "kind": v.get("kind"), "theater": sec.get("theater_id"),

@@ -123,7 +123,7 @@ def test_visuals_never_saved_are_named_not_faked() -> None:
     sent = []
     out = visuals_store.republish("geopolitics", "2026-10-15", record, lambda files: sent.append(files) or {"assets": 0, "ok": True})
     assert [m["id"] for m in out["missing"]] == ["anx_dv20261015_1", "anx_dv20261015_2"] and sent == [] and out["files"] == 0
-    assert all("visuals-only --fresh" in m["why"] for m in out["missing"])
+    assert all("visuals-only --fresh-visuals" in m["why"] for m in out["missing"])
 
 
 def test_a_corrupt_saved_spec_is_reported_and_the_rest_still_go() -> None:

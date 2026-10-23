@@ -33,6 +33,11 @@ set -euo pipefail
 INFRA="$HOME/Algent/infra/server"
 LIVE_TIMERS=""
 
+# Cap the journal (200 MB; journald-ohmega.conf). Needs sudo like the units below; idempotent. The vacuum trims what is already there once.
+sudo install -D -m 0644 "$INFRA/journald-ohmega.conf" /etc/systemd/journald.conf.d/ohmega.conf
+sudo systemctl restart systemd-journald
+sudo journalctl --vacuum-size=200M >/dev/null 2>&1 || true
+
 unit() {   # name, command, OnCalendar
     sudo tee "/etc/systemd/system/ohmega-$1.service" >/dev/null <<EOF
 [Unit]

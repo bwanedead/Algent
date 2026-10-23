@@ -23,6 +23,9 @@ so it can be rebuilt from scratch instead of repaired by hand.
 | `ohmega-backup` | daily 06:15 | stores → private `algent-data` archive | free |
 | `ohmega-db-prune` | daily 03:40 | retention windows on the growing Postgres tables + `VACUUM` (`newsroom db prune --apply`; a no-op while the Postgres flag is off) | free |
 | `ohmega-maritime-rollup` | daily 04:05 | daily per-zone ship summaries + retention of the raw maritime event log (`newsroom maritime rollup --apply`) | free |
+| `ohmega-backup-snapshot` | daily 06:40 | tar.gz of every irreplaceable store -> the private R2 bucket, 14 daily / 8 weekly / 12 monthly (`newsroom backup snapshot`) | free |
+| `ohmega-backup-drill` | monthly, day 1, 07:30 | restore the latest snapshot to a temp dir and verify counts + hashes; ok/FAIL to `~/ops-log.md` (`newsroom backup restore-drill`) | free |
+| `ohmega-envelope` | daily 07:10 | one-line operating-envelope summary to `~/ops-log.md` (`newsroom envelope --log`) | free |
 | `ohmega-menu` | daily 05:00 | newsroom menu (`run --to menu`) | **paid** |
 | `ohmega-daily-1` | daily 05:30 | geopolitics daily, part 1 (Europe/Asia morning) | **paid** |
 | `ohmega-daily-2` | daily 17:30 | geopolitics daily, part 2 (Americas), appended to the same report | **paid** |
@@ -79,6 +82,7 @@ Logs: `journalctl -u ohmega-<job> -n 50`; timers: `systemctl list-timers 'ohmega
   stored bytes, projections, warn at 70%, **writes refused at 90%**. `newsroom publish rebuild-all [--dry-run]` republishes everything from the local
   stores; `newsroom maritime store|rollup` shows and compacts the ship data. The Postgres tools (`newsroom db size|prune|diet|vacuum-full`) apply
   only if `database/flags.POSTGRES_PUBLISH` is switched back on. Never let a writer rewrite a big document on a timer without a content-hash skip.
+- `newsroom envelope` measures every register row of `docs/architecture/foundation.md` (disk, RAM, journal, each store, R2, backup age, restore drill, feeds, search, spend) as ok/warn/fail against `ops/envelope_flags.py`; `newsroom doctor` embeds the rows it lacks. Accounts and where recovery lives: `accounts.md`.
 - `newsroom search-usage` shows how search is doing (who answers, free vs paid, failures).
 
 ## Watchdog
@@ -96,8 +100,9 @@ See what it did: `tail runs_data/watchdog.jsonl` (one JSON line per pass/kill/ha
 ## Source of truth for data
 
 Once runs happen on the server, **its stores are the live ones**; the laptop stops running jobs so the two
-never both write and both publish. The private `algent-data` archive (nightly + after runs) is the recovery copy and now mirrors every corpus
-store plus what was published (`data_backup/sync.py`, pinned by `tests/test_backup_coverage.py`). There is no working database: R2 holds only the
+never both write and both publish. The recovery copy is the nightly **R2 snapshot** (`newsroom backup snapshot`, private bucket `R2_BACKUP_BUCKET`, restore with
+`newsroom backup restore --to DIR`, proven monthly by `restore-drill`); the private `algent-data` mirror (nightly + after runs) is a second path for files
+under 10 MB. Both read the one coverage list, `data_backup/sync.py` (pinned by `tests/test_backup_coverage.py`). There is no working database: R2 holds only the
 publication, rebuilt at any time with `newsroom publish rebuild-all`.
 
 ## Access it holds

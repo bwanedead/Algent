@@ -122,36 +122,56 @@ body) **throws** `DataUnavailable`. In Next 14 an ISR regeneration that throws l
 request, whereas a render that returns an empty list would be written as the new page for a whole window; a non-200 `fetch` is also never stored in the data
 cache. During `next build` (no previous page exists) a failure degrades to the content files so a bucket blip cannot fail the deploy.
 
-## Ship data: daily summaries and retention (`maritime/rollup.py`)
+## Ship data: the transition log, daily summaries and retention (`maritime/eventlog.py`, `maritime/rollup.py`)
 
-Only one file in `maritime_store` is unbounded: **`log.jsonl`**, the append-only record (a full event with evidence every time one opens or changes
-state; **measured ~1.9 KB a line**). `profiles.json.gz` (≤ 50 000 vessels, 4 days) and `events.json` (30 days, ≤ 3000 events) are bounded already, and the
-detectors read nothing else: profile book 4 days, activity grid 4 days, picture `RETAIN_DAYS`. Nothing reads the log back, so raw lines older than
-`LOG_KEEP_DAYS = RETAIN_DAYS` (30) are summarised and dropped. I could not measure the server's 1.7 GB from here: run `newsroom maritime store` to see
-which file it is; at 1.9 KB a line the log alone would be ~0.9 M lines.
+Only one file in `maritime_store` is unbounded: **`log.jsonl`**, the long record. It used to hold a full event with evidence on every open and state
+touch (**measured 1.7 GB in ~6 days: ~250 k lines a day at ~1.9 KB**, 44% `open`, 29% `ended`, 24% `ongoing`, 4% `unresolved`). It now holds **one compact
+line per transition and nothing else** (`{id, kind, state, mmsi, imo, name, ship_class, at, lat, lon, area, confidence}`, ~0.2 KB; state `open`, `ended` or
+`unresolved`; "ongoing" and full objects are never written). The picture (`events.json`) still carries the full event while it is current.
+
+Why it was ~100 k opens a day (found in code, not guessed): the picture is a bounded cache (`EVENTS_MAX`), and an event that fell out of it was re-found by its
+detector on the next 5-minute pass and logged `open` again; the sanctioned detector flips an event between ongoing and ended around a freshness threshold
+and logged every flip. Now `maritime/eventlog.Ledger` (`log_ledger.json`) remembers per event id which transitions are written (one `open`, one terminal), and
+per vessel + kind when it last opened (`flags.LOG_COOLDOWN_S`: each kind's cooldown is the least time in which a genuinely new event of that kind can appear,
+`GAP_MIN_S`, `STS_MIN_S`, `LOITER_MIN_S`; derived from the detectors' own thresholds, not a constant). `store.upsert` also stops re-adding an event whose end is
+already on record and no longer cuts going events when the cap bites. Run `newsroom maritime compact-log` (dry run) on the server for the exact before / after
+count of opens per kind from the real log.
+
+`LOG_KEEP_DAYS = 7` (`maritime/flags.py`): nothing reads the log back, a week serves "what happened lately", and the day summaries carry the long view.
+`profiles.json.gz` (<= 50 000 vessels, 4 days) and `events.json` (30 days, <= 3000 events) are bounded already.
 
 `newsroom maritime rollup [--apply]` (timer `ohmega-maritime-rollup`, 04:05) writes `maritime_store/daily/<YYYY-MM-DD>.json.gz` (a few KB each):
 
 | Block | Content | From |
 |---|---|---|
 | `zones` | per chokepoint / region: unique ships, by vessel class, ships underway, median speed, samples | profile book (4 days) |
-| `events` | opened that day: total, by kind, by area, AIS gaps per area, outcomes | the log |
-| `notable` | up to 30 sanctioned / confidence ≥ 0.8 events, compact | the log |
-| `tracks` | up to 12 flagged vessels' evidence points (≤ 24 each) — the only positions kept long term | the log |
+| `events` | opened that day: total, by kind, by area, AIS gaps per area, outcomes; `through` = the last log line it counts | the log |
+| `notable` | up to 30 sanctioned / confidence >= 0.8 events, compact | the log |
+| `tracks` | up to 12 flagged vessels' evidence points: only from legacy full-event lines; compact lines carry one position each (in `notable`) | the log |
 
-The compaction streams the log (never loads it whole), renames it aside so the stream service keeps appending, appends the recent lines back, and
-resumes from `log.jsonl.work` after a crash. Each line is counted once and dropped, so a re-run never double counts. **Before / after:**
-log = 1.9 KB × events/day × all history (unbounded) → 1.9 KB × events/day × 30 days + ~5-10 KB/day of summaries (~3 MB/year). At 3 000 events/day:
-~5.7 MB/day forever → capped at ~170 MB + 3 MB/year; the old history shrinks ~300x (1.9 KB × N → ~7 KB per day). The summaries are in the nightly mirror.
+The compaction streams the log (never loads it whole), renames it aside so the stream service keeps appending, rewrites what is kept as compact deduplicated
+transitions and appends the recent lines back; it resumes from `log.jsonl.work` after a crash. A day is summarised the night after it ends (complete days), and
+`events.through` stops any line being counted twice. **One-shot for the old 1.7 GB file:** `newsroom maritime compact-log` (report), then `--apply`: it converts
+the legacy lines (dropping "ongoing" and repeats) and cuts to 7 days; expected result a few MB.
 
-## Backups (the server is the only copy)
+## Backups (the server was the only copy; now R2 snapshots + a small mirror repo)
 
-`data_backup/sync.py` mirrors, nightly (06:15) and after runs, into the private `algent-data` repo: `profile_store`, `pulse_store`, `geoledger_store`,
-`sanctions_store`, `calendar_store`, `markets_store`, `maritime_daily`, `intel_store`, `instruments_store`, `ai_benchmarks_store`, `statements_store`,
-`actors_store`, `draft_store`, `treatment_store`, `lead_store`, and what was **published** (the dailies and articles exist nowhere else): `site_articles`,
-`site_intel`, `site_radar`, `site_data`. Deliberately not mirrored (reasons in `tests/test_backup_coverage.py`): run logs, `live_store` (re-collected;
-baselines relearn in ~3 weeks), the library crawl cache, embeddings and fetch caches. `test_backup_coverage.py` fails when the code gains a store
-that is in neither table, so this cannot silently regress.
+**Primary: the nightly R2 snapshot** (`data_backup/snapshot.py`, `newsroom backup snapshot`, timer 06:40). One `backups/daily/<date>.tar.gz` of every store in
+`data_backup/sync._sources()` (the single coverage list: `profile_store`, `pulse_store`, `geoledger_store`, `sanctions_store`, `calendar_store`, `markets_store`,
+`maritime_daily`, `intel_store` (now including `visuals/`), `instruments_store`, `ai_benchmarks_store`, `statements_store`, `actors_store`, `draft_store`,
+`treatment_store`, `lead_store`, and what was published: `site_articles`, `site_intel`, `site_radar`, `site_data`) plus `<date>.manifest.json.gz` (file count, bytes and
+sha256 of every file, and of the archive). It goes to a **private** bucket (`R2_BACKUP_BUCKET`; never the public one, which r2.dev serves to anyone) through the same
+`R2Store` and budget meter. Retention thins the prefix to the newest 14, the newest of each of the last 8 ISO weeks and 12 months (<= 34 objects). Expected size:
+the stores are ~135 MB raw (foundation.md section 3) and JSON gzips 5-8x, so **~20-35 MB a snapshot, ~0.7-1.2 GB at the 34-object ceiling (7-12% of the 10 GB free
+storage)**; Class A per night ~2 PUT + 1 LIST + up to 4 DELETE = ~7, i.e. ~210 a month (0.02% of 1 M). `newsroom backup snapshot --dry-run` builds one locally and prints the
+true size. `newsroom backup restore-drill` (monthly) downloads the latest, unpacks to a temp dir, checks counts and hashes, and logs ok/FAIL to `~/ops-log.md` and
+`backup_state.json` (what `newsroom envelope` reads); `newsroom backup restore --to DIR` unpacks into a new directory for a real recovery.
+
+**Second path: the `algent-data` mirror repo** (`data_backup/sync.py`, nightly 06:15 and after runs) is kept because it is a different vendor and human-diffable, but
+only for files under `flags.MIRROR_MAX_FILE_BYTES` (a tenth of GitHub's 100 MB hard limit, so a file must grow tenfold before it can break a push); larger files
+(for example a big `assets.jsonl`) are reported as `too_big_for_git` and are covered by the snapshot only. It never deletes. Deliberately not backed up (reasons in
+`tests/test_backup_coverage.py`): run logs, `live_store` (re-collected; baselines relearn in ~3 weeks), the library crawl cache, embeddings and fetch caches.
+`test_backup_coverage.py` fails when the code gains a store that is in neither table, so this cannot silently regress.
 
 ## Recovery of the lost Pulse stretch
 
