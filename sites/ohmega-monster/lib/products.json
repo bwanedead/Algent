@@ -212,7 +212,8 @@
         "/intel/record"
       ],
       "publishes": [
-        "data/"
+        "data/",
+        "record.json"
       ],
       "feeds_from": [
         "library"
@@ -371,7 +372,9 @@
       "id": "ops",
       "title": "Operations (deploy, watchdog, envelope, housekeeping)",
       "routes": [],
-      "publishes": [],
+      "publishes": [
+        "status/"
+      ],
       "feeds_from": [],
       "refresh_minutes": 2
     },

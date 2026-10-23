@@ -64,10 +64,15 @@ def canonical(body: Any) -> bytes:
     return json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).replace(_NUL, "").encode("utf-8")
 
 
-def pack(path: str, body: Any) -> Packed:
-    raw = canonical(body)
-    return Packed(path=path, kind=kind_of(path), key=object_key(path), sha256=hashlib.sha256(raw).hexdigest(), size_bytes=len(raw),
-                  raw=raw)
+def pack(path: str, body: Any, schema: str = "") -> Packed:
+    """``schema`` ("ohmega.daily/1", from ``contracts.stamp_for``) is written into the uploaded object when the body has none. The hash is of the body WITHOUT
+    the stamp for major 1 (a document published before stamps existed is not "changed" by gaining one, so adding contracts costs no re-upload round) and
+    includes it from major 2 (a breaking bump must re-send everything once)."""
+    plain = canonical(body)
+    raw = canonical({"schema": schema, **body}) if schema else plain
+    major = int(schema.rsplit("/", 1)[1]) if schema else 1
+    digest = hashlib.sha256(plain if major <= 1 else plain + b"|" + schema.encode()).hexdigest()
+    return Packed(path=path, kind=kind_of(path), key=object_key(path), sha256=digest, size_bytes=len(raw), raw=raw)
 
 
 def over_cap(packed: Packed) -> str | None:

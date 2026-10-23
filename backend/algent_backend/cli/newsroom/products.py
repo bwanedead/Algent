@@ -23,6 +23,7 @@ from typing import Any
 _REPO = Path(__file__).resolve().parents[4]
 FOUNDATION = _REPO / "docs" / "architecture" / "foundation.md"
 CONTRACT = _REPO / "sites" / "ohmega-monster" / "lib" / "products.json"
+CONTRACTS = CONTRACT.with_name("contracts.json")
 
 
 def add_parser(sub: Any) -> None:
@@ -46,8 +47,10 @@ def add_parser(sub: Any) -> None:
     c = verbs.add_parser("check", help="validate the registry and judge this machine against it")
     c.add_argument("--text", action="store_true", help="one line per row instead of JSON")
     c.set_defaults(handler=run_check)
+    st = verbs.add_parser("status", help="per-product status files (checked vs changed): products tracked, worst-case Class A cost, local copies")
+    st.set_defaults(handler=run_status)
     k = verbs.add_parser("contract", help="the JSON contract the site reads")
-    k.add_argument("--write", action="store_true", help="write sites/ohmega-monster/lib/products.json")
+    k.add_argument("--write", action="store_true", help="write sites/ohmega-monster/lib/products.json and lib/contracts.json (schema ids, majors, paths)")
     k.set_defaults(handler=run_contract)
     h = verbs.add_parser("housekeeping", help="expire the fetch cache and old per-job run logs")
     h.add_argument("--apply", action="store_true", help="delete (default: report only)")
@@ -120,12 +123,28 @@ def contract_text() -> str:
     return json.dumps(views.site_contract(), indent=2, ensure_ascii=False) + "\n"
 
 
+def contracts_text() -> str:
+    from algent_backend import contracts
+
+    return json.dumps(contracts.site_table(), indent=2, ensure_ascii=False) + "\n"
+
+
 def run_contract(args: Any) -> int:
     if args.write:
         CONTRACT.write_text(contract_text(), encoding="utf-8")
-        print(f"wrote {CONTRACT}", file=sys.stderr)
+        CONTRACTS.write_text(contracts_text(), encoding="utf-8")
+        print(f"wrote {CONTRACT} and {CONTRACTS}", file=sys.stderr)
     else:
         print(contract_text(), end="")
+    return 0
+
+
+def run_status(args: Any) -> int:
+    from algent_backend.ops import status
+
+    per_day = status.puts_per_day()
+    print(json.dumps({"tracked": per_day, "class_a_per_day": round(sum(per_day.values()), 1), "class_a_per_month": round(sum(per_day.values()) * 30),
+                      "share_of_free_tier": round(sum(per_day.values()) * 30 / 1_000_000, 4), "local": {p: status.read_local(p) for p in per_day}}, indent=2))
     return 0
 
 

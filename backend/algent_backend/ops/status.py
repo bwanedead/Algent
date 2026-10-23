@@ -31,8 +31,8 @@ from algent_backend.publishing import changed
 SCHEMA = "ohmega.status/1"
 #: A product that runs more often than hourly publishes its status at most this often (minutes). Chosen below the smoke test's lateness bound (twice this).
 MIN_GAP_MIN = 30.0
-#: Products whose pages are not data the site reads: no status file (staging is a copy of production under another prefix).
-EXCLUDED = ("staging",)
+#: Prefixes that are not data the site reads: a product publishing only these has no status file (staging is a copy of production; status is status).
+META_PREFIXES = ("staging/", "status/")
 
 
 def doc_path(product: str) -> str:
@@ -65,7 +65,7 @@ def _write_local(product: str, doc: dict[str, Any]) -> None:
 
 def tracked(product: Any) -> bool:
     """A product has a status file when it publishes something and runs on a timer."""
-    return bool(product.publishes) and product.id not in EXCLUDED and any(j.kind == "timer" for j in product.job_list())
+    return bool(product.publishes) and not all(p in META_PREFIXES for p in product.publishes) and any(j.kind == "timer" for j in product.job_list())
 
 
 def cadence_min(product: Any) -> float:

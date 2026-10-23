@@ -115,6 +115,25 @@ class Job:
 
 
 @dataclass(frozen=True)
+class Contract:
+    """One published document family and the schema its readers can rely on (docs/architecture/foundation.md, "Contracts between server and site").
+
+    ``schema`` is the family id (``ohmega.sanctions``), ``version`` its current MAJOR: documents carry ``"schema": "<id>/<version>"``. ``paths`` are the logical
+    document paths it covers (``*`` is one path segment, ``**`` the rest; a ``.gz`` suffix never matters; the most specific pattern wins). ``accepts`` lists
+    the older majors the site still reads while a breaking change is rolled out (the site learns the new major first, the server flips second). The shape
+    itself (required fields and types) is ``contracts/shapes.py``; a test keeps the two in step."""
+
+    schema: str
+    version: int
+    paths: tuple[str, ...]
+    accepts: tuple[int, ...] = ()
+
+    @property
+    def stamp(self) -> str:
+        return f"{self.schema}/{self.version}"
+
+
+@dataclass(frozen=True)
 class Product:
     id: str
     title: str
@@ -127,6 +146,7 @@ class Product:
     jobs: tuple[Job, ...] | Callable[[], tuple[Job, ...]] = ()
     manual: str = ""                                      # no timer on purpose: the command a person runs, and why
     publishes: tuple[str, ...] = ()                       # key prefixes in the publication bucket (R2)
+    contracts: tuple[Contract, ...] = ()                  # the document families under ``publishes`` that have a versioned schema (the site's parsers assert their major)
     site_routes: tuple[str, ...] = ()                     # app routes that read it, in Next.js notation (/daily/[desk]/[date])
     feeds_from: tuple[str, ...] = ()                      # product ids it reads (for later dependency ordering)
     heartbeat: tuple[str, ...] = ()                       # "<store name>/<glob>": files whose newest mtime shows the product ran (the freshness check)

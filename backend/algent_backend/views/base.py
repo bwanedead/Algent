@@ -14,6 +14,8 @@ import json
 from dataclasses import dataclass, field
 from typing import Any
 
+from algent_backend.contracts import view_schema
+
 from . import flags
 
 
@@ -39,6 +41,6 @@ class View:
 
 def make(family: str, key: str, body: dict[str, Any], *, as_of: str, sources: list[tuple[str, str]]) -> View:
     """A view with its envelope. ``sources`` is ``[(registry product id, document path or store)]``."""
-    env = {"schema": flags.SCHEMA.format(name=family), "built_at": "", "as_of": as_of or "",
+    env = {"schema": view_schema(family), "built_at": "", "as_of": as_of or "",
            "provenance": {"builder": "algent_backend.views", "sources": [{"product": p, "from": f} for p, f in sources]}}
     return View(key=key, family=family, body={**env, **body})

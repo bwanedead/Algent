@@ -13,7 +13,7 @@ no measurement exists yet (run ``newsroom envelope --text`` and replace it).
 from __future__ import annotations
 
 from . import locations as loc
-from .model import Budget, Job, Product, Retention, Store
+from .model import Budget, Contract as K, Job, Product, Retention, Store
 
 #: After-hooks of a job that publishes a report: the fast views build (Home, the globe HUD and the daily hub reflect it within minutes instead of at the
 #: next half-hour tick) and then a smoke test of the production site (it must still serve everything the new report touches). Each runs as a job of its own.
@@ -56,6 +56,12 @@ def _live_jobs() -> tuple[Job, ...]:
     return (*feeds, Job("ais", ("live", "ais"), kind="service", lock=False, what="AIS chokepoint counter (always on; needs ALGENT_AISSTREAM_KEY)"))
 
 
+#: The views' families (``views/flags.BUDGET_BYTES``): one contract each, ``ohmega.view.<family>``, over ``views/<key>.json``. Builders stamp their own schema
+#: from here (``contracts.view_schema``), so there is one place that says which version a view family is at.
+VIEW_FAMILIES = {"country": "country/*", "situation": "situation/*", "situations": "situations", "entity": "entity/*/*", "event": "event/*/*", "series": "series/*",
+                 "series-index": "series-index", "home": "home", "hud": "hud", "daily-hub": "daily-hub", "graph": "graph", "search-index": "search-index", "manifest": "manifest"}
+
+
 def _b(steady: float, warn: float, fail: float, written: float, growth: float, why: str) -> Budget:
     return Budget(steady, warn, fail, written, growth, why)
 
@@ -73,6 +79,7 @@ PRODUCTS: tuple[Product, ...] = (
                              "agent_system/agents/intel/daily.py::daily_dir", "on-write"),),
         irreplaceable=True, why="paid editorial work and published reports; the saved visuals exist only here (42 charts were lost when they were upload-only)",
         jobs=_daily_jobs, publishes=("daily/", "briefs/", "snapshots/", "theaters/", "/analytics/daily/"),
+        contracts=(K("ohmega.daily", 1, ("daily/*/*.json", "data/daily/*/*.json")), K("ohmega.brief", 1, ("briefs/*.json", "data/briefs/*.json")), K("ohmega.snapshot", 1, ("snapshots/*.json",))),
         site_routes=("/daily", "/daily/[desk]", "/daily/[desk]/[date]", "/daily/[desk]/archive", "/intel/briefs/[slug]", "/intel/events/[date]/[theater]/[n]"),
         feeds_from=("instruments", "statements", "library", "live", "sanctions", "calendar", "maritime", "geoledger", "actors"),
         heartbeat=("intel_store/daily/*/*.json",)),
@@ -81,6 +88,7 @@ PRODUCTS: tuple[Product, ...] = (
         what="Each long-running story as one file, built from the dailies' sections; no extra cost, no store of its own.",
         retention=(Retention("derived", "rebuilt from the dailies on every daily run (theaters/<id>.json); clearing it loses nothing", "publishing/agent_feed.py::dossier_files", "on-write"),),
         why="derived from the dailies (intel_store holds the source)", manual="rebuilt on every daily run and by `newsroom publish`; no timer of its own", publishes=("theaters/",),
+        contracts=(K("ohmega.dossier", 1, ("theaters/*.json",)), K("ohmega.dossier.index", 1, ("theaters/index.json",))),
         site_routes=("/situations", "/situations/[id]", "/intel/graph"), feeds_from=("dailies", "actors", "pulses")),
     Product(
         id="pulses", title="Pulses (0-100 gauges)", owner="agent_system/agents/pulse",
@@ -89,7 +97,7 @@ PRODUCTS: tuple[Product, ...] = (
                       budget=_b(2, 50, 200, 20, 0.5, "measured 10-23: 2 MB, ~0.5 MB a week, append-only")),),
         retention=(Retention("append-only", "influences are never rewritten or removed; ~0.5 MB a week", "agent_system/agents/pulse/store.py::PulseStore", "on-write"),),
         irreplaceable=True, why="two weeks of Pulse reasoning were lost once when it was missing from the backup",
-        manual="written by the daily runs (no timer of its own)", publishes=("pulses/",), site_routes=("/pulses",), feeds_from=("dailies",)),
+        manual="written by the daily runs (no timer of its own)", publishes=("pulses/",), contracts=(K("ohmega.pulse", 1, ("pulses/*.json", "data/pulses/*.json")),), site_routes=("/pulses",), feeds_from=("dailies",)),
     Product(
         id="articles", title="Articles", owner="agent_system/agents/editorial",
         what="Long-form researched pieces: leads, treatments and drafts (paid work the pipeline must never redo) and the published copy.",
@@ -100,6 +108,7 @@ PRODUCTS: tuple[Product, ...] = (
         retention=(Retention("append-only", "every draft, treatment and lead is kept (lineage to its profile); a few MB a week", "agent_system/agents/editorial/draft_store.py::DraftStore", "on-write"),),
         irreplaceable=True, why="paid editorial work (memory: never redo paid work) and the published articles",
         manual="`newsroom run` by hand, irregular: an article is the operator's call", publishes=("articles/", "docs/", "/analytics/"),
+        contracts=(K("ohmega.article.source", 1, ("articles/*.json",)), K("ohmega.article.index", 1, ("articles/index.json",))),
         site_routes=("/articles", "/articles/[slug]"), feeds_from=("profiles",)),
     Product(
         id="profiles", title="Research profiles (the corpus)", owner="agent_system/agents/research",
@@ -118,7 +127,7 @@ PRODUCTS: tuple[Product, ...] = (
         retention=(Retention("prune", "only the newest 5 runs are kept; older history stays in runs_index.jsonl", "agent_system/runs/control_plane/layout.py::prune_runs", "on-write"),),
         irreplaceable=True, why="the published menus exist nowhere else once the database is gone; the run logs themselves are expendable",
         jobs=(Job("menu", ("run", "--to", "menu"), at=_menu_at, every_min=1440, spend="paid", est_min=30, deadline_min=120, what="newsroom menu"),),
-        publishes=("radar/",), site_routes=("/daily/headlines", "/daily/headlines/[slug]")),
+        publishes=("radar/",), contracts=(K("ohmega.radar", 1, ("radar/*.json",)),), site_routes=("/daily/headlines", "/daily/headlines/[slug]")),
     # ── data: measured layers ─────────────────────────────────────────────────────────────────────
     Product(
         id="live", title="Live feeds (ships, aircraft, quakes, fires, outages)", owner="live",
@@ -127,6 +136,11 @@ PRODUCTS: tuple[Product, ...] = (
                       budget=_b(46, 150, 500, 200, 0, "measured 10-23: 46 MB of snapshots and baselines; snapshots overwrite, hour files are pruned at 60 days")),),
         retention=(Retention("prune", "hour files older than HOUR_KEEP_DAYS (60) are deleted; event snapshots are replaced each run", "live/memory/hours.py::prune", "job:live-usgs"),),
         why="re-collectable from public feeds", jobs=_live_jobs, publishes=("live/",), site_routes=("/live",), feeds_from=(),
+        contracts=(K("ohmega.live.events", 1, ("live/events.json",)), K("ohmega.live.stats", 1, ("live/stats.json",)), K("ohmega.live.anomalies", 1, ("live/anomalies.json",)),
+                   K("ohmega.live.world", 1, ("live/world.json",)), K("ohmega.live.summary", 1, ("live/summary.json",)), K("ohmega.live.energy", 1, ("live/energy.json",)),
+                   K("ohmega.live.fires", 1, ("live/fires.json",)), K("ohmega.live.vessels", 1, ("live/vessels.json",)), K("ohmega.live.aircraft", 1, ("live/aircraft.json",)),
+                   K("ohmega.live.coverage", 1, ("live/coverage.json",)), K("ohmega.live.points", 1, ("live/points.json",)), K("ohmega.live.tiles.index", 1, ("live/tiles/index.json",)),
+                   K("ohmega.live.tile", 1, ("live/tiles/*.json",)), K("ohmega.live.tracks", 1, ("live/tracks/**",))),
         heartbeat=("live_store/status.json",)),
     Product(
         id="flows", title="Flows (ship lanes, grain, money)", owner="flows",
@@ -134,14 +148,14 @@ PRODUCTS: tuple[Product, ...] = (
         retention=(Retention("overwrite", "tracker and days.json are bounded aggregates replaced atomically", "flows/store.py::root", "on-write"),),
         why="aggregates of the live stream, rebuilt as it runs",
         jobs=(Job("flows", ("flows", "publish"), "*:7/15", every_min=15, lock=False, est_mb=150, what="ship-lane + grain/money flows document"),),
-        publishes=("live/",), site_routes=(), feeds_from=("live",), heartbeat=("live_store/flows/days.json",)),
+        publishes=("live/",), contracts=(K("ohmega.flows", 1, ("live/flows.json",)),), site_routes=(), feeds_from=("live",), heartbeat=("live_store/flows/days.json",)),
     Product(
         id="satellite", title="Satellite (Sentinel-2 chips, night lights)", owner="satellite",
         what="Change detection on watched sites from keyless imagery; stored under live_store/satellite.",
         retention=(Retention("prune", "dated chips are pruned to the KEEP_DATED (3) newest scenes per site plus the baseline", "satellite/store.py::KEEP_DATED", "on-write"),),
         why="re-observed daily; the append-only records.jsonl is small and re-derivable from imagery",
         jobs=(Job("satellite", ("satellite", "run"), "*-*-* 03:20", every_min=1440, lock=False, est_min=5, est_mb=300, what="Sentinel-2 chips + night lights of watched sites"),),
-        publishes=("live/", "/satellite/"), site_routes=("/intel/satellite",), feeds_from=(), heartbeat=("live_store/satellite/doc.json",)),
+        publishes=("live/", "/satellite/"), contracts=(K("ohmega.satellite", 1, ("live/satellite.json",)),), site_routes=("/intel/satellite",), feeds_from=(), heartbeat=("live_store/satellite/doc.json",)),
     Product(
         id="maritime", title="Maritime behaviour", owner="maritime",
         what="Behaviour events from the AIS stream (encounters, dark gaps, loitering, sanctioned vessels); the daily ship summaries are the long record.",
@@ -151,7 +165,8 @@ PRODUCTS: tuple[Product, ...] = (
         retention=(Retention("rollup", "daily ship summaries are written then the raw event log is cut to LOG_KEEP_DAYS (7)", "maritime/flags.py::LOG_KEEP_DAYS", "job:maritime-rollup"),),
         irreplaceable=True, why="the daily summaries are the only long record of ship behaviour (backed up as maritime_daily)",
         jobs=(Job("maritime-rollup", ("maritime", "rollup", "--apply"), "*-*-* 04:05", every_min=1440, priority=4, what="daily ship summaries + retention of the raw event log"),),
-        publishes=("maritime/",), site_routes=("/intel/maritime",), feeds_from=("live",), heartbeat=("maritime_store/state.json",)),
+        publishes=("maritime/",), site_routes=("/intel/maritime",),
+        contracts=(K("ohmega.maritime.events", 1, ("maritime/recent.json", "maritime/live.json", "maritime/vessel/*.json")), K("ohmega.maritime.counts", 1, ("maritime/counts.json",))), feeds_from=("live",), heartbeat=("maritime_store/state.json",)),
     Product(
         id="sanctions", title="Sanctions", owner="sanctions",
         what="OFAC / UK / EU list diffs as designation events; an append-only event log plus one snapshot per source.",
@@ -159,7 +174,7 @@ PRODUCTS: tuple[Product, ...] = (
         retention=(Retention("append-only", "events.jsonl is never rewritten; snapshots/<src>.json are replaced atomically", "sanctions/store.py::root", "on-write"),),
         irreplaceable=True, why="forward capture: the diff history of the lists cannot be re-fetched",
         jobs=(Job("sanctions", ("sanctions", "fetch"), "2/6:25", every_min=360, what="sanctions list diffs"),),
-        publishes=("sanctions/",), site_routes=("/intel/sanctions",), feeds_from=(), heartbeat=("sanctions_store/status.json",)),
+        publishes=("sanctions/",), contracts=(K("ohmega.sanctions", 1, ("sanctions/recent.json", "sanctions/country/*.json")),), site_routes=("/intel/sanctions",), feeds_from=(), heartbeat=("sanctions_store/status.json",)),
     Product(
         id="calendar", title="Calendar (look-ahead)", owner="lookahead",
         what="Upcoming elections, central-bank decisions, summits, OPEC+ and extracted deadlines; append-only revisions of items.",
@@ -167,7 +182,7 @@ PRODUCTS: tuple[Product, ...] = (
         retention=(Retention("append-only", "items.jsonl keeps every revision; status.json is replaced", "lookahead/store.py::root", "on-write"),),
         irreplaceable=True, why="revision history (a moved or withdrawn date) cannot be re-fetched",
         jobs=(Job("calendar", ("calendar", "refresh"), "*-*-* 04:40", every_min=1440, what="calendar refresh"),),
-        publishes=("calendar/",), site_routes=("/calendar",), feeds_from=("statements",), heartbeat=("calendar_store/status.json",)),
+        publishes=("calendar/",), contracts=(K("ohmega.calendar", 1, ("calendar/next.json",)),), site_routes=("/calendar",), feeds_from=("statements",), heartbeat=("calendar_store/status.json",)),
     Product(
         id="ai_benchmarks", title="AI benchmarks", owner="ai_benchmarks",
         what="Benchmark scores (Epoch hub, SWE-bench, LMArena) and lab-claimed scores found by one capped model call a day.",
@@ -178,7 +193,7 @@ PRODUCTS: tuple[Product, ...] = (
         jobs=(Job("ai-bench", ("ai-benchmarks", "fetch"), "0/12:55", every_min=720, what="AI benchmark scores"),
               Job("ai-discovery", ("ai-benchmarks", "discover"), "*-*-* 06:50", every_min=1440, spend="capped",
                   what="lab-claimed scores: SearXNG + one capped model call (<$0.10/day, ai_benchmarks/flags.py)")),
-        publishes=("data/ai-benchmarks.json",), site_routes=("/intel/ai",), feeds_from=("library",), heartbeat=("ai_benchmarks_store/status.json",)),
+        publishes=("data/ai-benchmarks.json",), contracts=(K("ohmega.ai-benchmarks", 1, ("data/ai-benchmarks.json",)),), site_routes=("/intel/ai",), feeds_from=("library",), heartbeat=("ai_benchmarks_store/status.json",)),
     Product(
         id="instruments", title="Instruments (public data series)", owner="instruments",
         what="Free public series (prices, energy, macro, live-feed daily counts), one append-only file per series.",
@@ -194,7 +209,7 @@ PRODUCTS: tuple[Product, ...] = (
         retention=(Retention("append-only", "statements.jsonl is append-only (ids dedupe); raw transcripts are internal and kept with it", "agent_system/agents/statements/store.py::store_dir", "on-write"),),
         irreplaceable=True, why="extractions are paid model work and the record is the product",
         jobs=(Job("statements", ("statements", "collect", "--no-extract", "--no-reported"), "1/6:10", every_min=360, what="official statement transcripts (collection only)"),),
-        publishes=("data/",), site_routes=("/intel/record",), feeds_from=("library",), heartbeat=("statements_store/seen.json",)),
+        publishes=("data/", "record.json"), contracts=(K("ohmega.record", 1, ("record.json",)),), site_routes=("/intel/record",), feeds_from=("library",), heartbeat=("statements_store/seen.json",)),
     Product(
         id="actors", title="Actors (state profiles)", owner="actors",
         what="Country indicators and office-holders; append-only observations, one file per indicator.",
@@ -202,7 +217,7 @@ PRODUCTS: tuple[Product, ...] = (
         retention=(Retention("append-only", "a fetch appends only a never-seen or changed (country, year); no line is edited", "actors/store.py::store_dir", "on-write"),),
         irreplaceable=True, why="refetchable but cheap to keep, and revisions are forward capture",
         manual="`newsroom actors fetch` by hand: indicators change yearly, no timer is needed",
-        publishes=("actors/", "data/actors/"), site_routes=("/intel/actors", "/intel/actors/[iso]"), feeds_from=("instruments",)),
+        publishes=("actors/", "data/actors/"), contracts=(K("ohmega.actor", 1, ("actors/*.json",)), K("ohmega.actor.index", 1, ("actors/index.json",))), site_routes=("/intel/actors", "/intel/actors/[iso]"), feeds_from=("instruments",)),
     Product(
         id="geoledger", title="Geoledger (assets and status events)", owner="geoledger",
         what="A ledger of physical assets and their status events (append-only), seeded from OpenStreetMap and curated lists.",
@@ -210,7 +225,9 @@ PRODUCTS: tuple[Product, ...] = (
         retention=(Retention("append-only", "assets/events/merges.jsonl are never rewritten; cache/overpass is keyed by query hash (overwritten, finite)", "geoledger/store.py::root", "on-write"),),
         irreplaceable=True, why="status events are partly forward capture",
         manual="`newsroom geo ...` seeds and updates by hand; nothing in it changes between operator actions",
-        publishes=("geo/",), site_routes=("/intel/places/[id]",), feeds_from=()),
+        publishes=("geo/",), site_routes=("/intel/places/[id]",),
+        contracts=(K("ohmega.geo.place", 1, ("geo/a/*.json",)), K("ohmega.geo.assets", 1, ("geo/c/*.json", "geo/events-assets.json")), K("ohmega.geo.countries", 1, ("geo/countries.json",)),
+                   K("ohmega.geo.grid", 1, ("geo/grid/*.json",)), K("ohmega.geo.events", 1, ("geo/events/*.json",))), feeds_from=()),
     Product(
         id="markets", title="Markets and the paper trader", owner="markets",
         what="Read-only Polymarket mirror, our blind forecasts and the paper trader's decisions; the scored track record.",
@@ -220,7 +237,8 @@ PRODUCTS: tuple[Product, ...] = (
         jobs=(Job("markets", ("markets", "refresh"), "3/4:50", every_min=240, what="Polymarket mirror: markets, prices, resolutions; paper track record"),
               Job("markets-daily", ("markets", "daily"), at=_markets_daily_at, every_min=1440, spend="paid", est_min=15, deadline_min=120, what="Polymarket paper trader: forecasts, trades, marks",
                   then=AFTER_PUBLISH)),
-        publishes=("data/track-record.json",), site_routes=("/intel/forecasts", "/intel/track-record"), feeds_from=("dailies",), heartbeat=("markets_store/status.json",)),
+        publishes=("data/track-record.json",), contracts=(K("ohmega.track-record", 2, ("data/track-record.json",), accepts=(1,)),),
+        site_routes=("/intel/forecasts", "/intel/track-record"), feeds_from=("dailies",), heartbeat=("markets_store/status.json",)),
     Product(
         id="library", title="Source library (crawl cache)", owner="library",
         what="The crawled pages the research and dailies read, in one SQLite file.",
@@ -249,7 +267,8 @@ PRODUCTS: tuple[Product, ...] = (
         why="derived: every field comes from another product's published documents or the corpus index; deleting the store loses nothing",
         jobs=(Job("views", ("views", "build"), "2/4:50", every_min=240, priority=2, est_min=2, deadline_min=60, what="build every view and publish the changed ones (after corpus-build)", then=("site-smoke",)),
               Job("views-fast", ("views", "build", "--only", "home,hud,daily-hub"), "*:10/30", every_min=30, lock=False, priority=2, est_min=1.5, est_mb=300, what="refresh the home, globe HUD and daily-hub views (no corpus; a changed daily shows within half an hour)")),
-        publishes=("views/",), feeds_from=("dailies", "situations", "pulses", "actors", "articles", "statements", "sanctions", "calendar", "geoledger", "markets", "corpus_index"),
+        publishes=("views/",), contracts=tuple(K(f"ohmega.view.{fam}", 1, (f"views/{path}.json",)) for fam, path in VIEW_FAMILIES.items()),
+        feeds_from=("dailies", "situations", "pulses", "actors", "articles", "statements", "sanctions", "calendar", "geoledger", "markets", "corpus_index"),
         heartbeat=("views_store/manifest.json",)),
     Product(
         id="staging", title="Staging channel (preview data)", owner="publishing",
@@ -266,7 +285,9 @@ PRODUCTS: tuple[Product, ...] = (
         stores=(Store("site_data", loc.site_data, "", True, budget=_b(10, 200, 1000, 100, 2, "estimate: the published JSON tree (public/data); unmeasured")),),
         retention=(Retention("derived", "built from the dailies, profiles and Pulses on publish; the bucket holds the served copy", "publishing/agent_feed.py::dossier_files", "on-write"),),
         irreplaceable=True,
-        why="what was published exists nowhere else once the database is gone (the served copy is the only copy of the documents)", manual="rebuilt on every publish by the daily and article runs", publishes=("data/", "feeds/"), site_routes=("/developers",), feeds_from=("dailies", "situations", "pulses", "actors")),
+        why="what was published exists nowhere else once the database is gone (the served copy is the only copy of the documents)", manual="rebuilt on every publish by the daily and article runs", publishes=("data/", "feeds/"),
+        contracts=(K("ohmega.forecasts", 1, ("data/forecasts.json",)), K("ohmega.changes", 1, ("data/changes.json",)), K("ohmega.intel.index", 1, ("data/intel.json",)),
+                   K("ohmega.pulses", 1, ("data/pulses.json",))), site_routes=("/developers",), feeds_from=("dailies", "situations", "pulses", "actors")),
     Product(
         id="site", title="Site hubs and surfaces", owner="sites/ohmega-monster",
         what="Pages that are navigation or presentation over other products: home, the Data hub, the globe HUD and the 3D lab.",
@@ -280,6 +301,7 @@ PRODUCTS: tuple[Product, ...] = (
         what="The jobs that keep the machine honest: deploy-on-push, the spend watchdog, the envelope log, daily housekeeping.",
         retention=(Retention("prune", "housekeeping deletes fetch-cache files past their TTL and per-job run logs older than 30 days", "ops/housekeeping.py::run", "job:housekeeping"),),
         why="code and logs only; ~/ops-log.md grows by a few lines a day",
+        publishes=("status/",), contracts=(K("ohmega.status", 1, ("status/*.json",)),),
         jobs=(Job("update", script="update.sh", calendar="*:0/5", every_min=5, lock=False, est_mb=80, what="deploy-on-push"),
               Job("watchdog", ("watchdog",), "*:0/2", every_min=2, lock=False, est_min=0.2, est_mb=50, what="kills paid runs over their time/spend limits"),
               Job("envelope", ("envelope", "--log"), "*-*-* 07:10", every_min=1440, priority=4, what="one-line operating-envelope summary to ~/ops-log.md"),
