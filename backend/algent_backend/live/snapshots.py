@@ -18,6 +18,7 @@ import gzip
 import json
 from typing import Any, Callable
 
+from algent_backend import contracts
 from algent_backend.publishing import asset_store
 
 from . import flags, store
@@ -41,8 +42,13 @@ def publish(docs: dict[str, Any], *, local: tuple[str, ...] = (), http: Callable
     for name in local:
         if name in docs:
             store.write_doc(name, docs[name])
+    def stamped(n: str) -> Any:
+        """The document with the schema stamp its contract declares (contracts/): the browser's snapshot reader checks the major."""
+        stamp = contracts.stamp_for(f"live/{n}.json", docs[n])
+        return {"schema": stamp, **docs[n]} if stamp else docs[n]
+
     def encoded(names: list[str]) -> dict[str, bytes]:
-        return {(f"/live/{n}.json.gz" if n.startswith(GZIPPED) else f"/live/{n}.json"): encode_gz(docs[n]) if n.startswith(GZIPPED) else encode(docs[n])
+        return {(f"/live/{n}.json.gz" if n.startswith(GZIPPED) else f"/live/{n}.json"): encode_gz(stamped(n)) if n.startswith(GZIPPED) else encode(stamped(n))
                 for n in names}
 
     tile_names = [n for n in docs if n.startswith("tiles/") and n != "tiles/index"]

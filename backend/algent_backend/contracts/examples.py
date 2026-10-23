@@ -33,7 +33,7 @@ _MARITIME = {"id": "m1", "kind": "ais_gap", "mmsi": 123456789, "mmsi2": None, "n
              "confidence": 0.8, "rationale": "r", "summary": "Went silent for 9 hours.", "detail": {}, "evidence": [[1760000000, 26.5, 56.3, 11.0, "last"]], "provenance": "ohmega_derived", "updated_at": AT}
 _SANCTION = {"id": "sx1", "source": "ofac", "action": "designated", "on_date": "2026-10-20", "observed_on": "2026-10-21", "ref": "R1", "name": "MAR AZUL", "type": "vessel",
              "programmes": ["IRAN"], "countries": ["IR"], "imo": "9876543", "flag": "PA", "owner": "X Ltd", "source_url": "https://ofac.treasury.gov/", "baseline": False, "asset_id": "plant1"}
-_CAL = {"id": "c1", "on_date": "2026-10-28", "end_date": None, "title": "Gulf summit", "kind": "summit", "countries": ["IR", "SA"], "theaters": [], "source": "official",
+_CAL = {"id": "c1", "on_date": "2099-01-15", "end_date": None, "title": "Gulf summit", "kind": "summit", "countries": ["IR", "SA"], "theaters": [], "source": "official",
         "source_url": "https://example.org/summit", "confidence": "high", "provenance": "aggregated", "via": "", "active": True}
 _STATEMENT = {"id": "s1", "speaker": "A. Official", "role": "Minister", "affiliation": "Government", "iso2": "IR", "date": TODAY, "venue": "", "quote": "We will respond.", "paraphrase": "",
               "about": [], "about_iso2": ["US"], "signal": "threat", "stance": -1, "significance": "", "url": "https://example.org/s", "reported_by": ""}

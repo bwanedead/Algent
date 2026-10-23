@@ -1,3 +1,4 @@
+import { gate } from "./contract";
 import { DATA_BASE } from "./data-base";
 import { snapshotUrl } from "./live-shared";
 import type { SatelliteDoc } from "./satellite-shared";
@@ -23,6 +24,6 @@ export async function satelliteDoc(revalidate: number = TTL.daily): Promise<Sate
     if (process.env.NEXT_PHASE === "phase-production-build") return null;
     throw new Error(`satellite document answered ${res.status}`);
   }
-  const doc = (await res.json()) as SatelliteDoc;
+  const doc = gate("live/satellite.json", (await res.json()) as SatelliteDoc);
   return doc && doc.v === 1 && Array.isArray(doc.sites) ? doc : null;
 }

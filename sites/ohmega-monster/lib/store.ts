@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { gunzipSync } from "node:zlib";
 
+import { gate } from "./contract";
 import { DATA_BASE } from "./data-base";
 
 // The site's content source (docs/architecture/published-content.md, "storage architecture").
@@ -63,14 +64,14 @@ export function decodeDoc(bytes: Buffer): unknown {
 }
 
 /** One published document by path ("daily/geopolitics/2026-10-01.json"): the parsed body, null if it is not published (or no bucket is
- *  configured), throws DataUnavailable on any other failure (see rule 2 above). */
+ *  configured, or its schema major is one this build does not read: lib/contract.ts, which remembers why so a page can say an update is pending), throws DataUnavailable on any other failure (see rule 2 above). */
 export async function publishedDoc(rel: string, revalidate: number = TTL.daily): Promise<unknown> {
   if (!dataEnabled()) return null;
   try {
     const res = await fetch(`${DATA_BASE}/docs/${rel}.gz`, { next: { revalidate } });
     if (res.status === 404) return null;
     if (!res.ok) throw new DataUnavailable(`${rel} answered ${res.status}`);
-    return decodeDoc(Buffer.from(await res.arrayBuffer()));
+    return gate(rel, decodeDoc(Buffer.from(await res.arrayBuffer())));
   } catch (err) {
     if (building()) return null;
     throw err instanceof DataUnavailable ? err : new DataUnavailable(`${rel}: ${(err as Error).message}`);

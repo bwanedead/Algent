@@ -1,3 +1,4 @@
+import { parseStamp } from "./contract";
 import { publishedDoc, TTL } from "./store";
 import type { CountryView, DailyHubView, EntityView, EventView, GraphView, HomeView, HudView, SearchIndexView, SeriesIndexView, SituationsView, SituationView } from "./views-types";
 
@@ -11,8 +12,9 @@ export * from "./views-types";
 // There is no file fallback: a view exists only on the server. A page whose view is not published says so (or shows nothing) instead of rebuilding the
 // answer from raw documents - that per-request aggregation is what views replaced.
 //
-// A view whose schema is not the one this reader knows (`ohmega.view.<family>/1`) is treated as not published, so a newer server can introduce /2
-// without breaking a site that has not caught up.
+// A view whose schema is not one this reader knows is treated as not published, so a newer server can introduce /2 without breaking a site that has not
+// caught up. The general gate is lib/contract.ts (inside `publishedDoc`, from the registry-generated lib/contracts.json); the check below is the stricter
+// per-family one: a view must also carry its stamp (they always do), and its family must be the one asked for.
 
 const KEY = /^[\w~-]+(?:[./][\w~-]+)*$/;
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -26,7 +28,8 @@ export async function viewDoc<T>(family: Family, key: string, revalidate: number
   if (!KEY.test(key) || key.includes("..")) return null;
   const doc = await publishedDoc(`views/${key}.json`, revalidate);
   if (typeof doc !== "object" || doc === null) return null;
-  return (doc as { schema?: unknown }).schema === `ohmega.view.${family}/1` ? (doc as T) : null;
+  const got = parseStamp((doc as { schema?: unknown }).schema);
+  return got !== null && got.id === `ohmega.view.${family}` ? (doc as T) : null; // the major was already judged by the gate in publishedDoc
 }
 
 export const countryView = (iso: string): Promise<CountryView | null> => (/^[A-Z]{2}$/.test(iso) ? viewDoc<CountryView>("country", `country/${iso}`) : Promise.resolve(null));

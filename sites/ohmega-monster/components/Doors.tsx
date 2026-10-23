@@ -53,14 +53,14 @@ export default function Doors({ doors, label, lines = true }: { doors: Door[]; l
             <span className="door-text">
               <span className="door-title">
                 {d.title}
-                {d.stamp && d.cadenceHours ? <NewDot id={`door:${d.href}`} stamp={d.stamp} stale={isStale(d.stamp, d.cadenceHours)} /> : null}
+                {d.stamp && d.cadenceHours ? <NewDot id={`door:${d.href}`} stamp={d.stamp} stale={isStale(d.checked || d.stamp, d.cadenceHours)} /> : null}
               </span>
               {lines && <span className="door-line">{d.line}</span>}
             </span>
             <span className="door-meta">
               {n ? <span className="door-n">{n}</span> : null}
               {note ? <span className="vl-label door-rest">{note}</span> : null}
-              {d.stamp && d.cadenceHours ? <Age stamp={d.stamp} cadenceHours={d.cadenceHours} /> : null}
+              {d.stamp && d.cadenceHours ? <Age stamp={d.stamp} checked={d.checked} cadenceHours={d.cadenceHours} /> : null}
             </span>
           </>
         );

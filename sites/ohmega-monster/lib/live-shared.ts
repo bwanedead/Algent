@@ -3,6 +3,7 @@
 // series computed from them. Everything here degrades to "nothing": no database, an empty table or a failed
 // request yields empty lists, and the page says so instead of inventing a picture.
 
+import { gate } from "./contract";
 import { DATA_BASE } from "./data-base";
 import type { Provenance } from "./stats/render";
 
@@ -165,7 +166,7 @@ export async function fetchSnapshot<T>(name: string): Promise<T | null> {
   for (const url of attempts) {
     try {
       const res = await fetch(url, { cache: "no-store" });
-      if (res.ok) return (await inflate(new Uint8Array(await res.arrayBuffer()))) as T;
+      if (res.ok) return gate(`live/${name}.json`, (await inflate(new Uint8Array(await res.arrayBuffer()))) as T);
     } catch {
       /* try the next form */
     }

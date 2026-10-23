@@ -48,5 +48,6 @@ export async function load(url, context, next) {
     const out = ts.transpileModule(src, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX }, fileName: url });
     return { format: "module", source: out.outputText, shortCircuit: true };
   }
+  if (url.startsWith("file:") && url.endsWith(".json")) return { format: "module", source: `export default ${fs.readFileSync(fileURLToPath(url), "utf8")};`, shortCircuit: true };
   return next(url, context);
 }

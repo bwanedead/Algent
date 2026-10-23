@@ -7,6 +7,7 @@ import { liveSummary } from "./live";
 import { maritimeCounts, maritimeLive } from "./maritime";
 import { getMenus } from "./radar";
 import { satelliteDoc } from "./satellite";
+import { productStatuses, withStatus } from "./status";
 import { statDef } from "./stats/registry";
 import { shortDate, statView } from "./stats/render";
 import { trackRecord } from "./track-record";
@@ -27,6 +28,8 @@ export type Door = {
   hint: string;
   /** When the product was last refreshed (ISO time or bare day); "" when it has no cheap stamp. */
   stamp?: string;
+  /** When the product was last verified alive (its status file, lib/status.ts); staleness is judged on this when present, `stamp` is then "what's new". */
+  checked?: string;
   /** How often the product is meant to refresh, in hours (lib/fresh.ts CADENCE_HOURS); staleness is judged against it. */
   cadenceHours?: number;
 };
@@ -34,7 +37,7 @@ export type Door = {
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
 const hints = cache(async () => {
-  const [home, articles, menus, live, maritime, maritimeNewest, track, ai, satellite] = await Promise.all([
+  const [home, articles, menus, live, maritime, maritimeNewest, track, ai, satellite, st] = await Promise.all([
     homeView(),
     getAllMeta(),
     getMenus(),
@@ -44,6 +47,7 @@ const hints = cache(async () => {
     trackRecord(),
     aiBenchmarks(),
     satelliteDoc(),
+    productStatuses(["sanctions", "calendar", "ai_benchmarks", "markets", "maritime", "menu"]),
   ]);
   const f = home?.facts;
   // One universe for every situation count: the active ones (not quiet, not merged, not a one-day Spotlight), across all desks.
@@ -71,20 +75,21 @@ const hints = cache(async () => {
     pulses: pulses > 0 ? `${plural(pulses, "Pulse")}${severe > 0 ? ` · ${severe} severe or worse` : ""} · model-assessed` : "",
     pulsesStamp: f?.pulses.built_at ?? "",
     articles: { hint: articles.length > 0 ? `${plural(articles.length, "article")}` : "", stamp: articles[0]?.published_at || articles[0]?.date || "" },
-    headlines: { hint: menus[0] ? plural(menus[0].leads.length, "headline") : "", stamp: menus[0]?.builtAt ?? "" },
+    headlines: { hint: menus[0] ? plural(menus[0].leads.length, "headline") : "", ...withStatus(menus[0]?.builtAt ?? "", st.menu) },
     live: { hint: live && live.headlines.length > 0 ? `${plural(live.headlines.length, "signal")} now` : "", stamp: live?.as_of ?? "" },
     satellite: satellite && satellite.counts.with_imagery > 0 ? `${plural(satellite.counts.with_imagery, "place")}${satellite.counts.changed > 0 ? ` · ${satellite.counts.changed} changed` : ""}` : "",
     calendar: calendar30 > 0 ? `${plural(calendar30, "date")} · next 30 days` : "",
+    calendarStatus: withStatus("", st.calendar),
     maritime: {
       // A real count (a list fetch is capped at 1000 rows), over the detectors' own history rather than a "last 30 days" they have not run for.
       hint: maritime && maritime.total > 0 ? `${plural(maritime.total, "event")} · since ${shortDate(statDef("maritime_events").baseline_since ?? "")}` : "",
-      stamp: newest(maritimeNewest.map((m) => m.updated_at)),
+      ...withStatus(newest(maritimeNewest.map((m) => m.updated_at)), st.maritime),
     },
-    track: { hint: track ? `${plural(track.scores.compared, "market")} compared · ${plural(track.markets.open, "open market")}` : "", stamp: track?.as_of ?? "" },
-    ai: { hint: ai ? `${plural(ai.benchmarks.length, "benchmark")} · ${plural(ai.labs.length, "lab")}` : "", stamp: ai?.as_of ?? "" },
+    track: { hint: track ? `${plural(track.scores.compared, "market")} compared · ${plural(track.markets.open, "open market")}` : "", ...withStatus(track?.as_of ?? "", st.markets) },
+    ai: { hint: ai ? `${plural(ai.benchmarks.length, "benchmark")} · ${plural(ai.labs.length, "lab")}` : "", ...withStatus(ai?.as_of ?? "", st.ai_benchmarks) },
     sanctions: {
       hint: additions > 0 ? `${plural(additions, "addition")} · since ${shortDate(statDef("sanctions_changes").baseline_since ?? "")}` : "",
-      stamp: f?.sanctions.newest_observed ?? "",
+      ...withStatus(f?.sanctions.newest_observed ?? "", st.sanctions),
     },
   };
 });
@@ -114,15 +119,15 @@ export async function dataGroups(): Promise<DataGroup[]> {
       lead: "Collected from public sources, no editorial voice.",
       doors: [
         { href: "/live", title: "Live map", line: "Ships, aircraft, quakes, fires and outages as they happen.", hint: h.live.hint, stamp: h.live.stamp, cadenceHours: CADENCE_HOURS.live },
-        { href: "/intel/maritime", title: "Maritime", line: "Ships that went dark, met at sea, changed identity or matched a sanctions list.", hint: h.maritime.hint, stamp: h.maritime.stamp, cadenceHours: CADENCE_HOURS.maritime },
-        { href: "/intel/sanctions", title: "Sanctions", line: "Who was added to or removed from the US, UK and EU lists.", hint: h.sanctions.hint, stamp: h.sanctions.stamp, cadenceHours: CADENCE_HOURS.sanctions },
+        { href: "/intel/maritime", title: "Maritime", line: "Ships that went dark, met at sea, changed identity or matched a sanctions list.", hint: h.maritime.hint, stamp: h.maritime.stamp, checked: h.maritime.checked, cadenceHours: CADENCE_HOURS.maritime },
+        { href: "/intel/sanctions", title: "Sanctions", line: "Who was added to or removed from the US, UK and EU lists.", hint: h.sanctions.hint, stamp: h.sanctions.stamp, checked: h.sanctions.checked, cadenceHours: CADENCE_HOURS.sanctions },
         { href: "/intel/satellite", title: "Satellite", line: "Fresh imagery of struck and watched places, before and after, with change flagged as a machine signal.", hint: h.satellite },
-        { href: "/calendar", title: "Calendar", line: "What is scheduled in the next 30 days, with sources.", hint: h.calendar },
-        { href: "/intel/ai", title: "AI benchmarks", line: "Frontier model scores on public benchmarks, open against closed, lab by lab.", hint: h.ai.hint, stamp: h.ai.stamp, cadenceHours: CADENCE_HOURS.benchmarks },
+        { href: "/calendar", title: "Calendar", line: "What is scheduled in the next 30 days, with sources.", hint: h.calendar, ...h.calendarStatus, cadenceHours: CADENCE_HOURS.calendar },
+        { href: "/intel/ai", title: "AI benchmarks", line: "Frontier model scores on public benchmarks, open against closed, lab by lab.", hint: h.ai.hint, stamp: h.ai.stamp, checked: h.ai.checked, cadenceHours: CADENCE_HOURS.benchmarks },
         { href: "/intel/actors", title: "Countries", line: "Population, economy, energy and military of each state.", hint: h.actors },
         { href: "/intel/record", title: "The record", line: "Statements by leaders and institutions, with transcripts.", hint: h.record, stamp: h.recordStamp, cadenceHours: CADENCE_HOURS.statements },
         { href: "/intel/graph", title: "Graph", line: "States and situations as one network: who is involved where.", hint: h.graph },
-        { href: "/daily/headlines", title: "Headlines", line: "Other outlets' headlines, not verified by us.", hint: h.headlines.hint, stamp: h.headlines.stamp, cadenceHours: CADENCE_HOURS.headlines },
+        { href: "/daily/headlines", title: "Headlines", line: "Other outlets' headlines, not verified by us.", hint: h.headlines.hint, stamp: h.headlines.stamp, checked: h.headlines.checked, cadenceHours: CADENCE_HOURS.headlines },
       ],
     },
     {
@@ -131,7 +136,7 @@ export async function dataGroups(): Promise<DataGroup[]> {
       lead: "What we think will happen, kept on the record and scored. Our reading, not a measurement.",
       doors: [
         { href: "/pulses", title: "Pulses", line: "Every relationship on one 0 to 100 scale.", hint: h.pulses, stamp: h.pulsesStamp, cadenceHours: CADENCE_HOURS.pulses },
-        { href: "/intel/forecasts", title: "Forecasts", line: "Every open forecast, and how our calls scored against Polymarket prices, misses included. Paper only.", hint: h.track.hint, stamp: h.track.stamp, cadenceHours: CADENCE_HOURS.track },
+        { href: "/intel/forecasts", title: "Forecasts", line: "Every open forecast, and how our calls scored against Polymarket prices, misses included. Paper only.", hint: h.track.hint, stamp: h.track.stamp, checked: h.track.checked, cadenceHours: CADENCE_HOURS.track },
       ],
     },
     {
