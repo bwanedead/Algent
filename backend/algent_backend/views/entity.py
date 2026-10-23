@@ -59,7 +59,11 @@ def candidates(ctx: ViewContext) -> list[tuple[str, int]]:
         return []
     uses = usage(ctx.corpus.db)
     ordered = sorted(uses.items(), key=lambda x: (-x[1], x[0]))
-    places = [x for x in ordered if x[0].startswith("asset:")]                # a place with status events has a page: it always gets its view
+    # A place with dated events (strikes, status changes, developments placed there) has a page, so it always gets its view. A bare geoledger asset
+    # (one of ~37k plants/ports with no events) is only linked to its country by a relation: it gets no view, or every place would be a page.
+    with_events = {r[0] for r in ctx.corpus.db.execute(
+        "SELECT place_id FROM events WHERE place_id LIKE 'asset:%' UNION SELECT entity_id FROM event_actors WHERE entity_id LIKE 'asset:%'")}
+    places = [x for x in ordered if x[0] in with_events]
     rest = [x for x in ordered if not x[0].startswith("asset:") and x[1] >= flags.SEARCH_MIN_USES]
     return sorted([*places, *rest[: max(0, ENTITY_VIEWS_MAX - len(places))]], key=lambda x: (-x[1], x[0]))
 
