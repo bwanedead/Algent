@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # The server's scheduled jobs, one entry point so systemd units stay one-liners:
 #
-#   jobs.sh library | instruments | statements | sanctions | calendar | markets | ai-benchmarks | ai-discovery | backup | db-prune | watchdog | flows | satellite | live <feed>   free
+#   jobs.sh library | instruments | statements | sanctions | calendar | markets | ai-benchmarks | ai-discovery | backup | backup-snapshot | backup-drill | envelope | db-prune | watchdog | flows | satellite | live <feed>   free
 #   jobs.sh menu | daily-1 | daily-2 | markets-daily                       PAID, unattended (operator-authorised)
 #
 # Free work: crawl, AI benchmark scores, a capped (<$0.10/day, ai_benchmarks/flags.py) discovery of lab-claimed scores, public data series, statement transcripts without extraction, the archive backup.
@@ -35,6 +35,9 @@ case "${1:?usage: jobs.sh library|instruments|statements|sanctions|calendar|mark
     ai-discovery)  $PY -m algent_backend.cli newsroom ai-benchmarks discover ;;
     db-prune)    $PY -m algent_backend.cli newsroom db prune --apply ;;
     maritime-rollup) $PY -m algent_backend.cli newsroom maritime rollup --apply ;;
+    backup-snapshot) $PY -m algent_backend.cli newsroom backup snapshot ;;
+    backup-drill)    $PY -m algent_backend.cli newsroom backup restore-drill ;;
+    envelope)        $PY -m algent_backend.cli newsroom envelope --log ;;
     backup)      $PY -c "from algent_backend.data_backup import sync; print(sync.backup(note='server nightly'))" ;;
     menu|daily-1|daily-2|markets-daily|ai-daily) $PY -m algent_backend.cli newsroom schedule run "$1" ;;
     *) echo "unknown job: $1" >&2; exit 2 ;;

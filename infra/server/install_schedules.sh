@@ -12,6 +12,9 @@
 #   ohmega-ai-bench     every 12 h     AI benchmark scores (Epoch hub, SWE-bench, LMArena) -> site document
 #   ohmega-ai-discovery daily 06:50    lab-claimed scores: SearXNG + ONE capped model call (<$0.10/day, flags.DISCOVERY_*; ALGENT_AI_DISCOVERY=0 stops it)
 #   ohmega-backup       daily 06:15    stores -> private algent-data archive
+#   ohmega-backup-snapshot daily 06:40  nightly tar.gz of the irreplaceable stores -> private R2 bucket (14 daily / 8 weekly / 12 monthly; data_backup/snapshot.py)
+#   ohmega-backup-drill monthly day 1 07:30  restore the latest snapshot to a temp dir, verify counts + hashes, log ok/FAIL to ~/ops-log.md
+#   ohmega-envelope     daily 07:10    one-line operating-envelope summary to ~/ops-log.md (newsroom envelope --log; budgets in ops/envelope_flags.py)
 #   ohmega-db-prune     daily 03:40    retention windows on the growing Postgres tables + VACUUM (database/flags.py; docs/architecture/database-budget.md)
 #   ohmega-maritime-rollup daily 04:05  daily ship summaries + retention of the raw maritime event log (maritime/rollup.py)
 #   ohmega-live-<feed>  every N min     free live feeds (ioda, usgs, adsb, firms; N from live/flags.py)
@@ -67,6 +70,9 @@ unit markets     "$INFRA/jobs.sh markets"      "3/4:50"
 unit ai-bench    "$INFRA/jobs.sh ai-benchmarks" "0/12:55"
 unit ai-discovery "$INFRA/jobs.sh ai-discovery" "*-*-* 06:50"
 unit backup      "$INFRA/jobs.sh backup"       "*-*-* 06:15"
+unit backup-snapshot "$INFRA/jobs.sh backup-snapshot" "*-*-* 06:40"
+unit backup-drill "$INFRA/jobs.sh backup-drill" "*-*-01 07:30:00"
+unit envelope    "$INFRA/jobs.sh envelope"     "*-*-* 07:10"
 unit db-prune    "$INFRA/jobs.sh db-prune"     "*-*-* 03:40"
 unit maritime-rollup "$INFRA/jobs.sh maritime-rollup" "*-*-* 04:05"
 unit watchdog    "$INFRA/jobs.sh watchdog"     "*:0/2"
@@ -111,7 +117,7 @@ done < <(cd "$HOME/Algent/backend" && .venv/bin/python -m algent_backend.cli new
 [ -n "$PAID" ] || { echo "no paid jobs listed by 'newsroom schedule times'; refusing to continue" >&2; exit 1; }
 
 sudo systemctl daemon-reload
-for t in update library instruments statements sanctions calendar markets ai-bench ai-discovery backup db-prune maritime-rollup watchdog flows satellite $LIVE_TIMERS $PAID; do
+for t in update library instruments statements sanctions calendar markets ai-bench ai-discovery backup backup-snapshot backup-drill envelope db-prune maritime-rollup watchdog flows satellite $LIVE_TIMERS $PAID; do
     sudo systemctl enable --now "ohmega-$t.timer" >/dev/null
 done
 sudo systemctl enable --now ohmega-ais.service >/dev/null

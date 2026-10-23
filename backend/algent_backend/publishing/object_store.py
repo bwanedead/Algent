@@ -291,6 +291,19 @@ def select(backend: str | None = None, *, env: Mapping[str, str] | None = None, 
     return None
 
 
+BACKUP_BUCKET_ENV = "R2_BACKUP_BUCKET"
+
+
+def select_backup(env: Mapping[str, str] | None = None, *, call: Call | None = None, meter: Any = None) -> R2Store | None:
+    """The PRIVATE bucket for backup snapshots (``R2_BACKUP_BUCKET``, same account and keys as the publication bucket), or None when unset.
+    There is deliberately no fallback to the public bucket: r2.dev serves every object in it to anyone. Same budget meter as everything else."""
+    env = os.environ if env is None else env
+    acct, key, secret, bucket = (env.get(k, "").strip() for k in ("R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", BACKUP_BUCKET_ENV))
+    if not (acct and key and secret and bucket):
+        return None
+    return R2Store(acct, key, secret, bucket, "", call=call, meter=meter)
+
+
 def held_dir():
     """Server-local publish state (content-hash manifests, the article index): gitignored, never in the site checkout.
     ``ALGENT_PUBLISH_HELD`` overrides the location (tests)."""

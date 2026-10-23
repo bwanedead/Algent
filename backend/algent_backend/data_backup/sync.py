@@ -12,7 +12,9 @@ Rules:
   an accident, and an accident must not propagate into the only other copy.
 - Never raises. A backup that fails leaves the run's result untouched and says why.
 - Off in tests (``ALGENT_DATA_BACKUP=0``, set by conftest) — a test must never push data.
-Restore on a new machine: clone the repo and copy its folders back (``restore()``).
+Files over ``flags.MIRROR_MAX_FILE_BYTES`` are not mirrored: the R2 snapshot (``snapshot.py``) is the primary copy and covers them. This list
+(``_sources``) is the single source of truth for what is irreplaceable; the snapshot reads it too.
+Restore on a new machine: clone the repo and copy its folders back (``restore()``), or ``newsroom backup restore`` from the latest snapshot.
 """
 
 from __future__ import annotations
@@ -109,8 +111,11 @@ def _checkout() -> tuple[Path | None, str]:
     return wt, "cloned"
 
 
-def mirror(sources: dict[str, Path], dest: Path) -> int:
-    """Copy new and changed files from each source into ``dest/<name>/``. Returns files copied."""
+def mirror(sources: dict[str, Path], dest: Path, skipped: list[str] | None = None) -> int:
+    """Copy new and changed files from each source into ``dest/<name>/``. Returns files copied. A file over ``flags.MIRROR_MAX_FILE_BYTES`` is
+    not mirrored (it is in the R2 snapshot, ``snapshot.py``); its path is appended to ``skipped`` when given."""
+    from algent_backend.data_backup import flags
+
     copied = 0
     for name, src in sources.items():
         if not src.is_dir():
@@ -119,6 +124,10 @@ def mirror(sources: dict[str, Path], dest: Path) -> int:
             if not path.is_file() or path.suffix == ".tmp":
                 continue
             target = dest / name / path.relative_to(src)
+            if path.stat().st_size > flags.MIRROR_MAX_FILE_BYTES:
+                if skipped is not None:
+                    skipped.append(f"{name}/{path.relative_to(src).as_posix()}")
+                continue
             if target.exists() and filecmp.cmp(path, target, shallow=False):
                 continue
             target.parent.mkdir(parents=True, exist_ok=True)
@@ -135,15 +144,17 @@ def backup(note: str = "") -> dict:
         wt, how = _checkout()
         if wt is None:
             return {"backed_up": False, "note": how}
-        copied = mirror(_sources(), wt)
+        too_big: list[str] = []
+        copied = mirror(_sources(), wt, too_big)
+        extra = {"too_big_for_git": too_big} if too_big else {}
         if not copied:
-            return {"backed_up": True, "copied": 0, "note": "already current"}
+            return {"backed_up": True, "copied": 0, "note": "already current", **extra}
         _git(wt, "add", "-A")
         ok, out = _git(wt, "commit", "-m", f"backup: {copied} file(s){' — ' + note if note else ''}")
         if not ok and "nothing to commit" not in out:
             return {"backed_up": False, "note": f"commit failed: {out[:160]}"}
         ok, out = _git(wt, "push", "-u", "origin", BRANCH)
-        return {"backed_up": ok, "copied": copied, "note": "pushed" if ok else f"push failed: {out[:160]}"}
+        return {"backed_up": ok, "copied": copied, "note": "pushed" if ok else f"push failed: {out[:160]}", **extra}
     except Exception as exc:  # noqa: BLE001 — a failed backup must never fail the run
         return {"backed_up": False, "note": f"{type(exc).__name__}: {str(exc)[:160]}"}
 
