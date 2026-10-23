@@ -41,11 +41,12 @@ Docs sprawl is a real failure mode. To prevent it:
 - `agent-ergonomics-ethos.md` – fit the action seam to the agent's natural grammar; discover it empirically.
 
 ### Architecture — `architecture/`
+- `foundation.md` – **start here for ops**: the operating envelope. Every external dependency and server store with its limit, measured use, failure mode, guard and gap; ranked risks and the hardening plan. New products add their rows before shipping.
 - `run-control-plane.md` – run directory contract, runs CLI, observability weave.
 - `map-analytics-stack.md` – accurate country-scale map figures for the newsroom analytics path.
 - `pulse-system.md` – Ohmega Pulse: situations, anchored Pulses, append-only influences, watches, storage.
-- `published-content.md` – publishing as a database write: `published_*` tables, anon-read RLS, the site's Supabase reader with file fallback.
-- `database-budget.md` – staying on Supabase's free plan: what fills the 500 MB database (estimates), documents in Storage with an index row, retention windows, the size guard, and the read-only recovery runbook (`newsroom db size|prune|diet|vacuum-full`).
+- `published-content.md` – how the site reads published documents (now from R2; legacy Supabase notes).
+- `database-budget.md` – storage architecture: server = record, R2 = publication, the R2 budget guard, egress, ship-data rollup, backups; legacy Postgres notes.
 - `agent-api.md` – the agent surface of the site: `/api/v1` JSON API, OpenAPI, remote MCP server, discovery files, and the API-key seam.
 - `instruments.md` – the numbers layer: free programmatic series (chokepoint transits, energy, rates, FX…), append-only store, moves vs each series' own history, evidence API.
 - `statements.md` – the record of who said what: primary transcripts (Kremlin, White House, State, FCDO, No 10, EC, China MFA), quote-validated extraction, append-only ledger, recall API.
