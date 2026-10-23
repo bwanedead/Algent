@@ -15,7 +15,7 @@
 .hub-parts .is-late { font-style: italic; opacity: 0.7; }
 .hub-list { margin: 10px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--rule); }
 .hub-list li { border-bottom: 1px solid var(--rule); }
-.hub-row { display: grid; grid-template-columns: 70px minmax(0, 1fr); gap: 0 10px; align-items: baseline; padding: 7px 2px; min-width: 0; color: var(--text); text-decoration: none; font-size: 12px; line-height: 18px; }
+.hub-row { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 0 10px; align-items: baseline; padding: 7px 2px; min-width: 0; color: var(--text); text-decoration: none; font-size: 12px; line-height: 18px; }
 .intel-page.th-page a.hub-row { color: var(--text); text-decoration: none; }
 .hub-row:hover, .hub-row:focus-visible { background: var(--vl-hover); }
 .hub-row-what { min-width: 0; display: flex; flex-direction: column; gap: 1px; overflow-wrap: anywhere; }
@@ -61,5 +61,6 @@
 .hm-today-line { display: block; margin-top: 2px; color: var(--strong); font-size: 14px; line-height: 20px; font-weight: 600; letter-spacing: -0.01em; overflow-wrap: anywhere; }
 
 @media (max-width: 700px) {
-  .hub-row { grid-template-columns: 62px minmax(0, 1fr); }
+  .hub-row { grid-template-columns: 1fr; gap: 2px 0; }   /* phone: the direction sits above the name instead of squeezing beside it */
 }
+.hub-row .vl-dir { white-space: nowrap; }

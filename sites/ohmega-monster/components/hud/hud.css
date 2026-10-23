@@ -28,7 +28,7 @@
 
 /* ---- the canvas: the globe in the middle, four slots around it ---- */
 .hud-canvas { display: grid; grid-template-columns: var(--hud-l, 0px) minmax(0, 1fr) var(--hud-r, 0px); grid-template-areas: "top top top" "left globe right" "bottom bottom bottom"; align-items: start; }
-.hud-globe { grid-area: globe; min-width: 0; position: sticky; top: 8px; }
+.hud-globe { grid-area: globe; min-width: 0; }   /* not sticky: a sticky globe rode down over the bottom panels as you scrolled */
 .hud-slot { min-width: 0; }
 .hud-slot[data-empty="true"] { display: none; }
 .hud-slot-left { grid-area: left; margin-right: 12px; }
