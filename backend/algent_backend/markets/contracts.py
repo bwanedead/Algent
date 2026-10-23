@@ -61,6 +61,9 @@ class Forecast(BaseModel):
     model: str = ""
     prompt_version: str = ""
     usd: float = 0.0
+    book: str = "daily"                       # which pass made it: "daily" or "fast" (the fast pass forecasts the markets it trades)
+    evidence: str = ""                        # the forecaster's own verdict on its evidence: sufficient | thin | gap ("" before research existed)
+    hours_to_end: float | None = None         # time to the market's end when forecast (for horizon splits)
 
 
 class Trade(BaseModel):
@@ -119,12 +122,16 @@ class Decision(BaseModel):
     model: str = ""
     prompt_version: str = ""
     usd: float = 0.0                          # this line's share of the call's cost
+    book: str = "daily"                       # "daily" (the trader) or "fast" (the short-horizon book): two ledgers in one file
+    evidence_ids: list[str] = Field(default_factory=list)   # corpus items the decision cited
+    evidence: str = ""                        # sufficient | thin | gap ("" before research existed)
+    hours_to_end: float | None = None
 
 
 class EquityPoint(BaseModel):
     """A book's value at the end of a day: cash plus open positions at their current side price. Written once per (book, day), never edited."""
 
-    book: Literal["trader", "rule"]
+    book: Literal["trader", "rule", "fast"]
     day: str
     at: str
     cash: float
@@ -137,3 +144,78 @@ class EquityPoint(BaseModel):
 
 def decision_id(market_id: str, action: str, at: str) -> str:
     return "td-" + hashlib.sha1(f"{market_id}|{action}|{at}".encode()).hexdigest()[:14]
+
+
+# ── research traces and gaps (research.py, trace.py, gaps.py) ────────────────────────────────────
+class QueryRun(BaseModel):
+    """One planned corpus query and what it returned."""
+
+    tool: str
+    arg: str = ""
+    since: str = ""
+    kinds: list[str] = Field(default_factory=list)
+    n: int = 0                                # rows returned (after the blindness filter)
+    new: int = 0                              # of which not already found by an earlier query for the same market
+    ids: list[str] = Field(default_factory=list)
+    ms: int = 0
+    error: str = ""
+
+
+class Trace(BaseModel):
+    """How one forecast or decision was researched: queries issued, ids returned, ids cited, cost and latency. Append-only; pruned by age."""
+
+    id: str
+    at: str
+    kind: Literal["forecast", "trade"]
+    book: str = "daily"
+    market_id: str
+    ref: str = ""                             # the forecast / decision line this trace belongs to
+    mode: str = "corpus"                      # corpus | base-fallback (no corpus index here) | base (research switched off)
+    rounds: int = 0
+    queries: list[QueryRun] = Field(default_factory=list)
+    returned_ids: list[str] = Field(default_factory=list)
+    shown_ids: list[str] = Field(default_factory=list)       # returned AND fitted into what the decision read
+    cited_ids: list[str] = Field(default_factory=list)
+    evidence: str = ""                        # the decision's own verdict: sufficient | thin | gap
+    gap_topic: str = ""
+    tokens: int = 0                           # estimated: characters / 4 of what was read and written
+    plan_usd: float = 0.0
+    usd: float = 0.0                          # planning + decision
+    latency_ms: int = 0
+
+
+class Gap(BaseModel):
+    """One ask from a bot: it needed this and the corpus did not hold it."""
+
+    id: str
+    at: str
+    day: str
+    topic: str
+    why: str = ""
+    market_id: str
+    question: str = ""
+    book: str = "daily"
+    kind: str = "forecast"                    # forecast | trade
+
+
+class GapFill(BaseModel):
+    """One research run started for a gap cluster (append-only; a gap is filled when a line for its topic exists inside the refill window)."""
+
+    id: str
+    at: str
+    day: str
+    key: str                                  # the cluster's token key (gaps.cluster_key)
+    topic: str
+    asks: int = 1
+    markets: list[str] = Field(default_factory=list)
+    ok: bool = False
+    usd: float = 0.0                          # booked at the estimate until measured
+    note: str = ""
+
+
+def trace_id(kind: str, ref: str, at: str) -> str:
+    return "rt-" + hashlib.sha1(f"{kind}|{ref}|{at}".encode()).hexdigest()[:14]
+
+
+def gap_id(market_id: str, topic: str, at: str) -> str:
+    return "gp-" + hashlib.sha1(f"{market_id}|{topic}|{at}".encode()).hexdigest()[:14]

@@ -8,6 +8,8 @@ so the record cannot be quietly improved after the fact.
     trades.jsonl      the RULE book's paper trades: open / mark / settle (a position is a projection of its lines)
     decisions.jsonl   the TRADER's ledger: every decision (buy / sell / hold / settle) with its rationale and any guard clips
     equity.jsonl      one EquityPoint per book per day (the equity curves)
+    gaps.jsonl        what the bots looked for and the corpus did not hold (gaps.py); gap_fills.jsonl the research runs those asks became
+    research_trace.jsonl  one line per forecast / decision: queries, result ids, cited ids, tokens, cost, latency (trace.py; pruned by age)
     status.json       the last pass: when, what it found, what failed
 """
 
@@ -22,7 +24,7 @@ from typing import TypeVar
 from pydantic import BaseModel
 
 from . import flags
-from .contracts import Decision, EquityPoint, Forecast, Market, Snapshot, Trade
+from .contracts import Decision, EquityPoint, Forecast, Gap, GapFill, Market, Snapshot, Trace, Trade
 
 _ENV = "ALGENT_MARKETS_STORE"
 M = TypeVar("M", bound=BaseModel)
@@ -145,8 +147,10 @@ def append_trades(rows: list[Trade]) -> None:
     _append("trades.jsonl", rows)
 
 
-def decisions() -> list[Decision]:
-    return _read("decisions.jsonl", Decision)
+def decisions(book: str | None = "daily") -> list[Decision]:
+    """The ledger of one book (default the daily trader; lines written before the fast book existed have ``book`` "daily"); ``None`` = every book."""
+    rows = _read("decisions.jsonl", Decision)
+    return rows if book is None else [d for d in rows if d.book == book]
 
 
 def append_decisions(rows: list[Decision]) -> None:
@@ -161,6 +165,45 @@ def append_equity(rows: list[EquityPoint]) -> None:
     """Append points for days a book has no point yet: a day's mark is written once and never replaced."""
     have = {(e.book, e.day) for e in equity_points()}
     _append("equity.jsonl", [e for e in rows if (e.book, e.day) not in have])
+
+
+# ── research traces and gaps ─────────────────────────────────────────────────────────────────────
+def traces() -> list[Trace]:
+    return _read("research_trace.jsonl", Trace)
+
+
+def append_traces(rows: list[Trace]) -> None:
+    _append("research_trace.jsonl", rows)
+
+
+def prune_traces(now: datetime | None = None) -> int:
+    """Drop trace lines older than ``flags.TRACE_KEEP_DAYS`` (the only line type ever pruned: observability, not the scored record). Returns how many."""
+    now = now or datetime.now(UTC)
+    rows = traces()
+    keep = [t for t in rows if (parse_iso(t.at) or now) >= now - timedelta(days=flags.TRACE_KEEP_DAYS)]
+    if len(keep) == len(rows):
+        return 0
+    path = root() / "research_trace.jsonl"
+    tmp = path.with_suffix(".tmp")
+    tmp.write_text("".join(t.model_dump_json() + "\n" for t in keep), encoding="utf-8", newline="\n")
+    os.replace(tmp, path)
+    return len(rows) - len(keep)
+
+
+def gaps() -> list[Gap]:
+    return _read("gaps.jsonl", Gap)
+
+
+def append_gaps(rows: list[Gap]) -> None:
+    _append("gaps.jsonl", rows)
+
+
+def gap_fills() -> list[GapFill]:
+    return _read("gap_fills.jsonl", GapFill)
+
+
+def append_gap_fills(rows: list[GapFill]) -> None:
+    _append("gap_fills.jsonl", rows)
 
 
 # ── status ───────────────────────────────────────────────────────────────────────────────────────
