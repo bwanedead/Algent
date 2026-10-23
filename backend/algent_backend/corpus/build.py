@@ -91,11 +91,13 @@ def _build_into(db: sqlite3.Connection, only: list[str] | None, *, full: bool, s
     report: dict[str, Any] = {"sources": {}}
     for src in sources.load(only):
         report["sources"][src.name] = _run_source(db, src, full=full, since=since, now=now)
-    db.execute("BEGIN")
-    entities = link.finish(db)
-    db.execute("INSERT OR REPLACE INTO meta VALUES ('built_at', ?)", (now,))
-    db.execute("COMMIT")
-    report["entities"] = entities
+    touched = full or any(s["changed"] or s["removed"] or s["errors"] for s in report["sources"].values())
+    report["touched"] = touched
+    if touched:                                                # nothing changed: the link pass would reproduce what is already there
+        db.execute("BEGIN")
+        report["entities"] = link.finish(db)
+        db.execute("INSERT OR REPLACE INTO meta VALUES ('built_at', ?)", (now,))
+        db.execute("COMMIT")
     return report
 
 
@@ -124,11 +126,12 @@ def build(store: Path | str | None = None, *, full: bool = False, since: str = "
         report = _build_into(db, only, full=full, since=since, now=now)
         report["unresolved"] = link.unresolved_count(db)
         report["rows"] = counts(db)
-        db.execute("PRAGMA optimize")
-        free = db.execute("PRAGMA freelist_count").fetchone()[0] / max(1, db.execute("PRAGMA page_count").fetchone()[0])
-        if not full and free > flags.VACUUM_FREE_SHARE:
-            db.execute("VACUUM")
-            report["vacuumed"] = True
+        if report["touched"]:
+            db.execute("PRAGMA optimize")
+            free = db.execute("PRAGMA freelist_count").fetchone()[0] / max(1, db.execute("PRAGMA page_count").fetchone()[0])
+            if not full and free > flags.VACUUM_FREE_SHARE:
+                db.execute("VACUUM")
+                report["vacuumed"] = True
         db.execute("PRAGMA wal_checkpoint(TRUNCATE)")
     finally:
         db.close()

@@ -115,7 +115,7 @@ copying a changed file whole, now bounded by the 10 MB mirror threshold). Every 
    - journald: `infra/server/journald-ohmega.conf` (`SystemMaxUse=200M`), installed by `install_schedules.sh` (needs sudo); one-liner in the file header.
    - `library_store` and `geoledger_store`: **no change needed, on purpose.** The library is a single SQLite file (page-level writes; the 129 MB "written" is its mtime), and the geoledger is already append-only JSONL. Splitting either would add code for no saving. What actually churned was the git mirror copying changed files whole; the 10 MB threshold fixes that. The envelope's "written 7 d" column will show if either ever really rewrites.
    - `docs/guides/accounts.md`: the inventory (names only), with the cells only the operator can know marked **unrecorded**.
-6. **Then features resume**: custom domain for R2 (production reads); Vercel usage check / plan decision; GPS jamming/attack log; the knowledge graph for agents.
+6. **Then features resume**: custom domain for R2 (production reads); Vercel usage check / plan decision; GPS jamming/attack log; the knowledge graph for agents (Phase A built: the `corpus_index` product, `corpus-index.md`; server views and agent endpoints next).
 
 ## Operator checklist (server, in this order)
 1. Deploy happens by push (the server pulls `organic-dev` every 5 min). Then `ssh` in.
