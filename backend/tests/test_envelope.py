@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import os
 import time
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -56,6 +56,10 @@ class FakeProbes(envelope.Probes):
     def spend_by_day(self):
         return self.kw.get("spend", {"2026-10-23": 1.5})
 
+    def queue_rows(self):
+        return self.kw.get("queue", [{"job": "views", "prio": 2, "outcome": "ok", "wait_s": 0.0, "locked": True, "ts": NOW.isoformat(),
+                                      "start": NOW.timestamp() - 3600, "end": NOW.timestamp() - 3500}])
+
     def state_path(self):
         return self.tmp / "envelope_state.json"
 
@@ -68,12 +72,12 @@ def test_a_healthy_box_is_all_ok_and_logs_one_line(tmp_path, monkeypatch) -> Non
     monkeypatch.setenv("HOME", str(tmp_path))
     monkeypatch.setenv("USERPROFILE", str(tmp_path))
     rep = run(tmp_path)
-    assert rep["ok"] and rep["summary"] == "11 ok, 0 warn, 0 fail"
-    assert set(rep["rows"]) == {"disk", "memory", "journald", "r2", "backup", "restore_drill", "feeds", "search", "site", "spend_day", "spend_month"}
+    assert rep["ok"] and rep["summary"] == "14 ok, 0 warn, 0 fail"
+    assert set(rep["rows"]) == {"disk", "memory", "journald", "r2", "backup", "restore_drill", "feeds", "search", "site", "queue_waits", "queue_busy", "queue_memory", "spend_day", "spend_month"}
     line = envelope.one_line(rep)
-    assert line.startswith("envelope all 11 rows ok") and "\n" not in line
+    assert line.startswith("envelope all 14 rows ok") and "\n" not in line
     envelope.log(rep)
-    assert "envelope all 11 rows ok" in (tmp_path / "ops-log.md").read_text(encoding="utf-8")
+    assert "envelope all 14 rows ok" in (tmp_path / "ops-log.md").read_text(encoding="utf-8")
 
 
 @pytest.mark.parametrize("kw,row,status", [
@@ -150,7 +154,7 @@ def test_the_doctor_embeds_only_the_rows_it_lacks(tmp_path) -> None:
         envelope_probes = FakeProbes(tmp_path, roots={}, smoke={"at": datetime.now(UTC).isoformat(), "ok": True, "summary": "x"})
 
     out = doctor.check_envelope({}, P())
-    assert set(out) == {"envelope:journald", "envelope:backup", "envelope:restore_drill", "envelope:site", "envelope:spend_day", "envelope:spend_month"}
+    assert set(out) == {"envelope:journald", "envelope:backup", "envelope:restore_drill", "envelope:site", "envelope:queue_waits", "envelope:queue_busy", "envelope:queue_memory", "envelope:spend_day", "envelope:spend_month"}
     assert all(v["status"] == "ok" for v in out.values())
 
 
@@ -168,3 +172,24 @@ def test_the_site_row_follows_the_last_smoke_test(tmp_path) -> None:
     late = run(tmp_path, smoke={"at": "2026-10-23T02:00:00+00:00", "ok": True, "summary": "x"})["rows"]["site"]
     assert late["status"] == "warn" and "5.2 h ago" in late["detail"]
     assert run(tmp_path, smoke={})["rows"]["site"]["status"] == "warn"                            # never run: unknown, not green
+
+
+def _q(job="views", prio=2, **kw):
+    return {"job": job, "prio": prio, "ts": (NOW - timedelta(hours=1)).isoformat(), **kw}
+
+
+def test_the_queue_rows_judge_skips_busy_share_and_memory_breaches(tmp_path) -> None:
+    ok = {"outcome": "ok", "wait_s": 0.0, "locked": True, "start": NOW.timestamp() - 7200, "end": NOW.timestamp() - 7000}
+    r = run(tmp_path, queue=[_q(**ok)])["rows"]
+    assert r["queue_waits"]["status"] == r["queue_busy"]["status"] == r["queue_memory"]["status"] == "ok"
+    skipped_collector = run(tmp_path, queue=[_q("library", 3, outcome="skipped", reason="busy: x")])["rows"]["queue_waits"]
+    assert skipped_collector["status"] == "warn" and "1 skipped busy (library)" in skipped_collector["detail"]
+    assert run(tmp_path, queue=[_q("daily-1", 1, outcome="skipped", reason="busy: x")])["rows"]["queue_waits"]["status"] == "fail"
+    assert run(tmp_path, queue=[_q("daily-1", 1, outcome="ok", deadline_missed=True, wait_s=0)])["rows"]["queue_waits"]["status"] == "warn"
+    t = NOW.timestamp()
+    heavy = [_q("daily-1", 1, outcome="ok", wait_s=0, locked=True, start=t - 20 * 3600, end=t - 1000)]
+    assert run(tmp_path, queue=heavy)["rows"]["queue_busy"]["status"] == "fail"                   # 20 h of 24 busy
+    breach = {"kind": "breach", "job": "views", "ts": (NOW - timedelta(hours=1)).isoformat()}
+    assert run(tmp_path, queue=[breach])["rows"]["queue_memory"]["status"] == "warn"
+    assert run(tmp_path, queue=[breach] * 3)["rows"]["queue_memory"]["status"] == "fail"
+    assert run(tmp_path, queue=[])["rows"]["queue_busy"]["status"] == "warn"                       # nothing recorded: unknown, not green
