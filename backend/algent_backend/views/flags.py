@@ -16,7 +16,7 @@ BUDGET_BYTES = {
     "country": 160_000,        # panel stats + 120 briefs (~250 B) + context + 50 sanctions rows + 10 calendar + grid + series
     "situation": 600_000,      # newest 3 full Daily sections (each up to ~120 KB with its map) + a compact index of every other day
     "situations": 150_000,     # one slim row (+ 21-day strips) per situation, a few dozen situations
-    "entity": 80_000,          # profile + 40 documents/claims/events + 15 relations + 12 series of <=24 points
+    "entity": 60_000,          # profile + 15 documents + 10 claims + 15 events + 12 relations + 12 series of <=24 points
     "event": 60_000,           # the developments of one theater-day (<= ~12 developments of a few hundred bytes)
     "home": 200_000,           # two trimmed desk reports (trackers, no map/visual specs) + moving situations + facts
     "hud": 300_000,            # globe rows for ~250 countries + report block + theaters + pulses + calendar + sanctions + trader curve
@@ -37,10 +37,10 @@ SERIES_PER_ENTITY = 12
 SERIES_POINTS = 24             # yearly indicators: 24 years; daily series: ~3 weeks of sparkline
 STREAM_FULL_DAYS = 3           # newest days of a situation stream sent as full Daily sections; older days are index rows linking into the Daily
 STREAM_INDEX_DAYS = 400        # index rows kept per situation (a year and more of daily coverage)
-ENTITY_DOCS = 40
-ENTITY_CLAIMS = 20
-ENTITY_EVENTS = 30
-ENTITY_RELATED = 15
+ENTITY_DOCS = 15               # newest documents mentioning the entity (an agent asks `about` with a window for more)
+ENTITY_CLAIMS = 10
+ENTITY_EVENTS = 15
+ENTITY_RELATED = 12
 EVENT_DEVELOPMENTS = 40
 HUD_DAILY_ITEMS = 10
 HUD_PULSES = 12
@@ -54,7 +54,7 @@ HUD_POSITIONS = 6
 GLOBE_DAILIES = 21             # dailies the globe's theme tally reads (7-to-30-day band); unchanged from the page it replaces
 GRAPH_REFS = 300               # theater refs the graph keeps (heaviest ties first); the pages show tens
 SEARCH_ENTITIES = 6000         # entities with substance (>= SEARCH_MIN_USES uses) in the search index
-SEARCH_MIN_USES = 2
+SEARCH_MIN_USES = 3
 SEARCH_DOCUMENTS = 4000        # newest document titles
 SEARCH_ALIASES = 4
 

@@ -20,7 +20,7 @@ from .context import ViewContext
 
 #: Kinds that get an entity view (countries/situations have their own families; pulses, markets and free-text topics are not "things").
 KINDS = ("person", "org", "actor", "place", "vessel", "lab", "model")
-ENTITY_VIEWS_MAX = 12000
+ENTITY_VIEWS_MAX = 8000
 _SAFE = re.compile(r"[^A-Za-z0-9._-]+")
 
 
@@ -92,7 +92,7 @@ def _place_block(ctx: ViewContext, entity_id: str) -> dict[str, Any] | None:
     return {"asset": doc["asset"], "history": events, "theaters": [refs.get(t) or {"id": t, "name": t, "direction": "unclear", "band": "unassessed", "linked": False} for t in sorted(via)]}
 
 
-def build_one(ctx: ViewContext, entity_id: str, uses: int) -> View | None:
+def build_one(ctx: ViewContext, entity_id: str, uses: int, rel: Any = None) -> View | None:
     from algent_backend.corpus.query import about as q_about
     from algent_backend.corpus.query import entity as q_entity
     from algent_backend.corpus.query import graph as q_graph
@@ -103,14 +103,14 @@ def build_one(ctx: ViewContext, entity_id: str, uses: int) -> View | None:
     if row is None:
         return None
     e = resolve.shape(row)
-    prof = q_entity.profile(db, e, timeline_n=flags.ENTITY_EVENTS)
+    prof = q_entity.profile(db, e, timeline_n=0)
     got = q_about.about(db, entity_id, limit=flags.ENTITY_DOCS)
     merged = [r[0] for r in db.execute("SELECT old_id FROM entity_merge WHERE canon_id = ? ORDER BY old_id", (entity_id,))]
     body = {
         "id": entity_id, "kind": e["kind"], "name": e["name"], "aliases": e["aliases"][:20], "iso2": e.get("iso2"), "lat": e.get("lat"), "lon": e.get("lon"),
         "attrs": {k: v for k, v in (e.get("attrs") or {}).items() if isinstance(v, (str, int, float, bool))}, "also_known_as_ids": merged, "uses": uses,
         "counts": prof["counts"], "latest": prof["latest"], "situations": prof["situations"], "relations": prof["relations"][: flags.ENTITY_RELATED],
-        "related": q_graph.related(db, entity_id, limit=flags.ENTITY_RELATED), "timeline": prof["timeline"],
+        "related": (rel or q_graph.RelatedIndex(db)).related(entity_id, limit=flags.ENTITY_RELATED),
         "documents": got["documents"][: flags.ENTITY_DOCS], "claims": got["claims"][: flags.ENTITY_CLAIMS], "events": got["events"][: flags.ENTITY_EVENTS],
         "series": _slim_series(q_series.series(db, entity_id=entity_id, limit=flags.SERIES_PER_ENTITY)),
     }
@@ -123,10 +123,14 @@ def build_one(ctx: ViewContext, entity_id: str, uses: int) -> View | None:
 
 
 def build(ctx: ViewContext) -> list[View]:
+    from algent_backend.corpus.query import graph as q_graph
+
     out = []
-    for entity_id, uses in candidates(ctx):
+    cands = candidates(ctx)
+    rel = q_graph.RelatedIndex(ctx.corpus.db) if cands else None                 # one pass over the tables, then a lookup per entity
+    for entity_id, uses in cands:
         try:
-            v = build_one(ctx, entity_id, uses)
+            v = build_one(ctx, entity_id, uses, rel)
         except Exception as exc:  # noqa: BLE001 - one entity that cannot be summarised must not lose the others
             print(f"[views] entity {entity_id}: {type(exc).__name__}: {str(exc)[:120]}", flush=True)
             continue

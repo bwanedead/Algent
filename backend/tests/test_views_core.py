@@ -162,3 +162,12 @@ def test_every_view_has_the_envelope_and_a_budget():
         assert v.family in flags.BUDGET_BYTES and not v.over_budget(), v.key
     assert one(res.views, "manifest")["families"]["country"]["count"] >= 5
     assert make("graph", "graph", {}, as_of="", sources=[]).path == "views/graph.json"
+
+
+def test_a_build_is_deterministic_so_an_unchanged_record_hashes_the_same(tmp_path):
+    a, b = tmp_path / "a", tmp_path / "b"
+    a.mkdir()
+    b.mkdir()
+    first = {v.key: json.dumps(v.body, sort_keys=True) for v in build.build_all(context(a, with_corpus=True)).views}
+    second = {v.key: json.dumps(v.body, sort_keys=True) for v in build.build_all(context(b, with_corpus=True)).views}
+    assert first == second

@@ -55,3 +55,47 @@ def related(db: sqlite3.Connection, entity_id: str, *, limit: int = 15, kinds: s
         if len(out) >= limit:
             break
     return out
+
+
+class RelatedIndex:
+    """``related`` for many entities at once. One pass over the tables fills a temporary pair table (entity, other, how, count); each entity is then a lookup.
+    ``related`` joins ``mentions`` with itself per call, which is right for one question and far too slow for twelve thousand: bulk consumers (the server's entity
+    views) build this once. The scoring is the same, so ``RelatedIndex(db).related(e)`` equals ``related(db, e)`` (tests/test_corpus_related.py)."""
+
+    _PAIRS = (
+        ("edges", "SELECT src_id AS a, dst_id AS b, COUNT(*) AS n FROM relations WHERE src_id IS NOT NULL AND dst_id IS NOT NULL GROUP BY 1, 2"),
+        ("edges", "SELECT dst_id AS a, src_id AS b, COUNT(*) AS n FROM relations WHERE src_id IS NOT NULL AND dst_id IS NOT NULL GROUP BY 1, 2"),
+        ("claims", "SELECT m1.entity_id AS a, m2.entity_id AS b, COUNT(DISTINCT m1.claim_id) AS n FROM mentions m1 JOIN mentions m2 ON m2.claim_id = m1.claim_id AND m2.entity_id != m1.entity_id "
+                   "WHERE m1.claim_id != '' AND m1.entity_id IS NOT NULL AND m2.entity_id IS NOT NULL GROUP BY 1, 2"),
+        ("documents", "SELECT m1.entity_id AS a, m2.entity_id AS b, COUNT(DISTINCT m1.document_id) AS n FROM mentions m1 JOIN mentions m2 ON m2.document_id = m1.document_id AND m2.entity_id != m1.entity_id "
+                      "WHERE m1.document_id != '' AND m1.entity_id IS NOT NULL AND m2.entity_id IS NOT NULL GROUP BY 1, 2"),
+        ("events", "SELECT a1.entity_id AS a, a2.entity_id AS b, COUNT(DISTINCT a1.event_id) AS n FROM event_actors a1 JOIN event_actors a2 ON a2.event_id = a1.event_id AND a2.entity_id != a1.entity_id "
+                   "WHERE a1.entity_id IS NOT NULL AND a2.entity_id IS NOT NULL GROUP BY 1, 2"),
+    )
+
+    def __init__(self, db: sqlite3.Connection) -> None:
+        self.db = db
+        db.execute("DROP TABLE IF EXISTS temp.co")
+        db.execute("CREATE TEMP TABLE co (a TEXT, b TEXT, how TEXT, n INTEGER)")
+        for how, sql in self._PAIRS:
+            db.execute(f"INSERT INTO temp.co SELECT a, b, '{how}', n FROM ({sql})")      # noqa: S608 - constants
+        db.execute("CREATE INDEX temp.ix_co ON co(a)")
+
+    def related(self, entity_id: str, *, limit: int = 15, kinds: set[str] | None = None) -> list[dict[str, Any]]:
+        score: dict[str, dict[str, float]] = {}
+        for r in self.db.execute("SELECT b, how, n FROM temp.co WHERE a = ?", (entity_id,)):
+            if r["b"] != entity_id:
+                score.setdefault(r["b"], {}).setdefault(r["how"], 0.0)
+                score[r["b"]][r["how"]] += r["n"]
+        weights = {"edges": _EDGE_WEIGHT, "claims": _CLAIM_WEIGHT, "events": _EVENT_WEIGHT, "documents": _DOC_WEIGHT}
+        ranked = sorted(score.items(), key=lambda kv: (-sum(weights[k] * v for k, v in kv[1].items()), kv[0]))
+        out = []
+        for other, via in ranked:
+            e = self.db.execute("SELECT id, name, kind FROM entities WHERE id = ?", (other,)).fetchone()
+            if e is None or (kinds and e["kind"] not in kinds):
+                continue
+            out.append({"entity": e["id"], "name": e["name"], "kind": e["kind"], "score": round(sum(weights[k] * v for k, v in via.items()), 1),
+                        "via": {k: int(v) for k, v in via.items()}})
+            if len(out) >= limit:
+                break
+        return out

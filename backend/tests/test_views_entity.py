@@ -11,7 +11,8 @@ def views_by_key(ctx) -> dict:
     return {v.key: v for v in entity.build(ctx)}
 
 
-def test_entities_with_substance_get_a_view_with_provenance_and_basis(tmp_path):
+def test_entities_with_substance_get_a_view_with_provenance_and_basis(tmp_path, monkeypatch):
+    monkeypatch.setattr(flags, "SEARCH_MIN_USES", 2)           # the tiny corpus has little to say about anyone
     ctx = context(tmp_path, with_corpus=True)
     views = views_by_key(ctx)
     irgc = views["entity/org/irgc"].body
@@ -21,7 +22,7 @@ def test_entities_with_substance_get_a_view_with_provenance_and_basis(tmp_path):
     claim = irgc["claims"][0]
     assert claim["sources"][0]["url"] == "https://reuters.com/hormuz" and claim["grounding"] == "snapshotted" and claim["product"] == "profiles"
     assert irgc["provenance"]["sources"][0]["product"] == "corpus_index" and irgc["schema"] == "ohmega.view.entity/1"
-    assert irgc["timeline"][0]["title"] == "Strait closed"
+    assert irgc["events"][0]["title"] == "Strait closed" and "timeline" not in irgc            # the timeline is documents and events merged by date; the API does that
     leader = views["entity/person/iran-leader"].body
     assert leader["relations"][0]["rel"] == "head_of_state" and leader["relations"][0]["direction"] == "in"
 

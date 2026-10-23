@@ -238,7 +238,7 @@ PRODUCTS: tuple[Product, ...] = (
         id="views", title="Views (server-built pages and agent data)", owner="views",
         what="Small versioned JSON views the server builds from the staged documents and the corpus index (country, situation, entity, event, home, hud, daily hub, theater-state graph, search index) and publishes to R2, so no page and no agent aggregates raw documents at request time.",
         stores=(Store("views_store", loc.views, "ALGENT_VIEWS_STORE", False, "derived; `newsroom views build` rebuilds every view from the other products' stores",
-                      budget=_b(60, 400, 1500, 80, 2, "estimate: ~12 k entity views of ~4 KB, ~250 country views of ~20 KB, situation views of up to 450 KB; replace with `newsroom views stats` from the server")),),
+                      budget=_b(120, 400, 1500, 120, 2, "estimate from the dev corpus: up to 8 k entity views of ~10 KB, ~250 country views of ~20 KB, situation views of up to 450 KB; replace with `newsroom views stats` from the server")),),
         retention=(Retention("derived", "rebuilt each run from the record; a full build prunes keys it no longer produces from the store (bucket objects are overwritten, never listed)", "views/build.py::build_all", "job:views"),),
         why="derived: every field comes from another product's published documents or the corpus index; deleting the store loses nothing",
         jobs=(Job("views", ("views", "build"), "2/4:50", every_min=240, what="build every view and publish the changed ones (after corpus-build)"),
