@@ -1,0 +1,346 @@
+{
+  "schema": "ohmega.products/1",
+  "products": [
+    {
+      "id": "dailies",
+      "title": "Dailies (geopolitics, AI)",
+      "routes": [
+        "/daily",
+        "/daily/[desk]",
+        "/daily/[desk]/[date]",
+        "/daily/[desk]/archive",
+        "/intel/briefs/[slug]",
+        "/intel/events/[date]/[theater]/[n]"
+      ],
+      "publishes": [
+        "daily/",
+        "briefs/",
+        "snapshots/",
+        "theaters/",
+        "/analytics/daily/"
+      ],
+      "feeds_from": [
+        "instruments",
+        "statements",
+        "library",
+        "live",
+        "sanctions",
+        "calendar",
+        "maritime",
+        "geoledger",
+        "actors"
+      ],
+      "refresh_minutes": 1440
+    },
+    {
+      "id": "situations",
+      "title": "Situations (living files)",
+      "routes": [
+        "/situations",
+        "/situations/[id]",
+        "/intel/graph"
+      ],
+      "publishes": [
+        "theaters/"
+      ],
+      "feeds_from": [
+        "dailies",
+        "actors",
+        "pulses"
+      ],
+      "refresh_minutes": null
+    },
+    {
+      "id": "pulses",
+      "title": "Pulses (0-100 gauges)",
+      "routes": [
+        "/pulses"
+      ],
+      "publishes": [
+        "pulses/"
+      ],
+      "feeds_from": [
+        "dailies"
+      ],
+      "refresh_minutes": null
+    },
+    {
+      "id": "articles",
+      "title": "Articles",
+      "routes": [
+        "/articles",
+        "/articles/[slug]"
+      ],
+      "publishes": [
+        "articles/",
+        "docs/",
+        "/analytics/"
+      ],
+      "feeds_from": [
+        "profiles"
+      ],
+      "refresh_minutes": null
+    },
+    {
+      "id": "profiles",
+      "title": "Research profiles (the corpus)",
+      "routes": [],
+      "publishes": [],
+      "feeds_from": [],
+      "refresh_minutes": null
+    },
+    {
+      "id": "menu",
+      "title": "Menu (headlines) and run logs",
+      "routes": [
+        "/daily/headlines",
+        "/daily/headlines/[slug]"
+      ],
+      "publishes": [
+        "radar/"
+      ],
+      "feeds_from": [],
+      "refresh_minutes": 1440
+    },
+    {
+      "id": "live",
+      "title": "Live feeds (ships, aircraft, quakes, fires, outages)",
+      "routes": [
+        "/live"
+      ],
+      "publishes": [
+        "live/"
+      ],
+      "feeds_from": [],
+      "refresh_minutes": 10
+    },
+    {
+      "id": "flows",
+      "title": "Flows (ship lanes, grain, money)",
+      "routes": [],
+      "publishes": [
+        "live/"
+      ],
+      "feeds_from": [
+        "live"
+      ],
+      "refresh_minutes": 15
+    },
+    {
+      "id": "satellite",
+      "title": "Satellite (Sentinel-2 chips, night lights)",
+      "routes": [
+        "/intel/satellite"
+      ],
+      "publishes": [
+        "live/",
+        "/satellite/"
+      ],
+      "feeds_from": [],
+      "refresh_minutes": 1440
+    },
+    {
+      "id": "maritime",
+      "title": "Maritime behaviour",
+      "routes": [
+        "/intel/maritime"
+      ],
+      "publishes": [
+        "maritime/"
+      ],
+      "feeds_from": [
+        "live"
+      ],
+      "refresh_minutes": 1440
+    },
+    {
+      "id": "sanctions",
+      "title": "Sanctions",
+      "routes": [
+        "/intel/sanctions"
+      ],
+      "publishes": [
+        "sanctions/"
+      ],
+      "feeds_from": [],
+      "refresh_minutes": 360
+    },
+    {
+      "id": "calendar",
+      "title": "Calendar (look-ahead)",
+      "routes": [
+        "/calendar"
+      ],
+      "publishes": [
+        "calendar/"
+      ],
+      "feeds_from": [
+        "statements"
+      ],
+      "refresh_minutes": 1440
+    },
+    {
+      "id": "ai_benchmarks",
+      "title": "AI benchmarks",
+      "routes": [
+        "/intel/ai"
+      ],
+      "publishes": [
+        "data/ai-benchmarks.json"
+      ],
+      "feeds_from": [
+        "library"
+      ],
+      "refresh_minutes": 720
+    },
+    {
+      "id": "instruments",
+      "title": "Instruments (public data series)",
+      "routes": [],
+      "publishes": [
+        "data/"
+      ],
+      "feeds_from": [
+        "live"
+      ],
+      "refresh_minutes": 360
+    },
+    {
+      "id": "statements",
+      "title": "Statements (on the record)",
+      "routes": [
+        "/intel/record"
+      ],
+      "publishes": [
+        "data/"
+      ],
+      "feeds_from": [
+        "library"
+      ],
+      "refresh_minutes": 360
+    },
+    {
+      "id": "actors",
+      "title": "Actors (state profiles)",
+      "routes": [
+        "/intel/actors",
+        "/intel/actors/[iso]"
+      ],
+      "publishes": [
+        "actors/",
+        "data/actors/"
+      ],
+      "feeds_from": [
+        "instruments"
+      ],
+      "refresh_minutes": null
+    },
+    {
+      "id": "geoledger",
+      "title": "Geoledger (assets and status events)",
+      "routes": [
+        "/intel/places/[id]"
+      ],
+      "publishes": [
+        "geo/"
+      ],
+      "feeds_from": [],
+      "refresh_minutes": null
+    },
+    {
+      "id": "markets",
+      "title": "Markets and the paper trader",
+      "routes": [
+        "/intel/forecasts",
+        "/intel/track-record"
+      ],
+      "publishes": [
+        "data/track-record.json"
+      ],
+      "feeds_from": [
+        "dailies"
+      ],
+      "refresh_minutes": 240
+    },
+    {
+      "id": "library",
+      "title": "Source library (crawl cache)",
+      "routes": [],
+      "publishes": [],
+      "feeds_from": [],
+      "refresh_minutes": 240
+    },
+    {
+      "id": "agent_feeds",
+      "title": "Agent feeds and API",
+      "routes": [
+        "/developers"
+      ],
+      "publishes": [
+        "data/",
+        "feeds/"
+      ],
+      "feeds_from": [
+        "dailies",
+        "situations",
+        "pulses",
+        "actors"
+      ],
+      "refresh_minutes": null
+    },
+    {
+      "id": "site",
+      "title": "Site hubs and surfaces",
+      "routes": [
+        "/",
+        "/data",
+        "/globe",
+        "/lab/scene"
+      ],
+      "publishes": [],
+      "feeds_from": [
+        "dailies",
+        "situations",
+        "live",
+        "flows",
+        "maritime",
+        "actors",
+        "geoledger",
+        "pulses"
+      ],
+      "refresh_minutes": null
+    },
+    {
+      "id": "ops",
+      "title": "Operations (deploy, watchdog, envelope, housekeeping)",
+      "routes": [],
+      "publishes": [],
+      "feeds_from": [],
+      "refresh_minutes": 2
+    },
+    {
+      "id": "backup",
+      "title": "Backups",
+      "routes": [],
+      "publishes": [],
+      "feeds_from": [],
+      "refresh_minutes": 1440
+    },
+    {
+      "id": "database",
+      "title": "Legacy Postgres tables",
+      "routes": [],
+      "publishes": [],
+      "feeds_from": [],
+      "refresh_minutes": 1440
+    },
+    {
+      "id": "caches",
+      "title": "Caches and scratch",
+      "routes": [],
+      "publishes": [],
+      "feeds_from": [],
+      "refresh_minutes": null
+    }
+  ]
+}

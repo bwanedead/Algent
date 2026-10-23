@@ -19,28 +19,14 @@ MEM_AVAILABLE_MB = (250.0, 600.0)
 #: applied, 500 MB (it was 562 MB uncapped) means it is not working.
 JOURNAL_MB = (250.0, 500.0)
 
-# ── the stores: size and what was written in the last 7 days (MB) ────────────────────────────────
-#: name -> (size warn, size fail, 7-day written warn). "Written" = bytes of files modified in the last 7 days: for an append-only store that is
-#: growth, for a store that rewrites files whole it is the churn the register wants to see. Budgets are ~3x today's size (measured 2026-10-23,
-#: foundation.md section 3) for stores that should hold steady, and the store's own bound where it has one.
-STORE_MB: dict[str, tuple[float, float, float]] = {
-    "maritime_store": (800, 3000, 800),       # profile book <= 50 000 vessels x 4 d (tens of MB) + 7 d of compact log + daily summaries; 1.7 GB log was the incident
-    "library_store": (400, 1000, 400),        # crawl cache, bounded by the crawl cap; 123 MB today
-    "live_store": (150, 500, 200),            # 46 MB of snapshots and baselines (relearn in ~3 weeks if lost)
-    "profile_store": (300, 1500, 100),        # THE corpus: append-only, 34 MB, ~5 MB a week
-    "intel_store": (250, 1500, 80),           # dailies, boards, drafts, saved visuals: ~1.4 MB a day plus ~0.3 MB of visuals
-    "actors_store": (100, 500, 50),           # 17 MB, refetchable
-    "geoledger_store": (100, 500, 100),       # 17 MB, rewritten per run
-    "statements_store": (100, 500, 60),       # 15 MB, ~7 MB a week
-    "instruments_store": (100, 500, 100),     # 9 MB, rewritten per fetch
-    "markets_store": (100, 500, 100),         # 8 MB
-    "sanctions_store": (100, 500, 100),       # 7 MB
-    "ai_benchmarks_store": (50, 200, 50),     # 3 MB
-    "pulse_store": (50, 200, 20),             # 2 MB, append-only, irreplaceable
-    "draft_store": (100, 500, 50),            # paid editorial drafts
-    "treatment_store": (100, 500, 50),
-    "lead_store": (100, 500, 50),
-}
+# ── the stores ───────────────────────────────────────────────────────────────────────────────────
+#: Per-store size and 7-day-write budgets live WITH each store in the product registry (ops/products/registry.py, ``Store.budget``), each with the
+#: reason for its numbers: "written" = bytes of files modified in the last 7 days (growth for an append-only store, churn for one that rewrites whole
+#: files). A store the registry does not know gets this default, and the registry test fails first.
+DEFAULT_STORE_MB = (100.0, 500.0, 100.0)
+#: ``newsroom products check``: a product is stale when its heartbeat file is older than this many of its slowest timer's cadences (plus five minutes):
+#: the timers can slip a cycle, so one missed run is not stale, three are.
+PRODUCT_STALE_CADENCES = 3
 
 # ── publication and backups ──────────────────────────────────────────────────────────────────────
 #: R2 month-to-date uses the budget meter's own levels (database/flags.py: warn 70%, hard stop 90% of the free tier), so there is one definition.

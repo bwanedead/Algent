@@ -3,7 +3,7 @@
 judged ok / warn / fail against the budgets in ``envelope_flags.py``. Spends nothing and writes nothing but a small state file (daily
 spend, so a month total survives the heartbeat files' three-day retention). The doctor embeds the rows it does not already have.
 
-Rows: disk, memory, journald, store:<name> (size + 7-day written), r2, backup, restore_drill, feeds, search, spend_day, spend_month.
+Rows: disk, memory, journald, store:<name> (size + 7-day written; budgets from the product registry), r2, backup, restore_drill, feeds, search, spend_day, spend_month.
 Every measurement is a method on ``Probes`` so tests substitute fakes; a probe that cannot measure returns None and its row says "unknown"
 (warn), never a guess.
 """
@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import Any
 
 from algent_backend.ops import doctor, envelope_flags as f, opslog
+from algent_backend.ops.products import views
 
 OK, WARN, FAIL = doctor.OK, doctor.WARN, doctor.FAIL
 _MB = 1024 * 1024
@@ -55,16 +56,10 @@ class Probes(doctor.Probes):
             return None
 
     def store_roots(self) -> dict[str, Path]:
-        """Every durable store on this machine by name: the backup coverage list (single source of truth) plus the ones it deliberately leaves out."""
-        from algent_backend.data_backup import sync
-        from algent_backend.library.store import store_dir as library_dir
-        from algent_backend.live.store import root as live_root
-        from algent_backend.maritime.store import root as maritime_root
+        """Every budgeted store on this machine by name: the product registry's stores (ops/products), the single list of what we keep."""
+        from algent_backend.ops.products import views
 
-        backend = Path(__file__).resolve().parents[2]
-        roots = {n: p for n, p in sync._sources().items() if n.endswith("_store")}
-        roots["maritime_store"], roots["library_store"], roots["live_store"] = maritime_root(), library_dir(), live_root()
-        return {n: (p if p.is_absolute() else backend / p) for n, p in sorted(roots.items())}
+        return views.store_roots()
 
     def store_stats(self, root: Path, now: float) -> tuple[int, int] | None:
         """(bytes, bytes written in the last 7 days) of one directory tree; None when it does not exist here."""
@@ -159,7 +154,8 @@ def rows_stores(p: Probes, now: float) -> dict[str, dict[str, Any]]:
         if got is None:
             continue
         size, recent = got[0] / _MB, got[1] / _MB
-        warn, fail, grow = f.STORE_MB.get(name, (100, 500, 100))
+        b = views.budget_for(name)
+        warn, fail, grow = (b.warn_mb, b.fail_mb, b.written_mb) if b else f.DEFAULT_STORE_MB
         status = FAIL if size >= fail else WARN if size >= warn or recent >= grow else OK
         out[f"store:{name}"] = _row(status, f"{size:,.0f} MB, {recent:,.0f} MB written in 7 d", mb=round(size, 1), written_7d_mb=round(recent, 1),
                                     budget=f"size warn {warn} / fail {fail} MB, written warn {grow} MB")
@@ -198,8 +194,8 @@ def row_drill(p: Probes) -> dict[str, Any]:
                 value=round(age, 1), budget=f"stale > {f.DRILL_AGE_DAYS:.0f} d")
 
 
-def row_feeds(p: Probes, env: dict[str, str]) -> dict[str, Any]:
-    now, stale, live = datetime.now(UTC), [], 0
+def row_feeds(p: Probes, env: dict[str, str], now: datetime | None = None) -> dict[str, Any]:
+    now, stale, live = now or datetime.now(UTC), [], 0
     for r in p.feed_rows():
         if r["needs"]:
             continue                                            # no key: not a fault of the box
@@ -264,7 +260,7 @@ def run(env: dict[str, str] | None = None, probes: Probes | None = None, now: da
     steps: list[tuple[str, Any]] = [
         ("disk", lambda: row_disk(p)), ("memory", lambda: row_memory(p)), ("journald", lambda: row_journal(p)),
         ("stores", lambda: rows_stores(p, time.time())), ("r2", lambda: row_r2(p)), ("backup", lambda: row_backup(p)),
-        ("restore_drill", lambda: row_drill(p)), ("feeds", lambda: row_feeds(p, env)), ("search", lambda: row_search(p, env)),
+        ("restore_drill", lambda: row_drill(p)), ("feeds", lambda: row_feeds(p, env, now)), ("search", lambda: row_search(p, env)),
         ("spend", lambda: rows_spend(p, now)),
     ]
     rows: dict[str, dict[str, Any]] = {}

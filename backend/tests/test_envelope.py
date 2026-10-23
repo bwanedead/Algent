@@ -11,6 +11,8 @@ from pathlib import Path
 import pytest
 
 from algent_backend.ops import doctor, envelope, envelope_flags as f
+from algent_backend.ops.products import views
+from algent_backend.ops.products.model import Budget
 
 NOW = datetime(2026, 10, 23, 7, 10, tzinfo=UTC)
 
@@ -105,7 +107,7 @@ def test_stores_report_size_and_seven_day_writes(tmp_path) -> None:
 
 
 def test_a_store_over_budget_or_churning_is_flagged(tmp_path, monkeypatch) -> None:
-    monkeypatch.setitem(f.STORE_MB, "maritime_store", (1, 5, 1.5))
+    monkeypatch.setattr(views, "budget_for", lambda name: Budget(1, 1, 5, 1.5, 0, "test budget") if name == "maritime_store" else None)
     root = tmp_path / "maritime_store"
     root.mkdir()
     (root / "log").write_bytes(b"x" * 2_000_000)
@@ -149,8 +151,8 @@ def test_the_doctor_embeds_only_the_rows_it_lacks(tmp_path) -> None:
     assert all(v["status"] == "ok" for v in out.values())
 
 
-def test_every_budgeted_store_is_one_the_code_has() -> None:
-    from algent_backend.data_backup import sync
-
-    names = {n for n in sync._sources() if n.endswith("_store")} | {"maritime_store", "library_store", "live_store"}
-    assert set(f.STORE_MB) <= names | {"calendar_store"}
+def test_every_store_budget_comes_from_the_registry_and_is_measured() -> None:
+    """The envelope has no budget table of its own: its store rows are the registry's budgeted stores."""
+    assert not hasattr(f, "STORE_MB")
+    assert set(envelope.Probes().store_roots()) == {s.name for _, s in views.stores() if s.budget}
+    assert views.budget_for("maritime_store").fail_mb == 3000 and views.budget_for("nope") is None

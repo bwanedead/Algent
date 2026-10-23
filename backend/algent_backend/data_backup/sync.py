@@ -12,8 +12,8 @@ Rules:
   an accident, and an accident must not propagate into the only other copy.
 - Never raises. A backup that fails leaves the run's result untouched and says why.
 - Off in tests (``ALGENT_DATA_BACKUP=0``, set by conftest) — a test must never push data.
-Files over ``flags.MIRROR_MAX_FILE_BYTES`` are not mirrored: the R2 snapshot (``snapshot.py``) is the primary copy and covers them. This list
-(``_sources``) is the single source of truth for what is irreplaceable; the snapshot reads it too.
+Files over ``flags.MIRROR_MAX_FILE_BYTES`` are not mirrored: the R2 snapshot (``snapshot.py``) is the primary copy and covers them. What is
+irreplaceable is decided once, in the product registry (``ops/products``); ``_sources()`` reads it and so does the snapshot.
 Restore on a new machine: clone the repo and copy its folders back (``restore()``), or ``newsroom backup restore`` from the latest snapshot.
 """
 
@@ -39,56 +39,12 @@ def _repo_root() -> Path:
     return Path(__file__).resolve().parents[3]          # …/Algent
 
 
-def _env_dir(env: str, default: str) -> Path:
-    return Path(os.environ.get(env) or default)
-
-
 def _sources() -> dict[str, Path]:
-    """What is backed up, by the folder name it gets in the data repo."""
-    from algent_backend.agent_system.agents.pulse import PulseStore
-    from algent_backend.agent_system.agents.research.store import JsonProfileStore
+    """What is backed up, by the folder name it gets in the data repo: every backed-up store of an irreplaceable product in the product registry
+    (``ops/products/registry.py``) - the single list, read by the mirror, the R2 snapshot, the restore and the coverage test."""
+    from algent_backend.ops.products import views
 
-    backend = _repo_root() / "backend"
-
-    def resolve(p: Path) -> Path:
-        return p if p.is_absolute() else backend / p
-
-    from algent_backend.agent_system.agents.intel.heat import store_dir as intel_dir
-    from algent_backend.actors.store import store_dir as actors_dir
-    from algent_backend.agent_system.agents.statements.store import store_dir as statements_dir
-    from algent_backend.ai_benchmarks.store import root as ai_benchmarks_dir
-    from algent_backend.instruments.store import store_dir as instruments_dir
-
-    from algent_backend.geoledger.store import root as geoledger_dir
-    from algent_backend.lookahead.store import root as calendar_dir
-    from algent_backend.maritime.store import root as maritime_dir
-    from algent_backend.markets.store import root as markets_dir
-    from algent_backend.publishing import site_git
-    from algent_backend.sanctions.store import root as sanctions_dir
-
-    # The server is the system of record (no database): every corpus store is mirrored, plus what was PUBLISHED (the dailies and articles
-    # exist nowhere else once the database is gone). The raw maritime positions (GB) are not mirrored; their daily summaries are.
-    site = site_git.live_site_dir(_repo_root())
-    return {"profile_store": resolve(JsonProfileStore().root),
-            "pulse_store": resolve(PulseStore().root),
-            "geoledger_store": resolve(geoledger_dir()),
-            "sanctions_store": resolve(sanctions_dir()),
-            "calendar_store": resolve(calendar_dir()),
-            "markets_store": resolve(markets_dir()),
-            "maritime_daily": resolve(maritime_dir()) / "daily",
-            # paid editorial work the pipeline must never redo (memory: never-redo-paid-work)
-            "draft_store": resolve(_env_dir("ALGENT_DRAFT_STORE", "draft_store")),
-            "treatment_store": resolve(_env_dir("ALGENT_TREATMENT_STORE", "treatment_store")),
-            "lead_store": resolve(_env_dir("ALGENT_LEAD_STORE", "lead_store")),
-            "site_articles": site / "content" / "articles",
-            "site_intel": site / "content" / "intel",
-            "site_radar": site / "content" / "radar",
-            "site_data": site / "public" / "data",
-            "intel_store": resolve(intel_dir()),
-            "instruments_store": resolve(instruments_dir()),
-            "ai_benchmarks_store": resolve(ai_benchmarks_dir()),   # forward-captured Arena snapshots and lab claims cannot be re-fetched
-            "statements_store": resolve(statements_dir()),
-            "actors_store": resolve(actors_dir())}
+    return views.backup_sources()
 
 
 def _git(cwd: Path, *args: str) -> tuple[bool, str]:

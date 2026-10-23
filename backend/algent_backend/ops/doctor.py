@@ -623,6 +623,17 @@ def check_envelope(env: dict[str, str], probes: Probes) -> dict[str, Any]:
     return {f"envelope:{name}": _check(r["status"], r["detail"]) for name, r in report["rows"].items()}
 
 
+def check_products(env: dict[str, str], probes: Probes) -> dict[str, Any]:
+    """The product registry against this machine (ops/products/check.py): registry rules, stores, timers (and orphans), snapshot coverage, freshness.
+    The budgets row is left out: the envelope's own ``store:*`` rows are already embedded above. Tests may set ``probes.products_probes``."""
+    from algent_backend.ops.products import check
+
+    try:
+        return check.run(getattr(probes, "products_probes", None), skip=("budgets",))["rows"]
+    except Exception as exc:  # noqa: BLE001
+        return {"products": _check(WARN, f"unknown: {scrub(exc)}")}
+
+
 def run_checks(env: dict[str, str] | None = None, probes: Probes | None = None,
                repo: Path | None = None) -> dict[str, Any]:
     env = dict(os.environ if env is None else env)
@@ -631,7 +642,7 @@ def run_checks(env: dict[str, str] | None = None, probes: Probes | None = None,
     checks: dict[str, Any] = {}
     for part in (check_keys(env), check_database(env, probes), check_object_store(env), check_search(env, probes), check_reads(probes),
                  check_harnesses(probes), check_publish(env, probes, repo), check_runner(probes),
-                 check_system(probes), check_watchdog(probes), check_schedule(probes), check_quota(probes), check_instruments(), check_live(env), check_sanctions(), check_maritime(), check_calendar(), check_markets(), check_ai_benchmarks(), check_satellite(), check_basemap(probes), check_envelope(env, probes)):
+                 check_system(probes), check_watchdog(probes), check_schedule(probes), check_quota(probes), check_instruments(), check_live(env), check_sanctions(), check_maritime(), check_calendar(), check_markets(), check_ai_benchmarks(), check_satellite(), check_basemap(probes), check_envelope(env, probes), check_products(env, probes)):
         checks.update(part)
     if checks.get("database", {}).get("status") == OK:        # the size check needs a reachable database
         checks.update(check_db_budget(env, probes))

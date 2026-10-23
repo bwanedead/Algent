@@ -1,7 +1,7 @@
 """
 Nightly off-box snapshot: one compressed tar of every irreplaceable store, in the private R2 backup bucket.
 
-    backups/daily/<YYYY-MM-DD>.tar.gz            the stores (``sync._sources()`` is the single list of what is irreplaceable), one folder each
+    backups/daily/<YYYY-MM-DD>.tar.gz            the stores (``sync._sources()``, read from the product registry, is the single list of what is irreplaceable), one folder each
     backups/daily/<YYYY-MM-DD>.manifest.json.gz  per store: file count, bytes and the sha256 of every file, plus the archive's own sha256
 
 Why this and not git: the old backup was a git repo of rewritten JSON (history grows forever, files approach the 100 MB wall, never restored from).

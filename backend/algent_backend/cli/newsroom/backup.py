@@ -1,6 +1,7 @@
 """
 ``newsroom backup`` - the off-box snapshot of the irreplaceable stores (data_backup/snapshot.py). Needs ``R2_BACKUP_BUCKET`` (a PRIVATE bucket).
 
+    newsroom backup mirror                     copy new and changed files of every backed-up store into the private algent-data git repo and push (the nightly second path)
     newsroom backup snapshot [--dry-run]       build today's tar.gz of every backed-up store, upload it, thin old ones (14 daily / 8 weekly / 12 monthly)
     newsroom backup status                     last snapshot, last restore drill, what is in the bucket (one LIST)
     newsroom backup prune [--apply]            show / apply the retention on its own
@@ -20,6 +21,7 @@ from typing import Any
 def add_parser(sub: Any) -> None:
     p = sub.add_parser("backup", help="R2 snapshots of the irreplaceable stores: snapshot, status, prune, restore-drill, restore")
     verbs = p.add_subparsers(dest="backup_cmd", required=True)
+    verbs.add_parser("mirror", help="the git mirror: new and changed files of every backed-up store to algent-data").set_defaults(handler=run_mirror)
     s = verbs.add_parser("snapshot", help="build and upload today's snapshot")
     s.add_argument("--dry-run", action="store_true", help="build it in a temp dir and report sizes; upload nothing (needs no bucket)")
     s.set_defaults(handler=run_snapshot)
@@ -43,6 +45,14 @@ def _store() -> Any:
 def _emit(doc: dict[str, Any]) -> int:
     print(json.dumps(doc, indent=2, ensure_ascii=False))
     return 0 if doc.get("ok", True) else 1
+
+
+def run_mirror(_args: Any) -> int:
+    from algent_backend.data_backup import sync
+
+    res = sync.backup(note="server nightly")
+    print(res)
+    return 0 if res.get("backed_up") else 1
 
 
 def run_snapshot(args: Any) -> int:
