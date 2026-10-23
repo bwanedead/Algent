@@ -38,6 +38,8 @@ CREATE INDEX IF NOT EXISTS ix_entities_kind ON entities(kind);
 CREATE INDEX IF NOT EXISTS ix_entities_iso2 ON entities(iso2);
 CREATE TABLE IF NOT EXISTS entity_alias (norm TEXT NOT NULL, entity_id TEXT NOT NULL, alias TEXT NOT NULL, PRIMARY KEY (norm, entity_id));
 CREATE INDEX IF NOT EXISTS ix_alias_entity ON entity_alias(entity_id);
+-- ids declared for one real thing, folded into the canonical one (identity.py); rows asserting an old id are rewritten to the canonical id
+CREATE TABLE IF NOT EXISTS entity_merge (old_id TEXT PRIMARY KEY, canon_id TEXT NOT NULL);
 
 CREATE TABLE IF NOT EXISTS documents (
     id TEXT PRIMARY KEY, kind TEXT NOT NULL, domain TEXT NOT NULL DEFAULT '', date TEXT NOT NULL DEFAULT '', title TEXT NOT NULL DEFAULT '',

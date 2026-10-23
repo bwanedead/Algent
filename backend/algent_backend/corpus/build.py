@@ -95,7 +95,7 @@ def _build_into(db: sqlite3.Connection, only: list[str] | None, *, full: bool, s
     report["touched"] = touched
     if touched:                                                # nothing changed: the link pass would reproduce what is already there
         db.execute("BEGIN")
-        report["entities"] = link.finish(db)
+        report["entities"], report["merge_monotone"] = link.finish(db)
         db.execute("INSERT OR REPLACE INTO meta VALUES ('built_at', ?)", (now,))
         db.execute("COMMIT")
     return report
@@ -124,6 +124,9 @@ def build(store: Path | str | None = None, *, full: bool = False, since: str = "
     try:
         schema.create(db, fts=fts)
         report = _build_into(db, only, full=full, since=since, now=now)
+        if not full and report.get("merge_monotone") is False:      # identities split: rows already folded together cannot be un-merged in place
+            db.close()
+            return build(store, full=True, only=only)
         report["unresolved"] = link.unresolved_count(db)
         report["rows"] = counts(db)
         if report["touched"]:

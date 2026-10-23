@@ -26,7 +26,7 @@ def find(db: sqlite3.Connection, ref: str, *, kinds: set[str] | None = None) -> 
     ref = (ref or "").strip()
     if not ref:
         return []
-    row = db.execute("SELECT * FROM entities WHERE id = ?", (ref,)).fetchone()
+    row = db.execute("SELECT * FROM entities WHERE id = ?", (ref,)).fetchone()         or db.execute("SELECT e.* FROM entities e JOIN entity_merge m ON m.canon_id = e.id WHERE m.old_id = ?", (ref,)).fetchone()   # an id that was folded in
     found = [shape(row)] if row else []
     if not found:
         n = norm(ref)
