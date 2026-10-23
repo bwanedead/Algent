@@ -12,7 +12,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from . import build as _build
+from .build import build as _run_build  # the package re-exports the function `build`, which shadows the submodule
 from . import flags
 from .query import Corpus, CorpusMissing
 
@@ -20,7 +20,7 @@ ASK = ("entity", "about", "timeline", "search", "related", "series")
 
 
 def run_build(*, full: bool = False, since: str = "", only: str = "", as_json: bool = False) -> int:
-    r = _build.build(full=full, since=since, only=[s for s in only.split(",") if s] or None)
+    r = _run_build(full=full, since=since, only=[s for s in only.split(",") if s] or None)
     if as_json:
         print(json.dumps(r, indent=2, ensure_ascii=False, default=str))
         return 1 if r["errors"] else 0
