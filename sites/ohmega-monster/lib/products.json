@@ -315,6 +315,19 @@
       "refresh_minutes": 30
     },
     {
+      "id": "staging",
+      "title": "Staging channel (preview data)",
+      "routes": [],
+      "publishes": [
+        "staging/"
+      ],
+      "feeds_from": [
+        "views",
+        "dailies"
+      ],
+      "refresh_minutes": 1440
+    },
+    {
       "id": "agent_feeds",
       "title": "Agent feeds and API",
       "routes": [
@@ -352,7 +365,7 @@
         "geoledger",
         "pulses"
       ],
-      "refresh_minutes": null
+      "refresh_minutes": 60
     },
     {
       "id": "ops",

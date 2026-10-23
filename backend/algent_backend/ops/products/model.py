@@ -77,7 +77,9 @@ class Retention:
 class Job:
     """One unit of scheduled work. ``argv`` is what follows ``python -m algent_backend.cli newsroom``; ``script`` (relative to infra/server) replaces it
     for the one job that is a shell script. ``calendar`` is a systemd OnCalendar string (UTC) or a zero-argument callable returning one (read from
-    the product's own flags, so a time has one home). ``every_min`` is the longest gap between runs that is still healthy."""
+    the product's own flags, so a time has one home). ``every_min`` is the longest gap between runs that is still healthy.
+    ``then`` names jobs that follow a successful run: the daily that finishes a report triggers the fast views build and the site smoke test, so the pages
+    reflect it within minutes instead of at the next timer tick."""
 
     name: str
     argv: tuple[str, ...] = ()
@@ -89,6 +91,7 @@ class Job:
     kind: str = "timer"                   # "timer", or "service" (always on, installed by hand; listed so it is not an orphan)
     what: str = ""
     script: str = ""
+    then: tuple[str, ...] = ()            # after-hook: jobs run once this one has succeeded (``products/run.py``), each as its own run: its own lock and spend gates
 
     def hhmm(self) -> str:
         return (self.at() if callable(self.at) else self.at) or ""

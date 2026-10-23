@@ -50,6 +50,9 @@ class FakeProbes(envelope.Probes):
     def search_results(self, base):
         return self.kw.get("search", 30)
 
+    def smoke_state(self):
+        return self.kw.get("smoke", {"at": NOW.isoformat(), "ok": True, "summary": "58 checks: 58 ok, 0 warn, 0 fail; p95 900 ms"})
+
     def spend_by_day(self):
         return self.kw.get("spend", {"2026-10-23": 1.5})
 
@@ -65,12 +68,12 @@ def test_a_healthy_box_is_all_ok_and_logs_one_line(tmp_path, monkeypatch) -> Non
     monkeypatch.setenv("HOME", str(tmp_path))
     monkeypatch.setenv("USERPROFILE", str(tmp_path))
     rep = run(tmp_path)
-    assert rep["ok"] and rep["summary"] == "10 ok, 0 warn, 0 fail"
-    assert set(rep["rows"]) == {"disk", "memory", "journald", "r2", "backup", "restore_drill", "feeds", "search", "spend_day", "spend_month"}
+    assert rep["ok"] and rep["summary"] == "11 ok, 0 warn, 0 fail"
+    assert set(rep["rows"]) == {"disk", "memory", "journald", "r2", "backup", "restore_drill", "feeds", "search", "site", "spend_day", "spend_month"}
     line = envelope.one_line(rep)
-    assert line.startswith("envelope all 10 rows ok") and "\n" not in line
+    assert line.startswith("envelope all 11 rows ok") and "\n" not in line
     envelope.log(rep)
-    assert "envelope all 10 rows ok" in (tmp_path / "ops-log.md").read_text(encoding="utf-8")
+    assert "envelope all 11 rows ok" in (tmp_path / "ops-log.md").read_text(encoding="utf-8")
 
 
 @pytest.mark.parametrize("kw,row,status", [
@@ -144,10 +147,10 @@ def test_a_failing_probe_is_a_warning_not_a_crash(tmp_path) -> None:
 
 def test_the_doctor_embeds_only_the_rows_it_lacks(tmp_path) -> None:
     class P(doctor.Probes):
-        envelope_probes = FakeProbes(tmp_path, roots={})
+        envelope_probes = FakeProbes(tmp_path, roots={}, smoke={"at": datetime.now(UTC).isoformat(), "ok": True, "summary": "x"})
 
     out = doctor.check_envelope({}, P())
-    assert set(out) == {"envelope:journald", "envelope:backup", "envelope:restore_drill", "envelope:spend_day", "envelope:spend_month"}
+    assert set(out) == {"envelope:journald", "envelope:backup", "envelope:restore_drill", "envelope:site", "envelope:spend_day", "envelope:spend_month"}
     assert all(v["status"] == "ok" for v in out.values())
 
 
@@ -156,3 +159,12 @@ def test_every_store_budget_comes_from_the_registry_and_is_measured() -> None:
     assert not hasattr(f, "STORE_MB")
     assert set(envelope.Probes().store_roots()) == {s.name for _, s in views.stores() if s.budget}
     assert views.budget_for("maritime_store").fail_mb == 3000 and views.budget_for("nope") is None
+
+
+def test_the_site_row_follows_the_last_smoke_test(tmp_path) -> None:
+    assert run(tmp_path)["rows"]["site"]["status"] == "ok"
+    failing = run(tmp_path, smoke={"at": NOW.isoformat(), "ok": False, "since_failure": "2026-10-23T05:00:00+00:00", "failing": ["/pulses: status 500"]})["rows"]["site"]
+    assert failing["status"] == "fail" and "/pulses: status 500" in failing["detail"]
+    late = run(tmp_path, smoke={"at": "2026-10-23T02:00:00+00:00", "ok": True, "summary": "x"})["rows"]["site"]
+    assert late["status"] == "warn" and "5.2 h ago" in late["detail"]
+    assert run(tmp_path, smoke={})["rows"]["site"]["status"] == "warn"                            # never run: unknown, not green

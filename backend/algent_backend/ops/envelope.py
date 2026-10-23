@@ -3,7 +3,8 @@
 judged ok / warn / fail against the budgets in ``envelope_flags.py``. Spends nothing and writes nothing but a small state file (daily
 spend, so a month total survives the heartbeat files' three-day retention). The doctor embeds the rows it does not already have.
 
-Rows: disk, memory, journald, store:<name> (size + 7-day written; budgets from the product registry), r2, backup, restore_drill, feeds, search, spend_day, spend_month.
+Rows: disk, memory, journald, store:<name> (size + 7-day written; budgets from the product registry), r2, backup, restore_drill, feeds, search, site (the last
+smoke test of the production site), spend_day, spend_month.
 Every measurement is a method on ``Probes`` so tests substitute fakes; a probe that cannot measure returns None and its row says "unknown"
 (warn), never a guess.
 """
@@ -115,6 +116,12 @@ class Probes(doctor.Probes):
                 continue
         return out
 
+    def smoke_state(self) -> dict[str, Any]:
+        """The last production smoke report (ops/smoke/state.py), {} when none was ever recorded."""
+        from algent_backend.ops.smoke import state
+
+        return state.read()
+
     def state_path(self) -> Path:
         from algent_backend.agent_system.foundation import live_spend
 
@@ -222,6 +229,23 @@ def row_search(p: Probes, env: dict[str, str]) -> dict[str, Any]:
                 budget=f"warn < {f.SEARCH_MIN_RESULTS}, fail at 0")
 
 
+def row_site(p: Probes, now: datetime) -> dict[str, Any]:
+    """The hourly smoke test of the production site (``newsroom site smoke --log``): failing is a fail, a run that stopped happening is a warning."""
+    from algent_backend.ops.smoke import flags as smoke_flags, state
+
+    st = p.smoke_state()
+    if not st:
+        return _row(WARN, "no site smoke test has been recorded (newsroom site smoke --log; the hourly site-smoke job)")
+    age = state.age_hours(st, now)
+    if not st.get("ok"):
+        return _row(FAIL, f"site smoke FAILING since {st.get('since_failure')}: " + "; ".join(st.get("failing") or [])[:300], value=len(st.get("failing") or []),
+                    budget="fail on any failed check (ops/smoke)")
+    if age is None or age > smoke_flags.STATE_STALE_H:
+        return _row(WARN, f"last site smoke test {'unreadable' if age is None else f'{age:.1f} h ago'} (hourly job)", value=round(age or 0, 1),
+                    budget=f"warn > {smoke_flags.STATE_STALE_H:g} h")
+    return _row(OK, f"{st.get('summary')} ({age:.1f} h ago)", value=round(age, 1), budget=f"warn > {smoke_flags.STATE_STALE_H:g} h old or any failed check")
+
+
 def rows_spend(p: Probes, now: datetime) -> dict[str, dict[str, Any]]:
     from algent_backend.ops import flags as ops_flags
 
@@ -261,7 +285,7 @@ def run(env: dict[str, str] | None = None, probes: Probes | None = None, now: da
         ("disk", lambda: row_disk(p)), ("memory", lambda: row_memory(p)), ("journald", lambda: row_journal(p)),
         ("stores", lambda: rows_stores(p, time.time())), ("r2", lambda: row_r2(p)), ("backup", lambda: row_backup(p)),
         ("restore_drill", lambda: row_drill(p)), ("feeds", lambda: row_feeds(p, env, now)), ("search", lambda: row_search(p, env)),
-        ("spend", lambda: rows_spend(p, now)),
+        ("site", lambda: row_site(p, now)), ("spend", lambda: rows_spend(p, now)),
     ]
     rows: dict[str, dict[str, Any]] = {}
     for name, step in steps:

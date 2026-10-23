@@ -15,6 +15,11 @@ from __future__ import annotations
 from . import locations as loc
 from .model import Budget, Job, Product, Retention, Store
 
+#: After-hooks of a job that publishes a report: the fast views build (Home, the globe HUD and the daily hub reflect it within minutes instead of at the
+#: next half-hour tick) and then a smoke test of the production site (it must still serve everything the new report touches). Each runs as a job of its own.
+AFTER_PUBLISH = ("views-fast", "site-smoke")
+
+
 # ── jobs whose times come from a product's own flags (read lazily) ──────────────────────────────────
 def _menu_at() -> str:
     from algent_backend.ops import flags
@@ -26,9 +31,9 @@ def _daily_jobs() -> tuple[Job, ...]:
     from algent_backend.agent_system.agents.intel import flags as f
 
     out = [Job(f"daily-{e.n}", ("intel", "daily", "--domain", "geopolitics", "--research", "--edition", str(e.n)), at=e.utc, every_min=1440, spend="paid",
-               what=f"geopolitics daily, part {e.n} ({e.label})") for e in f.EDITIONS]
+               what=f"geopolitics daily, part {e.n} ({e.label})", then=AFTER_PUBLISH) for e in f.EDITIONS]
     if f.AI_DAILY_SCHEDULED:
-        out.append(Job("ai-daily", ("intel", "daily", "--domain", "ai", "--research"), at=f.AI_DAILY_UTC, every_min=1440, spend="paid", what="AI daily"))
+        out.append(Job("ai-daily", ("intel", "daily", "--domain", "ai", "--research"), at=f.AI_DAILY_UTC, every_min=1440, spend="paid", what="AI daily", then=AFTER_PUBLISH))
     return tuple(out)
 
 
@@ -213,7 +218,8 @@ PRODUCTS: tuple[Product, ...] = (
         retention=(Retention("append-only", "history is never rewritten so the record cannot be quietly improved; ~2 MB a week estimated", "markets/store.py::root", "on-write"),),
         irreplaceable=True, why="our forecasts and trades are the scored record; they cannot be reconstructed",
         jobs=(Job("markets", ("markets", "refresh"), "3/4:50", every_min=240, what="Polymarket mirror: markets, prices, resolutions; paper track record"),
-              Job("markets-daily", ("markets", "daily"), at=_markets_daily_at, every_min=1440, spend="paid", what="Polymarket paper trader: forecasts, trades, marks")),
+              Job("markets-daily", ("markets", "daily"), at=_markets_daily_at, every_min=1440, spend="paid", what="Polymarket paper trader: forecasts, trades, marks",
+                  then=AFTER_PUBLISH)),
         publishes=("data/track-record.json",), site_routes=("/intel/forecasts", "/intel/track-record"), feeds_from=("dailies",), heartbeat=("markets_store/status.json",)),
     Product(
         id="library", title="Source library (crawl cache)", owner="library",
@@ -241,10 +247,18 @@ PRODUCTS: tuple[Product, ...] = (
                       budget=_b(120, 400, 1500, 120, 2, "estimate from the dev corpus: up to 8 k entity views of ~10 KB, ~250 country views of ~20 KB, situation views of up to 450 KB; replace with `newsroom views stats` from the server")),),
         retention=(Retention("derived", "rebuilt each run from the record; a full build prunes keys it no longer produces from the store (bucket objects are overwritten, never listed)", "views/build.py::build_all", "job:views"),),
         why="derived: every field comes from another product's published documents or the corpus index; deleting the store loses nothing",
-        jobs=(Job("views", ("views", "build"), "2/4:50", every_min=240, what="build every view and publish the changed ones (after corpus-build)"),
+        jobs=(Job("views", ("views", "build"), "2/4:50", every_min=240, what="build every view and publish the changed ones (after corpus-build)", then=("site-smoke",)),
               Job("views-fast", ("views", "build", "--only", "home,hud,daily-hub"), "*:10/30", every_min=30, lock=False, what="refresh the home, globe HUD and daily-hub views (no corpus; a changed daily shows within half an hour)")),
         publishes=("views/",), feeds_from=("dailies", "situations", "pulses", "actors", "articles", "statements", "sanctions", "calendar", "geoledger", "markets", "corpus_index"),
         heartbeat=("views_store/manifest.json",)),
+    Product(
+        id="staging", title="Staging channel (preview data)", owner="publishing",
+        what="A sample of what production publishes, under the staging/ prefix of the same bucket, so a preview deployment is checked against real data before promotion.",
+        retention=(Retention("prune", "staged objects not rewritten for STAGING_KEEP_DAYS (14) are deleted; a daily-operations cap and a byte cap bound it between prunes",
+                             "publishing/staging.py::prune", "job:staging-prune"),),
+        why="derived: rebuilt from the local stores by `newsroom publish stage-from-prod`; deleting it loses nothing",
+        jobs=(Job("staging-prune", ("publish", "staging-prune"), "*-*-* 05:05", every_min=1440, what="delete staged objects older than the staging retention"),),
+        publishes=("staging/",), feeds_from=("views", "dailies")),
     # ── the machine itself ────────────────────────────────────────────────────────────────────────
     Product(
         id="agent_feeds", title="Agent feeds and API", owner="publishing",
@@ -258,6 +272,8 @@ PRODUCTS: tuple[Product, ...] = (
         what="Pages that are navigation or presentation over other products: home, the Data hub, the globe HUD and the 3D lab.",
         retention=(Retention("derived", "presentation only; no data of its own", "", "on-write"),),
         why="reads the other products' published documents", site_routes=("/", "/data", "/globe", "/lab/scene"),
+        jobs=(Job("site-smoke", ("site", "smoke", "--log"), "*:17", every_min=60, lock=False,
+                  what="smoke test of the production site: every route, sampled dynamic pages, the agent API, freshness (hourly, and after each publish job)"),),
         feeds_from=("dailies", "situations", "live", "flows", "maritime", "actors", "geoledger", "pulses")),
     Product(
         id="ops", title="Operations (deploy, watchdog, envelope, housekeeping)", owner="ops",

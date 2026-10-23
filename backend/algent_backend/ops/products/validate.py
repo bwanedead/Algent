@@ -104,6 +104,27 @@ def validate() -> list[str]:
     routes = [r for p in views.products() for r in p.site_routes]
     out += [f"duplicate site route {r!r}" for r in sorted({r for r in routes if routes.count(r) > 1})]
     out += _cycles()
+    out += _then_problems()
+    return out
+
+
+def _then_problems() -> list[str]:
+    """After-hooks (``Job.then``) must name registered timer jobs and must not chain back on themselves."""
+    timers = {j.name: j for _, j in views.jobs() if j.kind == "timer"}
+    out = []
+    for name, j in timers.items():
+        out += [f"job {name}: then {t!r} is not a registered timer job" for t in j.then if t not in timers]
+    for start in timers:
+        seen, frontier = set(), list(timers[start].then)
+        while frontier:
+            n = frontier.pop()
+            if n == start:
+                out.append(f"job {start}: then-chain comes back to {start}")
+                break
+            if n in seen or n not in timers:
+                continue
+            seen.add(n)
+            frontier += timers[n].then
     return out
 
 

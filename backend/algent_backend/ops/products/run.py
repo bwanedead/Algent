@@ -18,6 +18,7 @@ from . import views
 from .model import REPO
 
 LOCK_WAIT_S = 3600
+MAX_THEN_DEPTH = 3                      # validate.py rejects chains that loop; this bounds one that slipped through
 
 
 def lock_path() -> Path:
@@ -49,7 +50,9 @@ def command(job: Any) -> list[str]:
     return [sys.executable, "-m", "algent_backend.cli", "newsroom", *job.argv]
 
 
-def run_job(name: str) -> int:
+def run_job(name: str, *, _depth: int = 0) -> int:
+    """Run one job, then its ``then`` after-hooks when it succeeded. Each runs as a job of its own (own lock, own spend gates) after this one's lock is
+    released, so a hook that needs the lock cannot wait on the job that started it. A hook that fails never changes this job's exit code."""
     found = views.job(name)
     if found is None or found[1].kind != "timer":
         print(f"unknown job: {name}", file=sys.stderr)
@@ -60,8 +63,15 @@ def run_job(name: str) -> int:
         if job.spend == "paid":
             from algent_backend.ops import schedule
 
-            return schedule.run_job(name)
-        return subprocess.call(command(job), cwd=str(REPO / "backend"))
+            rc = schedule.run_job(name)
+        else:
+            rc = subprocess.call(command(job), cwd=str(REPO / "backend"))
     finally:
         if lock is not None:
             lock.close()
+    if rc == 0 and _depth < MAX_THEN_DEPTH:
+        for hook in job.then:
+            hook_rc = run_job(hook, _depth=_depth + 1)
+            if hook_rc != 0:
+                print(f"after-hook {hook} of {name} exited {hook_rc}", file=sys.stderr)
+    return rc
