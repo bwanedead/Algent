@@ -36,6 +36,7 @@ from pathlib import Path
 from typing import Any
 
 from . import flags
+from .jobq import measure
 
 SITE = "https://www.ohmega.monster"
 _KILLED_RC = (-15, -9, 143, 137)        # SIGTERM / SIGKILL as a child's return code (raw and shell-style)
@@ -125,7 +126,7 @@ class Probes:
                 fh.write(line)
                 tail.append(line)
                 del tail[:-flags.OUTCOME_TAIL_LINES]
-            rc = proc.wait()
+            rc = measure.reap(proc)                 # waits, and notes the job's peak RSS for the run ledger (ops/jobq)
         return rc, "".join(tail)
 
     def sleep(self, seconds: float) -> None:

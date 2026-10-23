@@ -31,9 +31,9 @@ def _daily_jobs() -> tuple[Job, ...]:
     from algent_backend.agent_system.agents.intel import flags as f
 
     out = [Job(f"daily-{e.n}", ("intel", "daily", "--domain", "geopolitics", "--research", "--edition", str(e.n)), at=e.utc, every_min=1440, spend="paid",
-               what=f"geopolitics daily, part {e.n} ({e.label})", then=AFTER_PUBLISH) for e in f.EDITIONS]
+               est_min=70 if e.n == 1 else 45, deadline_min=120, what=f"geopolitics daily, part {e.n} ({e.label})", then=AFTER_PUBLISH) for e in f.EDITIONS]
     if f.AI_DAILY_SCHEDULED:
-        out.append(Job("ai-daily", ("intel", "daily", "--domain", "ai", "--research"), at=f.AI_DAILY_UTC, every_min=1440, spend="paid", what="AI daily", then=AFTER_PUBLISH))
+        out.append(Job("ai-daily", ("intel", "daily", "--domain", "ai", "--research"), at=f.AI_DAILY_UTC, every_min=1440, spend="paid", est_min=40, deadline_min=120, what="AI daily", then=AFTER_PUBLISH))
     return tuple(out)
 
 
@@ -117,7 +117,7 @@ PRODUCTS: tuple[Product, ...] = (
                 Store("site_radar", loc.site_radar, "", True, budget=_b(2, 100, 500, 50, 0.5, "estimate: published menus, small JSON"))),
         retention=(Retention("prune", "only the newest 5 runs are kept; older history stays in runs_index.jsonl", "agent_system/runs/control_plane/layout.py::prune_runs", "on-write"),),
         irreplaceable=True, why="the published menus exist nowhere else once the database is gone; the run logs themselves are expendable",
-        jobs=(Job("menu", ("run", "--to", "menu"), at=_menu_at, every_min=1440, spend="paid", what="newsroom menu"),),
+        jobs=(Job("menu", ("run", "--to", "menu"), at=_menu_at, every_min=1440, spend="paid", est_min=30, deadline_min=120, what="newsroom menu"),),
         publishes=("radar/",), site_routes=("/daily/headlines", "/daily/headlines/[slug]")),
     # ── data: measured layers ─────────────────────────────────────────────────────────────────────
     Product(
@@ -150,7 +150,7 @@ PRODUCTS: tuple[Product, ...] = (
                 Store("maritime_daily", loc.maritime_daily, "", True, budget=_b(1, 100, 500, 50, 0.5, "estimate: one small summary file a day"))),
         retention=(Retention("rollup", "daily ship summaries are written then the raw event log is cut to LOG_KEEP_DAYS (7)", "maritime/flags.py::LOG_KEEP_DAYS", "job:maritime-rollup"),),
         irreplaceable=True, why="the daily summaries are the only long record of ship behaviour (backed up as maritime_daily)",
-        jobs=(Job("maritime-rollup", ("maritime", "rollup", "--apply"), "*-*-* 04:05", every_min=1440, what="daily ship summaries + retention of the raw event log"),),
+        jobs=(Job("maritime-rollup", ("maritime", "rollup", "--apply"), "*-*-* 04:05", every_min=1440, priority=4, what="daily ship summaries + retention of the raw event log"),),
         publishes=("maritime/",), site_routes=("/intel/maritime",), feeds_from=("live",), heartbeat=("maritime_store/state.json",)),
     Product(
         id="sanctions", title="Sanctions", owner="sanctions",
@@ -218,7 +218,7 @@ PRODUCTS: tuple[Product, ...] = (
         retention=(Retention("append-only", "history is never rewritten so the record cannot be quietly improved; ~2 MB a week estimated", "markets/store.py::root", "on-write"),),
         irreplaceable=True, why="our forecasts and trades are the scored record; they cannot be reconstructed",
         jobs=(Job("markets", ("markets", "refresh"), "3/4:50", every_min=240, what="Polymarket mirror: markets, prices, resolutions; paper track record"),
-              Job("markets-daily", ("markets", "daily"), at=_markets_daily_at, every_min=1440, spend="paid", what="Polymarket paper trader: forecasts, trades, marks",
+              Job("markets-daily", ("markets", "daily"), at=_markets_daily_at, every_min=1440, spend="paid", est_min=15, deadline_min=120, what="Polymarket paper trader: forecasts, trades, marks",
                   then=AFTER_PUBLISH)),
         publishes=("data/track-record.json",), site_routes=("/intel/forecasts", "/intel/track-record"), feeds_from=("dailies",), heartbeat=("markets_store/status.json",)),
     Product(
@@ -237,7 +237,7 @@ PRODUCTS: tuple[Product, ...] = (
                       budget=_b(75, 400, 1500, 80, 3, "measured 10-23 on the dev stores: 74 MB (130 k observations dominate); estimate for the server until `newsroom corpus stats` runs there")),),
         retention=(Retention("derived", "rebuilt from the record; --full builds a fresh compact file, incremental builds VACUUM past 25% free pages", "corpus/build.py::build", "job:corpus-build"),),
         why="derived: every row comes from another product's store; deleting it loses nothing",
-        jobs=(Job("corpus-build", ("corpus", "build"), "2/4:25", every_min=240, what="incremental corpus index build (after the daily, AI and markets runs)"),),
+        jobs=(Job("corpus-build", ("corpus", "build"), "2/4:25", every_min=240, priority=2, est_min=1, est_mb=190, what="incremental corpus index build (after the daily, AI and markets runs)"),),
         feeds_from=("dailies", "pulses", "profiles", "articles", "statements", "sanctions", "calendar", "geoledger", "maritime", "markets", "instruments", "actors", "ai_benchmarks"),
         heartbeat=("corpus_store/corpus.db",)),
     Product(
@@ -247,8 +247,8 @@ PRODUCTS: tuple[Product, ...] = (
                       budget=_b(120, 400, 1500, 120, 2, "estimate from the dev corpus: up to 8 k entity views of ~10 KB, ~250 country views of ~20 KB, situation views of up to 450 KB; replace with `newsroom views stats` from the server")),),
         retention=(Retention("derived", "rebuilt each run from the record; a full build prunes keys it no longer produces from the store (bucket objects are overwritten, never listed)", "views/build.py::build_all", "job:views"),),
         why="derived: every field comes from another product's published documents or the corpus index; deleting the store loses nothing",
-        jobs=(Job("views", ("views", "build"), "2/4:50", every_min=240, what="build every view and publish the changed ones (after corpus-build)", then=("site-smoke",)),
-              Job("views-fast", ("views", "build", "--only", "home,hud,daily-hub"), "*:10/30", every_min=30, lock=False, what="refresh the home, globe HUD and daily-hub views (no corpus; a changed daily shows within half an hour)")),
+        jobs=(Job("views", ("views", "build"), "2/4:50", every_min=240, priority=2, est_min=2, deadline_min=60, what="build every view and publish the changed ones (after corpus-build)", then=("site-smoke",)),
+              Job("views-fast", ("views", "build", "--only", "home,hud,daily-hub"), "*:10/30", every_min=30, lock=False, priority=2, what="refresh the home, globe HUD and daily-hub views (no corpus; a changed daily shows within half an hour)")),
         publishes=("views/",), feeds_from=("dailies", "situations", "pulses", "actors", "articles", "statements", "sanctions", "calendar", "geoledger", "markets", "corpus_index"),
         heartbeat=("views_store/manifest.json",)),
     Product(
@@ -257,7 +257,7 @@ PRODUCTS: tuple[Product, ...] = (
         retention=(Retention("prune", "staged objects not rewritten for STAGING_KEEP_DAYS (14) are deleted; a daily-operations cap and a byte cap bound it between prunes",
                              "publishing/staging.py::prune", "job:staging-prune"),),
         why="derived: rebuilt from the local stores by `newsroom publish stage-from-prod`; deleting it loses nothing",
-        jobs=(Job("staging-prune", ("publish", "staging-prune"), "*-*-* 05:05", every_min=1440, what="delete staged objects older than the staging retention"),),
+        jobs=(Job("staging-prune", ("publish", "staging-prune"), "*-*-* 05:05", every_min=1440, priority=4, preemptible=True, what="delete staged objects older than the staging retention"),),
         publishes=("staging/",), feeds_from=("views", "dailies")),
     # ── the machine itself ────────────────────────────────────────────────────────────────────────
     Product(
@@ -273,7 +273,7 @@ PRODUCTS: tuple[Product, ...] = (
         retention=(Retention("derived", "presentation only; no data of its own", "", "on-write"),),
         why="reads the other products' published documents", site_routes=("/", "/data", "/globe", "/lab/scene"),
         jobs=(Job("site-smoke", ("site", "smoke", "--log"), "*:17", every_min=60, lock=False,
-                  what="smoke test of the production site: every route, sampled dynamic pages, the agent API, freshness (hourly, and after each publish job)"),),
+                  priority=2, what="smoke test of the production site: every route, sampled dynamic pages, the agent API, freshness (hourly, and after each publish job)"),),
         feeds_from=("dailies", "situations", "live", "flows", "maritime", "actors", "geoledger", "pulses")),
     Product(
         id="ops", title="Operations (deploy, watchdog, envelope, housekeeping)", owner="ops",
@@ -282,22 +282,22 @@ PRODUCTS: tuple[Product, ...] = (
         why="code and logs only; ~/ops-log.md grows by a few lines a day",
         jobs=(Job("update", script="update.sh", calendar="*:0/5", every_min=5, lock=False, what="deploy-on-push"),
               Job("watchdog", ("watchdog",), "*:0/2", every_min=2, lock=False, what="kills paid runs over their time/spend limits"),
-              Job("envelope", ("envelope", "--log"), "*-*-* 07:10", every_min=1440, what="one-line operating-envelope summary to ~/ops-log.md"),
-              Job("housekeeping", ("products", "housekeeping", "--apply"), "*-*-* 03:55", every_min=1440, what="expire the fetch cache and old per-job run logs"))),
+              Job("envelope", ("envelope", "--log"), "*-*-* 07:10", every_min=1440, priority=4, what="one-line operating-envelope summary to ~/ops-log.md"),
+              Job("housekeeping", ("products", "housekeeping", "--apply"), "*-*-* 03:55", every_min=1440, priority=4, preemptible=True, what="expire the fetch cache and old per-job run logs"))),
     Product(
         id="backup", title="Backups", owner="data_backup",
         what="The nightly git mirror, the R2 snapshot with a hash manifest, and the monthly restore drill.",
         retention=(Retention("prune", "snapshots are thinned to 14 daily + 8 weekly + 12 monthly", "data_backup/flags.py::KEEP_DAILY", "job:backup-snapshot"),),
         why="it is the backup (state in backup_state.json, objects in the private R2 bucket)",
-        jobs=(Job("backup", ("backup", "mirror"), "*-*-* 06:15", every_min=1440, what="stores -> private algent-data archive"),
-              Job("backup-snapshot", ("backup", "snapshot"), "*-*-* 06:40", every_min=1440, what="nightly tar.gz of the irreplaceable stores -> private R2 bucket"),
-              Job("backup-drill", ("backup", "restore-drill"), "*-*-01 07:30:00", every_min=44640, what="restore the latest snapshot to a temp dir and verify it"))),
+        jobs=(Job("backup", ("backup", "mirror"), "*-*-* 06:15", every_min=1440, priority=4, what="stores -> private algent-data archive"),
+              Job("backup-snapshot", ("backup", "snapshot"), "*-*-* 06:40", every_min=1440, priority=4, what="nightly tar.gz of the irreplaceable stores -> private R2 bucket"),
+              Job("backup-drill", ("backup", "restore-drill"), "*-*-01 07:30:00", every_min=44640, priority=4, preemptible=True, what="restore the latest snapshot to a temp dir and verify it"))),
     Product(
         id="database", title="Legacy Postgres tables", owner="database",
         what="The paused Supabase/Postgres publishing path; its retention windows are kept running until it is deleted.",
         retention=(Retention("prune", "retention windows on the growing tables + VACUUM", "database/flags.py::LIVE_EVENTS_ENDED_DAYS", "job:db-prune"),),
         why="publication moved to the server and R2 (Supabase paused 10-22)",
-        jobs=(Job("db-prune", ("db", "prune", "--apply"), "*-*-* 03:40", every_min=1440, what="retention windows on the Postgres tables + VACUUM"),)),
+        jobs=(Job("db-prune", ("db", "prune", "--apply"), "*-*-* 03:40", every_min=1440, priority=4, what="retention windows on the Postgres tables + VACUUM"),)),
     Product(
         id="caches", title="Caches and scratch", owner="agent_system/tools, retrieval, data_ingestion",
         what="The page-fetch cache, the embeddings cache and the ingestion CLI's scratch output.",
