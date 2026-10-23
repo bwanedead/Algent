@@ -59,10 +59,12 @@ class JobQueue:
         self.env = env or Env()
         self.ledger = ledger or Ledger()
         self.line = Line(self.env)
+        self.outcome = ""                 # how the last ``run`` ended: ok, failed, preempted, skipped, coalesced (the status files only trust ok / failed)
 
     # ── the entry point ──
     def run(self, job: Any, work: Callable[[], int], *, parent: str = "") -> int:
         env, queued = self.env, self.env.now()
+        self.outcome = ""
         row: dict[str, Any] = {"kind": "run", "job": job.name, "prio": job.prio, "locked": bool(job.lock), "parent": parent, "queued_at": queued}
         deadline = deadline_epoch(job, queued)
         history = self.ledger.rows() if job.lock else []
@@ -83,6 +85,7 @@ class JobQueue:
             rc, outcome = 0, "preempted"
         except BaseException:
             outcome = "failed"
+            self.outcome = outcome
             self._write(job, row, outcome, rc=1)
             raise
         finally:
@@ -91,6 +94,7 @@ class JobQueue:
                 self.line.clear_holder()
         if deadline and env.now() > deadline:
             row["deadline_missed"] = True
+        self.outcome = outcome
         self._write(job, row, outcome, rc=rc)
         return rc
 
@@ -153,6 +157,7 @@ class JobQueue:
     # ── ledger rows ──
     def _finish_unrun(self, job: Any, row: dict[str, Any], outcome: str) -> int:
         row.setdefault("wait_s", round(self.env.now() - row["queued_at"], 1))
+        self.outcome = outcome
         self._write(job, row, outcome, rc=0)
         print(f"{job.name}: {outcome}: {row.get('reason', '')}", flush=True)
         if outcome == "skipped" and job.prio <= flags.PUBLICATION:

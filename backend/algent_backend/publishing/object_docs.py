@@ -25,6 +25,7 @@ from typing import Any
 from algent_backend.database import flags as budget
 
 from . import asset_store, doc_store, object_store
+from . import changed as run_changes
 
 NAMES_DIR = "_names"
 _LOCK = threading.RLock()
@@ -112,6 +113,7 @@ def publish(docs: dict[str, Any], *, http: Any = None, force: bool = False, mani
                 sent += landed
                 _save(mpath, state)
             out["documents"] = len(sent)
+            run_changes.note(p.path for p in sent)
             _save(mpath, state)
             if names and sent:
                 paths = {k.split("|", 1)[1] for k in state if k.startswith(ident + "|")}

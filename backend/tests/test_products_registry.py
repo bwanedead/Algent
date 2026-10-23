@@ -185,7 +185,7 @@ def test_run_takes_the_lock_only_when_the_job_asks_and_runs_its_command(monkeypa
 def test_run_sends_a_paid_job_through_the_spend_gates(monkeypatch, tmp_path) -> None:
     seen = []
     monkeypatch.setattr(products_run, "make_queue", lambda: queue(tmp_path)[0])
-    monkeypatch.setattr(schedule, "run_job", lambda name: seen.append(name) or 0)
+    monkeypatch.setattr(schedule, "run_job", lambda name, **k: seen.append(name) or 0)
     monkeypatch.setattr(products_run.measure, "call", lambda *a, **k: pytest.fail("a paid job must not bypass ops/schedule.py"))
     assert products_run.run_job("menu") == 0 and seen == ["menu"]
 
