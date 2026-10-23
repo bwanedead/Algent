@@ -104,7 +104,7 @@ export async function homeDoors(): Promise<Door[]> {
     { href: "/globe", title: "Globe", line: "The world on a globe: flows, countries and situations to pin.", hint: "" },
     { href: "/live", title: "Live map", line: "Ships, aircraft, quakes, fires and outages as they happen.", hint: h.live.hint, stamp: h.live.stamp, cadenceHours: CADENCE_HOURS.live },
     { href: "/intel/track-record", title: "Prediction bots", line: "Our forecasts and paper trades against Polymarket: every bet, the running P&L, misses included.", hint: h.track.hint, stamp: h.track.stamp, checked: h.track.checked, cadenceHours: CADENCE_HOURS.track },
-    { href: "/data", title: "Data", line: "Measured layers, scored judgments and feeds for machines.", hint: "" },
+    { href: "/explore", title: "Explore", line: "Measured layers, scored judgments and feeds for machines.", hint: "" },
   ];
 }
 

@@ -279,7 +279,7 @@ export async function seriesOp(a: Args): Promise<ApiResult> {
   const [idx, exact] = await Promise.all([seriesIndex(), anyView<SeriesView>("series", metricKey(metric))]);
   if (exact) {
     const out = { ...exact, entities: exact.entities.map((e) => ({ ...e, points: trim(e.points) })) };
-    return { data: out, as_of: exact.as_of || null, cite_as: abs("/data"), source: exact.schema, provenance: exact.provenance, basis: [exact.basis].filter(Boolean), note: `${exact.entities.length} of ${exact.entities_total} entities shown, the most recently updated first; the entity's own view has the rest.` };
+    return { data: out, as_of: exact.as_of || null, cite_as: abs("/explore"), source: exact.schema, provenance: exact.provenance, basis: [exact.basis].filter(Boolean), note: `${exact.entities.length} of ${exact.entities_total} entities shown, the most recently updated first; the entity's own view has the rest.` };
   }
   if (!idx) throw notFound("the series index (not published yet)");
   const q = norm(metric.replace(/[.*]+$/, ""));
@@ -290,7 +290,7 @@ export async function seriesOp(a: Args): Promise<ApiResult> {
   return {
     data: { metric: metric, candidates: p.items, total: p.total },
     as_of: idx.as_of || null,
-    cite_as: abs("/data"),
+    cite_as: abs("/explore"),
     source: idx.schema,
     provenance: idx.provenance,
     basis: Array.from(new Set(p.items.map((m) => m.basis).filter(Boolean))).sort(),

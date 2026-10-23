@@ -17,7 +17,7 @@ const GLYPH: Record<string, GlyphName> = {
   "/daily": "globe",
   "/situations": "theater",
   "/globe": "globe",
-  "/data": "pulse",
+  "/explore": "pulse",
   "/intel/graph": "theater",
   "/intel/forecasts": "pulse",
   "/intel/track-record": "pulse",
