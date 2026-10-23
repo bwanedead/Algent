@@ -122,7 +122,7 @@ RESEARCH_PLAN_EFFORT = "low"
 RESEARCH_LOOKBACK_DAYS = 120
 #: Research traces (research_trace.jsonl, one line per decision) older than this are pruned by the refresh job; scoring never reads them (the
 #: forecast and decision lines carry their own cited ids).
-TRACE_KEEP_DAYS = 120
+TRACE_KEEP_DAYS = 60
 #: "Rich" evidence for the accuracy split: a decision that cited at least this many corpus items; fewer is "thin". Shown only at MIN_RESOLVED_FOR_VERDICT.
 RICH_MIN_CITED = 3
 #: Items shown in a position's evidence trail on the page.
@@ -132,10 +132,14 @@ TRAIL_MAX = 12
 #: A gap is a request, never a lookup: it lands in gaps.jsonl and the daily fill job researches it into the corpus through the ordinary research
 #: pipeline. The bot sees the result the next time, as corpus content. Operator-authorised ceiling: $0.50 a day.
 GAP_FILL_ENABLED = True
+#: When the unattended ``markets-gaps`` job fires (UTC HH:MM): after the markets-daily pass (07:30) has recorded the day's asks.
+GAPS_UTC = "08:45"
 GAP_FILL_USD_PER_DAY = 0.50
 #: Each fill is one profile research run. Its estimated cost is booked at this figure per run until the ledger measures it (the budget gate still
 #: halts real overspend), so at most GAP_FILL_USD_PER_DAY // GAP_FILL_EST_USD runs a day.
 GAP_FILL_EST_USD = 0.25
+#: Hard USD cap handed to each research run (the profile loop honours a vector's ``cost_cap_usd``; its own ceiling is $1.00).
+GAP_FILL_RUN_CAP_USD = 0.25
 GAP_FILL_MAX_PER_DAY = 2
 #: A topic asked for again within this many days of a fill is not researched again (the profile store keeps history; the corpus already has it).
 GAP_REFILL_DAYS = 14

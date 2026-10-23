@@ -91,7 +91,7 @@ def build_profile_graph(
         # Scope the search gate + paid budget + USD cap, and collect source snapshots,
         # for the whole research loop.
         with policy.scoped(search_channels, paid_budget), \
-                cost.scoped(cost_cap_usd, model_spec.model), snapshots.scoped():
+                cost.scoped(_run_cap(vector, cost_cap_usd), model_spec.model), snapshots.scoped():
             produced = stream_react_loop(
                 agent,
                 {"messages": [HumanMessage(content=build_vector_message(vector, prior.render()))]},
@@ -138,6 +138,15 @@ def build_profile_graph(
     graph.add_edge(START, "research")
     graph.add_edge("research", END)
     return graph.compile()
+
+
+def _run_cap(vector: dict[str, Any], default: float) -> float:
+    """A vector may ask for a LOWER cap than the agent's ceiling (a small requested run); never a higher one."""
+    try:
+        asked = float(vector.get("cost_cap_usd") or 0.0)
+    except (TypeError, ValueError):
+        return default
+    return min(default, asked) if asked > 0 else default
 
 
 def _recall(context: AgentRunContext, vector: dict[str, Any]) -> corpus.CorpusContext:

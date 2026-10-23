@@ -259,7 +259,8 @@
         "data/track-record.json"
       ],
       "feeds_from": [
-        "dailies"
+        "dailies",
+        "profiles"
       ],
       "refresh_minutes": 240
     },

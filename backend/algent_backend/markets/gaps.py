@@ -11,6 +11,7 @@ cap is a ceiling, not a hope.
 
 from __future__ import annotations
 
+import json
 import re
 import subprocess
 import sys
@@ -115,10 +116,18 @@ def spent_today(now: datetime) -> float:
     return round(sum(f.usd for f in store.gap_fills() if f.day == now.date().isoformat()), 6)
 
 
+def gap_vector(topic: str, why: str) -> dict[str, Any]:
+    """The research vector for one gap: a thesis-free brief (what to find out), stamped ``requested_by: markets`` and capped per run."""
+    slug = re.sub(r"[^a-z0-9]+", "_", topic.casefold()).strip("_")[:48]
+    return {"id": f"gap_{slug}", "title": topic[:180], "thesis": why or topic, "vector_type": "story", "research_effort": "standard",
+            "rationale": "Requested by the prediction-market bots: their corpus search found too little on this. Ground it in sources; say plainly what could not be found.",
+            "supporting_hits": [], "pillars": [], "scope": [], "key_questions": [], "sources": [], "requested_by": "markets", "cost_cap_usd": flags.GAP_FILL_RUN_CAP_USD}
+
+
 def subprocess_runner(topic: str, why: str) -> dict[str, Any]:
-    """The default fill: one profile research run through the ordinary pipeline, stamped ``requested_by: markets``. Foreground; the run's own caps
-    (research ``COST_CAP_USD``, the budget gate) apply."""
-    cmd = [sys.executable, "-m", "algent_backend.cli", "newsroom", "run", "--brief", topic, "--angle", why or topic, "--to", "profile", "--requested-by", "markets"]
+    """The default fill: one ``signal_profile`` research run (the existing profile pipeline: web research -> profile store -> corpus index on its next
+    build), in a child process under its own USD cap. The profile is stamped ``requested_by: markets``."""
+    cmd = [sys.executable, "-m", "algent_backend.cli", "runs", "start", "signal_profile", "--input", json.dumps({"vector": gap_vector(topic, why)}), "--foreground"]
     try:
         p = subprocess.run(cmd, capture_output=True, text=True, timeout=2400, check=False)  # noqa: S603 - fixed argv, our own interpreter
     except (OSError, subprocess.TimeoutExpired) as exc:

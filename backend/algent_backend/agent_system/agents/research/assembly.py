@@ -72,6 +72,7 @@ def finalize_profile(
         "related_profiles": list(related_profiles or []), "corpus_context": list(corpus_context or []),
         "id": _profile_id(vector),
         "parent_vector_id": vector.get("id", ""),
+        "requested_by": str(vector.get("requested_by") or ""),
         "source_ledger": sources, "claim_ledger": claims, "entities": entities, "threads": threads,
         # Deterministic floor: the model may not claim maturity while a load-bearing claim/thread
         # is only snippet-grounded (see grounding.py).

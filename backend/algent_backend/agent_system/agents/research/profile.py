@@ -239,6 +239,7 @@ class SignalProfile(BaseModel):
 
     id: str
     parent_vector_id: str = ""       # the t1 research vector this was promoted from
+    requested_by: str = ""           # who asked for this research when it was not the editorial rail ("markets": the prediction-market bots' gap requests)
     title: str
     summary: str = ""                # the holistic gist (read first)
     #: Framing notes the operator added while the run was in progress (see newsroom/steer.py).

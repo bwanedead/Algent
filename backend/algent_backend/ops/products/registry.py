@@ -43,6 +43,19 @@ def _markets_daily_at() -> str:
     return flags.DAILY_UTC
 
 
+def _markets_gaps_at() -> str:
+    from algent_backend.markets import flags
+
+    return flags.GAPS_UTC
+
+
+def _markets_fast_calendar() -> str:
+    """Every FAST_EVERY_H hours at :20, which is 30 minutes after the free mirror pass (3/4:50) has refreshed prices and resolutions."""
+    from algent_backend.markets import flags
+
+    return f"*-*-* 0/{flags.FAST_EVERY_H}:20:00"
+
+
 def _calendar_every(minutes: int) -> str:
     """systemd minute steps stop at 59, so a longer cadence is written as an hourly step."""
     return f"*-*-* 0/{minutes // 60}:00:00" if minutes >= 60 else f"*:0/{minutes}"
@@ -230,15 +243,20 @@ PRODUCTS: tuple[Product, ...] = (
                    K("ohmega.geo.grid", 1, ("geo/grid/*.json",)), K("ohmega.geo.events", 1, ("geo/events/*.json",))), feeds_from=()),
     Product(
         id="markets", title="Markets and the paper trader", owner="markets",
-        what="Read-only Polymarket mirror, our blind forecasts and the paper trader's decisions; the scored track record.",
-        stores=(Store("markets_store", loc.markets, "ALGENT_MARKETS_STORE", True, budget=_b(8, 100, 500, 100, 2, "measured 10-23: 8 MB; every file is append-only JSON lines")),),
-        retention=(Retention("append-only", "history is never rewritten so the record cannot be quietly improved; ~2 MB a week estimated", "markets/store.py::root", "on-write"),),
+        what="Read-only Polymarket mirror, our blind forecasts and the paper traders' decisions (daily and fast books), the corpus-research traces and gap requests; the scored track record.",
+        stores=(Store("markets_store", loc.markets, "ALGENT_MARKETS_STORE", True, budget=_b(8, 100, 500, 100, 5, "measured 10-23: 8 MB; every file is append-only JSON lines; the fast book and research traces add ~3 MB a week (estimate; traces are pruned at 60 days)")),),
+        retention=(Retention("append-only", "history is never rewritten so the record cannot be quietly improved; ~2 MB a week estimated", "markets/store.py::root", "on-write"),
+                   Retention("prune", "research traces (observability, never read by scoring) older than TRACE_KEEP_DAYS are dropped by the free refresh pass; forecasts, decisions, gaps and fills are never pruned", "markets/flags.py::TRACE_KEEP_DAYS", "job:markets")),
         irreplaceable=True, why="our forecasts and trades are the scored record; they cannot be reconstructed",
         jobs=(Job("markets", ("markets", "refresh"), "3/4:50", every_min=240, what="Polymarket mirror: markets, prices, resolutions; paper track record"),
               Job("markets-daily", ("markets", "daily"), at=_markets_daily_at, every_min=1440, spend="paid", est_min=15, deadline_min=120, what="Polymarket paper trader: forecasts, trades, marks",
-                  then=AFTER_PUBLISH)),
+                  then=AFTER_PUBLISH),
+              Job("markets-fast", ("markets", "fast"), _markets_fast_calendar, every_min=480, spend="capped", priority=2, est_min=6, est_mb=400, max_wait_min=45, deadline_min=60,
+                  what="fast book: markets settling within days, forecast + paper trade every 4 h (own cap; gated like a paid job)"),
+              Job("markets-gaps", ("markets", "gaps"), at=_markets_gaps_at, every_min=1440, spend="paid", est_min=20, deadline_min=180,
+                  what="research the bots' most-asked corpus gaps into profiles (capped $0.50/day)")),
         publishes=("data/track-record.json",), contracts=(K("ohmega.track-record", 2, ("data/track-record.json",), accepts=(1,)),),
-        site_routes=("/intel/forecasts", "/intel/track-record"), feeds_from=("dailies",), heartbeat=("markets_store/status.json",)),
+        site_routes=("/intel/forecasts", "/intel/track-record"), feeds_from=("dailies", "profiles"), heartbeat=("markets_store/status.json",)),
     Product(
         id="library", title="Source library (crawl cache)", owner="library",
         what="The crawled pages the research and dailies read, in one SQLite file.",
