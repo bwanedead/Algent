@@ -218,3 +218,71 @@ def test_the_cli_exits_nonzero_on_failure_and_only_production_runs_are_logged(mo
     assert cli.run_smoke(args) == 1
     assert json.loads(capsys.readouterr().out)["counts"]["fail"] == 1
     assert cli.run_smoke(type("A", (), {"base": "nope", "json": False, "log": False})()) == 2
+
+
+# ── the deploy helper: wait for the Vercel preview of a commit (GitHub REST, faked) ───────────────────────────
+def hub(deployments=None, statuses=None, commit=(200, {"sha": "abc123def"})):
+    calls = []
+
+    def get(path):
+        calls.append(path)
+        if "/commits/" in path:
+            return commit
+        if "/statuses" in path:
+            return 200, statuses() if callable(statuses) else (statuses or [])
+        return 200, deployments if deployments is not None else []
+
+    get.calls = calls
+    return get
+
+
+def test_repo_slug_reads_https_and_ssh_remotes() -> None:
+    from algent_backend.ops.smoke import deploy
+
+    assert deploy.repo_slug("https://github.com/organic-dev/algent.git\n") == "organic-dev/algent"
+    assert deploy.repo_slug("git@github.com:organic-dev/algent.git") == "organic-dev/algent"
+    with pytest.raises(ValueError):
+        deploy.repo_slug("https://example.com/x/y")
+
+
+def test_preview_state_follows_the_vercel_deployment_status() -> None:
+    from algent_backend.ops.smoke import deploy
+
+    dep = [{"id": 9, "environment": "Production"}, {"id": 7, "environment": "Preview"}]
+    assert deploy.preview_state("o/r", "abc", hub([]))[0] == "none"
+    assert deploy.preview_state("o/r", "abc", hub([{"id": 9, "environment": "Production"}]))[0] == "none"       # production deployments are not previews
+    assert deploy.preview_state("o/r", "abc", hub(dep, [{"state": "pending", "description": "Building"}])) == ("pending", "", "Building")
+    ready = [{"state": "success", "environment_url": "https://algent-git-x.vercel.app", "description": "Deployment has completed"}]
+    assert deploy.preview_state("o/r", "abc", hub(dep, ready)) == ("ready", "https://algent-git-x.vercel.app", "Deployment has completed")
+    assert deploy.preview_state("o/r", "abc", hub(dep, [{"state": "failure", "description": "Build failed"}]))[0] == "failed"
+
+
+def test_wait_polls_until_ready_and_gives_up_at_the_deadline() -> None:
+    from algent_backend.ops.smoke import deploy
+
+    answers = iter([[{"state": "pending"}], [{"state": "pending"}], [{"state": "success", "environment_url": "https://p.vercel.app"}]])
+    get = hub([{"id": 1, "environment": "Preview"}], statuses=lambda: next(answers))
+    now = [0.0]
+    sleeps = []
+    got = deploy.wait_for_preview("o/r", "abc", wait_s=600, interval_s=15, get=get, sleep=lambda s: (sleeps.append(s), now.__setitem__(0, now[0] + s)), clock=lambda: now[0])
+    assert got[0] == "ready" and got[1] == "https://p.vercel.app" and sleeps == [15, 15]
+    never = hub([{"id": 1, "environment": "Preview"}], statuses=[{"state": "pending"}])
+    now[0] = 0.0
+    late = deploy.wait_for_preview("o/r", "abc", wait_s=40, interval_s=15, get=never, sleep=lambda s: now.__setitem__(0, now[0] + s), clock=lambda: now[0])
+    assert late[0] == "pending"
+
+
+def test_resolve_sha_explains_a_private_repository() -> None:
+    from algent_backend.ops.smoke import deploy
+
+    assert deploy.resolve_sha("o/r", "organic-dev", hub()) == "abc123def"
+    with pytest.raises(LookupError, match="GITHUB_TOKEN"):
+        deploy.resolve_sha("o/r", "organic-dev", hub(commit=(404, None)))
+
+
+def test_deploy_check_cli_smokes_the_preview_url(monkeypatch, capsys) -> None:
+    real = run.run
+    monkeypatch.setattr(run, "run", lambda base=None, **kw: real(base, fetch=FakeSite(), now=NOW, pace=0, sleep=lambda _s: None))
+    args = type("A", (), {"url": BASE, "ref": "organic-dev", "sha": "", "wait_min": 0, "json": False})()
+    assert cli.run_deploy_check(args) == 0
+    assert "preview is healthy" in capsys.readouterr().out

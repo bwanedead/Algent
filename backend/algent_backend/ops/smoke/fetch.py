@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import time
 import urllib.error
 import urllib.request
@@ -34,7 +35,10 @@ class _NoRedirect(urllib.request.HTTPRedirectHandler):
 
 def default_fetch(url: str) -> Reply:
     opener = urllib.request.build_opener(_NoRedirect)
-    req = urllib.request.Request(url, headers={"User-Agent": flags.USER_AGENT, "Accept": "*/*"})
+    headers = {"User-Agent": flags.USER_AGENT, "Accept": "*/*"}
+    if (secret := os.environ.get("VERCEL_AUTOMATION_BYPASS_SECRET", "").strip()):          # lets the check through a preview's deployment protection
+        headers["x-vercel-protection-bypass"] = secret
+    req = urllib.request.Request(url, headers=headers)
     t0 = time.monotonic()
     try:
         with opener.open(req, timeout=flags.TIMEOUT_S) as resp:      # noqa: S310 - the URL is the operator's own site

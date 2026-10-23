@@ -28,6 +28,7 @@ UPLOADERS = {
     "publishing/publish.py": "article assets come from the run dir and are staged to content/articles in the same call (_write_article); db-mode failure aborts",
     "publishing/published_db.py": "documents are built from the staged files under .site-live (site_* stores are backed up)",
     "publishing/rebuild.py": "rebuild-all republishes FROM the local stores; it never originates a document",
+    "publishing/staging_docs.py": "stage-from-prod re-sends a sample READ FROM the local stores (rebuild steps, views_store/); it originates nothing",
     "publishing/site_data.py": "documents built from the domain stores (geoledger, sanctions, ...), all backed up",
     "views/publish.py": "every view is written to views_store/ before it is sent (store() then object_docs.publish); derived from backed-up stores, so a lost store is a rebuild",
 }
