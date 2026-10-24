@@ -3,20 +3,22 @@
 import { useMemo, useState } from "react";
 
 import IsoFlags from "@/components/IsoFlags";
+import Stat from "@/components/stats/Stat";
 import { Spark } from "@/components/vl/primitives";
-import { byCountry, dailyCounts, EVENT_SOURCES, EVENT_TYPES, logProvenance, typeLabel, type ConflictRow, type EventSource, type EventType } from "@/lib/conflict-shared";
+import { byCountry, dailyCounts, EVENT_SOURCES, EVENT_TYPES, typeLabel, type ConflictFacts, type ConflictRow, type EventSource, type EventType } from "@/lib/conflict-shared";
 import { countryName } from "@/lib/flags";
+import { statView } from "@/lib/stats/render";
 
-import Provenance from "./Provenance";
 import "./conflict.css";
 
 // /intel/attacks: a per-country strip over a dense table of events, filterable by country, kind of event, source and confidence. Rows
 // come from the server page; this file imports only the pure shared file. Every row says which source reported it and how it was
-// coded (machine-coded GDELT rows are marked and can be hidden); the figures at the top carry their provenance in an info hover.
+// coded (machine-coded GDELT rows are marked and can be hidden). Every figure at the top is a registered stat (lib/stats/registry.ts: attacks_*), so it reads
+// as a minimum and carries its basis and limits in an info hover; the counts come from the document's own per-day tallies of everything stored, not from the rows.
 
 const PAGE = 60;
 
-export default function AttackLog({ rows, today, since }: { rows: ConflictRow[]; today: string; since: string | null }) {
+export default function AttackLog({ rows, today, facts }: { rows: ConflictRow[]; today: string; facts: ConflictFacts }) {
   const [country, setCountry] = useState("");
   const [type, setType] = useState<EventType | "">("");
   const [source, setSource] = useState<EventSource | "">("");
@@ -29,14 +31,22 @@ export default function AttackLog({ rows, today, since }: { rows: ConflictRow[];
   );
   const countries = useMemo(() => byCountry(rows).filter((c) => c.iso !== ""), [rows]);
   const sources = useMemo(() => Array.from(new Set(rows.map((r) => r.source))), [rows]);
-  const prov = useMemo(() => logProvenance(rows, since), [rows, since]);
+  const days = Object.values(facts.byDay);
+  const machine = days.reduce((a, d) => a + d.machine, 0);
+  const curated = days.reduce((a, d) => a + d.curated, 0);
+  const waiting = Object.entries(facts.sources).filter(([, s]) => s.keyed && !s.active).map(([id]) => EVENT_SOURCES[id as EventSource]?.short ?? id);
   const reset = () => setLimit(PAGE);
 
   return (
     <div className="cx-view">
       <p className="cx-headline">
-        <strong>{rows.length}</strong> {rows.length === 1 ? "event" : "events"} reported in the last 14 days across <strong>{countries.length}</strong> countries <Provenance p={prov} label="the event count" />
+        <Stat id="attacks_events" value={facts.total} unit window={`in the last ${facts.days} days`} />
+        {" · "}<Stat id="attacks_machine" value={machine} unit /> read by software from news
+        {" · "}<Stat id="attacks_curated" value={curated} unit /> checked by researchers
+        {" · "}<Stat id="attacks_countries" value={countries.length} unit />
       </p>
+      {waiting.length > 0 && <p className="cx-note">Not collecting yet (these need an access key): {waiting.join(", ")}. Until they are switched on every figure here is GDELT alone.</p>}
+      {facts.capped && <p className="cx-note">The table lists the strongest {facts.shown} of the {facts.total}: curated and fatal events first, then the most reported.</p>}
 
       <ul className="cx-countries" aria-label="Events by country, last 14 days">
         {countries.slice(0, 12).map((c) => (
@@ -44,7 +54,7 @@ export default function AttackLog({ rows, today, since }: { rows: ConflictRow[];
             <button type="button" className={`cx-country${country === c.iso ? " is-on" : ""}`} aria-pressed={country === c.iso} onClick={() => { setCountry(country === c.iso ? "" : c.iso); reset(); }}>
               <IsoFlags codes={[c.iso]} />
               <span className="cx-country-n">{countryName(c.iso)}</span>
-              <span className="cx-country-c">{c.n}</span>
+              <span className="cx-country-c" title="Events among those listed below (a floor)">{statView({ id: "attacks_events", value: c.n }).text}</span>
               <Spark values={dailyCounts(rows.filter((r) => r.country === c.iso), today, 14)} label={`${countryName(c.iso)}: events per day, last 14 days`} />
             </button>
           </li>
@@ -83,7 +93,7 @@ export default function AttackLog({ rows, today, since }: { rows: ConflictRow[];
           <input type="checkbox" checked={sure} onChange={(e) => { setSure(e.target.checked); reset(); }} />
           <span>Hide single-source, low-confidence rows</span>
         </label>
-        <p className="cx-count">{shown.length} {shown.length === 1 ? "event" : "events"}</p>
+        <p className="cx-count">{statView({ id: "attacks_events", value: shown.length }).text} {shown.length === 1 ? "event" : "events"} listed</p>
       </div>
 
       {shown.length === 0 ? (

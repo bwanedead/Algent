@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import Provenance from "@/components/conflict/Provenance";
+import Stat from "@/components/stats/Stat";
 import { sharePct, SEVERITY_LABEL } from "@/lib/conflict-shared";
 import { shortDate } from "@/lib/calendar-shared";
 
@@ -15,7 +15,7 @@ export default function GnssPanel({ ctx }: PanelProps) {
   return (
     <>
       <p className="hud-sub">
-        <span className="cx-hud-n">{g.total}</span> zones on {shortDate(g.day)} <Provenance p={g.provenance} label="the interference zones" />
+        <span className="cx-hud-n"><Stat id="gnss_zones" value={g.total} /></span> zones on {shortDate(g.day)}
       </p>
       <ul className="hud-rows hud-table">
         {g.zones.map((z) => (

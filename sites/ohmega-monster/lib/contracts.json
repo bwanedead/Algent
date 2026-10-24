@@ -316,6 +316,50 @@
       "product": "sanctions"
     },
     {
+      "schema": "ohmega.conflict.recent",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "conflict/recent.json"
+      ],
+      "product": "conflict"
+    },
+    {
+      "schema": "ohmega.conflict.country",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "conflict/country/*.json"
+      ],
+      "product": "conflict"
+    },
+    {
+      "schema": "ohmega.gnss.latest",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "gnss/latest.json"
+      ],
+      "product": "gnss"
+    },
+    {
+      "schema": "ohmega.gnss.overlay",
+      "version": 1,
+      "accepts": [
+        1
+      ],
+      "paths": [
+        "live/gnss.json"
+      ],
+      "product": "gnss"
+    },
+    {
       "schema": "ohmega.calendar",
       "version": 1,
       "accepts": [

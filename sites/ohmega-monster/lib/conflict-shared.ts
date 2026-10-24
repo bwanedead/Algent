@@ -1,9 +1,10 @@
-// Attack / conflict events and GNSS interference zones, as data: the `conflict_events` and `gnss_zones` rows (backend `conflict/` and
-// `gnss/`, migration 014) and the pure helpers the pages, the HUD and the API share. No I/O and no node imports, so a client component may
+// Attack / conflict events and GNSS interference zones, as data: the documents the server publishes (`conflict/recent.json`, `gnss/latest.json`; backend
+// `conflict/publish.py`, `gnss/publish.py`) and the pure helpers the pages, the HUD and the API share. No I/O and no node imports, so a client component may
 // import this file. The server-side reads live in lib/conflict.ts.
 //
-// PROVENANCE is part of the data: every row says what kind of record it is (`basis`) and the limit of its coverage (`coverage_note`), and a
-// count we make ourselves is a minimum with a "since" date (`baseline_since`). `provenanceOf` turns those into the words an info hover shows.
+// PROVENANCE is part of the data: every row says what kind of record it is (`basis`) and the limit of its coverage (`coverage_note`, hydrated from the
+// document's per-source `coverage` map), and a count we make ourselves is a minimum with a "since" date. The numbers a page shows are registered once in
+// lib/stats/registry.ts (`attacks_*`, `gnss_*`); `provenanceText` below serves the API, whose responses carry the same words.
 
 export type EventSource = "gdelt" | "reliefweb" | "acled" | "ucdp";
 export type EventType = "bombing" | "airstrike" | "armed_clash" | "assault" | "mass_violence" | "report";
@@ -11,13 +12,14 @@ export type Basis = "official" | "third_party" | "our_count" | "our_estimate";
 
 export type AssetRef = { id: string; name: string; type: string; km: number };
 
+/** An event as the document stores it (`coverage_note` is per source, at document level). */
+export type ConflictRowRaw = Omit<ConflictRow, "coverage_note">;
+
 export type ConflictRow = {
   id: string;
   source: EventSource;
   on_date: string;
-  observed_at: string;
   type: EventType;
-  code: string;
   lat: number | null;
   lon: number | null;
   place: string;
@@ -37,6 +39,52 @@ export type ConflictRow = {
 
 export type Severity = "low" | "medium" | "high";
 export type GnssFlag = "" | "new" | "intensifying";
+
+/** The attack log document (`conflict/recent.json`): the strongest events of the window, the per-day counts of every stored event, which sources are live. */
+export type ConflictDoc = {
+  as_of: string;
+  since: string;
+  window_days: number;
+  /** Every event stored in the window; `rows` carries the strongest `shown` of them. */
+  total: number;
+  shown: number;
+  capped: boolean;
+  by_day: Record<string, { events: number; machine: number; curated: number }>;
+  sources: Record<string, { keyed: boolean; active: boolean; last_ok: string }>;
+  coverage: Record<string, string>;
+  rows: ConflictRowRaw[];
+};
+
+/** What the document says about itself, for the figures at the top of the log (lib/conflict.ts `conflictFacts`). */
+export type ConflictFacts = {
+  total: number;
+  shown: number;
+  capped: boolean;
+  days: number;
+  since: string | null;
+  asOf: string;
+  byDay: ConflictDoc["by_day"];
+  sources: ConflictDoc["sources"];
+};
+
+/** The per-country slice (`conflict/country/<ISO>.json`). */
+export type ConflictCountryDoc = { iso: string; as_of: string; window_days: number; total: number; capped: boolean; rows: ConflictRowRaw[] };
+
+/** A zone as the document stores it (`coverage_note` and `baseline_since` are per source, at document level). */
+export type GnssRowRaw = Omit<GnssRow, "coverage_note" | "baseline_since">;
+
+/** The GNSS document (`gnss/latest.json`): the newest day's zones, ours and GPSJam's top band, and a short per-day history of our own. */
+export type GnssDoc = {
+  day: string;
+  generated_at: string;
+  samples: number;
+  baseline_days: number;
+  baseline_since: string;
+  coverage: Record<string, string>;
+  ours: GnssRowRaw[];
+  gpsjam: GnssRowRaw[];
+  history: { day: string; zones: number; high: number; flagged: number }[];
+};
 
 export type GnssRow = {
   id: string;

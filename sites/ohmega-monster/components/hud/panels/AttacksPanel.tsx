@@ -2,20 +2,20 @@
 
 import Link from "next/link";
 
-import Provenance from "@/components/conflict/Provenance";
+import Stat from "@/components/stats/Stat";
 import { EVENT_SOURCES, typeLabel, type EventSource } from "@/lib/conflict-shared";
 import { shortDate } from "@/lib/calendar-shared";
 
 import { pointsAt, type PanelProps } from "../types";
 
-/** The strongest attacks reported in the last three days. The count is Ohmega's own tally (a minimum), with its provenance in the "i". */
+/** The strongest attacks reported in the last three days. The count is Ohmega's own tally (a minimum: registry id attacks_events), with its basis and limits in the "i". */
 export default function AttacksPanel({ ctx }: PanelProps) {
   const a = ctx.data.attacks;
   if (!a) return <p className="hud-none">No attack reports collected yet.</p>;
   return (
     <>
       <p className="hud-sub">
-        <span className="cx-hud-n">{a.total}</span> reported in {a.days} days <Provenance p={a.provenance} label="the attack count" />
+        <span className="cx-hud-n"><Stat id="attacks_events" value={a.total} /></span> reported in {a.days} days
       </p>
       <ul className="hud-rows hud-table">
         {a.rows.map((r) => (

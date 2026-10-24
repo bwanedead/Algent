@@ -1,12 +1,15 @@
 import Link from "next/link";
 
 import ComingStrip from "@/components/calendar/ComingStrip";
+import SignalsSection from "@/components/conflict/SignalsSection";
 import { Section } from "@/components/dossier/parts";
 import { Spark } from "@/components/vl/primitives";
 import { toComing, type CalendarRow } from "@/lib/calendar-shared";
 import { dailyCounts, SOURCES, typeLabel, type SanctionsRow } from "@/lib/sanctions-shared";
+import type { SignalAttacks, SignalGnss } from "@/lib/views-types";
 
-// Two short sections of an actor page, each drawn only when there is something to say: "Sanctions activity" (how many parties tied to
+// Short sections of an actor page, each drawn only when there is something to say: "Attacks reported" and "GPS interference" (components/conflict/SignalsSection.tsx),
+// "Sanctions activity" (how many parties tied to
 // this state were added to or removed from the US, UK and EU lists lately, a sparkline of additions per day, the latest few) and
 // "Upcoming" (dated items ahead that concern it). Server component; data from lib/sanctions.ts and lib/calendar.ts.
 
@@ -14,7 +17,7 @@ import "@/components/sanctions/sanctions.css";
 
 const SHOWN = 4;
 
-export default function ActorWatch({ name, sanctions, upcoming, today }: { name: string; sanctions: SanctionsRow[]; upcoming: CalendarRow[]; today: string }) {
+export default function ActorWatch({ name, sanctions, upcoming, today, attacks = null, jam = null }: { name: string; sanctions: SanctionsRow[]; upcoming: CalendarRow[]; today: string; attacks?: SignalAttacks | null; jam?: SignalGnss | null }) {
   const added = sanctions.filter((s) => s.action === "designated");
   const removed = sanctions.length - added.length;
   return (
@@ -41,6 +44,7 @@ export default function ActorWatch({ name, sanctions, upcoming, today }: { name:
           </ul>
         </Section>
       )}
+      <SignalsSection where={name} attacks={attacks} jam={jam} />
       {upcoming.length > 0 && (
         <Section id="upcoming" title="Upcoming" lead={`Dated items ahead that concern ${name}.`}>
           <ComingStrip rows={upcoming.map(toComing)} today={today} heading={`Coming up for ${name}`} limit={6} />

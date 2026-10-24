@@ -3,6 +3,7 @@
 
 .cx-view { display: grid; gap: 14px; }
 .cx-headline { margin: 0; color: var(--text); font-size: 13px; line-height: 20px; }
+.cx-note { margin: 0; color: var(--muted, var(--text)); font-size: 12px; line-height: 18px; }
 .cx-headline strong { color: var(--strong); font-variant-numeric: tabular-nums; }
 .cx-prov { display: inline-flex; align-items: center; gap: 4px; margin-left: 6px; vertical-align: baseline; }
 .cx-basis { color: var(--muted); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }

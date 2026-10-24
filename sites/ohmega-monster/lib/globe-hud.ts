@@ -1,6 +1,7 @@
 import { addDays, ahead, isUnconfirmed, kindOf, todayIso, untilWords } from "./calendar";
 import { claimOf } from "./daily";
-import type { HudAnomaly, HudComing, HudCounter, HudData, HudLive, HudSanction } from "./globe/hud-data";
+import { countryName } from "./flags";
+import type { HudAnomaly, HudAttacks, HudComing, HudCounter, HudData, HudGnss, HudLive, HudSanction } from "./globe/hud-data";
 import { liveAnomalies, liveEvents, liveStats, liveSummary, type LiveStat } from "./live";
 import { SOURCES, typeLabel } from "./sanctions";
 import { historyOf, shortDate, statView, type Provenance } from "./stats/render";
@@ -16,6 +17,9 @@ const ISO_RE = /^[A-Z]{2}$/;
 const COMING_DAYS = 14;
 const COMING_SHOWN = 10;
 const SANCTIONS_SHOWN = 10;
+const ATTACKS_SHOWN = 8;
+const ATTACK_DAYS = 3;
+const ZONES_SHOWN = 8;
 const DAILY_LINE_MAX = 150;
 const THEATER_LINE_MAX = 160;
 
@@ -103,6 +107,26 @@ export async function hudData(): Promise<HudData> {
       id: r.id, name: r.name, type: typeLabel(r.type), source: SOURCES[r.source]?.short ?? r.source, date: r.on_date,
       iso: r.countries.map((c) => c.toUpperCase()).filter((c) => ISO_RE.test(c)), programme: r.programmes[0] ?? "", url: web(r.source_url),
     }));
+  const attacks: HudAttacks | null = h?.attacks
+    ? {
+        total: h.attacks.total,
+        days: h.attacks.days ?? ATTACK_DAYS,
+        rows: h.attacks.rows.slice(0, ATTACKS_SHOWN).map((r) => ({
+          id: r.id, date: r.on_date, type: r.type, place: r.place || r.title, iso: ISO_RE.test(r.country) ? [r.country] : [], source: r.source, machine: r.coding === "machine",
+          fatalities: r.fatalities, reports: r.articles, url: web(r.url),
+        })),
+      }
+    : null;
+  const gnss: HudGnss | null = h?.gnss
+    ? {
+        day: h.gnss.day,
+        total: h.gnss.total,
+        zones: h.gnss.zones.slice(0, ZONES_SHOWN).map((z) => ({
+          id: z.id, where: z.country ? countryName(z.country) : `${z.lat.toFixed(0)}, ${z.lon.toFixed(0)}`, iso: ISO_RE.test(z.country) ? [z.country] : [],
+          severity: z.severity, share: z.degraded_share, flag: z.flag === "new" || z.flag === "intensifying" ? z.flag : "", lat: z.lat, lon: z.lon,
+        })),
+      }
+    : null;
   return {
     asOf: h?.asOf ?? "",
     daily: h?.daily ? { ...h.daily, items: h.daily.items.map((i) => ({ ...i, text: claimOf(i.text, DAILY_LINE_MAX) })) } : null,
@@ -111,6 +135,8 @@ export async function hudData(): Promise<HudData> {
     live,
     coming,
     sanctions,
+    attacks,
+    gnss,
     trader: h?.trader ?? null,
     tweets: null, // no published source yet: see HudTweet in lib/globe/hud-data.ts
   };

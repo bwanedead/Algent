@@ -3,16 +3,22 @@
 import { useEffect, useMemo, useState } from "react";
 
 import IsoFlags from "@/components/IsoFlags";
-import { sharePct, SEVERITY_LABEL, type GnssRow, type Provenance as ProvenanceData } from "@/lib/conflict-shared";
+import Stat from "@/components/stats/Stat";
+import { Spark } from "@/components/vl/primitives";
+import { sharePct, SEVERITY_LABEL, type GnssDoc, type GnssRow } from "@/lib/conflict-shared";
 import { countryName } from "@/lib/flags";
 import { loadLand } from "@/lib/globe/sphere";
+import { shortDate } from "@/lib/stats/render";
 
-import Provenance from "./Provenance";
 import "./conflict.css";
 
 // /intel/gnss: the day's GPS-interference zones as a flat map of cells (this page only: the live map never shows cells) over a table. Our own
 // estimate and GPSJam's file are drawn differently (ours as filled squares, GPSJam's as rings) so agreement or disagreement is visible; colour
 // is severity and nothing else. The coastline is the globe's detailed outline, fetched once; without it the zones still plot on a graticule.
+// The figures on top are registered stats (lib/stats/registry.ts: gnss_*): minimums with their basis and limits in an info hover, flags withheld until a week of history.
+
+/** Backend gnss/flags.py FLAG_AFTER_DAYS (also the registry's min_history for gnss_flagged): no cell is flagged before this many closed days. */
+const FLAG_AFTER_DAYS = 7;
 
 type Region = { id: string; label: string; w: number; e: number; s: number; n: number };
 const REGIONS: Region[] = [
@@ -57,7 +63,7 @@ const path = (runs: number[][], r: Region): string =>
     })
     .join("");
 
-export default function GnssView({ day, zones, ours, theirs }: { day: string; zones: GnssRow[]; ours: ProvenanceData; theirs: ProvenanceData | null }) {
+export default function GnssView({ day, zones, baselineSince, baselineDays, history }: { day: string; zones: GnssRow[]; baselineSince: string | null; baselineDays: number; history: GnssDoc["history"] }) {
   const [region, setRegion] = useState("eu");
   const [coast, setCoast] = useState<number[][] | null>(null);
   const [source, setSource] = useState<"ohmega_adsb" | "gpsjam">("ohmega_adsb");
@@ -74,16 +80,19 @@ export default function GnssView({ day, zones, ours, theirs }: { day: string; zo
   const land = useMemo(() => (coast ? path(coast, r) : ""), [coast, r]);
   const rows = source === "ohmega_adsb" ? mine : theirsRows;
   const lonSpan = r.e - r.w;
+  const theirs = theirsRows.length > 0;
+  const high = mine.filter((z) => z.severity === "high").length;
+  const flagged = mine.filter((z) => z.flag !== "").length;
 
   return (
     <div className="cx-view">
       <p className="cx-headline">
-        <strong>{mine.length}</strong> {mine.length === 1 ? "zone" : "zones"} from our own estimate on {day} <Provenance p={ours} label="our interference zones" />
-        {theirs && (
-          <>
-            {" · "}<strong>{theirsRows.length}</strong> from GPSJam <Provenance p={theirs} label="GPSJam's cells" />
-          </>
-        )}
+        <Stat id="gnss_zones" value={mine.length} unit window={`on ${shortDate(day)}`} />
+        {" · "}<Stat id="gnss_high" value={high} unit />
+        {" · "}
+        {baselineDays >= FLAG_AFTER_DAYS ? <><Stat id="gnss_flagged" value={flagged} unit /> new or intensifying</> : <span>flags start after a week of history (collecting since {shortDate(baselineSince ?? "")})</span>}
+        {theirs && <>{" · "}<Stat id="gnss_gpsjam" value={theirsRows.length} unit /> in GPSJam&apos;s top band</>}
+        {history.length > 1 && <> <Spark values={history.map((h) => h.zones)} label={`Our zones per day, last ${history.length} days`} /></>}
       </p>
 
       <div className="cx-filters" role="group" aria-label="Map region">

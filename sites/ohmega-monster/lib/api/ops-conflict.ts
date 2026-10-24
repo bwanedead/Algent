@@ -1,8 +1,9 @@
-import { EVENT_SOURCES, EVENT_TYPES, eventsSince, latestZones, logProvenance, provenanceText, recentEvents, recentZones, type Provenance } from "@/lib/conflict";
+import { conflictFacts, EVENT_SOURCES, EVENT_TYPES, latestZones, logProvenance, provenanceText, recentEvents, type Provenance } from "@/lib/conflict";
 
 import { abs, badRequest, enumParam, limitParam, newest, paginate, sinceParam, type ApiResult, type Args } from "./util";
 
-// Ops over the attack log and the GNSS-interference zones (backend `conflict/` and `gnss/`, migration 014). Programmatic: no model in the loop. Every response carries
+// Ops over the attack log and the GNSS-interference zones (backend `conflict/` and `gnss/`; the published documents `conflict/recent.json` and `gnss/latest.json`).
+// Programmatic: no model in the loop. Every response carries
 // `provenance` (what kind of record, the limit of its coverage, and since when Ohmega has been collecting) and every row its own `basis` and `coverage_note`.
 
 const ISO2 = /^[A-Za-z]{2}$/;
@@ -18,8 +19,10 @@ export async function attacksOp(a: Args): Promise<ApiResult> {
   const country = (a.country ?? "").trim().toUpperCase();
   if (country && !ISO2.test(country)) throw badRequest("country must be an ISO 3166-1 alpha-2 code");
   const since = sinceParam(a.since);
-  const days = Math.min(Math.max(Number.parseInt(a.days ?? "14", 10) || 14, 1), 30);
-  const [all, collecting] = await Promise.all([recentEvents(days), eventsSince()]);
+  const facts = await conflictFacts();
+  const days = Math.min(Math.max(Number.parseInt(a.days ?? "14", 10) || 14, 1), facts?.days ?? 14);
+  const all = await recentEvents(days);
+  const collecting = facts?.since ?? null;
   const rows = all
     .filter((r) => (!type || r.type === type) && (!source || r.source === source) && (!coding || r.coding === coding) && (!country || r.country === country))
     .filter((r) => !since || r.on_date >= since.slice(0, 10))
@@ -46,13 +49,22 @@ export async function attacksOp(a: Args): Promise<ApiResult> {
     }));
   const p = paginate(rows, limitParam(a.limit), a.cursor);
   return {
-    data: { events: p.items, total: p.total, types: EVENT_TYPES, sources: EVENT_SOURCES, provenance: withText(logProvenance(all, collecting)) },
+    data: {
+      events: p.items,
+      total: p.total,
+      // `stored_in_window` counts every event Ohmega stored in the window; `total` counts the strongest rows the document carries that match the filters.
+      stored_in_window: facts?.total ?? null,
+      types: EVENT_TYPES,
+      sources: EVENT_SOURCES,
+      sources_live: Object.fromEntries(Object.entries(facts?.sources ?? {}).map(([k, v]) => [k, v.active])),
+      provenance: withText(logProvenance(all, collecting)),
+    },
     as_of: newest(...rows.map((r) => r.date)),
     cite_as: abs("/intel/attacks"),
-    source: "conflict_events",
+    source: "conflict/recent.json",
     next_cursor: p.next_cursor,
     note:
-      "Ohmega's normalised record of reported attacks and clashes. total counts what the sources reported since Ohmega began collecting (provenance.baseline_since): a minimum, never a census. " +
+      "Ohmega's normalised record of reported attacks and clashes. total counts what the sources reported since Ohmega began collecting (provenance.baseline_since): a minimum, never a census; the list is capped to the strongest events (curated and fatal first) and stored_in_window is the count of everything stored. ReliefWeb, ACLED and UCDP appear only once their keys are set (sources_live). " +
       "coding=machine rows (GDELT) are software readings of news text: they can duplicate, misplace or misread an event and never carry casualty figures (fatalities null). " +
       "coding=curated rows (ACLED, UCDP) are researcher-checked; coding=report rows (ReliefWeb) are published humanitarian reports without coordinates. near_assets lists ledger places within a few km: proximity, not a claim of damage.",
   };
@@ -65,9 +77,8 @@ export async function gnssOp(a: Args): Promise<ApiResult> {
   const flag = enumParam("flag", a.flag, ["new", "intensifying"] as const);
   const country = (a.country ?? "").trim().toUpperCase();
   if (country && !ISO2.test(country)) throw badRequest("country must be an ISO 3166-1 alpha-2 code");
-  const days = Math.min(Math.max(Number.parseInt(a.days ?? "1", 10) || 1, 1), 30);
   const latest = await latestZones();
-  const all = days <= 1 ? (latest?.zones ?? []) : await recentZones(days);
+  const all = latest?.zones ?? [];
   const mine = all.find((z) => z.source === "ohmega_adsb");
   const rows = all
     .filter((r) => (!source || r.source === source) && (!severity || r.severity === severity) && (!flag || r.flag === flag) && (!country || r.country === country))
@@ -91,10 +102,10 @@ export async function gnssOp(a: Args): Promise<ApiResult> {
   const p = paginate(rows, limitParam(a.limit), a.cursor);
   const ours: Provenance = { basis: "our_estimate", coverage_note: mine?.coverage_note ?? "Ohmega's own estimate from ADS-B navigation accuracy.", baseline_since: mine?.baseline_since ?? null };
   return {
-    data: { zones: p.items, total: p.total, day: latest?.day ?? null, provenance: { ohmega_adsb: withText(ours) } },
+    data: { zones: p.items, total: p.total, day: latest?.day ?? null, history: latest?.history ?? [], provenance: { ohmega_adsb: withText(ours) } },
     as_of: latest?.day ?? null,
     cite_as: abs("/intel/gnss"),
-    source: "gnss_zones",
+    source: "gnss/latest.json",
     next_cursor: p.next_cursor,
     note:
       "Cells where an unusual share of aircraft report poor navigation accuracy (ADS-B NACp below 7), a sign of GPS jamming or spoofing, not proof of who is responsible. source=ohmega_adsb is Ohmega's own estimate " +

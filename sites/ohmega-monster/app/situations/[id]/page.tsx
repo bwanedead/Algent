@@ -10,6 +10,7 @@ import DossierOutlook from "@/components/dossier/DossierOutlook";
 import DossierPulses from "@/components/dossier/DossierPulses";
 import DossierRecord from "@/components/dossier/DossierRecord";
 import { DossierPrimer, DossierTop } from "@/components/dossier/DossierTop";
+import SignalsSection from "@/components/conflict/SignalsSection";
 import { RelatedTheaters, StatesInvolved } from "@/components/entities/EntityLinks";
 import UnusualHere from "@/components/live/UnusualHere";
 import SituationStream from "@/components/situations/SituationStream";
@@ -81,6 +82,7 @@ export default async function SituationPage({ params }: { params: Params }) {
       <ActorNetwork actors={d.actors} relations={d.relations} statements={d.statements} />
       <ActorStrip actors={involved} />
       {states.length > involved.length && <StatesInvolved states={states} />}
+      {view?.signals && <SignalsSection where="its main states" attacks={view.signals.attacks ? { ...view.signals.attacks, as_of: view.as_of } : null} jam={view.signals.gnss} />}
       <DossierRecord rows={d.on_record} />
       <DossierFigures figures={d.figures} />
       <DossierOutlook d={d} known={known} />

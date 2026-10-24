@@ -166,6 +166,33 @@
       "refresh_minutes": 360
     },
     {
+      "id": "conflict",
+      "title": "Attack log (conflict events)",
+      "routes": [
+        "/intel/attacks"
+      ],
+      "publishes": [
+        "conflict/"
+      ],
+      "feeds_from": [
+        "geoledger"
+      ],
+      "refresh_minutes": 15
+    },
+    {
+      "id": "gnss",
+      "title": "GPS interference (jamming zones)",
+      "routes": [
+        "/intel/gnss"
+      ],
+      "publishes": [
+        "gnss/",
+        "live/"
+      ],
+      "feeds_from": [],
+      "refresh_minutes": 60
+    },
+    {
       "id": "calendar",
       "title": "Calendar (look-ahead)",
       "routes": [

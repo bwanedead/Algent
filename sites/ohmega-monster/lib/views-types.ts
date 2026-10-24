@@ -11,6 +11,32 @@ import type { CountryBrief, GlobeData } from "./globe/data";
 import type { HudDaily, HudPulse, HudTheater, HudTrader } from "./globe/hud-data";
 import type { SanctionsRow } from "./sanctions-shared";
 
+// ---- measured signals (backend views/signals.py): the attack log and GPS-interference zones as blocks of a country, a situation and the HUD ----------------------
+/** One reported event (`conflict/` row, trimmed); `url` is its first source link. */
+export type SignalEvent = {
+  id: string;
+  source: string;
+  on_date: string;
+  type: string;
+  lat: number | null;
+  lon: number | null;
+  place: string;
+  country: string;
+  fatalities: number | null;
+  articles: number;
+  coding: "machine" | "curated" | "report";
+  confidence: string;
+  basis: string;
+  url: string;
+  title: string;
+};
+/** The strongest events and the count of every stored event behind them (a minimum). `sources` says which are live (a keyed source reads false until its key is set). */
+export type SignalAttacks = { total: number; capped?: boolean; window_days?: number; days?: number; as_of: string; since?: string; sources?: Record<string, boolean>; rows: SignalEvent[] };
+export type SignalZone = { id: string; country: string; lat: number; lon: number; severity: "low" | "medium" | "high"; degraded_share: number; aircraft: number; flag: string; cross_check: string };
+/** Our zones (flagged and strongest first) of the newest day. */
+export type SignalGnss = { day: string; total: number; baseline_since: string; baseline_days: number; zones: SignalZone[] };
+export type SituationSignals = { states: string[]; attacks: { total: number; window_days: number; rows: SignalEvent[] } | null; gnss: SignalGnss | null };
+
 export type ViewEnvelope = {
   schema: string;
   /** When this CONTENT was first built (an unchanged view keeps it). */
@@ -38,7 +64,7 @@ export type CountryView = ViewEnvelope & {
     iso: string;
     stats: RawPanelStat[];
     profiled: number;
-    counts: { theaters: number; statements7d: number; sanctions: number; calendar: number; anomalies: number };
+    counts: { theaters: number; statements7d: number; sanctions: number; calendar: number; anomalies: number; attacks: number; jamming: number };
     grid: { line: string; asOf: string } | null;
     leaders: { head_of_state: string; head_of_government: string };
     briefs: CountryBrief[];
@@ -55,6 +81,9 @@ export type CountryView = ViewEnvelope & {
   sanctionsTotal: number;
   calendar: CalendarRow[];
   grid: unknown | null;
+  /** Reported attacks in the country (last 30 days) and the GPS-interference zones over it; null when the products have nothing for it. */
+  attacks: SignalAttacks | null;
+  gnss: SignalGnss | null;
   snapshot: unknown | null;
   anomalies: { id: string; sentence: string; direction: string; confidence: number; series: string }[];
   relations?: unknown[];
@@ -94,6 +123,8 @@ export type SituationView = ViewEnvelope & {
   involved: ActorLite[];
   states: ActorRefView[];
   related: (TheaterRefView & { shared: ActorRefView[] })[];
+  /** Attacks and GPS-interference zones over the situation's main states; null when there are none. */
+  signals?: SituationSignals | null;
 };
 
 export type SituationsView = ViewEnvelope & {
@@ -173,6 +204,9 @@ export type HudBlockView = {
   coming: CalendarRow[];
   sanctions: SanctionsRow[];
   trader: HudTrader | null;
+  /** The strongest events of the last days and the strongest zones of the newest day, raw rows (backend `views/signals.py`); null when the product has published nothing. */
+  attacks: SignalAttacks | null;
+  gnss: SignalGnss | null;
 };
 export type HudView = ViewEnvelope & { globe: GlobeData | null; hud: HudBlockView };
 

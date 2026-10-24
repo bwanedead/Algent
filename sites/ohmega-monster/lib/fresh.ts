@@ -19,6 +19,8 @@ export const CADENCE_HOURS = {
   sanctions: 24,
   calendar: 24,
   maritime: 24,
+  attacks: 1, // GDELT files land every 15 minutes
+  gnss: 2, // one ADS-B pass an hour
   statements: 24,
   actors: 30 * 24, // profiles are slow data, refreshed by hand
   live: 1,
