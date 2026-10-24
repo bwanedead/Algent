@@ -313,3 +313,12 @@ def test_the_line_survives_a_json_garbage_file(tmp_path) -> None:
     (env.state_dir() / "waiting" / "x.json").write_text("{nope", encoding="utf-8")
     assert q.line.waiting() == [] and not (env.state_dir() / "waiting" / "x.json").exists()
     json.dumps({})
+
+
+def test_a_measured_service_peak_replaces_the_default_estimate():
+    from algent_backend.ops.jobq import guard, flags
+    rows = [{"svc": {"ais": 320.0}}, {"svc": {"ais": 410.0}}]
+    peaks = guard.service_peaks(rows)
+    assert peaks["ais"] == 410.0                                   # not the 1400 MB guess
+    assert peaks["searxng"] == flags.SERVICE_PEAK_MB["searxng"]    # never sampled: the default still covers it
+    assert guard.floor_mb(rows, {"ais": 400.0}) == max(10.0 + flags.SLACK_MB, flags.FLOOR_MIN_MB)

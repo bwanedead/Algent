@@ -156,6 +156,15 @@ check("sanctions, calendar, maritime, the geoledger, AI benchmarks and the track
   const tr = await trackRecord();
   assert.equal(tr.markets.open, 1);
   assert.equal(tr.forecasts, 2);
+  // The fast book, the evidence section and the horizons (additive fields): parsed, with a position's evidence trail and a withheld group staying withheld.
+  assert.equal(tr.fast.horizon_days, 7);
+  assert.equal(tr.fast.open_positions[0].trail[0].href, "/intel/actors/IR");
+  assert.equal(tr.fast.open_positions[0].evidence, "sufficient");
+  assert.equal(tr.evidence.coverage.sufficient, 2);
+  assert.equal(tr.evidence.top_gaps[0].topic, "Hormuz insurance rates");
+  assert.equal(tr.evidence.accuracy.forecasts[0].shown, false);
+  assert.equal(tr.evidence.accuracy.forecasts[0].brier_ours, null);
+  assert.equal(tr.horizons.books.fast.positions, 1);
 });
 
 check("live events, stats, anomalies, the world map, the snapshot layers the map polls, flows and satellite", async () => {

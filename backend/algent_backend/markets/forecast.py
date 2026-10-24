@@ -13,17 +13,20 @@ halt forbids.
 
 from __future__ import annotations
 
+import time
 from collections.abc import Callable
 from datetime import UTC, date, datetime, timedelta
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
+from . import books, gaps, research, trace
 from . import evidence as evidence_mod
 from . import flags, store
 from .contracts import Forecast, Market, forecast_id
 
 PROMPT_VERSION = "blind-v1"
+PROMPT_VERSION_RESEARCH = "blind-v2"
 
 ROLE = """\
 You are a forecaster on an intelligence desk. You are given ONE yes/no question about the world, the exact rules by which it will be settled, and
@@ -49,10 +52,23 @@ How to do it well:
 """
 
 
+RESEARCH_ADDENDUM = """
+Where the evidence comes from. What the desk knows is what its own corpus returned for queries planned for this question: dated documents,
+claims, events and entities, each with a bracketed id. That is all there is; nothing outside it is available, and a thin result is information too.
+Cite the ids you actually used. Say how well the evidence served you in `evidence`: "sufficient" (it bears directly on the trigger in the
+rules), "thin" (some bearing, large holes) or "gap" (it tells you little). When it is thin or a gap, name in `gap_topic` the one specific thing the
+desk's research should look into next (a short noun phrase a researcher could act on: a person, event, document or figure) and in `gap_why` what you
+would do with it. Do not name a gap you did not need.
+"""
+
+
 class ForecastOut(BaseModel):
     probability: float = Field(description="Probability the question resolves YES, between 0 and 1 (never exactly 0 or 1).")
     rationale: str = Field(description="Two to four sentences: base rate, what moved you from it, what would change your mind.")
     cited: list[str] = Field(default_factory=list, description="Evidence ids (bracketed ids in the evidence) that bore on the answer.")
+    evidence: Literal["sufficient", "thin", "gap"] = Field(default="sufficient", description="How well the evidence served this question.")
+    gap_topic: str = Field(default="", description="When thin or a gap: the one specific thing the desk should research next. Empty if sufficient.")
+    gap_why: str = Field(default="", description="When you named a gap: what you would do with it.")
 
 
 Ask = Callable[[str, str], tuple[Any, float]]
@@ -102,14 +118,16 @@ def default_ask(role: str = ROLE, schema: type[BaseModel] = ForecastOut, cap_usd
 
 
 # ── selection ────────────────────────────────────────────────────────────────────────────────────
-def today_spend(forecasts: list[Forecast], day: str) -> tuple[int, float]:
-    mine = [f for f in forecasts if f.made_at.startswith(day)]
+def today_spend(forecasts: list[Forecast], day: str, book: str = "daily") -> tuple[int, float]:
+    mine = [f for f in forecasts if f.made_at.startswith(day) and f.book == book]
     return len(mine), round(sum(f.usd for f in mine), 6)
 
 
-def candidates(now: datetime) -> list[Market]:
-    """Open markets worth a forecast now, best first: not forecast within ``REFORECAST_DAYS``, priced inside the skip band, still running.
-    Order: markets we hold evidence for (mapped to a theater) first, then by volume."""
+def candidates(now: datetime, book: str = "daily") -> list[Market]:
+    """Open markets worth a forecast now, best first: not forecast within ``REFORECAST_DAYS`` (the fast book: ``FAST_FORECAST_MAX_AGE_H`` hours, and only
+    markets inside its horizon), priced inside the skip band, still running. Order: markets we hold evidence for (mapped to a theater) first, then by volume."""
+    spec = books.get(book)
+    again = timedelta(days=flags.REFORECAST_DAYS) if book == "daily" else spec.forecast_max_age()
     by_price = store.snapshots_by_market()
     last: dict[str, datetime] = {}
     for f in store.forecasts():
@@ -123,7 +141,7 @@ def candidates(now: datetime) -> list[Market]:
         end = store.parse_iso(m.end_date)
         if end is not None and end <= now:
             continue
-        if m.id in last and now - last[m.id] < timedelta(days=flags.REFORECAST_DAYS):
+        if (book != "daily" and not spec.in_scope(m, now)) or (m.id in last and now - last[m.id] < again):
             continue
         live = [s for s in by_price.get(m.id, []) if s.source == "live"]
         newest = store.parse_iso(live[-1].at) if live else None
@@ -143,32 +161,63 @@ def evidence_index(today: date) -> Any:
         return None
 
 
+def _evidence_for(m: Market, now: datetime, *, plan_ask: Any, corpus: Any, record: dict[str, Any], index: Any) -> tuple[evidence_mod.Evidence, research.Researched | None, str]:
+    """(what the forecaster reads, the research behind it, the mode). Research on and a corpus index present: the corpus results (plus evidence.py's blocks
+    only if ``CORPUS_ONLY`` is off). Otherwise evidence.py's blocks, and the mode says why."""
+    if not flags.RESEARCH_ENABLED:
+        return evidence_mod.build(m, today=now.date(), record=record, index=index), None, "base"
+    if corpus is None:
+        return evidence_mod.build(m, today=now.date(), record=record, index=index), None, "base-fallback"
+    res = research.research([research.item_for("M1", m)], plan_ask=plan_ask, corpus=corpus, today=now.date())["M1"]
+    if flags.CORPUS_ONLY:
+        return evidence_mod.Evidence(text=res.text, ids=list(res.ids), n_blocks=1 if res.text else 0), res, "corpus"
+    base = evidence_mod.build(m, today=now.date(), record=record, index=index)
+    return evidence_mod.Evidence(text="\n\n".join(t for t in (res.text, base.text) if t), ids=[*res.ids, *base.ids], n_blocks=base.n_blocks + 1), res, "corpus"
+
+
 def run(*, ask: Ask | None = None, now: datetime | None = None, limit: int | None = None, record: dict[str, Any] | None = None,
-        index: Any = None) -> dict[str, Any]:
-    """The paid pass. Stops at the day's count or dollar limit, on a refused call, or when the list is done. Returns a report."""
+        index: Any = None, book: str = "daily", plan_ask: Any = None, corpus: Any = None) -> dict[str, Any]:
+    """The paid pass. Stops at the day's count or dollar limit, on a refused call, or when the list is done. Returns a report.
+
+    ``book="fast"`` forecasts only markets inside the fast horizon, at most ``FAST_FORECASTS_PER_RUN`` a run and within the fast book's spend cap
+    (which also pays for its trade call), so the short-horizon trader always has a fresh blind forecast to compare the price with."""
     now = now or datetime.now(UTC)
     day = now.date().isoformat()
-    report: dict[str, Any] = {"as_of": now.isoformat(timespec="seconds"), "made": 0, "usd": 0.0, "failed": 0, "stopped": ""}
-    if not flags.FORECAST_ENABLED:
-        return {**report, "stopped": "forecasting is switched off (markets/flags.FORECAST_ENABLED)"}
-    n_today, usd_today = today_spend(store.forecasts(), day)
-    quota = min(flags.MAX_FORECASTS_PER_DAY - n_today, limit if limit is not None else flags.MAX_FORECASTS_PER_DAY)
-    todo = candidates(now)
+    spec = books.get(book)
+    report: dict[str, Any] = {"as_of": now.isoformat(timespec="seconds"), "book": book, "made": 0, "usd": 0.0, "failed": 0, "stopped": ""}
+    if not flags.FORECAST_ENABLED or (book == "fast" and not spec.enabled()):
+        return {**report, "stopped": "forecasting is switched off (markets/flags)"}
+    n_today, usd_today = today_spend(store.forecasts(), day, book)
+    if book == "fast":
+        usd_today = books.spend_today(store.decisions("fast"), store.forecasts(), now, spec)
+        quota = min(flags.FAST_FORECASTS_PER_RUN, limit if limit is not None else flags.FAST_FORECASTS_PER_RUN)
+        usd_cap, run_cap = flags.FAST_MAX_USD_PER_DAY, flags.FAST_MAX_USD_PER_RUN * 0.5          # forecasts take at most half a run's money; the trade call needs the rest
+    else:
+        quota = min(flags.MAX_FORECASTS_PER_DAY - n_today, limit if limit is not None else flags.MAX_FORECASTS_PER_DAY)
+        usd_cap, run_cap = flags.MAX_FORECAST_USD_PER_DAY, flags.MAX_FORECAST_USD_PER_DAY
+    todo = candidates(now, book)
     report["candidates"] = len(todo)
     if quota <= 0:
         return {**report, "stopped": f"day limit reached ({n_today} forecasts today)"}
     if not todo:
         return report
     record = record if record is not None else evidence_mod.latest_record()
-    ask = ask or default_ask()
-    index = index if index is not None else evidence_index(now.date())
+    role = ROLE + (RESEARCH_ADDENDUM if flags.RESEARCH_ENABLED else "")
+    ask = ask or default_ask(role)
+    if flags.RESEARCH_ENABLED:
+        corpus = corpus if corpus is not None else research.open_corpus()
+        plan_ask = plan_ask or (research.default_plan_ask() if corpus is not None else None)
+    if index is None and not (corpus is not None and flags.RESEARCH_ENABLED and flags.CORPUS_ONLY):         # evidence.py's retrieval index is only read when its blocks are
+        index = evidence_index(now.date())
+    spent_run = 0.0
     for m in todo[:quota]:
-        if usd_today >= flags.MAX_FORECAST_USD_PER_DAY:
-            report["stopped"] = f"day budget reached (${usd_today:.2f})"
+        if usd_today >= usd_cap or spent_run >= run_cap:
+            report["stopped"] = f"day budget reached (${usd_today:.2f})" if usd_today >= usd_cap else f"run budget reached (${spent_run:.2f})"
             break
-        ev = evidence_mod.build(m, today=now.date(), record=record, index=index)
+        t0 = time.monotonic()
         try:
-            out, usd = ask(task_for(m, ev, now.date()), ROLE)
+            ev, res, mode = _evidence_for(m, now, plan_ask=plan_ask, corpus=corpus, record=record, index=index)
+            out, usd = ask(task_for(m, ev, now.date()), role)
         except Exception as exc:  # noqa: BLE001 - a refused or failed call skips this market, and a refusal ends the pass
             report["failed"] += 1
             report.setdefault("errors", []).append(f"{m.id}: {type(exc).__name__}: {str(exc)[:120]}")
@@ -180,12 +229,25 @@ def run(*, ask: Ask | None = None, now: datetime | None = None, limit: int | Non
         if not isinstance(p, (int, float)) or not (0.0 <= float(p) <= 1.0):
             report["failed"] += 1
             continue
-        made_at = datetime.now(UTC).isoformat(timespec="seconds") if now is None else now.isoformat(timespec="seconds")
-        cited = [c for c in getattr(out, "cited", []) or [] if c in set(ev.ids)]            # only ids that were actually shown
-        store.append_forecast(Forecast(id=forecast_id(m.id, made_at), market_id=m.id, made_at=made_at, p=clamp(p),
+        plan_usd = res.usd if res else 0.0
+        usd = round(usd + plan_usd, 6)                                                         # planning is part of this forecast's cost
+        made_at = now.isoformat(timespec="seconds")
+        shown = set(ev.ids)
+        cited = [c for c in getattr(out, "cited", []) or [] if c in shown]                     # only ids that were actually shown
+        verdict = (getattr(out, "evidence", "") or "") if mode == "corpus" else ""
+        topic = " ".join(str(getattr(out, "gap_topic", "") or "").split()) if verdict in ("thin", "gap") else ""
+        end = store.parse_iso(m.end_date)
+        fid = forecast_id(m.id, made_at)
+        store.append_forecast(Forecast(id=fid, market_id=m.id, made_at=made_at, p=clamp(p),
                                        rationale=" ".join(str(getattr(out, "rationale", "")).split())[:900], evidence_ids=cited,
-                                       theaters=m.theaters, model="house-low", prompt_version=PROMPT_VERSION, usd=usd))
+                                       theaters=m.theaters, model="house-low", prompt_version=PROMPT_VERSION_RESEARCH if mode == "corpus" else PROMPT_VERSION, usd=usd, book=book, evidence=verdict,
+                                       hours_to_end=round((end - now).total_seconds() / 3600, 1) if end else None))
+        trace.write([trace.build("forecast", book=book, market_id=m.id, ref=fid, at=made_at, res=res, mode=mode, cited=cited, evidence=verdict, gap_topic=topic,
+                                 decision_usd=usd - plan_usd, latency_ms=int((time.monotonic() - t0) * 1000), out_chars=len(str(getattr(out, "rationale", ""))))])
+        if topic:
+            gaps.record(topic, str(getattr(out, "gap_why", "") or ""), market_id=m.id, question=m.question, book=book, kind="forecast", at=made_at)
         usd_today += usd
+        spent_run += usd
         report["made"] += 1
         report["usd"] = round(report["usd"] + usd, 6)
     return report

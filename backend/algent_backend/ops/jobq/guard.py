@@ -38,12 +38,14 @@ def expected_mb(job: Any, rows: list[dict[str, Any]]) -> tuple[float, str]:
 
 
 def service_peaks(rows: list[dict[str, Any]]) -> dict[str, float]:
-    """Largest RSS ever sampled per service (rows carry the ``svc`` sample taken at each job start), over the documented defaults."""
-    peaks = dict(flags.SERVICE_PEAK_MB)
+    """Largest RSS ever sampled per service (rows carry the ``svc`` sample taken at each job start). A measured peak REPLACES the documented default
+    rather than being floored by it: the default is a guess for before any sample exists, and keeping it above real measurements reserved ~1.2 GB
+    the stream never used, which held the paid daily back 50 minutes on 2026-10-24 with 2 GB free."""
+    measured: dict[str, float] = {}
     for r in rows:
         for name, mb in (r.get("svc") or {}).items():
-            peaks[name] = max(peaks.get(name, 0.0), float(mb))
-    return peaks
+            measured[name] = max(measured.get(name, 0.0), float(mb))
+    return {**flags.SERVICE_PEAK_MB, **measured}       # per service: a measurement wins, the default covers one never sampled
 
 
 def floor_mb(rows: list[dict[str, Any]], services_now: dict[str, float]) -> float:

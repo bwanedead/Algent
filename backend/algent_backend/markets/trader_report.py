@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from . import book, flags, paper, store
+from . import book, flags, paper, research, store, trail
 from .contracts import Decision
 
 LOG_ROWS = 200
@@ -18,11 +18,14 @@ def _side_won(side: str, outcome: str) -> bool | None:
     return None if outcome not in ("yes", "no") else outcome == side
 
 
-def curve() -> list[dict[str, Any]]:
-    """One row per day: both books' equity and the flat bankroll (what doing nothing would be worth)."""
+def curve(book_name: str = "daily") -> list[dict[str, Any]]:
+    """One row per day: the agent book's equity (key ``trader`` whichever book, so one chart draws both), the rule book's (daily only) and the flat
+    bankroll (what doing nothing would be worth)."""
+    series = "fast" if book_name == "fast" else "trader"
     days: dict[str, dict[str, Any]] = {}
     for e in store.equity_points():
-        days.setdefault(e.day, {"day": e.day, "flat": flags.BANKROLL, "trader": None, "rule": None})[e.book] = e.equity
+        if e.book == series or (e.book == "rule" and book_name == "daily"):
+            days.setdefault(e.day, {"day": e.day, "flat": flags.BANKROLL, "trader": None, "rule": None})["trader" if e.book == series else "rule"] = e.equity
     return [days[d] for d in sorted(days)]
 
 
@@ -36,8 +39,8 @@ def _closed(ds: list[Decision]) -> dict[str, float]:
     return {m: round(v, 2) for m, v in pnl.items() if m not in held}
 
 
-def _summary(ds: list[Decision]) -> dict[str, Any]:
-    eq = [e for e in store.equity_points() if e.book == "trader"]
+def _summary(ds: list[Decision], series: str = "trader") -> dict[str, Any]:
+    eq = [e for e in store.equity_points() if e.book == series]
     last = eq[-1] if eq else None
     closed = _closed(ds)
     wins = sum(v > 0 for v in closed.values())
@@ -59,6 +62,12 @@ def _last_words(ds: list[Decision]) -> dict[str, Decision]:
 def open_positions(ds: list[Decision]) -> list[dict[str, Any]]:
     ms, prices, held, words = store.markets(), store.snapshots_by_market(), book.holdings(ds), _last_words(ds)
     rows = []
+    cited: dict[str, list[str]] = {}
+    for d in sorted(ds, key=lambda d: d.at, reverse=True):                        # newest first: the freshest evidence leads the trail
+        for i in d.evidence_ids:
+            if i not in cited.setdefault(d.market_id, []):
+                cited[d.market_id].append(i)
+    corpus = research.open_corpus() if cited else None
     for mid, h in held.items():
         m = ms.get(mid)
         p = book.last_price(prices.get(mid, []))
@@ -69,7 +78,8 @@ def open_positions(ds: list[Decision]) -> list[dict[str, Any]]:
         rows.append({"market_id": mid, "question": m.question, "url": m.url, "ends": m.end_date[:10], "side": h.side, "shares": round(h.shares, 2),
                      "entry": round(h.entry, 4), "now": None if p is None else round(book.side_price(p, h.side), 4), "cost": round(h.cost, 2),
                      "value": round(value, 2), "pnl": round(value - h.cost, 2), "opened": h.opened_at[:10],
-                     "rationale": w.rationale if w else "", "rationale_on": w.day if w else "", "ours": w.ours if w else None})
+                     "rationale": w.rationale if w else "", "rationale_on": w.day if w else "", "ours": w.ours if w else None,
+                     "evidence": w.evidence if w else "", "trail": trail.resolve(cited.get(mid, [])[:flags.TRAIL_MAX], corpus) if cited.get(mid) else []})
     return sorted(rows, key=lambda r: -r["cost"])
 
 
@@ -98,10 +108,10 @@ def today(ds: list[Decision], day: str) -> dict[str, int]:
             "held": sum(d.action == "hold" for d in mine), "clipped": sum(bool(d.clips) for d in mine)}
 
 
-def section(day: str | None = None) -> dict[str, Any]:
-    ds = store.decisions()
+def section(day: str | None = None, book_name: str = "daily") -> dict[str, Any]:
+    ds = store.decisions(book_name)
     day = day or store.now_iso()[:10]
-    return {"summary": _summary(ds), "rule": paper.summary(), "curve": curve(), "open_positions": open_positions(ds), "log": log(ds),
+    return {"summary": _summary(ds, "fast" if book_name == "fast" else "trader"), "rule": paper.summary(), "curve": curve(book_name), "open_positions": open_positions(ds), "log": log(ds),
             "today": today(ds, day), "since": min((d.day for d in ds), default=""), "spend_usd": round(sum(d.usd for d in ds), 4),
             "limits": {"bankroll": flags.BANKROLL, "max_position_frac": flags.MAX_POSITION_FRAC, "max_exposure_frac": flags.MAX_EXPOSURE_FRAC,
                        "slippage": flags.SLIPPAGE, "min_ticket": flags.TRADE_MIN_TICKET}}

@@ -81,7 +81,16 @@ SHAPES: dict[str, Any] = {
     "ohmega.ai-benchmarks": {"as_of": "str", "sources": [{"source": "str", "name": "str", "last_ok": "str", "rows": "int", "stale": "bool"}], "labs": [{"id": "str", "name": "str", "models": "int", "records": "int"}],
                              "benchmarks": [{"id": "str", "name": "str", "source": "str", "unit": "str", "n_models": "int", "n_results": "int", "as_of": "str", "frontier": "list"}]},
     "ohmega.track-record": {"as_of": "str", "markets": {"open": "int", "resolved": "int", "void": "int"}, "forecasts": "int", "scores": "obj", "trader": "obj", "open_positions": "list",
-                            "resolved": "list", "rules": "obj"},
+                            "resolved": "list", "rules": "obj",
+                            # additive since 10-23 (no major bump): the fast book, the evidence section and forecast accuracy by horizon
+                            "fast?": {"summary": "obj", "curve": "list", "open_positions": [{"market_id": "str", "question": "str", "trail?": [{"id": "str", "title": "str"}]}],
+                                      "horizon_days": "num", "every_hours": "num"},
+                            "evidence?": {"coverage": {"n": "int", "rated": "int", "sufficient": "int", "thin": "int", "gap": "int", "share_sufficient": "num|null"},
+                                          "citations": "obj", "tools": {"queries": "int", "by_tool": "obj"},
+                                          "top_gaps": [{"topic": "str", "asks": "int", "status": "str"}],
+                                          "accuracy": {"rich_min_cited": "int", "min_for_verdict": "int", "forecasts": [{"label": "str", "n": "int", "shown": "bool"}], "trades": "list", "note": "str"},
+                                          "caps": "obj", "gap_spend": "obj"},
+                            "horizons?": {"by_horizon": [{"label": "str", "n": "int", "shown": "bool"}], "books": "obj"}},
     "ohmega.status": {"product": "str", "job": "str", "checked_at": "str", "last_ok": "bool", "last_changed_at": "str|null", "last_failed_at": "str|null", "cadence_min": "num|null", "next_due": "str|null"},
     # ── views (docs/architecture/views.md) ────────────────────────────────────────────────────
     "ohmega.view.country": {**_ENV, "iso": "str", "name": "str", "region": "str", "capital": "str", "profiled": "bool",
