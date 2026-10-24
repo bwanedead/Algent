@@ -2,7 +2,7 @@
 GPSJam.org (keyless) — the daily interference file, read as an independent cross-check.
 
 ``https://gpsjam.org/data/<YYYY-MM-DD>-h3_4.csv``: one row per H3 resolution-4 cell, ``hex,count_good_aircraft,count_bad_aircraft`` (~190 KB, ~48k rows).
-The file is streamed row by row; a cell with at least ``GPSJAM_MIN_AIRCRAFT`` aircraft and a bad share at or above ``MIN_SHARE`` becomes a zone, its centre
+The file is streamed row by row; a cell with at least ``GPSJAM_MIN_AIRCRAFT`` aircraft and a bad share at or above ``GPSJAM_KEEP_SHARE`` (their top band) becomes a zone, its centre
 decoded by ``h3.center`` (pentagon cells are skipped). The file for a day appears the day after, so a run asks for yesterday and steps back.
 """
 
@@ -26,7 +26,7 @@ def parse(lines: Iterable[str], day: str, *, country: Callable[[float, float], s
             continue                                        # the header, or a torn row
         good, bad = int(parts[1]), int(parts[2])
         n = good + bad
-        if n < flags.GPSJAM_MIN_AIRCRAFT or bad / n < flags.MIN_SHARE or bad < flags.MIN_DEGRADED:
+        if n < flags.GPSJAM_MIN_AIRCRAFT or bad / n < flags.GPSJAM_KEEP_SHARE or bad < flags.MIN_DEGRADED:
             continue
         if (c := h3.center(parts[0])) is None:
             continue

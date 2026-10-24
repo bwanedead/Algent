@@ -4,7 +4,7 @@
     newsroom gnss run [--no-gpsjam] [--no-publish]   sample ADS-B, tally, rebuild today's zones, read GPSJam once a day, publish
     newsroom gnss zones [--day YYYY-MM-DD]           the day's zones from the local store
     newsroom gnss status                             per source: last good run, collecting since, baseline days
-    newsroom gnss publish                            push zones to the site database
+    newsroom gnss publish                            rebuild gnss/latest.json and live/gnss.json and send what changed
 
 Every command prints one JSON document. See ``gnss/`` and docs/architecture/conflict-events-gnss.md.
 """
@@ -26,7 +26,7 @@ def add_parser(sub: Any) -> None:
     z.add_argument("--day")
     z.set_defaults(handler=run_zones)
     verbs.add_parser("status", help="freshness and baseline").set_defaults(handler=run_status)
-    verbs.add_parser("publish", help="push zones to the site database").set_defaults(handler=run_publish)
+    verbs.add_parser("publish", help="rebuild the published documents and send what changed").set_defaults(handler=run_publish)
 
 
 def _emit(doc: Any) -> int:
@@ -40,7 +40,6 @@ def run_pass(args: Any) -> int:
     report = collect.run(with_gpsjam=not args.no_gpsjam)
     if not args.no_publish:
         report["publish"] = publish.publish()
-        report["snapshot"] = publish.publish_snapshot()
     return _emit(report)
 
 
@@ -54,11 +53,11 @@ def run_zones(args: Any) -> int:
 def run_status(_args: Any) -> int:
     from algent_backend.gnss import store
 
-    return _emit({"store": str(store.root()), "since": store.since(), "baseline_days": store.baseline_days(), "zone_days": store.zone_days()[-5:],
+    return _emit({"store": str(store.root()), "since": store.since(), "baseline_days": store.baseline_days(), "size_mb": round(store.size_mb(), 2), "zone_days": store.zone_days()[-5:],
                   "sources": store.load_status()})
 
 
 def run_publish(_args: Any) -> int:
     from algent_backend.gnss import publish
 
-    return _emit({**publish.publish(), "snapshot": publish.publish_snapshot()})
+    return _emit(publish.publish())

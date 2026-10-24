@@ -84,4 +84,5 @@ def run(*, now: datetime | None = None, fetch: Callable[..., str] = get, lines: 
         except (SourceError, ValueError, OSError) as exc:
             out["gpsjam"] = {"status": "error", "error": f"{type(exc).__name__}: {str(exc)[:200]}"}
             store.save_status("gpsjam", last_error=out["gpsjam"]["error"], last_error_at=store.now_iso())
+    out["retention"] = store.prune(today)
     return out

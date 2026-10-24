@@ -132,38 +132,79 @@ def test_collector_records_failure_without_raising():
     assert out["adsb"]["status"] == "error" and store.load_status()["ohmega_adsb"]["last_error"]
 
 
-def test_publish_shape_and_gpsjam_floor():
-    base = dict(date="2026-10-20", size_deg=1.0, country="LT", aircraft=20)
-    ours = Zone(id="z1", source="ohmega_adsb", cell="55,20", lat=55.5, lon=20.5, severity="high", degraded_share=0.4, basis="our_estimate", baseline_since="2026-10-14", **base)
-    low = Zone(id="z2", source="gpsjam", cell="h1", lat=1.0, lon=1.0, severity="low", degraded_share=0.05, basis="third_party", **base)
+def _save(day="2026-10-20", gpsjam=None):
+    base = dict(date=day, size_deg=1.0, country="LT", aircraft=20)
+    ours = Zone(id="z1", source="ohmega_adsb", cell="55,20", lat=55.5, lon=20.5, severity="high", degraded_share=0.4, basis="our_estimate", baseline_since="2026-10-14", flag="new",
+                cross_check="agrees", **base)
     top = Zone(id="z3", source="gpsjam", cell="h2", lat=2.0, lon=2.0, severity="high", degraded_share=0.6, basis="third_party", **base)
-    store.save_zones("2026-10-20", {"date": "2026-10-20", "generated_at": "t", "zones": [ours.model_dump()], "gpsjam": [low.model_dump(), top.model_dump()]})
-    assert [z.id for z in pub.zones_for("2026-10-20")] == ["z1", "z3"]                # GPSJam cells below their top band are not sent
-    assert len(pub.row(ours)) == 16 and pub.row(ours)[13] == "our_estimate" and pub.row(ours)[15] == "2026-10-14"
-    sent: list = []
+    store.save_zones(day, {"date": day, "generated_at": "t", "baseline_since": "2026-10-14", "baseline_days": 6, "samples": 20, "zones": [ours.model_dump()],
+                           "gpsjam": [top.model_dump()] if gpsjam is None else gpsjam})
+    return ours, top
 
-    class Cur:
-        def executemany(self, sql, rows): sent.extend(rows)
-        def __enter__(self): return self
-        def __exit__(self, *a): return False
 
-    class Conn(Cur):
-        def cursor(self): return Cur()
-        def commit(self): pass
+def test_gpsjam_keeps_only_its_top_band():
+    lines = ["841f715ffffffff,2,6", "841f425ffffffff,40,4", "841f725ffffffff,30,5"]          # 75%, 9% (below the band) and 14%
+    zs = gpsjam.parse(lines, "2026-10-19", country=lambda *_: "")
+    assert sorted(z.degraded_share for z in zs) == [0.1429, 0.75]
 
-    assert pub.publish(today=date(2026, 10, 20), connect=lambda: Conn())["zones"] == 2
-    assert pub.publish(today=date(2026, 10, 20), connect=lambda: Conn())["zones"] == 0      # unchanged document: nothing resent
-    store.save_zones("2026-10-20", {"date": "2026-10-20", "generated_at": "t2", "zones": [ours.model_dump()], "gpsjam": []})
-    assert pub.publish(today=date(2026, 10, 20), connect=lambda: Conn())["zones"] == 1      # the open day changed: upserted again
+
+def test_stored_zones_drop_per_source_constants_and_read_back_whole():
+    _save()
+    raw = json.loads((store.root() / "zones" / "2026-10-20.json").read_text(encoding="utf-8"))
+    assert "coverage_note" not in raw["zones"][0] and "baseline_since" not in raw["zones"][0]
+    z = store.load_zones("2026-10-20")["zones"][0]
+    assert "minimum" in z["coverage_note"] and z["baseline_since"] == "2026-10-14"
+
+
+def test_latest_document_rows_history_and_contract():
+    from algent_backend.contracts import spec
+    from algent_backend.contracts.shapes import SHAPES
+
+    _save("2026-10-19")
+    _save("2026-10-20")
+    doc = pub.documents(date(2026, 10, 21))["gnss/latest.json"]
+    assert doc["day"] == "2026-10-20" and doc["ours"][0]["on_date"] == "2026-10-20" and doc["gpsjam"][0]["source"] == "gpsjam"
+    assert [h["day"] for h in doc["history"]] == ["2026-10-19", "2026-10-20"] and doc["history"][0] == {"day": "2026-10-19", "zones": 1, "high": 1, "flagged": 1}
+    assert "coverage_note" not in doc["ours"][0] and "minimum" in doc["coverage"]["ohmega_adsb"]
+    assert spec.validate(doc, SHAPES["ohmega.gnss.latest"]) == [] and doc == pub.documents(date(2026, 10, 21))["gnss/latest.json"]
+    assert pub.documents(date(2026, 10, 1)) == {}
+
+
+def test_publish_builds_documents_and_overlay(monkeypatch):
+    _save()
+    got, over = {}, {}
+    monkeypatch.setattr(pub.site_data, "publish_built", lambda build, **k: got.update(build()) or {"ok": True})
+    monkeypatch.setattr("algent_backend.live.snapshots.publish", lambda docs, **k: over.update(docs) or {"ok": True})
+    out = pub.publish(today=date(2026, 10, 21))
+    assert out["files"]["ok"] and "gnss/latest.json" in got and over["gnss"]["zones"][0]["src"] == "o"
+
+
+def test_retention_keeps_sums_drops_hours_and_compacts_old_gpsjam():
+    today = date(2026, 11, 20)
+    put_day("2026-11-01", "55,20", 30, 6)                                          # 19 days old: past the hour window
+    put_day("2026-11-19", "55,20", 30, 6)
+    _save("2026-10-01")                                                              # 50 days old: GPSJam's cells go, ours stay
+    _save("2026-11-15")
+    _save("2024-01-01")                                                              # past the 400-day cap
+    out = store.prune(today)
+    assert out["compacted"] == 1 and out["dropped"] >= 2
+    assert not (store.root() / "hours" / "2026-11-01.jsonl").exists() and (store.root() / "hours" / "2026-11-19.jsonl").exists()
+    assert store.day_tally("2026-11-01", today) == {"55,20": [30, 6]}              # the baseline reads the sums: nothing it needs was lost
+    assert store.load_zones("2026-10-01")["gpsjam"] == [] and store.load_zones("2026-10-01")["zones"] and store.load_zones("2026-11-15")["gpsjam"]
+    assert "2024-01-01" not in store.zone_days()
+
+
+def test_collect_prunes_after_every_pass(monkeypatch):
+    monkeypatch.setattr(flags, "PROBES", (("a", 55.0, 20.5),))
+    put_day("2026-10-01", "55,20", 30, 0)
+    out = collect.run(now=datetime(2026, 10, 20, 12, 0, tzinfo=UTC), fetch=lambda url, **k: json.dumps({"ac": [ac("h1", 55.2, 20.4, 9)]}), with_gpsjam=False)
+    assert out["retention"]["dropped"] == 1
 
 
 def test_snapshot_doc_is_compact_and_carries_provenance():
-    ours = Zone(id="z1", date="2026-10-20", source="ohmega_adsb", cell="55,20", lat=55.5, lon=20.5, size_deg=1.0, severity="high", degraded_share=0.4, aircraft=30,
-                flag="new", basis="our_estimate")
-    weak = Zone(id="z2", date="2026-10-20", source="gpsjam", cell="h", lat=1.0, lon=1.0, size_deg=0.25, severity="low", degraded_share=0.05, aircraft=10, basis="third_party")
-    store.save_zones("2026-10-20", {"date": "2026-10-20", "generated_at": "t", "baseline_since": "2026-10-14", "baseline_days": 6,
-                                    "zones": [ours.model_dump()], "gpsjam": [weak.model_dump()]})
+    _save(gpsjam=[Zone(id="z2", date="2026-10-20", source="gpsjam", cell="h", lat=1.0, lon=1.0, size_deg=0.25, severity="high", degraded_share=0.5, aircraft=10,
+                       basis="third_party").model_dump()])
     doc = pub.snapshot_doc(date(2026, 10, 21))
-    assert doc["zones"] == [{"lat": 55.5, "lon": 20.5, "r": 1.0, "s": "high", "share": 0.4, "f": "new", "src": "o"}]
+    assert doc["zones"][0] == {"lat": 55.5, "lon": 20.5, "r": 1.0, "s": "high", "share": 0.4, "f": "new", "src": "o"} and doc["zones"][1]["src"] == "g"
     assert doc["p"]["ours"]["basis"] == "our_estimate" and doc["p"]["ours"]["baseline_since"] == "2026-10-14" and "minimum" in doc["p"]["ours"]["coverage_note"]
     assert pub.snapshot_doc(date(2026, 10, 1)) is None

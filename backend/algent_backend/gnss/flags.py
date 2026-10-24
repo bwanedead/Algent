@@ -48,16 +48,25 @@ PROBES: tuple[tuple[str, float, float], ...] = (
 )
 
 #: GPSJam publishes one CSV a day (``hex, count_good_aircraft, count_bad_aircraft``) on an H3 resolution-4 grid (~22 km edge). Cells under
-#: MIN_SHARE are background; the site database gets only cells at GPSJAM_PUBLISH_SHARE or above (GPSJam's own top band) to bound its size.
+#: MIN_SHARE are background. Only cells at GPSJAM_KEEP_SHARE or above (GPSJam's own top band, and the only ones the cross-check and the pages use) are
+#: stored or published: the rest of their ~48k-row file is read as a stream and dropped.
 GPSJAM_URL = "https://gpsjam.org/data/{day}-h3_4.csv"
 GPSJAM_MIN_AIRCRAFT = 8
-GPSJAM_PUBLISH_SHARE = 0.10
+GPSJAM_KEEP_SHARE = 0.10
 GPSJAM_EDGE_DEG = 0.25
 #: The file for day D appears on D+1 (or later): try these many days back from yesterday.
 GPSJAM_LOOKBACK = 3
 
-#: Reader window and doctor staleness.
-PUBLISH_DAYS = 30
+#: Storage discipline (operator rule: keep only derived interference, never raw ADS-B or full GPSJam files). An hourly line is a per-cell COUNT tally
+#: (counts only, no aircraft records). Hours are kept only to rebuild the open day and the one before it; the closed day's summed tally (``days/``) is what the
+#: baseline reads, so the hours are dropped after ``HOURS_KEEP_DAYS``. A zone file keeps GPSJam's cells for ``ZONES_FULL_DAYS`` and, after that, only our own
+#: zones. Everything is gone after ``KEEP_DAYS`` (a year of our own baseline is what lets a flag mean something).
+HOURS_KEEP_DAYS = 7
+ZONES_FULL_DAYS = 30
+KEEP_DAYS = 400
+
+#: Doctor staleness and the published history (days of per-day figures behind the page's trend line).
+HISTORY_PUBLISH_DAYS = 28
 STALE_HOURS = 3
 DESK_LINES = 6
 RETRIEVAL_DAYS = 21
