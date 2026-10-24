@@ -1,7 +1,7 @@
 """
 ``newsroom calendar`` — the forward-looking calendar (free, no model).
 
-    newsroom calendar refresh [--source fed ...] [--no-publish]   fetch the schedules, sync the store, publish
+    newsroom calendar refresh [--source fed ...] [--group schedules|fast] [--no-publish]   fetch the schedules, sync the store, publish
     newsroom calendar upcoming [--days N] [--kind K] [--country ISO2]   what is coming up, from the local store
     newsroom calendar status                                       per source: last good fetch, items, last error
     newsroom calendar publish                                      push the store to the site database
@@ -15,14 +15,18 @@ from __future__ import annotations
 import json
 from typing import Any
 
-_SOURCES = ["fed", "ecb", "boe", "elections", "unsc", "opec"]
+def _sources() -> list[str]:
+    from algent_backend.lookahead import collect
+
+    return collect.names()
 
 
 def add_parser(sub: Any) -> None:
-    p = sub.add_parser("calendar", help="upcoming elections, central-bank decisions, UN meetings, OPEC+, extracted deadlines")
+    p = sub.add_parser("calendar", help="upcoming elections, central-bank decisions, releases, summits, launches, our markets, extracted deadlines")
     verbs = p.add_subparsers(dest="calendar_cmd", required=True)
     r = verbs.add_parser("refresh", help="fetch the schedule sources, sync, publish")
-    r.add_argument("--source", action="append", choices=_SOURCES, help="repeatable; default all")
+    r.add_argument("--source", action="append", choices=_sources(), help="repeatable; default all")
+    r.add_argument("--group", choices=["schedules", "fast"], help="a cadence class (daily schedules; the six-hourly fast sources)")
     r.add_argument("--no-publish", action="store_true")
     r.set_defaults(handler=run_refresh)
     u = verbs.add_parser("upcoming", help="the local store's upcoming items")
@@ -47,7 +51,7 @@ def run_refresh(args: Any) -> int:
     from algent_backend.lookahead import publish
     from algent_backend.lookahead.collect import refresh
 
-    report = refresh(args.source)
+    report = refresh(args.source, group=args.group)
     if not args.no_publish:
         report["publish"] = publish.publish()
     return _emit(report)

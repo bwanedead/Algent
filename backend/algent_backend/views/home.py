@@ -48,7 +48,7 @@ def facts(ctx: ViewContext, groups: list[dict[str, Any]], reports: dict[str, dic
     record = ctx.record() or {}
     today = date.fromisoformat(ctx.today)
     horizon = (today + timedelta(days=COMING_AHEAD_DAYS)).isoformat()
-    ahead = [r for r in ctx.rows("calendar/next.json", "items") if r.get("active") is not False and today.isoformat() <= str(r.get("end_date") or r.get("on_date")) and str(r.get("on_date")) <= horizon]
+    ahead = [r for r in ctx.rows("calendar/next.json", "items") if r.get("active") is not False and int(r.get("importance") or 2) >= 2 and today.isoformat() <= str(r.get("end_date") or r.get("on_date")) and str(r.get("on_date")) <= horizon]
     since = (today - timedelta(days=SANCTIONS_WINDOW_DAYS)).isoformat()
     sanctions = [r for r in ctx.rows("sanctions/recent.json", "rows") if str(r.get("on_date")) >= since]
     return {
@@ -73,7 +73,7 @@ def build(ctx: ViewContext) -> list[View]:
             moving.append({"id": r["item"]["theater_id"], "name": r["item"].get("name"), "desk": g["desk"], "stamp": r["item"].get("last_seen", "")})
     today = date.fromisoformat(ctx.today)
     lo, hi = (today - timedelta(days=7)).isoformat(), (today + timedelta(days=14)).isoformat()
-    coming = [r for r in ctx.rows("calendar/next.json", "items") if r.get("active") is not False and lo <= str(r.get("on_date")) <= hi]
+    coming = [r for r in ctx.rows("calendar/next.json", "items") if r.get("active") is not False and int(r.get("importance") or 2) >= 2 and lo <= str(r.get("on_date")) <= hi]   # routine items stay on /calendar
     body = {"reports": {k: digest(v) if v else None for k, v in reports.items()}, "snapshot": mini_snapshot(ctx, reports.get(flags.GLOBE_DOMAIN)), "moving": moving,
             "coming": coming, "facts": facts(ctx, index, reports)}
     as_of = max((str(r.get("date") or "") for r in reports.values() if r), default="")

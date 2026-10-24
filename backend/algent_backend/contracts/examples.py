@@ -34,7 +34,8 @@ _MARITIME = {"id": "m1", "kind": "ais_gap", "mmsi": 123456789, "mmsi2": None, "n
 _SANCTION = {"id": "sx1", "source": "ofac", "action": "designated", "on_date": "2026-10-20", "observed_on": "2026-10-21", "ref": "R1", "name": "MAR AZUL", "type": "vessel",
              "programmes": ["IRAN"], "countries": ["IR"], "imo": "9876543", "flag": "PA", "owner": "X Ltd", "source_url": "https://ofac.treasury.gov/", "baseline": False, "asset_id": "plant1"}
 _CAL = {"id": "c1", "on_date": "2099-01-15", "end_date": None, "title": "Gulf summit", "kind": "summit", "countries": ["IR", "SA"], "theaters": [], "source": "official",
-        "source_url": "https://example.org/summit", "confidence": "high", "provenance": "aggregated", "via": "", "active": True}
+        "source_url": "https://example.org/summit", "confidence": "high", "provenance": "aggregated", "via": "", "active": True,
+        "situations": [], "grade": "official", "topic": "diplomacy", "importance": 3, "sources": [{"source": "official", "url": "https://example.org/summit"}]}
 _STATEMENT = {"id": "s1", "speaker": "A. Official", "role": "Minister", "affiliation": "Government", "iso2": "IR", "date": TODAY, "venue": "", "quote": "We will respond.", "paraphrase": "",
               "about": [], "about_iso2": ["US"], "signal": "threat", "stance": -1, "significance": "", "url": "https://example.org/s", "reported_by": ""}
 _BENCH = {"id": "swe", "name": "SWE-bench", "source": "swe-bench", "source_url": "https://example.org/swe", "unit": "fraction", "ceiling": 1.0, "baseline": 0.0, "released": "2024-01-01",

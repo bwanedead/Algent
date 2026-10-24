@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from datetime import date
 
-from . import store
+from . import rank, store
 from .contracts import CalendarItem
 
 DAYS = 14
@@ -28,7 +28,7 @@ def _line(i: CalendarItem) -> str:
 
 
 def touching(countries: set[str], theater_id: str, today: date, days: int = DAYS) -> list[CalendarItem]:
-    return [i for i in store.upcoming(today, days) if theater_id in i.theaters or (countries & set(i.countries))]
+    return [i for i in store.upcoming(today, days) if rank.base(i) >= 2 and (theater_id in i.theaters or (countries & set(i.countries)))]
 
 
 def for_theater(countries: set[str], theater_id: str, today: date, days: int = DAYS, limit: int = LINES) -> tuple[str, set[str], int]:

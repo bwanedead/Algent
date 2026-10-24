@@ -1,4 +1,4 @@
-import { addDays, calendarItems, KINDS, todayIso } from "@/lib/calendar";
+import { addDays, calendarItems, KINDS, TOPICS, todayIso } from "@/lib/calendar";
 import { recentSanctions, SOURCES, TYPES, type SanctionsSource } from "@/lib/sanctions";
 
 import { abs, badRequest, enumParam, limitParam, newest, paginate, sinceParam, type ApiResult, type Args } from "./util";
@@ -7,43 +7,58 @@ import { abs, badRequest, enumParam, limitParam, newest, paginate, sinceParam, t
 // (backend `lookahead/` and `sanctions/`, migration 012): no model in the loop, a source URL on every row.
 
 const KIND_IDS = KINDS.map((k) => k.id);
+const TOPIC_IDS = TOPICS.map((t) => t.id);
+const GRADES = ["official", "announced", "estimated", "unconfirmed"] as const;
 const ISO2 = /^[A-Za-z]{2}$/;
 
-/** Dated things ahead. Official schedules (high), announcements compiled from press reports (medium) and deadlines extracted from our own earlier reports (low, ours). */
+/** Dated things ahead. Every row has a topic, an importance (1 routine .. 3 major), a grade (official | announced | estimated | unconfirmed) and every
+ *  source that listed it. Routine rows (the weekly stock reports, UN Security Council meetings) are left out unless `routine=true`. */
 export async function calendarOp(a: Args): Promise<ApiResult> {
   const kind = enumParam("kind", a.kind, KIND_IDS);
+  const topic = enumParam("topic", a.topic, TOPIC_IDS);
+  const grade = enumParam("grade", a.grade, GRADES);
   const confidence = enumParam("confidence", a.confidence, ["high", "medium", "low"] as const);
   const country = (a.country ?? "").trim().toUpperCase();
   if (country && !ISO2.test(country)) throw badRequest("country must be an ISO 3166-1 alpha-2 code");
-  const days = Math.min(Math.max(Number.parseInt(a.days ?? "45", 10) || 45, 1), 240);
+  const situation = (a.situation ?? "").trim();
+  const minImportance = Math.min(Math.max(Number.parseInt(a.min_importance ?? (a.routine === "true" ? "1" : "2"), 10) || 1, 1), 3);
+  const days = Math.min(Math.max(Number.parseInt(a.days ?? "45", 10) || 45, 1), 180);
   const today = todayIso();
   const rows = (await calendarItems(days))
     .filter((r) => r.on_date <= addDays(today, days))
-    .filter((r) => (!kind || r.kind === kind) && (!confidence || r.confidence === confidence) && (!country || r.countries.includes(country)))
+    .filter((r) => (!kind || r.kind === kind) && (!topic || r.topic === topic) && (!grade || r.grade === grade) && (!confidence || r.confidence === confidence))
+    .filter((r) => (!country || r.countries.includes(country)) && (!situation || r.situations.includes(situation)) && r.importance >= minImportance)
     .map((r) => ({
       id: r.id,
       date: r.on_date,
       end_date: r.end_date,
       title: r.title,
       kind: r.kind,
+      topic: r.topic,
+      importance: r.importance,
+      grade: r.grade,
       countries: r.countries,
       theater_ids: r.theaters,
+      situation_ids: r.situations,
       confidence: r.confidence,
       provenance: r.provenance,
       source: r.source,
       source_url: r.source_url,
+      sources: r.sources,
       cite_as: abs("/calendar"),
     }));
   const p = paginate(rows, limitParam(a.limit), a.cursor);
   return {
-    data: { items: p.items, total: p.total, kinds: KIND_IDS, from: today, days },
+    data: { items: p.items, total: p.total, kinds: KIND_IDS, topics: TOPIC_IDS, from: today, days },
     as_of: today,
     cite_as: abs("/calendar"),
     source: "calendar_items",
     next_cursor: p.next_cursor,
     note:
-      "Dated items ahead, soonest first. confidence: high = an official schedule (central banks, UN Security Council); medium = compiled from announcements (elections, OPEC+); " +
-      "low with provenance ohmega_derived = a deadline or meeting extracted from Ohmega's own earlier reports, unconfirmed. A date is a plan, not an outcome: dates move and meetings are cancelled.",
+      "Dated items ahead, soonest first, merged across sources. importance: 3 major, 2 notable, 1 routine (hidden unless routine=true or min_importance=1). " +
+      "grade: official = the body's own schedule; announced = compiled from announcements or company-confirmed; estimated = generated from a published rule or a projection; " +
+      "unconfirmed (provenance ohmega_derived) = a date from Ohmega's own earlier reports or watches. confidence is the older three-level form of grade. " +
+      "A date is a plan, not an outcome: dates move and meetings are cancelled.",
   };
 }
 

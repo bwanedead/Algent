@@ -8,6 +8,7 @@ import { calendarOp, sanctionsOp } from "./ops-forward";
 import { aboutOp, entityOp, relatedOp, seriesOp, timelineOp } from "./ops-corpus";
 import { maritimeOp } from "./ops-maritime";
 import { KIND_ORDER as MARITIME_KINDS } from "@/lib/maritime-shared";
+import { KINDS, TOPICS } from "@/lib/calendar-shared";
 import { dailyOp, pulseOp, pulsesOp, statementsOp, theaterOp, theatersOp } from "./ops-desk";
 import { arr, isObj, objs, type ApiResult, type Args, type Obj } from "./util";
 
@@ -238,12 +239,15 @@ export const TOOLS: Tool[] = [
     name: "get_calendar",
     title: "What is coming",
     description:
-      "Dated upcoming items, soonest first: elections, central-bank rate decisions (Fed, ECB, Bank of England), UN Security Council meetings, OPEC+ meetings, and deadlines or meetings Ohmega's own reports named. Each has a source URL and a confidence (high = official schedule, medium = compiled from announcements, low = extracted from our earlier reports and unconfirmed). A date is a plan, not an outcome.",
+      "Dated upcoming items, soonest first and merged across sources: elections and referendums, central-bank decisions, data releases (GDP, PCE, jobs), commodity reports, summits, court hearings, AI and tech events, launches, resolution dates of the prediction markets we track, and deadlines Ohmega's own reports named. Each has a topic, an importance (3 major .. 1 routine), a grade (official, announced, estimated, unconfirmed) and its source URLs. A date is a plan, not an outcome.",
     inputSchema: schema({
-      kind: str_("Kind of item.", { enum: ["election", "central_bank", "summit", "security_council", "opec", "deadline", "vote"] }),
+      kind: str_("Kind of item.", { enum: [...KINDS.map((k) => k.id)] }),
+      topic: str_("Topic.", { enum: [...TOPICS.map((t) => t.id)] }),
       country: str_("ISO alpha-2 code the item concerns, e.g. US."),
-      confidence: str_("Confidence.", { enum: ["high", "medium", "low"] }),
-      days: str_("Days ahead (default 45, max 240)."),
+      situation: str_("Situation id the item is linked to."),
+      grade: str_("Grade.", { enum: ["official", "announced", "estimated", "unconfirmed"] }),
+      min_importance: str_("1 routine, 2 notable (default), 3 major.", { enum: ["1", "2", "3"] }),
+      days: str_("Days ahead (default 45, max 180)."),
       limit: limit_(30),
       cursor: cursor_,
     }),

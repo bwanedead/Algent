@@ -4,9 +4,17 @@
 
 import type { GlyphName } from "@/components/vl/Glyph";
 
-export type CalendarKind = "election" | "central_bank" | "summit" | "security_council" | "opec" | "deadline" | "vote";
+export type CalendarKind =
+  | "election" | "central_bank" | "summit" | "security_council" | "opec" | "deadline" | "vote"
+  | "data_release" | "commodity_report" | "conference" | "earnings" | "regulation" | "launch" | "court" | "market_resolves";
 
-/** One row of `calendar_items`. `end_date` is null for a single day; extracted items (`source` "corpus") are low confidence and ours. */
+/** The topic chips of /calendar (backend `lookahead/contracts.py` TOPIC_OF). */
+export type CalendarTopic = "economy" | "central_banks" | "elections" | "diplomacy" | "security" | "energy" | "tech" | "space" | "markets";
+/** Trust, four levels: official schedule, announced (compiled or company-confirmed), estimated (a rule or projection), unconfirmed (our own reading). */
+export type CalendarGrade = "official" | "announced" | "estimated" | "unconfirmed";
+
+/** One row of `calendar/next.json`. `end_date` is null for a single day; extracted items (`source` "corpus") are low confidence and ours.
+ *  The last five fields are additive (contract ohmega.calendar stays major 1): a document written before them lacks them, so readers go through `norm`. */
 export type CalendarRow = {
   id: string;
   on_date: string;
@@ -21,6 +29,11 @@ export type CalendarRow = {
   provenance: "aggregated" | "ohmega_derived";
   via: string;
   active: boolean;
+  situations?: string[];
+  grade?: CalendarGrade;
+  topic?: CalendarTopic;
+  importance?: number;
+  sources?: { source: string; url: string }[];
 };
 
 /** The few fields a compact "coming up" line needs; a CalendarRow and a daily's stored `coming_up` row both satisfy it after `toComing`. */
@@ -45,8 +58,8 @@ export function titleDateConflict(title: string, start: string, end: string | nu
 }
 
 /** Not an official schedule: extracted from our own reports (source "corpus"), or its title disagrees with its date. Shown as "unconfirmed". */
-export const isUnconfirmed = (r: { source: string; title: string; on_date: string; end_date: string | null }): boolean =>
-  r.source === "corpus" || titleDateConflict(r.title, r.on_date, r.end_date);
+export const isUnconfirmed = (r: { source: string; title: string; on_date: string; end_date: string | null; grade?: string }): boolean =>
+  r.source === "corpus" || r.grade === "unconfirmed" || titleDateConflict(r.title, r.on_date, r.end_date);
 
 export const toComing = (r: CalendarRow): ComingRow => ({
   date: r.on_date, end_date: r.end_date ?? "", title: r.title, kind: r.kind, countries: r.countries, confidence: r.confidence, url: r.source_url, ours: isUnconfirmed(r),
@@ -60,9 +73,59 @@ export const KINDS: { id: CalendarKind; label: string; glyph: GlyphName }[] = [
   { id: "security_council", label: "UN Security Council", glyph: "globe" },
   { id: "opec", label: "OPEC+", glyph: "energy" },
   { id: "deadline", label: "Deadline or expiry", glyph: "clock" },
+  { id: "data_release", label: "Data release", glyph: "economy" },
+  { id: "commodity_report", label: "Commodity report", glyph: "plant" },
+  { id: "conference", label: "Conference", glyph: "event" },
+  { id: "earnings", label: "Earnings", glyph: "record" },
+  { id: "regulation", label: "Regulation milestone", glyph: "article" },
+  { id: "launch", label: "Launch", glyph: "up" },
+  { id: "court", label: "Court hearing or ruling", glyph: "sanction" },
+  { id: "market_resolves", label: "Market resolves", glyph: "pulse" },
 ];
 
-export const kindOf = (k: string) => KINDS.find((x) => x.id === k) ?? KINDS[KINDS.length - 1];
+export const kindOf = (k: string) => KINDS.find((x) => x.id === k) ?? KINDS.find((x) => x.id === "deadline")!;
+
+export const TOPICS: { id: CalendarTopic; label: string }[] = [
+  { id: "economy", label: "Economy" },
+  { id: "central_banks", label: "Central banks" },
+  { id: "elections", label: "Elections" },
+  { id: "diplomacy", label: "Diplomacy" },
+  { id: "security", label: "Security" },
+  { id: "energy", label: "Energy and commodities" },
+  { id: "tech", label: "AI and tech" },
+  { id: "space", label: "Space" },
+  { id: "markets", label: "Markets" },
+];
+
+const TOPIC_OF: Record<CalendarKind, CalendarTopic> = {
+  election: "elections", vote: "elections", central_bank: "central_banks", data_release: "economy", commodity_report: "energy", opec: "energy",
+  summit: "diplomacy", court: "diplomacy", security_council: "security", deadline: "diplomacy", conference: "tech", earnings: "tech",
+  regulation: "tech", launch: "space", market_resolves: "markets",
+};
+const GRADE_OF = { high: "official", medium: "announced", low: "unconfirmed" } as const;
+
+/** A row with every additive field present (documents written before them lack them): topic from the kind, grade from the confidence, importance 2. */
+export function norm(r: CalendarRow): Required<CalendarRow> {
+  return {
+    ...r,
+    situations: r.situations ?? [],
+    grade: r.grade ?? GRADE_OF[r.confidence] ?? "announced",
+    topic: r.topic ?? TOPIC_OF[r.kind] ?? "diplomacy",
+    importance: r.importance === 1 || r.importance === 2 || r.importance === 3 ? r.importance : 2,
+    sources: r.sources && r.sources.length > 0 ? r.sources : [{ source: r.source, url: r.source_url }],
+  };
+}
+
+export const IMPORTANCE_WORD = ["", "routine", "notable", "major"] as const;
+export const GRADE_WORD: Record<CalendarGrade, string> = {
+  official: "official schedule", announced: "announced", estimated: "estimated from a rule or projection", unconfirmed: "unconfirmed (our own reading)",
+};
+
+/** "sit_russia_nato" -> "Russia nato": the situation id as a label (the rows carry ids, not titles). */
+export const situationLabel = (id: string): string => {
+  const t = id.replace(/^sit_/, "").replace(/_/g, " ");
+  return t.charAt(0).toUpperCase() + t.slice(1);
+};
 
 // ---- dates (ISO YYYY-MM-DD, UTC, string arithmetic through Date.UTC so a viewer's timezone never shifts a day) ------------------------------------
 
@@ -132,6 +195,63 @@ export function countriesOf(rows: CalendarRow[]): string[] {
   for (const r of rows) for (const c of r.countries) n.set(c, (n.get(c) ?? 0) + 1);
   return Array.from(n.entries()).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map((e) => e[0]);
 }
+
+/** Who published it, in words (the collector's source key -> a name a reader knows). */
+const SOURCE_LABEL: Record<string, string> = {
+  fed: "Federal Reserve", ecb: "ECB", boe: "Bank of England", boj: "Bank of Japan", rba: "Reserve Bank of Australia", norges: "Norges Bank", pboc: "PBoC (rule)",
+  bea: "BEA", bls_jobs: "BLS (rule)", wasde: "USDA", eia_petroleum: "EIA", eia_gas: "EIA", opec: "OPEC", elections: "Wikipedia electoral calendar",
+  unsc: "UN Security Council", unsc_presidency: "UN Security Council", icj: "ICJ", summits: "Wikipedia", ai_act: "AI Act timeline", gtc: "NVIDIA",
+  earnings: "Nasdaq earnings calendar", launches: "Launch Library 2", markets: "Ohmega markets", watches: "Ohmega situations", corpus: "Ohmega report",
+};
+export const sourceLabel = (s: string): string => SOURCE_LABEL[s] ?? s;
+
+/** Rows by the days they cover (a window sits on every day it spans). */
+export function indexByDay<T extends { on_date: string; end_date: string | null }>(rows: T[]): Map<string, T[]> {
+  const out = new Map<string, T[]>();
+  for (const r of rows) for (const d of spans(r)) out.set(d, [...(out.get(d) ?? []), r]);
+  return out;
+}
+
+export type CalFilter ={ topics: ReadonlySet<CalendarTopic>; country: string; situation: string; routine: boolean };
+export const NO_FILTER: CalFilter = { topics: new Set(), country: "", situation: "", routine: false };
+
+/** Rows that pass a filter: any chosen topic (none chosen = all), the country, the situation, and, unless `routine` or the row's topic chip is chosen, importance above 1. */
+export function filterRows(rows: Required<CalendarRow>[], f: CalFilter): Required<CalendarRow>[] {
+  return rows.filter(
+    (r) => (f.topics.size === 0 || f.topics.has(r.topic)) && (!f.country || r.countries.includes(f.country)) && (!f.situation || r.situations.includes(f.situation)) && (f.routine || r.importance > 1 || f.topics.has(r.topic)),   // choosing a topic chip shows its routine rows too (e.g. Markets: ~350 resolution dates)
+  );
+}
+
+/** The strip "on the horizon": rows that start from `today` up to three days on (72 hours), or are running now, most important first within a day. */
+export function horizon(rows: Required<CalendarRow>[], today: string, days = 3): Required<CalendarRow>[] {
+  const last = addDays(today, days);
+  return rows
+    .filter((r) => r.on_date <= last && (r.end_date ?? r.on_date) >= today)
+    .sort((a, b) => a.on_date.localeCompare(b.on_date) || b.importance - a.importance || a.title.localeCompare(b.title));
+}
+
+export type MonthCell = { date: string; inMonth: boolean; items: Required<CalendarRow>[] };
+
+/** Monday-first weeks covering the month of `anchor` (any day in it); each item sits on every day it covers, at most `max` per cell, most important first. */
+export function monthGrid(rows: Required<CalendarRow>[], anchor: string): { label: string; weeks: MonthCell[][] } {
+  const first = `${anchor.slice(0, 7)}-01`;
+  const next = isoOf(Date.UTC(+anchor.slice(0, 4), +anchor.slice(5, 7), 1));
+  const end = addDays(next, -1);
+  const byDay = new Map<string, Required<CalendarRow>[]>();
+  for (const r of rows) for (const d of spans(r)) byDay.set(d, [...(byDay.get(d) ?? []), r]);
+  const weeksOut: MonthCell[][] = [];
+  for (let s = weekStart(first); s <= end; s = addDays(s, 7)) {
+    weeksOut.push(Array.from({ length: 7 }, (_, i) => {
+      const date = addDays(s, i);
+      return { date, inMonth: date.slice(0, 7) === first.slice(0, 7), items: (byDay.get(date) ?? []).slice().sort((a, b) => b.importance - a.importance || a.title.localeCompare(b.title)) };
+    }));
+  }
+  const names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  return { label: `${names[+first.slice(5, 7) - 1]} ${first.slice(0, 4)}`, weeks: weeksOut };
+}
+
+/** The first day of the month `n` months from the month of `iso`. */
+export const addMonths = (iso: string, n: number): string => isoOf(Date.UTC(+iso.slice(0, 4), +iso.slice(5, 7) - 1 + n, 1));
 
 export const confidenceWord = (c: string, ours: boolean): string =>
   ours ? "from our own earlier report, unconfirmed" : c === "high" ? "official schedule" : c === "medium" ? "compiled from announcements" : "low confidence";

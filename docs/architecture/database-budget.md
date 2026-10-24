@@ -37,7 +37,7 @@ The free Supabase database (500 MB) filled and went down; the operator will not 
 | `live_anomalies` | `live/anomalies.json` (strongest 200, active first) | `live_store/memory/anomalies/current.json` | ~10 KB gz |
 | `maritime_events` | `maritime/live.json` (going + last 48 h, evidence last 4 points, max 400), `maritime/recent.json` (30 days, max 1500, evidence last 12), `maritime/counts.json`, `maritime/vessel/<imo>.json` | `maritime_store/events.json` | live ~100 KB, recent ~1 MB gz |
 | `sanctions_events` | `sanctions/recent.json` (180 d, max 3000), `sanctions/country/<ISO>.json` (180 d, max 200) | `sanctions_store` | ~100 KB / ~5 KB |
-| `calendar_items` | `calendar/next.json` (active, a week back to 120 d ahead) | `calendar_store` | ~30 KB |
+| `calendar_items` | `calendar/next.json` (active, 14 d back to 180 d ahead) + `calendar/country/<ISO>.json` | `calendar_store` | ~250 KB + ~80 small files, hash-skipped |
 | `geo_assets`, `geo_asset_events` | `geo/c/<ISO>.json` (places with a status + the 2000 largest without), `geo/countries.json` (index with bbox), `geo/events-assets.json`, `geo/a/<id>.json` (one place + history; only places with events), `geo/events/<YYYY-MM>.json` | `geoledger_store` | ≤ ~150 KB gz each |
 | `geo_grid` | `geo/grid/<ISO>.json` | ledger rollups | ~3 KB each |
 | `published_articles` | `articles/index.json` (front matter of all, no bodies), `articles/<slug>.json` | `content/articles/*.md` staging + `publish_held/articles_index.json` | index ~50 KB |
