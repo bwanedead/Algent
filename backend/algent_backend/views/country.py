@@ -110,7 +110,7 @@ def calendar_of(ctx: ViewContext, iso: str) -> list[dict[str, Any]]:
     """Active items naming the country from a week back to ``CALENDAR_PAGE_DAYS`` ahead, soonest first (the site keeps what is still ahead at render)."""
     t = date.fromisoformat(ctx.today)
     lo, hi = (t - timedelta(days=7)).isoformat(), (t + timedelta(days=CALENDAR_PAGE_DAYS)).isoformat()
-    rows = [r for r in ctx.rows("calendar/next.json", "items") if r.get("active") is not False and iso in (r.get("countries") or []) and lo <= str(r.get("on_date")) <= hi]
+    rows = [r for r in ctx.rows("calendar/next.json", "items") if r.get("active") is not False and int(r.get("importance") or 2) >= 2 and iso in (r.get("countries") or []) and lo <= str(r.get("on_date")) <= hi]
     rows.sort(key=lambda r: (str(r.get("on_date")), str(r.get("kind")), str(r.get("title"))))
     return rows[: flags.COUNTRY_CALENDAR]
 
@@ -182,7 +182,7 @@ def corpus_block(ctx: ViewContext, iso: str) -> dict[str, Any]:
 def isos(ctx: ViewContext, g: dict[str, Any], briefs: dict[str, list]) -> list[str]:
     """Countries with something to show: a profile, a tie to a theater, a brief naming it, a sanction, a calendar item or a grid rollup."""
     found = set(ctx.actor_isos()) | set(g["names"]) | {c for m in g["ties"].values() for c in m} | set(briefs)
-    for r in ctx.rows("calendar/next.json", "items"):
+    for r in (x for x in ctx.rows("calendar/next.json", "items") if int(x.get("importance") or 2) >= 2):
         found |= {c for c in r.get("countries") or [] if isinstance(c, str)}
     return sorted(c for c in found if ISO.match(c) and registry.get(c))
 

@@ -18,7 +18,7 @@ from typing import Any
 
 from . import store
 from .contracts import CalendarItem
-from .sources import (ai_act, bea, boj, central_banks, earnings, eia, elections, icj, launches, norges, own, pboc_lpr, rba, summits, tech_events,
+from .sources import (ai_act, bea, bls_jobs, boj, central_banks, earnings, eia, elections, icj, launches, norges, own, pboc_lpr, rba, summits, tech_events,
                       un_opec, unsc_presidency, wasde)
 
 Fetcher = Callable[[date], list[CalendarItem]]
@@ -28,7 +28,7 @@ FETCHERS: dict[str, Fetcher] = {
     "fed": central_banks.fetch_fed, "ecb": central_banks.fetch_ecb, "boe": central_banks.fetch_boe, "boj": boj.fetch, "rba": rba.fetch,
     "norges": norges.fetch, "pboc": pboc_lpr.fetch,
     # economic releases, commodities and energy
-    "bea": bea.fetch, "wasde": wasde.fetch, "eia_petroleum": eia.fetch_petroleum, "eia_gas": eia.fetch_gas, "opec": un_opec.fetch_opec,
+    "bea": bea.fetch, "bls_jobs": bls_jobs.fetch, "wasde": wasde.fetch, "eia_petroleum": eia.fetch_petroleum, "eia_gas": eia.fetch_gas, "opec": un_opec.fetch_opec,
     # elections, diplomacy and law
     "elections": elections.fetch, "unsc": un_opec.fetch_unsc, "unsc_presidency": unsc_presidency.fetch, "icj": icj.fetch, "summits": summits.fetch,
     # AI and tech

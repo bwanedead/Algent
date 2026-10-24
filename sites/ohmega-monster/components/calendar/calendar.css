@@ -7,6 +7,12 @@
 .cal-k-security_council { color: var(--vl-disaster); }
 .cal-k-opec { color: var(--vl-energy); }
 .cal-k-deadline { color: var(--vl-up); }
+.cal-k-data_release { color: var(--vl-economy); }
+.cal-k-commodity_report { color: var(--vl-energy); }
+.cal-k-conference, .cal-k-earnings, .cal-k-regulation { color: var(--vl-politics); }
+.cal-k-launch { color: var(--vl-up); }
+.cal-k-court { color: var(--vl-disaster); }
+.cal-k-market_resolves { color: var(--vl-economy); }
 
 /* ---- the compact strip ------------------------------------------------------------------------------------- */
 .cal-strip { margin: 12px 0; }
@@ -34,13 +40,39 @@
 .cal-country { display: flex; flex-direction: column; gap: 3px; }
 .cal-country select { min-height: 30px; padding: 3px 8px; border: 1px solid var(--rule-strong); border-radius: var(--vl-r); background: var(--vl-surface); color: var(--text); font: inherit; font-size: 12px; }
 
-.cal-density { position: relative; display: grid; grid-template-columns: repeat(30, minmax(0, 1fr)); gap: 2px; align-items: end; height: 44px; margin-bottom: 14px; padding-bottom: 0; border-bottom: 1px solid var(--rule-strong); }
-.cal-bar { display: flex; align-items: flex-end; height: 100%; }
-.cal-bar span { display: block; width: 100%; min-height: 1px; background: var(--accent); opacity: 0.8; }
-.cal-bar.is-today { box-shadow: -1px 0 0 var(--strong); }
-.cal-density-l, .cal-density-r { position: absolute; top: 100%; margin-top: 3px; color: var(--faint); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; }
-.cal-density-l { left: 0; }
-.cal-density-r { right: 0; }
+.cal-selects { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 14px; }
+.cal-check { display: inline-flex; align-items: center; gap: 6px; min-height: 30px; font-size: 12px; color: var(--muted); cursor: pointer; }
+.cal-check input { accent-color: var(--accent); }
+.cal-bar-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding-bottom: 8px; border-bottom: 1px solid var(--rule-strong); }
+.cal-views, .cal-nav { display: flex; align-items: center; gap: 6px; }
+.cal-nav-l { min-width: 112px; text-align: center; color: var(--strong); font-size: 12px; font-variant-numeric: tabular-nums; }
+.cal-count { margin-left: auto; color: var(--faint); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+.cal-chip:focus-visible, .cal-more:focus-visible { outline: 1px solid var(--link-accent); outline-offset: 2px; }
+
+/* importance: three hairline bars, filled = how much it matters; a major item also gets a left rule in its cell */
+.cal-imp { display: inline-flex; align-items: flex-end; gap: 2px; height: 10px; }
+.cal-imp span { display: block; width: 3px; height: 4px; background: var(--rule-strong); }
+.cal-imp span:nth-child(2) { height: 7px; }
+.cal-imp span:nth-child(3) { height: 10px; }
+.cal-imp span.is-on { background: var(--strong); }
+.cal-item.cal-imp-3 { box-shadow: -4px 0 0 -3px var(--accent); }
+.cal-item.cal-imp-1 { opacity: 0.75; }
+.cal-day-w { display: none; }
+.cal-more { margin-top: 6px; padding: 0; border: 0; background: none; color: var(--muted); font: inherit; font-size: 11px; text-decoration: underline; text-decoration-color: var(--rule-strong); text-underline-offset: 3px; cursor: pointer; }
+.cal-more:hover { color: var(--strong); }
+
+/* month: a header of weekday names over weeks of cells */
+.cal-month-h { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); margin: 0; padding: 0 0 4px 0; color: var(--faint); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+.cal-month-h span { padding-left: 6px; }
+.cal-days-m { margin-top: -1px; }
+.cal-days-m .cal-day { min-height: 96px; }
+
+/* list: every item with its detail */
+.cal-lines { margin: 0; padding: 0; list-style: none; }
+.cal-line { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 0 10px; padding: 7px 0; border-bottom: 1px solid var(--rule); }
+.cal-line.is-past { opacity: 0.55; }
+.cal-line-t { margin: 0; color: var(--text); font-size: 13px; line-height: 18px; overflow-wrap: anywhere; }
+.cal-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 12px; margin: 2px 0 0; color: var(--muted); font-size: 11px; line-height: 16px; }
 
 .cal-empty { margin: 8px 0; color: var(--muted); }
 .cal-week { margin-top: 6px; }
@@ -59,6 +91,9 @@
 /* a phone: the grid becomes an agenda; only days with something are listed */
 @media (max-width: 760px) {
   .cal-days { grid-template-columns: minmax(0, 1fr); border-left: 0; }
+  .cal-month-h { display: none; }
+  .cal-day-w { display: inline; }
+  .cal-count { margin-left: 0; }
   .cal-day { min-height: 0; border-right: 0; padding: 8px 2px; }
   .cal-day.is-empty { display: none; }
   .cal-row { grid-template-columns: 92px 18px minmax(0, 1fr); }

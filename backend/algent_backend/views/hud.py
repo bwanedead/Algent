@@ -140,8 +140,8 @@ def hud(ctx: ViewContext, g: dict[str, Any]) -> dict[str, Any]:
         theaters.sort(key=lambda x: -(x["heat"] or 0))
     today = date.fromisoformat(ctx.today)
     ahead_to = (today + timedelta(days=flags.HUD_COMING_DAYS)).isoformat()
-    coming = sorted((c for c in ctx.rows("calendar/next.json", "items") if c.get("active") is not False and ctx.today <= str(c.get("end_date") or c.get("on_date")) and str(c.get("on_date")) <= ahead_to),
-                    key=lambda c: (str(c.get("on_date")), str(c.get("kind")), str(c.get("title"))))[: flags.HUD_COMING]
+    coming = sorted((c for c in ctx.rows("calendar/next.json", "items") if c.get("active") is not False and int(c.get("importance") or 2) >= 2 and ctx.today <= str(c.get("end_date") or c.get("on_date")) and str(c.get("on_date")) <= ahead_to),
+                    key=lambda c: (str(c.get("on_date")), -int(c.get("importance") or 2), str(c.get("title"))))[: flags.HUD_COMING]
     since = (today - timedelta(days=SANCTION_RECENT_DAYS)).isoformat()
     sanctions = sorted((r for r in ctx.rows("sanctions/recent.json", "rows") if r.get("action") == "designated" and str(r.get("on_date")) >= since),
                        key=lambda r: str(r.get("on_date")), reverse=True)[: flags.HUD_SANCTIONS]

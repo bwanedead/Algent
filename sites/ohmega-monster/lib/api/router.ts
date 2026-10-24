@@ -11,7 +11,7 @@ import { satelliteOp } from "./ops-satellite";
 import { aiBenchmarksOp } from "./ops-ai";
 import { trackRecordOp } from "./ops-track";
 import { KIND_ORDER as MARITIME_KINDS } from "@/lib/maritime-shared";
-import { KINDS } from "@/lib/calendar-shared";
+import { KINDS, TOPICS } from "@/lib/calendar-shared";
 import {
   actorOp, actorsOp, apiUrl, briefOp, changesOp, dailyOp, deskAsOf, forecastsOp, pulseOp, pulsesOp, statementsOp, theaterOp, theatersOp,
 } from "./ops-desk";
@@ -169,13 +169,18 @@ export const ROUTES: Route[] = [
   {
     path: "/calendar",
     summary:
-      "What is coming: dated upcoming items (elections, central-bank rate decisions, UN Security Council meetings, OPEC+ meetings, deadlines and meetings our own reports named), soonest first, each with its source and a confidence. A date is a plan, not an outcome.",
+      "What is coming: dated upcoming items (elections and referendums, central-bank decisions, data releases, commodity reports, summits, courts, AI and tech events, launches, our markets' resolution dates, deadlines our own reports named), soonest first and merged across sources, each with a topic, an importance, a grade and its sources. A date is a plan, not an outcome.",
     paged: true,
     query: [
       { name: "kind", description: "Kind of item.", enum: KINDS.map((k) => k.id) },
+      { name: "topic", description: "Topic chip on /calendar.", enum: TOPICS.map((t) => t.id) },
       { name: "country", description: "ISO 3166-1 alpha-2 code the item concerns.", example: "US" },
-      { name: "confidence", description: "high = official schedule; medium = compiled from announcements; low = extracted from our own earlier reports.", enum: ["high", "medium", "low"] },
-      { name: "days", description: "How many days ahead (default 45, max 240).", example: "30" },
+      { name: "situation", description: "Situation id the item is linked to (from our own watches).", example: "sit_russia_nato" },
+      { name: "grade", description: "official = the body's own schedule; announced = compiled or company-confirmed; estimated = from a rule or projection; unconfirmed = our own reading.", enum: ["official", "announced", "estimated", "unconfirmed"] },
+      { name: "confidence", description: "The older three-level form of grade: high = official, medium = announced or estimated, low = unconfirmed.", enum: ["high", "medium", "low"] },
+      { name: "min_importance", description: "1 routine, 2 notable (default), 3 major.", enum: ["1", "2", "3"] },
+      { name: "routine", description: "true: include routine items (weekly stock reports, UN Security Council meetings).", enum: ["true", "false"] },
+      { name: "days", description: "How many days ahead (default 45, max 180).", example: "30" },
     ],
     run: (_p, q) => calendarOp(q),
   },

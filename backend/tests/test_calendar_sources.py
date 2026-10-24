@@ -63,6 +63,15 @@ EIA_PETROLEUM = '<tr><th scope="row">November 6, 2026</th><td>November 12, 2026<
 EIA_GAS = "<tr><td>November 25, 2026</td><td><span>Wednesday</span></td><td><span>Thanksgiving Day</span></td></tr>"
 
 
+def test_bls_jobs_report_follows_the_reference_week_rule():
+    from algent_backend.lookahead.sources import bls_jobs
+
+    assert [bls_jobs.release_day(2026, m) for m in (9, 10, 11)] == [date(2026, 10, 2), date(2026, 11, 6), date(2026, 12, 4)]
+    got = bls_jobs.fetch(TODAY)
+    assert got[0].date == "2026-11-06" and got[0].grade == "estimated" and rank.base(got[0]) == 3
+    assert all(date.fromisoformat(i.date).weekday() == 4 for i in got)
+
+
 def test_bea_keeps_only_gdp_and_pce():
     got = bea.parse(BEA)
     assert [(i.date, i.title) for i in got] == [("2026-10-29", "US GDP, advance estimate"), ("2026-10-29", "US personal income and spending (PCE inflation)"),

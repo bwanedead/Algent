@@ -131,7 +131,7 @@ check("articles, the headline menu and the forecasts / changes / Pulse feeds", a
 
 check("sanctions, calendar, maritime, the geoledger, AI benchmarks and the track record", async () => {
   const { recentSanctions } = await lib("sanctions.ts");
-  const { calendarItems } = await lib("calendar.ts");
+  const { calendarItems, norm, filterRows, NO_FILTER, horizon } = await lib("calendar.ts");
   const { maritimeEvents, maritimeCounts, maritimeLive, maritimeForVessel } = await lib("maritime.ts");
   const { getAsset, assetHistory, queryAssets, getGrid, eventsFor } = await lib("geoledger.ts");
   const { aiBenchmarks } = await lib("ai-benchmarks.ts");
@@ -140,6 +140,14 @@ check("sanctions, calendar, maritime, the geoledger, AI benchmarks and the track
   assert.equal(rows[0].name, "MAR AZUL");
   assert.equal(rows[0].asset_id, "plant1");
   assert.equal((await calendarItems(100000))[0].title, "Gulf summit");
+  // the additive fields (topic, importance, grade, situations, sources) arrive as written; a row written before them gets defaults from its kind and confidence
+  const c0 = (await calendarItems(100000))[0];
+  assert.deepEqual([c0.grade, c0.topic, c0.importance, c0.sources[0].source], ["official", "diplomacy", 3, "official"]);
+  const old = norm({ id: "x", on_date: "2099-01-01", end_date: null, title: "t", kind: "election", countries: [], theaters: [], source: "elections", source_url: "u", confidence: "medium", provenance: "aggregated", via: "", active: true });
+  assert.deepEqual([old.grade, old.topic, old.importance, old.situations.length], ["announced", "elections", 2, 0]);
+  assert.equal(filterRows([c0, { ...old, importance: 1 }], NO_FILTER).length, 1); // routine items are hidden unless asked for
+  assert.equal(filterRows([c0, { ...old, importance: 1 }], { ...NO_FILTER, routine: true }).length, 2);
+  assert.equal(horizon([c0], "2099-01-14").length, 1); // a day away is inside the 72-hour strip
   const ev = (await maritimeEvents())[0];
   assert.equal(ev.kind, "ais_gap");
   assert.equal(ev.area, "Strait of Hormuz");
