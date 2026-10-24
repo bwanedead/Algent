@@ -14,7 +14,8 @@
 .gv-seg button:focus-visible { outline: 2px solid var(--link-accent); outline-offset: -2px; }
 .gv-seg button.is-on { color: var(--strong); box-shadow: inset 0 -2px 0 var(--accent); }
 .gv-view-label { position: absolute; left: 12px; bottom: 12px; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); opacity: 0.75; pointer-events: none; }
-.gv-hint { position: absolute; right: 12px; bottom: 12px; margin: 0; font-size: 11px; color: var(--muted); opacity: 0.7; pointer-events: none; }
+.gv-hint { position: absolute; right: 12px; bottom: 12px; margin: 0; font-size: 11px; color: var(--muted); opacity: 0.7; pointer-events: none; transition: color 0.2s, opacity 0.2s; }
+.gv-hint.is-flash { color: var(--strong); opacity: 1; }
 @media (max-width: 640px) { .gv-hint { display: none; } .gv-seg button { padding: 8px 12px; } }
 .gv-seg-right { margin-left: auto; }
 
@@ -89,7 +90,7 @@
 .gv-panel-sub-inline { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
 /* Brief history: a bounded scroll box so the panel never outgrows the globe; the dot is the legend's theme colour (same classes). */
 .gv-panel-sub-first { margin-top: 0; padding-top: 0; border-top: 0; }
-.gv-briefs { max-height: min(300px, 38svh); overflow-y: auto; margin: 0 0 6px; border: 1px solid var(--rule); padding: 2px 8px 6px; overscroll-behavior: contain; }
+.gv-briefs { margin: 0 0 6px; border: 1px solid var(--rule); padding: 2px 8px 6px; }   /* no inner scroll: the list pages with More, the page scrolls */
 .gv-briefs:focus-visible { outline: 2px solid var(--link-accent); outline-offset: 1px; }
 .gv-briefs ul { margin: 0; padding: 0; list-style: none; }
 .gv-brief-day { display: block; margin: 8px 0 2px; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
@@ -113,4 +114,4 @@
 .gv-stat-bar { grid-column: 1 / -1; position: relative; height: 4px; background: color-mix(in srgb, var(--rule) 70%, transparent); }
 .gv-stat-bar i { display: block; height: 100%; background: var(--accent); }
 .gv-stat-bar::after { content: ""; position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--strong); opacity: 0.7; }
-@media (max-width: 640px) { .gv-briefs { max-height: 28svh; } }
+

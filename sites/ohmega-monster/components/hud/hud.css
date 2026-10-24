@@ -37,7 +37,7 @@
 .hud-slot-top { grid-area: top; margin-bottom: 12px; }
 .hud-slot-bottom { grid-area: bottom; margin-top: 12px; }
 .hud-slot-top, .hud-slot-bottom { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 12px; align-items: start; }
-.hud-slot-top .hud-body, .hud-slot-bottom .hud-body { max-height: 300px; }
+
 
 /* Under 1100px the globe leads and the slots stack beneath it, each as a responsive grid of panels. */
 @media (max-width: 1099px) {
@@ -59,7 +59,7 @@
 .hud-ctl button { min-width: 30px; }
 .hud-move { display: flex; flex-wrap: wrap; align-items: center; border-bottom: 1px solid var(--rule); background: color-mix(in srgb, var(--panel) 60%, transparent); }
 .hud-move-sep { width: 1px; align-self: stretch; background: var(--rule-strong); margin: 0 2px; }
-.hud-body { padding: 8px 10px 10px; max-height: 360px; overflow: auto; overscroll-behavior: contain; font-size: 12.5px; }
+.hud-body { padding: 8px 10px 10px; font-size: 12.5px; }   /* no nested scroll boxes: panels grow and the page scrolls (one scroll, anywhere) */
 .hud-body[hidden] { display: none; }
 .hud-body:focus-visible { outline: 2px solid var(--link-accent); outline-offset: -2px; }
 
@@ -131,4 +131,4 @@ a.hud-counter:hover { background: color-mix(in srgb, var(--link-accent) 8%, tran
 
 /* the country panel's body reuses the globe panel classes; inside a HUD panel they sit flush */
 .hud .gv-panel-sub { margin: 10px 0 4px; }
-.hud .gv-briefs { max-height: 220px; }
+
