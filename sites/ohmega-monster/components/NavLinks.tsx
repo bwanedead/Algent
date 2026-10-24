@@ -14,13 +14,15 @@ const isArticle = startsWith("/articles");
 const isGlobe = startsWith("/globe");
 
 const LINKS: { href: string; label: string; match: (p: string) => boolean }[] = [
+  { href: "/", label: "Home", match: (p) => p === "/" },
   { href: "/daily", label: "Daily", match: isDaily },
   { href: "/situations", label: "Situations", match: isSituation },
   { href: "/articles", label: "Articles", match: isArticle },
   { href: "/globe", label: "Globe", match: isGlobe },
   // Data is everything else that is not Home: the hub, the tool routes under /intel, Pulses, the calendar, the live map, the developers' page.
   { href: "/calendar", label: "Calendar", match: (p) => p.startsWith("/calendar") },
-  { href: "/explore", label: "Explore", match: (p) => p !== "/" && !p.startsWith("/calendar") && ![isDaily, isSituation, isArticle, isGlobe].some((m) => m(p)) },
+  { href: "/intel/track-record", label: "Predictions", match: (p) => p.startsWith("/intel/track-record") || p.startsWith("/intel/forecasts") },
+  { href: "/explore", label: "Explore", match: (p) => p !== "/" && !p.startsWith("/calendar") && !p.startsWith("/intel/track-record") && !p.startsWith("/intel/forecasts") && ![isDaily, isSituation, isArticle, isGlobe].some((m) => m(p)) },
 ];
 
 export default function NavLinks() {

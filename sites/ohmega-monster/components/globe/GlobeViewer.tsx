@@ -66,6 +66,14 @@ export default function GlobeViewer({ data, pick, onPick, highlight }: { data: G
   const [geo, setGeo] = useState<Countries | null>(null);
   const legendId = useId();
   const [showTheaters, setShowTheaters] = useState(false);
+  // A plain wheel over the globe scrolls the page; the hint lights up briefly to say how to zoom instead.
+  const [hintFlash, setHintFlash] = useState(false);
+  const hintTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const flashHint = useRef(() => {
+    setHintFlash(true);
+    if (hintTimer.current) clearTimeout(hintTimer.current);
+    hintTimer.current = setTimeout(() => setHintFlash(false), 1600);
+  }).current;
   const [showFlows, setShowFlows] = useState(false); // the flow layer (components/flows/): ships, grain and money in motion, drawn over the globe
   const [legendOpen, setLegendOpen] = useState(true); // open by default; the viewer's choice is remembered (read after mount, so the server render matches)
   const [mode, setModeState] = useState<Mode>("cycle");
@@ -322,6 +330,9 @@ export default function GlobeViewer({ data, pick, onPick, highlight }: { data: G
 
     const onWheel = (e: WheelEvent) => {
       if ((e.target as Element).closest(".fl-panel")) return; // the flow legend scrolls itself
+      // A plain wheel scrolls the PAGE: the globe sits in a long page of panels and must not trap the scroll. Zoom is Ctrl/Cmd + wheel, a
+      // trackpad pinch (browsers send it as a ctrl-wheel), the +/- buttons or a double-click.
+      if (!e.ctrlKey && !e.metaKey) { flashHint(); return; }
       e.preventDefault();
       zoomBy(Math.exp(-e.deltaY * (e.deltaMode === 1 ? 0.05 : 0.0016)), e.clientX, e.clientY);
     };
@@ -531,7 +542,7 @@ export default function GlobeViewer({ data, pick, onPick, highlight }: { data: G
           </div>
         </div>
       )}
-      <p className="gv-hint" aria-hidden="true">Drag to turn · scroll to zoom · double-click to centre</p>
+      <p className={`gv-hint${hintFlash ? " is-flash" : ""}`} aria-hidden="true">Drag to turn · Ctrl + scroll or pinch to zoom · double-click to centre</p>
     </div>
   );
 }

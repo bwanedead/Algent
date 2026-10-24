@@ -145,6 +145,7 @@ a { color: inherit; }
   align-items: center;
   gap: 22px;
 }
+.site-nav { gap: 6px 16px; flex-wrap: wrap; justify-content: flex-end; }   /* eight links + the display toggle: tighter, and wrap rather than overflow */
 
 .site-nav > a,
 .footer-row a {
