@@ -33,6 +33,7 @@ class View:
     bid: float | None = None
     ask: float | None = None
     path: list[tuple[str, float]] = field(default_factory=list)
+    depth: dict[str, float] = field(default_factory=dict)         # CLOB book: best bid / ask and the dollars resting within DEPTH_BAND of each
     source: str = "live"
 
     @property
@@ -154,6 +155,36 @@ def path_of(token_yes: str, market_id: str, get: Fetch) -> list[tuple[str, float
     return pts[::step][-flags.DAY_PATH_POINTS:]
 
 
+DEPTH_BAND = 0.05
+
+
+def depth_of(token_yes: str, get: Fetch) -> dict[str, float]:
+    """The YES token's order book from the CLOB: best bid and ask and the dollars resting within ``DEPTH_BAND`` of each. Empty when it is not exposed."""
+    if not token_yes:
+        return {}
+    data = get(f"{CLOB}/book", {"token_id": token_yes})
+    if not isinstance(data, dict):
+        return {}
+
+    def levels(key: str) -> list[tuple[float, float]]:
+        out = []
+        for r in data.get(key) or []:
+            p, z = polymarket.num(r.get("price")), polymarket.num(r.get("size"))
+            if p is not None and z is not None:
+                out.append((p, z))
+        return out
+
+    bids, asks = levels("bids"), levels("asks")
+    out: dict[str, float] = {}
+    if bids:
+        bb = max(p for p, _ in bids)
+        out.update(bid=bb, bid_depth_usd=round(sum(p * z for p, z in bids if p >= bb - DEPTH_BAND), 2))
+    if asks:
+        ba = min(p for p, _ in asks)
+        out.update(ask=ba, ask_depth_usd=round(sum(p * z for p, z in asks if p <= ba + DEPTH_BAND), 2))
+    return out
+
+
 def load(market_id: str, *, get: Fetch, with_path: bool = False) -> View | None:
     """One market, fresh from Gamma (tags come from its event when the market row lacks them). None if Gamma does not know it."""
     raw = polymarket.market_by_id(str(market_id).strip(), get)
@@ -172,6 +203,11 @@ def load(market_id: str, *, get: Fetch, with_path: bool = False) -> View | None:
             v.path = path_of(v.market.token_yes, v.market.id, get)
         except Exception:  # noqa: BLE001 - a path is context, never a reason to refuse
             v.path = []
+        try:
+            v.depth = depth_of(v.market.token_yes, get)
+            v.bid, v.ask = v.depth.get("bid", v.bid), v.depth.get("ask", v.ask)
+        except Exception:  # noqa: BLE001 - depth is context too
+            v.depth = {}
     return v
 
 
@@ -188,6 +224,9 @@ def dump(v: View, now: datetime) -> str:
              f"YES {v.yes}  NO {None if v.yes is None else round(1 - v.yes, 4)}  bid {v.bid}  ask {v.ask}  spread {v.spread}",
              f"liquidity ${m.liquidity:,.0f}  volume ${m.volume:,.0f}  tags {', '.join(m.tags[:6]) or 'unknown'}",
              "tradable: " + ("yes" if not why else f"NO, {why}"), "rules: " + (m.description or "(none given)")]
+    if v.depth:
+        lines.append(f"book: bid {v.depth.get('bid')} (${v.depth.get('bid_depth_usd', 0):,.0f} within {DEPTH_BAND:.0%}), "
+                     f"ask {v.depth.get('ask')} (${v.depth.get('ask_depth_usd', 0):,.0f} within {DEPTH_BAND:.0%})")
     if v.path:
         lines.append("YES path: " + " ".join(f"{t} {p}" for t, p in v.path))
     return "\n".join(lines)

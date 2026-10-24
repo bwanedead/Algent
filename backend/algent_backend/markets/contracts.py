@@ -258,5 +258,35 @@ class DayRun(BaseModel):
     cash: float | None = None
 
 
+class Wish(BaseModel):
+    """Product feedback from the day agent at the end of a run: information it wanted that our corpus lacks, and what would supply it. Not a research
+    request (``request_research`` asks for a topic now); this says which data SOURCES to add. Append-only."""
+
+    id: str
+    at: str
+    day: str
+    run_id: str
+    topic: str
+    why: str = ""                             # why it mattered, for which market
+    market_id: str = ""
+    question: str = ""
+    source: str = ""                          # the source or data type that would supply it
+
+
+class WatchEvent(BaseModel):
+    """The agent's watchlist, persisted between runs as add / remove events (the list is their projection; the last event per market wins)."""
+
+    id: str
+    at: str
+    market_id: str
+    action: Literal["add", "remove"]
+    question: str = ""
+    note: str = ""
+
+
+def wish_id(run_id: str, topic: str) -> str:
+    return "ws-" + hashlib.sha1(f"{run_id}|{topic}".encode()).hexdigest()[:14]
+
+
 def day_run_id(at: str) -> str:
     return "dr-" + hashlib.sha1(at.encode()).hexdigest()[:14]

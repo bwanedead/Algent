@@ -23,7 +23,7 @@ import math
 from dataclasses import dataclass
 from typing import Any
 
-from . import flags, paper, research_report, store, trader_report
+from . import day_report, flags, paper, research_report, store, trader_report
 from .contracts import Forecast, Market
 
 EPS = 1e-3
@@ -188,7 +188,7 @@ def track_record() -> dict[str, Any]:
                       "no money is staked and nothing here is financial advice.",
         "markets": {"open": sum(m.status == "open" for m in ms), "resolved": sum(m.status == "resolved" for m in ms), "void": sum(m.status == "void" for m in ms)},
         "forecasts": len(store.forecasts()), "scores": forecast_scores(ps), "portfolio": paper.summary(),
-        "trader": trader_report.section(), "fast": research_report.fast_section(), "evidence": research_report.section(ps),
+        "trader": trader_report.section(), "fast": research_report.fast_section(), "day": day_report.section(), "evidence": research_report.section(ps),
         "horizons": research_report.horizons(ps), "open_positions": open_rows(), "disagreements": disagreements()[:20], "worst_misses": worst,
         "market_beat_us": len(market_won), "resolved": rows[::-1][:flags.PUBLISH_RESOLVED],
         "other": watch_scores(),

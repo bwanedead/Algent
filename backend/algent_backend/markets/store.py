@@ -11,6 +11,7 @@ so the record cannot be quietly improved after the fact.
     gaps.jsonl        what the bots looked for and the corpus did not hold (gaps.py); gap_fills.jsonl the research runs those asks became
     research_trace.jsonl  one line per forecast / decision: queries, result ids, cited ids, tokens, cost, latency (trace.py; pruned by age)
     day_runs.jsonl    one DayRun per run of the day book: the full tool trace, orders, cost (day.py; pruned by age)
+    day_wishes.jsonl  what the day agent wished the corpus held (product feedback); day_watchlist.jsonl its persisted watchlist (events)
     status.json       the last pass: when, what it found, what failed
 """
 
@@ -25,7 +26,7 @@ from typing import TypeVar
 from pydantic import BaseModel
 
 from . import flags
-from .contracts import DayRun, Decision, EquityPoint, Forecast, Gap, GapFill, Market, Snapshot, Trace, Trade
+from .contracts import DayRun, Decision, EquityPoint, Forecast, Gap, GapFill, Market, Snapshot, Trace, Trade, WatchEvent, Wish
 
 _ENV = "ALGENT_MARKETS_STORE"
 M = TypeVar("M", bound=BaseModel)
@@ -200,6 +201,30 @@ def day_runs() -> list[DayRun]:
 
 def append_day_run(run: DayRun) -> None:
     _append("day_runs.jsonl", [run])
+
+
+def wishes() -> list[Wish]:
+    return _read("day_wishes.jsonl", Wish)
+
+
+def append_wishes(rows: list[Wish]) -> None:
+    _append("day_wishes.jsonl", rows)
+
+
+def watch_events() -> list[WatchEvent]:
+    return _read("day_watchlist.jsonl", WatchEvent)
+
+
+def append_watch(row: WatchEvent) -> None:
+    _append("day_watchlist.jsonl", [row])
+
+
+def watchlist() -> dict[str, WatchEvent]:
+    """Markets currently on the day agent's watchlist (the last event per market is an add)."""
+    last: dict[str, WatchEvent] = {}
+    for e in watch_events():
+        last[e.market_id] = e
+    return {k: e for k, e in last.items() if e.action == "add"}
 
 
 def gaps() -> list[Gap]:

@@ -15,12 +15,13 @@ from typing import Any
 
 from algent_backend.retrieval.docs import clip
 
-from . import book, browse, flags, gaps, guards, research, store
-from .contracts import Decision, Snapshot, ToolEvent, decision_id
+from . import book, browse, day_report, flags, gaps, guards, research, store
+from .contracts import Decision, Snapshot, ToolEvent, WatchEvent, decision_id
 from .day_prompt import PROMPT_VERSION, Call
 from .polymarket import Fetch, num
 
-CORPUS_TOOLS = ("entity", "about", "search", "timeline", "related", "series")
+NL = "\n"
+CORPUS_TOOLS =("entity", "about", "search", "timeline", "related", "series")
 
 
 def _args(call: Call) -> dict[str, Any]:
@@ -97,7 +98,8 @@ class Session:
         prices = store.snapshots_by_market()
         pt = book.point("day", self.now, cash_=book.cash(self.ds), held=held, realised_=book.realised(self.ds), prices=prices)
         lines = [f"cash {_money(pt.cash)} | equity {_money(pt.equity)} (P&L {_money(pt.equity - flags.DAY_BANKROLL)}) | invested {_money(sum(h.cost for h in held.values()))} "
-                 f"of the {_money(flags.DAY_MAX_EXPOSURE_FRAC * flags.DAY_BANKROLL)} limit | per-market limit {_money(flags.DAY_MAX_POSITION_FRAC * flags.DAY_BANKROLL)}"]
+                 f"({sum(h.cost for h in held.values()) / flags.DAY_BANKROLL:.1%} of the bankroll at risk) of the {_money(flags.DAY_MAX_EXPOSURE_FRAC * flags.DAY_BANKROLL)} limit | "
+                 f"per-market limit {_money(flags.DAY_MAX_POSITION_FRAC * flags.DAY_BANKROLL)} | realised so far {_money(book.realised(self.ds))}, unrealised {_money(pt.unrealised)}"]
         for lab, mid in self._labels().items():
             h, m = held[mid], ms.get(mid)
             p = book.last_price(prices.get(mid, []))
@@ -105,10 +107,58 @@ class Session:
             end = store.parse_iso(m.end_date) if m else None
             left = f"{(end - self.now).total_seconds() / 3600:.1f} h to resolution" if end else "no end time"
             lines.append(f"{lab} [{mid}] {h.side.upper()} {m.question if m else mid} | {h.shares:.1f} sh, entry {h.entry:.3f}, now "
-                         f"{'?' if p is None else round(book.side_price(p, h.side), 3)}, cost {_money(h.cost)}, value {_money(value)}, P&L {_money(value - h.cost)} | {left}{fresh[mid]}")
+                         f"{'?' if p is None else round(book.side_price(p, h.side), 3)}, cost {_money(h.cost)}, value {_money(value)}, unrealised {_money(value - h.cost)} ({(value - h.cost) / h.cost:+.0%}), "
+                         f"realised on earlier sells {_money(sum(d.realised for d in self.ds if d.market_id == mid))}, {h.cost / flags.DAY_BANKROLL:.1%} of bankroll | {left}{fresh[mid]}")
         if not held:
             lines.append("no open positions")
         return "\n".join(lines), ""
+
+    def t_performance(self, _c: Call) -> tuple[str, str]:
+        st = day_report.stats(self.ds)
+        eq = " ".join(f"{d[5:]} {e:,.0f}" for d, e in st["equity"]) or "no history yet"
+        trade = lambda t: f"{t['question'][:60]} {_money(t['pnl'])} in {t['hold_h']} h"  # noqa: E731
+        grp = lambda g: f"{g['label']}: {g['n']} closed, {g['wins']} won, {_money(g['pnl'])}"  # noqa: E731
+        lines = [f"equity by day: {eq}", f"closed trades {st['closed']}, won {st['wins']}, realised {_money(st['realised'])}, average hold {st['avg_hold_h']} h",
+                 "best: " + ("; ".join(trade(t) for t in st["best"]) or "none"), "worst: " + ("; ".join(trade(t) for t in st["worst"]) or "none"),
+                 "by horizon: " + (" | ".join(grp(g) for g in st["horizon"] if g["n"]) or "none yet"), "by category: " + (" | ".join(grp(g) for g in st["category"]) or "none yet")]
+        return NL.join(lines), ""
+
+    def t_size(self, c: Call) -> tuple[str, str]:
+        v = browse.load(c.market, get=self.get)
+        if v is None or v.yes is None:
+            return f"no live price for {c.market!r}", ""
+        if not 0.0 < c.p_yes < 1.0:
+            return "give p_yes: your probability that the market resolves YES (between 0 and 1)", ""
+        self._see(v)
+        held, cash = book.holdings(self.ds).get(v.market.id), book.cash(self.ds)
+        exposure = sum(h.cost for h in book.holdings(self.ds).values())
+        room = min(cash, flags.DAY_MAX_POSITION_FRAC * flags.DAY_BANKROLL - (held.cost if held else 0.0), flags.DAY_MAX_EXPOSURE_FRAC * flags.DAY_BANKROLL - exposure)
+        lines = [f"YES at {v.yes} (spread {v.spread}); your p(YES) {c.p_yes:.2f}; room under the caps and cash {_money(max(0.0, room))}"]
+        for side, q in (("yes", c.p_yes), ("no", 1 - c.p_yes)):
+            cost = min(0.99, book.side_price(v.yes, side) + flags.SLIPPAGE)
+            full = (q - cost) / (1 - cost)
+            if full <= 0:
+                lines.append(f"{side.upper()}: all-in price {cost:.3f} vs your {q:.2f}: no edge")
+                continue
+            stake = max(0.0, min(flags.KELLY_FRACTION * full * flags.DAY_BANKROLL, room))
+            lines.append(f"{side.upper()}: all-in price {cost:.3f}; edge {q - cost:+.3f} per share, expected return {(q - cost) / cost:+.0%}; full Kelly {full:.1%} of bankroll, "
+                         f"{flags.KELLY_FRACTION:g}x Kelly = {_money(flags.KELLY_FRACTION * full * flags.DAY_BANKROLL)}; after the caps {_money(stake)}")
+        if held:
+            lines.append(f"you hold {held.side.upper()} (cost {_money(held.cost)}): compare the expected value of holding with selling at the bid before adding")
+        return NL.join(lines), ""
+
+    def t_watchlist(self, c: Call) -> tuple[str, str]:
+        mid = c.market.strip()
+        if c.action in ("add", "remove") and mid:
+            v = browse.load(mid, get=self.get) if c.action == "add" else None
+            q = v.market.question if v else store.markets().get(mid).question if mid in store.markets() else ""
+            store.append_watch(WatchEvent(id=f"wl-{len(store.watch_events()) + 1}-{mid}", at=self.now.isoformat(timespec="seconds"), market_id=mid, action=c.action,
+                                          question=q, note=" ".join(c.reason.split())[:200]))
+        return self.watch_text(), ""
+
+    def watch_text(self) -> str:
+        w = store.watchlist()
+        return NL.join(f"[{e.market_id}] {e.question} | since {e.at[:10]} | {e.note}" for e in w.values()) or "watchlist is empty"
 
     # ── the corpus ───────────────────────────────────────────────────────────────────────────────
     def _corpus(self, c: Call) -> tuple[str, str]:
@@ -141,7 +191,7 @@ class Session:
         cited = [i for i in c.cited if i in self.shown]
         return Decision(id=decision_id(mid, fill.action, f"{at}day{self.attempts}"), market_id=mid, at=at, day=at[:10], action=fill.action,  # type: ignore[arg-type]
                         requested=round(requested, 2), side=fill.side, price=fill.price, shares=fill.shares, cash_flow=fill.cash_flow,  # type: ignore[arg-type]
-                        realised=fill.realised, rationale=" ".join(c.reason.split())[:420], clips=clips, ours=None, market=v.yes if v else None,
+                        realised=fill.realised, rationale=" ".join(c.reason.split())[:420], clips=clips, ours=c.p_yes if 0.0 < c.p_yes < 1.0 else None, market=v.yes if v else None,
                         model="house-" + flags.DAY_EFFORT, prompt_version=PROMPT_VERSION, usd=0.0, book="day", evidence_ids=cited,
                         hours_to_end=round((end - self.now).total_seconds() / 3600, 1) if end else None)
 
