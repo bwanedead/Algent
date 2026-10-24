@@ -10,6 +10,8 @@ so the record cannot be quietly improved after the fact.
     equity.jsonl      one EquityPoint per book per day (the equity curves)
     gaps.jsonl        what the bots looked for and the corpus did not hold (gaps.py); gap_fills.jsonl the research runs those asks became
     research_trace.jsonl  one line per forecast / decision: queries, result ids, cited ids, tokens, cost, latency (trace.py; pruned by age)
+    day_runs.jsonl    one DayRun per run of the day book: the full tool trace, orders, cost (day.py; pruned by age)
+    day_wishes.jsonl  what the day agent wished the corpus held (product feedback); day_watchlist.jsonl its persisted watchlist (events)
     status.json       the last pass: when, what it found, what failed
 """
 
@@ -24,7 +26,7 @@ from typing import TypeVar
 from pydantic import BaseModel
 
 from . import flags
-from .contracts import Decision, EquityPoint, Forecast, Gap, GapFill, Market, Snapshot, Trace, Trade
+from .contracts import DayRun, Decision, EquityPoint, Forecast, Gap, GapFill, Market, Snapshot, Trace, Trade, WatchEvent, Wish
 
 _ENV = "ALGENT_MARKETS_STORE"
 M = TypeVar("M", bound=BaseModel)
@@ -179,15 +181,50 @@ def append_traces(rows: list[Trace]) -> None:
 def prune_traces(now: datetime | None = None) -> int:
     """Drop trace lines older than ``flags.TRACE_KEEP_DAYS`` (the only line type ever pruned: observability, not the scored record). Returns how many."""
     now = now or datetime.now(UTC)
-    rows = traces()
+    return _prune("research_trace.jsonl", traces(), now) + _prune("day_runs.jsonl", day_runs(), now)
+
+
+def _prune(name: str, rows: list, now: datetime) -> int:
     keep = [t for t in rows if (parse_iso(t.at) or now) >= now - timedelta(days=flags.TRACE_KEEP_DAYS)]
     if len(keep) == len(rows):
         return 0
-    path = root() / "research_trace.jsonl"
+    path = root() / name
     tmp = path.with_suffix(".tmp")
     tmp.write_text("".join(t.model_dump_json() + "\n" for t in keep), encoding="utf-8", newline="\n")
     os.replace(tmp, path)
     return len(rows) - len(keep)
+
+
+def day_runs() -> list[DayRun]:
+    return _read("day_runs.jsonl", DayRun)
+
+
+def append_day_run(run: DayRun) -> None:
+    _append("day_runs.jsonl", [run])
+
+
+def wishes() -> list[Wish]:
+    return _read("day_wishes.jsonl", Wish)
+
+
+def append_wishes(rows: list[Wish]) -> None:
+    _append("day_wishes.jsonl", rows)
+
+
+def watch_events() -> list[WatchEvent]:
+    return _read("day_watchlist.jsonl", WatchEvent)
+
+
+def append_watch(row: WatchEvent) -> None:
+    _append("day_watchlist.jsonl", [row])
+
+
+def watchlist() -> dict[str, WatchEvent]:
+    """Markets currently on the day agent's watchlist (the last event per market is an add)."""
+    last: dict[str, WatchEvent] = {}
+    for e in watch_events():
+        last[e.market_id] = e
+    return {k: e for k, e in last.items() if e.action == "add"}
 
 
 def gaps() -> list[Gap]:

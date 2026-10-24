@@ -56,6 +56,13 @@ def _markets_fast_calendar() -> str:
     return f"*-*-* 0/{flags.FAST_EVERY_H}:20:00"
 
 
+def _markets_day_calendar() -> str:
+    """The day book's runs: DAY_RUN_HOURS at minute DAY_RUN_MINUTE (UTC), e.g. ``*-*-* 8,14,20:40:00``."""
+    from algent_backend.markets import flags
+
+    return f"*-*-* {','.join(str(h) for h in flags.DAY_RUN_HOURS)}:{flags.DAY_RUN_MINUTE:02d}:00"
+
+
 def _calendar_every(minutes: int) -> str:
     """systemd minute steps stop at 59, so a longer cadence is written as an hourly step."""
     return f"*-*-* 0/{minutes // 60}:00:00" if minutes >= 60 else f"*:0/{minutes}"
@@ -245,7 +252,7 @@ PRODUCTS: tuple[Product, ...] = (
                    K("ohmega.geo.grid", 1, ("geo/grid/*.json",)), K("ohmega.geo.events", 1, ("geo/events/*.json",))), feeds_from=()),
     Product(
         id="markets", title="Markets and the paper trader", owner="markets",
-        what="Read-only Polymarket mirror, our blind forecasts and the paper traders' decisions (daily and fast books), the corpus-research traces and gap requests; the scored track record.",
+        what="Read-only Polymarket mirror, our blind forecasts and the paper traders' decisions (daily, fast and day books), the corpus-research traces and gap requests; the scored track record.",
         stores=(Store("markets_store", loc.markets, "ALGENT_MARKETS_STORE", True, budget=_b(8, 100, 500, 100, 5, "measured 10-23: 8 MB; every file is append-only JSON lines; the fast book and research traces add ~3 MB a week (estimate; traces are pruned at 60 days)")),),
         retention=(Retention("append-only", "history is never rewritten so the record cannot be quietly improved; ~2 MB a week estimated", "markets/store.py::root", "on-write"),
                    Retention("prune", "research traces (observability, never read by scoring) older than TRACE_KEEP_DAYS are dropped by the free refresh pass; forecasts, decisions, gaps and fills are never pruned", "markets/flags.py::TRACE_KEEP_DAYS", "job:markets")),
@@ -255,6 +262,8 @@ PRODUCTS: tuple[Product, ...] = (
                   then=AFTER_PUBLISH),
               Job("markets-fast", ("markets", "fast"), _markets_fast_calendar, every_min=480, spend="capped", priority=2, est_min=6, est_mb=400, max_wait_min=45, deadline_min=60,
                   what="fast book: markets settling within days, forecast + paper trade every 4 h (own cap; gated like a paid job)"),
+              Job("markets-day", ("markets", "day"), _markets_day_calendar, every_min=720, spend="capped", priority=1, est_min=5, est_mb=400, max_wait_min=30, deadline_min=40,
+                  what="day book: an agent that browses Polymarket and picks its own 0-2 day paper bets, 3 runs a day (own caps; gated like a paid job)"),
               Job("markets-gaps", ("markets", "gaps"), at=_markets_gaps_at, every_min=1440, spend="paid", est_min=20, deadline_min=180,
                   what="research the bots' most-asked corpus gaps into profiles (capped $0.50/day)")),
         publishes=("data/track-record.json",), contracts=(K("ohmega.track-record", 2, ("data/track-record.json",), accepts=(1,)),),

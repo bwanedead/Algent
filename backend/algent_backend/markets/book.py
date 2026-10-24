@@ -109,6 +109,9 @@ def mark(now: datetime | None = None) -> list[EquityPoint]:
     fast = store.decisions("fast")
     if fast:                                                    # the fast book's own $10k, its own curve (only once it has traded)
         pts.append(point("fast", now, cash_=cash(fast), held=holdings(fast), realised_=realised(fast), prices=prices))
+    day_book = store.decisions("day")
+    if day_book:                                                # the day book's own $10k, its own curve (only once it has traded)
+        pts.append(point("day", now, cash_=cash(day_book), held=holdings(day_book), realised_=realised(day_book), prices=prices))
     have = {(e.book, e.day) for e in store.equity_points()}
     fresh = [p for p in pts if (p.book, p.day) not in have]
     store.append_equity(fresh)

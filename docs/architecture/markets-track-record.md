@@ -116,6 +116,42 @@ at :20 every 4 h (30 min after the free mirror pass), priority 2 so the editoria
 `FAST_FORECAST_MAX_AGE_H`; the run first forecasts up to `FAST_FORECASTS_PER_RUN` that lack one (blind as ever, `Forecast.book = "fast"`). The scheduler's paid class is daily-only
 (`ops/products/validate.py`), so the job is registered `capped` and `markets fast` applies the same gate as a paid job (`ops.schedule._may_spend`: kill switch, runner claim, spend halt).
 
+## The day book (`day.py`, `day_tools.py`, `day_prompt.py`, `browse.py`, `day_report.py`; 10-24)
+A third paper book, **agentic and choosing its own bets**, 0-2 days out. It is handed no market list: it browses Polymarket live and our mirror, reads the corpus (the six corpus tools, the same blindness filter, no
+open-web search), files research requests, and buys and sells freely at the live price plus `SLIPPAGE`. Same code underneath as the others: `guards.apply` (now taking the book's own caps), `book.holdings/cash/point`,
+`Decision` lines tagged `book: "day"` in `decisions.jsonl`, `trader.settle(book_name="day")`, the gap ledger (`request_research` files a `book: "day"` gap), `book.mark` (equity series `day`). Its own $10k and caps:
+`DAY_BANKROLL`, `DAY_MAX_POSITION_FRAC` 5%, `DAY_MAX_EXPOSURE_FRAC` 50%.
+
+**Loop approach: a bounded loop of structured turns, not native tool calling.** The harness (`forecast.default_ask`: house model, structured output, per-call `cost.scoped` cap, budget gate) has no tool calling, and `bind_tools`
+exists only in the gate for ReAct agents. Each turn the agent returns a `Turn` (notes, up to `DAY_MAX_CALLS_PER_TURN` `Call`s, `done`, `summary`, `wishes`); we execute the calls in order and the next turn reads the transcript (older results
+collapse to a line past `DAY_TRANSCRIPT_CHARS`). Bounds in `flags.py`: `DAY_MAX_TURNS` 7, `DAY_MAX_TOOL_CALLS` 24, `DAY_MAX_ORDERS_PER_RUN` 6, `DAY_MAX_USD_PER_RUN` 0.15 (stops before a turn if spend plus the dearest turn so far would
+exceed it), `DAY_MAX_USD_PER_DAY` 0.45 (<= the operator's 0.50; summed over `day_runs.jsonl`), `DAY_CALL_CAP_USD` 0.05 a call. The last turns are told they are near the end. A failed model call keeps the orders already filled.
+
+**Tools.** `search_markets(query, ends_within_h, min_liquidity, limit)`: Gamma `/events` swept by end-date window (busiest first) plus `/public-search` for a query, plus the mirror; every row passes `browse.tradable_why` (open, not
+in `BLOCK_TAGS`, ends between `DAY_MIN_HOURS_LEFT` and `DAY_HORIZON_H` (48 h, the ceiling), `MIN_LIQUIDITY_USD`/`MIN_VOLUME_USD`, priced). `market(id)`: rules, end, YES/NO, spread and **CLOB book depth** (`/book`, dollars within 5 pts of
+each side), recent hourly path. `portfolio()`: cash, % of bankroll at risk, per position cost basis, mark, unrealised and realised P&L, hours to resolution (live marks, snapshots appended). `performance()`: equity history, win rate, average
+hold, best/worst, by horizon and category (`day_report.stats`). `size(market, p_yes)`: fractional Kelly for each side with the day caps and cash applied. `watchlist(add|remove|list)`: persisted in `day_watchlist.jsonl`, shown at the start of
+every run. `entity/about/search/timeline/related/series`, `request_research`, `buy(market, side, usd, reason, cited, p_yes)`, `sell(market|P#, usd|all, reason, cited, p_yes)`. **Exits are free** and the role makes the agent state
+hold-versus-sell-now expected value. Orders return filled / trimmed / refused with the reason to the agent; a refused order is a `hold` line whose `clips` begin `refused:`. A bought market not in the mirror is saved with
+`Market.origin = "day"` so the free refresh tracks, marks and resolves it, and the desk's forecaster never forecasts it.
+
+**Meta-goal and data-gap feedback.** The role opens with compounding the bankroll reliably, risk-adjusted. Every run ends with `wishes` (topic, why, market, the source or data type that would supply it) persisted to `day_wishes.jsonl`
+(one line per topic per run), merged across runs by `gaps` token similarity (`day_report.wishes_top`, ranked by distinct runs) and shown as "What it wished we knew": product feedback on which data sources to add, separate from
+`request_research` (a topic to research now, filled by `markets-gaps`).
+
+**Trace.** `day_runs.jsonl`, one `DayRun` per run: every tool call (args, what the agent was shown, ms, the ledger line an order produced), markets considered, corpus queries, orders, closing note, estimated tokens, USD, why it
+stopped, equity after. Pruned with the research traces at `TRACE_KEEP_DAYS`; the order lines in `decisions.jsonl` are never pruned.
+
+**Schedule and cost.** Registry job `markets-day` (`newsroom markets day`), `flags.DAY_RUN_HOURS` (8, 14, 20) at minute 40 UTC, outside 05:00-07:00. Spend class `capped`, priority 1 (editorial), not `paid`: the paid class is daily-only
+(`ops/products/validate.py`), exactly the reason `markets-fast` is `capped`; `markets day` applies the same gate (`schedule._may_spend`: kill switch, runner claim, spend halt). Expected ~$0.08-0.12 a run, ~$0.25-0.35 a day, hard ceiling $0.45
+(an estimate until `day_runs.jsonl` has measured usd). Settlement and mark-to-market happen on every `markets` refresh (every 4 h) and at each run.
+
+**Page layout (10-24 redesign).** `/intel/track-record` opens with ONE portfolio-value chart (`components/track/Portfolio.tsx` `ValueChart`: a line per bot, each labelled at its end with name and value in its own colour, dotted $10,000 start) and ONE summary row per bot (`Books`: value, P&L $ and %, open, cash, trades, win rate or `n=3, too early`, last run) that expands to its open positions (Polymarket link, side, entry, live price "as of HH:MM" from our newest snapshot, stake, unrealised P&L, resolves date plus time left, reason on expand), its trades (with reason) and, for the day bot, its latest run and wishes. No client-side price fetch: the page is server-rendered on an hourly cache, so "now" is the snapshot (the mirror refresh runs every 4 h). Everything else is collapsed (`Fold`): forecast quality, evidence, gaps and wishes, day horizons, misses, resolved, scoring notes; each chart (`ChartCard`) has a question title, a reading guide and renders "Too early: n of 30 markets needed" below the verdict threshold. Tables become stacked labelled rows under 720 px. Additive fields: `now_at` on positions, `last_at` on every book.
+
+**Page.** Additive `day` object in `ohmega.track-record/2`: stats, equity curve, open positions with `ends_at`/`hours_left` (every book's positions carry these now), trade log with reasons (`hours_to_end`), closed trades by hold
+horizon (`DAY_HORIZON_BUCKETS`) and category with win rate and P&L withheld below `MIN_RESOLVED_FOR_VERDICT`, the last `DAY_RUNS_SHOWN` runs ("what it browsed and why"), "What it wished we knew", and the watchlist (parsed, not yet drawn).
+Parser `lib/track-record.ts` (`parseDay`), components `components/track/DayBook.tsx`, checked by `scripts/contract-check.mjs` through `tests/test_site_contracts.py`.
+
 ## Evidence on the page (`research_report.py`)
 Additive fields of `ohmega.track-record/2` (no major bump: optional, parsers default them): `evidence` (coverage = share of rated decisions that found the corpus sufficient vs thin vs
 gap, citations per decision, tool usage from the traces, `top_gaps` with their status open/tried/filled, accuracy split by evidence richness, caps, gap spend), `fast` (shaped like
@@ -156,5 +192,5 @@ other paid timers through `newsroom schedule times` (no per-job edit) and `jobs.
 
 ## Operating it
 `newsroom markets refresh` (mirror + paper + trader settlement + publish; free), `daily` (the paid job above), `trade [--limit N] [--dry-run]`, `forecast [--limit N] [--dry-run]`,
-`paper`, `score [--full]`, `list`, `status`, `publish`, `fast [--dry-run]` (the fast book), `gaps [--list]` (fill the most-asked corpus gaps), `evidence` (how the corpus served the bots). Server: `markets-fast` every 4 h (`capped`) and `markets-gaps` 08:45 UTC (`paid`, the fifth operator-authorised paid job, <= $0.50/day) are registry jobs, so `newsroom products table`/`timers` and the installer pick them up. Doctor check `markets` (a good pass within 10 h). The unattended paid jobs are an operator authorisation (`ops/flags.py`,
+`paper`, `score [--full]`, `list`, `status`, `publish`, `fast [--dry-run]` (the fast book), `day [--dry-run]` (the day book), `gaps [--list]` (fill the most-asked corpus gaps), `evidence` (how the corpus served the bots). Server: `markets-fast` every 4 h (`capped`) and `markets-gaps` 08:45 UTC (`paid`, the fifth operator-authorised paid job, <= $0.50/day) are registry jobs, so `newsroom products table`/`timers` and the installer pick them up. Doctor check `markets` (a good pass within 10 h). The unattended paid jobs are an operator authorisation (`ops/flags.py`,
 `infra/server/jobs.sh`); the operator has authorised `markets-daily` as the fourth (`tests/test_ops_schedule.py` pins the set).
