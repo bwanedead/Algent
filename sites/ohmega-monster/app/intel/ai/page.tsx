@@ -8,8 +8,8 @@ import ScoresTable, { type ScoreRow } from "@/components/ai/ScoresTable";
 import { ago, aiBenchmarks, fmtDate, fmtDelta, fmtScore, type Bench } from "@/lib/ai-benchmarks";
 import { labColor } from "@/lib/ai-labs";
 
-import "@/app/geopolitics/geopolitics.css";
-import "../theaters/theaters.css";
+import "@/app/daily/daily.css";
+import "@/app/situations/situations.css";
 import "@/components/ai/ai.css";
 
 export const metadata: Metadata = {
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 // The AI desk's numbers (backend `ai_benchmarks/`, docs/architecture/ai-desk.md): scores collected twice a day from free public leaderboards, a frontier
 // derived per benchmark, and a capped daily pass that records what labs CLAIM before any leaderboard carries it. Claims are always drawn apart from measured
 // scores (hollow diamonds) and never enter a line.
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 3600; // lib/store.ts TTL.static: slow products (markets every 4 h, benchmarks every 12 h)
 
 const CARDS_SHOWN = 24;
 const PAIRS_SHOWN = 6;
@@ -34,7 +34,7 @@ export default async function AiBenchmarksPage() {
   if (!doc) {
     return (
       <div className="intel-page th-page">
-        <p className="th-kicker"><PageTag kind="tool" detail="AI" /></p>
+        <p className="th-kicker"><PageTag kind="data" detail="AI benchmarks" /></p>
         <h1 className="th-claim">AI benchmarks</h1>
         <p className="th-asof">No benchmark scores have been published yet. The collector has to run once first.</p>
       </div>
@@ -62,7 +62,7 @@ export default async function AiBenchmarksPage() {
   return (
     <div className="intel-page th-page">
       <p className="th-kicker">
-        <PageTag kind="tool" detail="AI" /> <Link href="/ai" className="xt">AI daily →</Link> <Link href="/intel" className="xt">data &amp; tools →</Link>
+        <PageTag kind="data" detail="AI benchmarks" /> <Link href="/daily/ai" className="xt">AI daily →</Link> <Link href="/explore" className="xt">explore →</Link>
       </p>
       <h1 className="th-claim">AI benchmarks</h1>
       <p className="th-asof">

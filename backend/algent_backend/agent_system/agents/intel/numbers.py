@@ -114,7 +114,8 @@ def tracker(row: dict[str, Any], day: date) -> dict[str, Any]:
             "value": _sig(row["latest"]["value"]), "as_of": row["latest"]["period"], "age_days": row["age_days"],
             "changes": changes, "unusual": bool(row["unusual"]), "reasons": list(row["unusual_reasons"]),
             "outside": bool(row["long_run_outside"]), "outside_note": row["outside_note"],
-            "percentile_1y": row["percentile_1y"], "cadence": row["freshness"]["cadence"],
+            "percentile_1y": row["percentile_1y"], "history_days": row.get("history_days"),
+            "history_since": row.get("history_since"), "percentile_window": row.get("percentile_window"), "cadence": row["freshness"]["cadence"],
             "status": row["freshness"]["status"], "note": row["freshness"]["note"],
             "step_key": row["step_key"], "step_label": row["step_label"], "new": bool(row.get("new", True)),
             "spark": spark(row["series_id"], day)}

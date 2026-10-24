@@ -47,7 +47,7 @@ def test_evidence_block_format():
     line = lines[1]
     assert "[chk_hormuz_transits]" in line and "2 ships/day" in line and "UNUSUAL" in line
     assert "at 90d low" in line and "source: IMF PortWatch https://portwatch.imf.org/" in line
-    assert "vs prior week" in line and "vs prev" not in line and "1y percentile" in line
+    assert "vs prior week" in line and "vs prev" not in line and "within only" in line and "1y percentile" not in line   # a series younger than a year is ranked under its true window
     last = date.today() - timedelta(days=1)                                   # the seed's newest observation
     assert "weekly data" in line and f"latest week to {last.day} {last:%b}" in line
 

@@ -3,17 +3,26 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-// The primary navigation, one level, always visible (it wraps on a phone; nothing hides behind a menu): the three
-// products (Daily, Theaters, Articles), the live map, and Intelligence, the door to every data tool (Pulses, the
-// record, calendar, sanctions, maritime, graph, actors, headlines). The current section is marked.
-const TOOL_PREFIXES = ["/intel", "/pulses", "/calendar", "/headlines", "/globe"];
+// The primary navigation, one level, always visible (it wraps on a phone; nothing hides behind a menu): the five places the site is
+// made of (docs/architecture/information-architecture.md §3). The logo is Home. Each page belongs to exactly one place, so the
+// current one is always marked: Daily (a desk's report and its headlines), Situations (the living files, and the briefs that are
+// dated entries of them), Articles, Globe, and Data (every measured layer and judgment, whatever its own route is called).
+const startsWith = (...prefixes: string[]) => (p: string) => prefixes.some((x) => p === x || p.startsWith(`${x}/`));
+const isDaily = startsWith("/daily", "/intel/events");
+const isSituation = startsWith("/situations", "/intel/briefs");
+const isArticle = startsWith("/articles");
+const isGlobe = startsWith("/globe");
+
 const LINKS: { href: string; label: string; match: (p: string) => boolean }[] = [
   { href: "/", label: "Home", match: (p) => p === "/" },
-  { href: "/geopolitics", label: "Daily", match: (p) => p.startsWith("/geopolitics") || p === "/ai" || p.startsWith("/ai/") },
-  { href: "/intel/theaters", label: "Theaters", match: (p) => p.startsWith("/intel/theaters") },
-  { href: "/articles", label: "Articles", match: (p) => p.startsWith("/articles") },
-  { href: "/live", label: "Live", match: (p) => p.startsWith("/live") },
-  { href: "/intel", label: "Intelligence", match: (p) => !p.startsWith("/intel/theaters") && TOOL_PREFIXES.some((x) => p.startsWith(x)) },
+  { href: "/daily", label: "Daily", match: isDaily },
+  { href: "/situations", label: "Situations", match: isSituation },
+  { href: "/articles", label: "Articles", match: isArticle },
+  { href: "/globe", label: "Globe", match: isGlobe },
+  // Data is everything else that is not Home: the hub, the tool routes under /intel, Pulses, the calendar, the live map, the developers' page.
+  { href: "/calendar", label: "Calendar", match: (p) => p.startsWith("/calendar") },
+  { href: "/intel/track-record", label: "Predictions", match: (p) => p.startsWith("/intel/track-record") || p.startsWith("/intel/forecasts") },
+  { href: "/explore", label: "Explore", match: (p) => p !== "/" && !p.startsWith("/calendar") && !p.startsWith("/intel/track-record") && !p.startsWith("/intel/forecasts") && ![isDaily, isSituation, isArticle, isGlobe].some((m) => m(p)) },
 ];
 
 export default function NavLinks() {

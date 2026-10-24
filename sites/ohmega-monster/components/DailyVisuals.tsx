@@ -3,6 +3,7 @@ import Link from "next/link";
 import LinkedText from "@/components/entities/LinkedText";
 import Popover from "@/components/Popover";
 import PulseTile from "@/components/PulseTile";
+import { ModelMark } from "@/components/stats/ModelMark";
 import type { DailyDevelopment, DailyPulse, DailyStatement, KeyFigure, TheaterMap } from "@/lib/daily";
 import { mappedNumbers } from "@/components/map/numbering";
 import { shortDay } from "@/lib/daily";
@@ -11,7 +12,7 @@ import { toWallPulse, type WallPulse } from "@/lib/pulse-wall";
 
 // Visuals for the daily report (doctrine: docs/ethos/information-ergonomics-ethos.md). Server
 // components; inline SVG/CSS only. Everything renders nothing when its data is absent. Styles are in
-// app/geopolitics/geopolitics.css (geo-*). Detail never reflows the page: it opens in a Popover.
+// app/daily/daily.css (geo-*). Detail never reflows the page: it opens in a Popover.
 
 function host(url: string): string {
   try {
@@ -106,6 +107,7 @@ export function PulseTiles({ pulses, snap, limit, asOf, className = "geo-pulses"
   return (
     <div className={className}>
       {head.map(tile)}
+      <span className="geo-pulses-mark"><ModelMark /></span>
       {rest > 0 && (
         <Popover label={`${rest} more Pulses`} triggerClassName="geo-more-chip xt" wide trigger={`+${rest}`}>
           <div className="geo-pd">
@@ -122,7 +124,7 @@ export function PulseTiles({ pulses, snap, limit, asOf, className = "geo-pulses"
 export function CoverSpark({ series, coverage, name }: { series: { day: string; count: number }[]; coverage: Coverage; name: string }) {
   const c = COVERAGE_DISPLAY[coverage];
   const week = series.slice(-7);
-  const title = `Coverage ${c.label}: headlines about this theater per day`;
+  const title = `Coverage ${c.label}: headlines about this situation per day`;
   if (week.length < 2) {
     return (
       <span className="geo-cov" title={title}>
@@ -165,6 +167,9 @@ function FigureBar({ value, baseline }: { value: number; baseline: number }) {
   );
 }
 
+/** A key figure's comparison is ONE earlier value the writer picked, not a normal: worded as exactly that ("from one earlier figure: was 27 on 12 Oct"). */
+const twoPoint = (label: string): string => `from one earlier figure${label ? `: ${label}` : ""}`;
+
 export function KeyFigures({ figures }: { figures: KeyFigure[] }) {
   if (figures.length === 0) return null;
   return (
@@ -188,7 +193,7 @@ export function KeyFigures({ figures }: { figures: KeyFigure[] }) {
                     <FigureBar value={f.value} baseline={f.baseline} />
                     <span className="geo-fig-vs">
                       {pct !== null && Math.abs(pct) >= 0.5 && <span className="geo-chg">{fmtPct(pct)} </span>}
-                      vs {f.baseline_label || "baseline"}
+                      {twoPoint(f.baseline_label)}
                     </span>
                   </>
                 )}
@@ -202,11 +207,12 @@ export function KeyFigures({ figures }: { figures: KeyFigure[] }) {
               </p>
               {f.baseline !== null && (
                 <p>
-                  vs {f.baseline_label || "baseline"}: {fmtNum(f.baseline)}
+                  {twoPoint(f.baseline_label)}: {fmtNum(f.baseline)}
                   {pct !== null && <span className="geo-chg"> {fmtPct(pct)}</span>}
                 </p>
               )}
               <p className="geo-pd-foot">
+                <ModelMark />{" "}
                 {f.as_of && <span className="geo-micro">as of {f.as_of}</span>}
                 {f.source && <SourceLink url={f.source} />}
               </p>
@@ -302,7 +308,7 @@ export function DevelopmentDetail({ d, href }: { d: DailyDevelopment; href?: str
       )}
       {href && (
         <p className="geo-pd-foot">
-          <Link href={href} className="xt" title="This development on its own page, with its place, actors and theater">
+          <Link href={href} className="xt" title="This development on its own page, with its place, actors and situation">
             Open on its own page ↗
           </Link>
         </p>

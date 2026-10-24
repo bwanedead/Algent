@@ -2,35 +2,23 @@
 # Install the server's systemd timers (run as ohmega; uses sudo). Idempotent: rewrites the units and restarts
 # the timers. Schedules are UTC. Logs: `journalctl -u ohmega-<job> -n 50`.
 #
-#   ohmega-update       every 5 min    deploy-on-push (update.sh)
-#   ohmega-library      every 4 h      source-library crawl (150 pages)
-#   ohmega-instruments  every 6 h      free public data series
-#   ohmega-statements   every 6 h      official statement transcripts (collection only, no extraction)
-#   ohmega-sanctions    every 6 h      OFAC / UK / EU sanctions list diffs -> designation events
-#   ohmega-conflict     every 15 min   attack / conflict event log: GDELT 15-minute files (keyless)
-#   ohmega-reliefweb    hourly         ReliefWeb humanitarian reports (needs an approved ALGENT_RELIEFWEB_APPNAME; reports so until set)
-#   ohmega-conflict-daily daily 05:20  ACLED + UCDP (need ALGENT_ACLED_EMAIL/PASSWORD, ALGENT_UCDP_TOKEN; report so until set)
-#   ohmega-gnss         hourly         GPS-jamming zones from ADS-B navigation accuracy + GPSJam cross-check (keyless)
-#   ohmega-calendar     daily 04:40    upcoming elections, central-bank decisions, summits, OPEC+, extracted deadlines
-#   ohmega-markets      every 4 h      Polymarket mirror (read-only): relevant markets, prices, resolutions; paper track record
-#   ohmega-ai-bench     every 12 h     AI benchmark scores (Epoch hub, SWE-bench, LMArena) -> site document
-#   ohmega-ai-discovery daily 06:50    lab-claimed scores: SearXNG + ONE capped model call (<$0.10/day, flags.DISCOVERY_*; ALGENT_AI_DISCOVERY=0 stops it)
-#   ohmega-backup       daily 06:15    stores -> private algent-data archive
-#   ohmega-live-<feed>  every N min     free live feeds (ioda, usgs, adsb, firms; N from live/flags.py)
-#   ohmega-flows        every 15 min   ship-lane + grain/money flows document (lane counts come from ohmega-ais; trade from UN Comtrade weekly)
-#   ohmega-satellite    daily 03:20    Sentinel-2 chips + night lights of watched sites, change flagged (keyless; satellite/)
-#   ohmega-ais          always on        AIS chokepoint counter service (needs ALGENT_AISSTREAM_KEY; restarts always)
-#   ohmega-watchdog     every 2 min    kills paid runs over their time/spend limits (free; ops/flags.py)
-#   ohmega-menu         daily 05:00    PAID: newsroom menu (time: MENU_UTC in ops/flags.py)
-#   ohmega-daily-1      daily 05:30    PAID: geopolitics daily, part 1 Europe/Asia (time: EDITIONS in intel/flags.py)
-#   ohmega-daily-2      daily 17:30    PAID: geopolitics daily, part 2 Americas, appended to the same report
-#   ohmega-markets-daily daily 07:30   PAID: Polymarket paper trader's day (time: DAILY_UTC in markets/flags.py)
-# The four paid timers are operator-authorised and run unattended behind the watchdog; each job checks the kill
-# switch (SCHEDULED_PAID_RUNS), the runner claim and the spend halt before it spends (ops/schedule.py). Pause:
-# `sudo systemctl disable --now ohmega-menu.timer ohmega-daily-1.timer ohmega-daily-2.timer ohmega-markets-daily.timer`.
+# Timers, systemd units and their schedules (UTC) are NOT listed here: the product registry owns them (backend/algent_backend/ops/products/registry.py).
+# `newsroom products timers` prints "<name><TAB><command><TAB><OnCalendar>" for every timer (free jobs, live feeds from live/flags.py, the paid jobs
+# whose times come from intel/flags.py, ops/flags.py and markets/flags.py) and this script writes one service+timer pair per line. The one always-on
+# service (ohmega-ais) is written below. Logs: `journalctl -u ohmega-<job> -n 50`. `newsroom products check` (also in `newsroom doctor`) lists
+# timers that are installed but registered to nobody (orphans) and registered ones that are missing.
+#
+# The paid timers (spend="paid" in the registry) are operator-authorised and run unattended behind the watchdog; each job checks the kill
+# switch (SCHEDULED_PAID_RUNS), the runner claim and the spend halt before it spends (ops/schedule.py). Pause: `newsroom schedule times` lists them,
+# then `sudo systemctl disable --now ohmega-<job>.timer` for each, or flip SCHEDULED_PAID_RUNS in ops/flags.py and push.
 set -euo pipefail
 INFRA="$HOME/Algent/infra/server"
-LIVE_TIMERS=""
+PY="$HOME/Algent/backend/.venv/bin/python"
+
+# Cap the journal (200 MB; journald-ohmega.conf). Needs sudo like the units below; idempotent. The vacuum trims what is already there once.
+sudo install -D -m 0644 "$INFRA/journald-ohmega.conf" /etc/systemd/journald.conf.d/ohmega.conf
+sudo systemctl restart systemd-journald
+sudo journalctl --vacuum-size=200M >/dev/null 2>&1 || true
 
 unit() {   # name, command, OnCalendar
     sudo tee "/etc/systemd/system/ohmega-$1.service" >/dev/null <<EOF
@@ -59,32 +47,13 @@ WantedBy=timers.target
 EOF
 }
 
-unit update      "$INFRA/update.sh"            "*:0/5"
-unit library     "$INFRA/jobs.sh library"      "0/4:20"
-unit instruments "$INFRA/jobs.sh instruments"  "0/6:40"
-unit statements  "$INFRA/jobs.sh statements"   "1/6:10"
-unit sanctions   "$INFRA/jobs.sh sanctions"    "2/6:25"
-unit calendar    "$INFRA/jobs.sh calendar"     "*-*-* 04:40"
-unit conflict    "$INFRA/jobs.sh conflict"     "*:4/15"
-unit reliefweb   "$INFRA/jobs.sh reliefweb"    "*:41"
-unit conflict-daily "$INFRA/jobs.sh conflict-daily" "*-*-* 05:20"
-unit gnss        "$INFRA/jobs.sh gnss"         "*:12"
-unit markets     "$INFRA/jobs.sh markets"      "3/4:50"
-unit ai-bench    "$INFRA/jobs.sh ai-benchmarks" "0/12:55"
-unit ai-discovery "$INFRA/jobs.sh ai-discovery" "*-*-* 06:50"
-unit backup      "$INFRA/jobs.sh backup"       "*-*-* 06:15"
-unit watchdog    "$INFRA/jobs.sh watchdog"     "*:0/2"
-unit flows       "$INFRA/jobs.sh flows"        "*:7/15"
-unit satellite   "$INFRA/jobs.sh satellite"   "*-*-* 03:20"
-
-# Live feeds: one timer per feed, cadence from `newsroom live schedule` (live/flags.py is the single source).
-# Keyed feeds without their key just report it. A feed run is seconds long.
-while read -r feed minutes; do
-    # systemd minute steps only go to 59; longer cadences are written as an hourly step.
-    if [ "$minutes" -ge 60 ]; then cal="*-*-* 0/$((minutes / 60)):00:00"; else cal="*:0/$minutes"; fi
-    unit "live-$feed" "$INFRA/jobs.sh live $feed" "$cal"
-    LIVE_TIMERS="$LIVE_TIMERS live-$feed"
-done < <(cd "$HOME/Algent/backend" && .venv/bin/python -m algent_backend.cli newsroom live schedule)
+# Every timer in the registry: name, command (relative to infra/server), OnCalendar. Refuse to continue on an empty list: a half-installed set is worse than none.
+TIMERS=""
+while IFS=$'	' read -r name cmd cal; do
+    unit "$name" "$INFRA/$cmd" "$cal"
+    TIMERS="$TIMERS $name"
+done < <(cd "$HOME/Algent/backend" && "$PY" -m algent_backend.cli newsroom products timers)
+[ -n "$TIMERS" ] || { echo "no timers listed by 'newsroom products timers'; refusing to continue" >&2; exit 1; }
 
 # The AIS counter is a long-running service, not a timer; it exits with a message (and is retried slowly) while
 # its free key is missing.
@@ -106,16 +75,8 @@ WantedBy=multi-user.target
 EOF
 
 
-# Paid jobs (menu, daily-1, daily-2, markets-daily): the times live in the repo's flags, not here (`newsroom schedule times` prints "<job> <HH:MM>").
-PAID=""
-while read -r job hhmm; do
-    unit "$job" "$INFRA/jobs.sh $job" "*-*-* $hhmm:00"
-    PAID="$PAID $job"
-done < <(cd "$HOME/Algent/backend" && .venv/bin/python -m algent_backend.cli newsroom schedule times)
-[ -n "$PAID" ] || { echo "no paid jobs listed by 'newsroom schedule times'; refusing to continue" >&2; exit 1; }
-
 sudo systemctl daemon-reload
-for t in update library instruments statements sanctions calendar conflict reliefweb conflict-daily gnss markets ai-bench ai-discovery backup watchdog flows satellite $LIVE_TIMERS $PAID; do
+for t in $TIMERS; do
     sudo systemctl enable --now "ohmega-$t.timer" >/dev/null
 done
 sudo systemctl enable --now ohmega-ais.service >/dev/null

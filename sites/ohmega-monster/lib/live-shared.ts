@@ -3,7 +3,11 @@
 // series computed from them. Everything here degrades to "nothing": no database, an empty table or a failed
 // request yields empty lists, and the page says so instead of inventing a picture.
 
-export type LiveKind = "outage" | "quake" | "aircraft" | "fire";
+import { gate } from "./contract";
+import { DATA_BASE } from "./data-base";
+import type { Provenance } from "./stats/render";
+
+export type LiveKind ="outage" | "quake" | "aircraft" | "fire";
 export type LiveSeverity = "info" | "notable" | "major";
 
 export type LiveEvent = {
@@ -139,7 +143,7 @@ export const KIND_LABEL: Record<LiveKind, string> = {
 
 // ---- snapshot documents (backend `live/snapshots.py`): compact JSON in the public Storage bucket, polled by the map ----------
 
-export const SNAPSHOT_BASE = `${(process.env.NEXT_PUBLIC_SUPABASE_URL || "").replace(/\/+$/, "")}/storage/v1/object/public/published-assets/live`;
+export const SNAPSHOT_BASE = `${DATA_BASE}/live`;
 
 /** URL of a live snapshot's plain-JSON form ("fires", "summary", "energy"; the big ones are fetched with `fetchSnapshot`). */
 export const snapshotUrl = (name: string) => `${SNAPSHOT_BASE}/${name}.json`;
@@ -162,7 +166,7 @@ export async function fetchSnapshot<T>(name: string): Promise<T | null> {
   for (const url of attempts) {
     try {
       const res = await fetch(url, { cache: "no-store" });
-      if (res.ok) return (await inflate(new Uint8Array(await res.arrayBuffer()))) as T;
+      if (res.ok) return gate(`live/${name}.json`, (await inflate(new Uint8Array(await res.arrayBuffer()))) as T);
     } catch {
       /* try the next form */
     }
@@ -180,7 +184,9 @@ export type Summary = {
   headlines: Headline[];
   gates: Record<string, GateNow>;
   fresh: Partial<Record<"outage" | "quake" | "fire" | "ships" | "aircraft" | "aircraft_regions" | "energy", string>>;
-  fires?: { as_of?: string; detections?: number; occupied?: number };
+  fires?: { as_of?: string; detections?: number; occupied?: number; scope?: string };
+  /** Where each live number comes from and how long we have counted it (backend live/provenance.py); absent in older documents. */
+  provenance?: Provenance;
 };
 
 /** Fire heat: cells are [lon, lat, detections, strongest MW]. */

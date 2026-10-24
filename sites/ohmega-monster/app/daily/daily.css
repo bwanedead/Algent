@@ -1,0 +1,351 @@
+/* The daily report (geo-*). Governing doctrine: docs/ethos/information-ergonomics-ethos.md.
+   One meaning per visual channel: band colour = Pulse severity only; the accent = change / new only
+   (rising or easing, a moved Pulse, escalated/new changes, a figure's move vs its baseline); everything
+   else is neutral greys. Structure comes from whitespace and alignment, not boxes and rules.
+   Detail opens in the shared Popover (geo-pd = popover body); the page never reflows. */
+
+.geo { min-width: 0; }
+
+/* Links read as text, not as accent: the accent is reserved for change. */
+body .geo a,
+body .geo-pd a,
+body .geo-card a { color: var(--text); text-decoration-color: var(--rule-strong); text-underline-offset: 3px; }
+body .geo a:hover,
+body .geo-pd a:hover,
+body .geo-card a:hover { color: var(--strong); text-decoration-color: var(--accent); }
+
+.geo-micro { color: var(--muted); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+.geo-muted { color: var(--muted); }
+.geo-strong { color: var(--strong); font-weight: 600; }
+.geo-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.geo-h2 { margin: 0 0 6px; color: var(--muted); font-size: 10px; font-weight: 400; letter-spacing: 0.09em; text-transform: uppercase; }
+.geo-more { flex: none; color: var(--faint); }
+
+/* Popover triggers: plain text that looks like what it is, never like a default button. */
+button.geo-link-btn,
+button.geo-fig,
+button.geo-ev-btn,
+button.geo-x-btn { font: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0; text-align: left; cursor: pointer; }
+button.geo-link-btn { display: block; margin-top: 6px; font-size: 11px; line-height: 20px; }
+button.geo-fig:focus-visible,
+button.geo-ev-btn:focus-visible,
+button.geo-x-btn:focus-visible,
+
+/* Trust: one quiet pair of marks, solid = researched, hollow = reported (map, timeline, popovers). */
+.geo-v { display: inline-block; flex: none; width: 9px; height: 9px; border: 1.5px solid var(--strong); border-radius: 50%; vertical-align: -1px; }
+.geo-v.is-solid { background: var(--strong); }
+.geo-v.is-hollow { background: transparent; }
+.geo-key { display: inline-flex; align-items: center; gap: 6px; margin-left: auto; color: var(--muted); font-size: 11px; }
+.geo-key .geo-v:not(:first-child) { margin-left: 8px; }
+
+/* ---- screen one: headline, glance table, the day -------------------------------------------- */
+.geo-headline { margin: 16px 0 14px; color: var(--strong); font-size: clamp(18px, 2.6vw, 24px); line-height: 1.3; font-weight: 600; letter-spacing: -0.02em; overflow-wrap: anywhere; }
+
+.geo-glance { --cols: minmax(140px, 190px) minmax(0, 1fr) 84px minmax(240px, 360px) 54px 64px; margin: 0 0 14px; min-width: 0; }
+.geo-glance-head,
+.geo-row { display: grid; grid-template-columns: var(--cols); gap: 0 14px; align-items: center; min-width: 0; }
+.geo-glance-head { padding-bottom: 4px; border-bottom: 1px solid var(--rule-strong); color: var(--muted); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+.geo-rows { list-style: none; margin: 0; padding: 0; }
+.geo-row { padding: 7px 0; }
+
+body .geo a.geo-name,
+body .geo-card a.geo-name { color: var(--strong); font-weight: 600; font-size: 13px; line-height: 18px; text-decoration: none; overflow-wrap: anywhere; min-width: 0; }
+body .geo a.geo-name:hover,
+body .geo-card a.geo-name:hover { text-decoration: underline; text-decoration-color: var(--accent); }
+.geo-state { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-width: 0; font-size: 12px; line-height: 17px; overflow-wrap: anywhere; }
+
+.geo-dir { color: var(--muted); font-size: 11px; white-space: nowrap; }
+.geo-dir.is-moving { color: var(--accent); }
+
+/* A theater's Pulses as compact shared tiles; extras fold into a "+N" chip. Stale ones are muted. */
+.geo-tiles { display: flex; flex-wrap: wrap; align-items: stretch; gap: 5px; min-width: 0; }
+.geo-tiles > .pt { flex: 1 1 104px; max-width: 170px; }
+button.geo-more-chip { align-self: center; padding: 2px 7px; font: inherit; font-size: 11px; background: none; border: 1px solid var(--link-accent); text-decoration: none; }
+button.geo-more-chip:hover { border-color: var(--link-accent-hover); }
+
+.geo-delta { color: var(--muted); font-size: 11px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.geo-delta.is-moving { color: var(--accent); }
+
+/* Coverage: neutral on purpose, never a band colour. */
+.geo-cov-cell { min-width: 0; }
+.geo-spark { display: block; width: 56px; height: 16px; }
+.geo-spark-base { stroke: var(--rule-strong); stroke-width: 1; }
+.geo-spark-bar { fill: var(--muted); }
+.geo-cov { color: var(--muted); font-size: 10px; white-space: nowrap; }
+
+.geo-day { margin: 18px 0 0; min-width: 0; }
+.geo-day ul { margin: 2px 0 0; padding-left: 16px; }
+.geo-day li { padding: 1px 0; max-width: 110ch; overflow-wrap: anywhere; }
+
+/* ---- a theater: claim, picture, change, timeline, Pulses, next ------------------------------- */
+.geo-theater { margin-top: calc(var(--line) * 2.5); scroll-margin-top: 16px; min-width: 0; }
+.geo-th { margin: 0 0 12px; }
+.geo-kicker { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; margin: 0; color: var(--muted); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+.geo-claim { margin: 2px 0 0; max-width: 72ch; color: var(--strong); font-size: clamp(16px, 2.2vw, 20px); line-height: 1.3; font-weight: 600; letter-spacing: -0.015em; overflow-wrap: anywhere; }
+
+.geo-visual { display: grid; gap: 14px; align-items: start; margin: 0 0 16px; min-width: 0; }
+
+/* The map (components/map/GeoMap.tsx): a utilitarian reference map, drawn like a printed atlas page in BOTH
+   themes — pale water, light land, grey borders, dark labels with a white halo. Its colours are map-local
+   (not theme tokens) on purpose: legibility beats theme matching, and a light panel reads the same in
+   either theme. --u is viewBox units per CSS px (set by the component), so line weights and halos stay a
+   constant number of screen pixels however large the map renders. */
+.geo-map {
+  --map-sea: #cfe3f1; --map-land: #f4f1e8; --map-border: #8e98a3; --map-river: #5b9bd0; --map-ink: #1b2430;
+  --map-ink-2: #4d5967; --map-halo: #ffffff; --map-accent: #0a6b73; --map-hatch: #6b4a82; --map-hatch-ink: #4a3260;
+  margin: 0; min-width: 0; max-width: 820px;
+}
+.geo-map-svg { display: block; width: 100%; height: auto; border: 1px solid var(--rule-strong); background: var(--map-sea); }
+.geo-map-sea { fill: var(--map-sea); }
+.geo-map-land { fill: var(--map-land); stroke: var(--map-border); stroke-width: 0.9px; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.geo-map-lake { fill: var(--map-sea); stroke: #8fb4d0; stroke-width: 0.7px; vector-effect: non-scaling-stroke; }
+.geo-map-river { fill: none; stroke: var(--map-river); stroke-width: 1px; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; opacity: 0.9; }
+.geo-map-country, .geo-map-disputed, .geo-city text, .geo-map-place, .geo-note text, .geo-scale text {
+  paint-order: stroke; stroke: var(--map-halo); stroke-width: calc(var(--u, 1.5) * 3); stroke-linejoin: round; font-family: inherit; pointer-events: none;
+}
+/* Disputed/occupied territory: one hue (plum) that nothing else on the map uses — not the accent teal, not the
+   locator's red — as a thin diagonal hatch plus a dashed outline. Readable on the cream land and the pale sea. */
+.geo-hatch-line { stroke: var(--map-hatch); opacity: 0.75; }
+.geo-disputed { stroke: var(--map-hatch); stroke-width: 1px; stroke-dasharray: 4 3; stroke-linejoin: round; fill-rule: evenodd; vector-effect: non-scaling-stroke; cursor: pointer; }
+.geo-disputed:hover, .geo-disputed.is-open { stroke-width: 1.8px; }
+.geo-disputed:focus-visible { outline: 2px solid var(--map-hatch-ink); outline-offset: 1px; }
+.geo-map-disputed { fill: var(--map-hatch-ink); font-style: italic; font-weight: 600; }
+.geo-map-legend { margin-top: 4px; }
+.geo-legend-line { display: flex; align-items: center; gap: 6px; margin: 0; letter-spacing: 0; text-transform: none; }
+.geo-hatch-swatch { flex: none; width: 16px; height: 10px; border: 1px dashed var(--map-hatch); background: repeating-linear-gradient(45deg, var(--map-hatch) 0 1px, transparent 1px 4px); }
+.geo-legend-note { margin: 2px 0 0; min-height: 3.2em; max-width: 72ch; font-size: 12px; line-height: 1.35; overflow-wrap: anywhere; }
+.geo-legend-note a { white-space: nowrap; }
+.geo-legend-close { display: inline; margin: 0; font-size: 11px; }
+.geo-map-country { fill: var(--map-ink-2); letter-spacing: 0.1em; font-weight: 600; }
+.geo-city circle { fill: #fff; stroke: var(--map-ink); stroke-width: calc(var(--u, 1.5) * 1.2); }
+.geo-city.is-cap circle { fill: var(--map-ink); stroke: #fff; }
+.geo-city text { fill: var(--map-ink); }
+.geo-city.is-cap text { font-weight: 700; }
+.geo-map-place { fill: var(--map-ink); font-weight: 700; }
+.geo-pt circle { stroke: var(--map-ink); }
+.geo-pt text { font-family: var(--mono); font-weight: 700; pointer-events: none; }
+.geo-pt-solid circle { fill: var(--map-ink); stroke: #fff; }
+.geo-pt-solid .geo-pt-num { fill: #fff; }
+.geo-pt-hollow circle { fill: #fff; }
+.geo-pt-hollow .geo-pt-num { fill: var(--map-ink); }
+.geo-note line { stroke: var(--map-accent); }
+.geo-note rect { fill: rgba(255, 255, 255, 0.95); stroke: var(--map-accent); }
+.geo-note text { fill: var(--map-ink); stroke: none; }
+.geo-note .geo-note-title { font-weight: 700; fill: var(--map-accent); }
+.geo-note path { fill: var(--map-accent); stroke: #fff; }
+.geo-scale-bg { fill: rgba(255, 255, 255, 0.8); }
+.geo-scale text { fill: var(--map-ink); stroke: none; font-weight: 600; }
+.geo-scale path { fill: none; stroke: var(--map-ink); }
+.geo-locator-bg { fill: var(--map-sea); stroke: var(--map-ink-2); }
+.geo-locator-land { fill: var(--map-land); stroke: var(--map-border); stroke-width: 0.5px; vector-effect: non-scaling-stroke; }
+.geo-locator-box { fill: rgba(200, 30, 30, 0.18); stroke: #c81e1e; stroke-width: 1.4px; vector-effect: non-scaling-stroke; }
+.geo-map-credit { margin-top: 4px; font-size: 10px; letter-spacing: 0; text-transform: none; overflow-wrap: anywhere; }
+
+/* Key figures: the value against its baseline on one scale (bar = value, tick = baseline). */
+.geo-figs { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; min-width: 0; }
+button.geo-fig { display: flex; flex-direction: column; gap: 3px; width: 100%; min-width: 0; padding: 8px 10px; background: var(--panel); line-height: 16px; }
+button.geo-fig:hover { outline: 1px solid var(--rule-strong); }
+.geo-fig-label { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 30px; color: var(--muted); font-size: 11px; line-height: 15px; overflow-wrap: anywhere; }
+.geo-fig-value { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 6px; min-width: 0; }
+.geo-fig-value b { color: var(--strong); font-size: 22px; line-height: 28px; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.geo-fig-unit { color: var(--muted); font-size: 11px; overflow-wrap: anywhere; }
+.geo-fig-bar { position: relative; display: block; height: 4px; margin: 4px 0 2px; background: var(--rule); }
+.geo-fig-fill { display: block; height: 100%; background: var(--muted); }
+.geo-fig-base { position: absolute; top: -3px; bottom: -3px; width: 2px; margin-left: -1px; background: var(--strong); }
+.geo-fig-vs { color: var(--muted); font-size: 10px; line-height: 14px; overflow-wrap: anywhere; }
+.geo-chg { color: var(--accent); font-variant-numeric: tabular-nums; }
+
+/* Since yesterday: only what changed gets a row; the glyph wears the accent for escalated / new. */
+.geo-since { margin: 0 0 16px; }
+.geo-chrows { list-style: none; margin: 0; padding: 0; }
+.geo-chrows li { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 0 8px; padding: 2px 0; font-size: 13px; line-height: 20px; overflow-wrap: anywhere; }
+.geo-glyph { color: var(--muted); font-size: 11px; text-align: center; }
+.geo-chrows li.is-hot .geo-glyph { color: var(--accent); }
+.geo-chrows li.is-hot { color: var(--strong); }
+button.geo-same { margin-top: 4px; }
+
+/* Developments: a vertical timeline of one-line items, newest day first. */
+.geo-tl { --day-w: 48px; list-style: none; margin: 0 0 16px; padding: 0; }
+.geo-ev { position: relative; display: grid; grid-template-columns: var(--day-w) 22px minmax(0, 1fr); align-items: start; }
+.geo-ev::before { content: ""; position: absolute; left: calc(var(--day-w) + 11px); top: 0; bottom: 0; width: 1px; background: var(--rule-strong); }
+.geo-ev:first-child::before { top: 12px; }
+.geo-ev:last-child::before { bottom: calc(100% - 12px); }
+.geo-ev-day { color: var(--muted); font-size: 11px; line-height: 24px; white-space: nowrap; }
+.geo-ev-mark { position: relative; z-index: 1; justify-self: center; display: flex; align-items: center; justify-content: center; width: 10px; height: 10px; margin-top: 7px; border: 1.5px solid var(--strong); border-radius: 50%; background: var(--bg); color: var(--strong); font-size: 10px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.geo-ev-mark.is-solid { background: var(--strong); color: var(--bg); }
+.geo-ev-mark.has-n { width: 18px; height: 18px; margin-top: 3px; }
+button.geo-ev-btn { display: flex; align-items: baseline; gap: 8px; width: 100%; min-width: 0; padding: 1px 4px; font-size: 13px; line-height: 22px; }
+.geo-ev-head { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+button.geo-ev-btn:hover .geo-ev-head { color: var(--strong); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+button.geo-ev-btn:hover .geo-more { color: var(--strong); }
+
+.geo-pulses-mark { grid-column: 1 / -1; order: 99; margin: 0; }
+.geo-pulses { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; margin: 0 0 16px; min-width: 0; }
+
+.geo-next { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4px 24px; margin: 0 0 4px; font-size: 13px; min-width: 0; }
+.geo-next > .geo-link-btn { grid-column: 1 / -1; justify-self: start; }
+.geo-next-outlook { margin: 0; overflow-wrap: anywhere; }
+.geo-watch { margin: 2px 0 0; padding-left: 16px; }
+.geo-watch li { overflow-wrap: anywhere; }
+
+/* ---- across theaters, earlier days ----------------------------------------------------------- */
+.geo-across { margin-top: calc(var(--line) * 3); min-width: 0; }
+.geo-across ul { list-style: none; margin: 0; padding: 0; }
+.geo-x { display: grid; grid-template-columns: minmax(180px, 38%) minmax(0, 1fr); gap: 0 14px; align-items: start; padding: 4px 0; font-size: 13px; line-height: 20px; }
+.geo-x-names { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; min-width: 0; }
+body .geo .geo-x-names a { color: var(--strong); font-weight: 600; text-decoration-color: var(--rule-strong); }
+.geo-x-names > span { color: var(--strong); font-weight: 600; }
+.geo-x-names > .geo-x-arrow { color: var(--muted); font-weight: 400; }
+button.geo-x-btn { display: flex; align-items: baseline; gap: 8px; width: 100%; min-width: 0; line-height: 20px; }
+.geo-x-line { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
+button.geo-x-btn:hover .geo-x-line { color: var(--strong); }
+button.geo-x-btn .geo-more { color: var(--link-accent); font-weight: 700; }
+button.geo-x-btn:hover .geo-more { color: var(--link-accent-hover); }
+
+/* ---- around the world (components/DailySweep.tsx) and the spotlight label ----------------------- */
+.geo-sweep { margin-top: calc(var(--line) * 3); min-width: 0; }
+.geo-sw-region { padding: 4px 0; }
+.geo-sw-name { margin: 0 0 2px; }
+.geo-sweep ul { list-style: none; margin: 0; padding: 0; }
+.geo-sw-item { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 0 10px; align-items: baseline; padding: 2px 0; font-size: 13px; line-height: 20px; }
+.geo-sw-flags { display: inline-flex; gap: 3px; min-width: 0; }
+.geo-sw-line { min-width: 0; overflow-wrap: anywhere; }
+.geo-sw-tag { margin-right: 8px; padding: 0 5px; border: 1px solid var(--accent-dim); color: var(--strong); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+.geo-spotlight-label { margin: calc(var(--line) * 3) 0 0; color: var(--strong); }
+/* A later part of the day's single report: a light provenance tag on what it added, and an update sitting under the morning section. */
+.geo-edition-tag { color: var(--strong); letter-spacing: 0.06em; }
+.geo-theater.is-update { margin-top: calc(var(--line) * 1.5); padding-left: 12px; border-left: 2px solid var(--rule, currentColor); }
+
+/* ---- day navigator (components/DayNav.tsx) and its "All days" list (components/DailyArchive.tsx) -- */
+.geo-daynav { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 0 14px; align-items: baseline; min-width: 0; padding: 0 0 6px; font-size: 12px; line-height: 20px; }
+.geo-daynav.is-bottom { margin-top: calc(var(--line) * 3); padding: 0; }
+.geo-daynav-prev { justify-self: start; min-width: 0; white-space: nowrap; }
+.geo-daynav-next { justify-self: end; min-width: 0; white-space: nowrap; }
+.intel-page .geo-daynav a { color: var(--text); text-decoration: none; }
+.intel-page .geo-daynav a:hover { color: var(--strong); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+.geo-daynav-mid { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: 0 10px; min-width: 0; }
+.geo-daynav-cur { color: var(--strong); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.intel-page .geo-daynav a.geo-daynav-latest { color: var(--muted); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+button.geo-daynav-all { font: inherit; font-size: 11px; background: none; border: 0; padding: 0; margin: 0; white-space: nowrap; }
+
+.geo-archive { min-width: 0; }
+.geo-arch-month + .geo-arch-month { margin-top: 10px; }
+.geo-archive ul { list-style: none; margin: 0; padding: 0; }
+body .geo-archive a { display: grid; grid-template-columns: 54px minmax(0, 1fr); gap: 0 10px; align-items: baseline; padding: 1px 0; color: var(--text); font-size: 12px; line-height: 20px; text-decoration: none; }
+body .geo-archive a:hover .geo-arch-line { color: var(--strong); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+.geo-arch-day { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+/* The one accent here: where you are. */
+body .geo-archive a.is-here { color: var(--accent); }
+body .geo-archive a.is-here .geo-arch-day,
+body .geo-archive a.is-here .geo-arch-line { color: var(--accent); font-weight: 600; }
+.geo-arch-line { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.geo-xlink { margin: calc(var(--line) * 2) 0 0; font-size: 11px; }
+body .geo-xlink a { color: var(--muted); }
+
+/* ---- popover body (shared grammar: title, text, quiet footer) -------------------------------- */
+.geo-pd { min-width: 0; color: var(--text); font-size: 13px; line-height: 20px; overflow-wrap: anywhere; }
+.geo-pd p { margin: 0 0 8px; }
+.geo-pd-title { color: var(--strong); font-size: 14px; font-weight: 600; line-height: 20px; }
+.geo-pd-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0 8px; color: var(--muted); font-size: 12px; }
+.geo-pd-big { color: var(--muted); }
+.geo-pd-big b { color: var(--strong); font-size: 26px; line-height: 32px; font-variant-numeric: tabular-nums; }
+.geo-pd-foot { display: flex; flex-wrap: wrap; gap: 2px 14px; margin-top: 4px; font-size: 11px; }
+.geo-plain { margin: 0 0 8px; padding-left: 16px; }
+.geo-plain li { padding: 1px 0; }
+.geo-src { overflow-wrap: anywhere; }
+.geo-ctx { list-style: none; margin: 0 0 8px; padding: 0; }
+.geo-ctx li { display: grid; grid-template-columns: 82px minmax(0, 1fr); gap: 0 10px; padding: 4px 0; font-size: 12px; line-height: 18px; }
+.geo-ctx-what { color: var(--strong); }
+.geo-quote { margin: 0 0 8px; padding: 2px 0 2px 10px; border-left: 2px solid var(--rule-strong); }
+.geo-quote blockquote { margin: 0; }
+.geo-quote p { margin: 0; color: var(--strong); }
+.geo-quote-para p { color: var(--text); font-size: 12px; }
+.geo-quote-cap { margin-top: 2px; font-size: 11px; line-height: 17px; }
+
+/* ---- home-page card (components/DailyCard.tsx) ----------------------------------------------- */
+.geo-card { padding: 0; }
+body .geo-card a.geo-card-head { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px 6px; color: var(--text); text-decoration: none; }
+.geo-card-head strong { color: var(--strong); font-size: 14px; font-weight: 600; line-height: 20px; overflow-wrap: anywhere; }
+.geo-card .geo-glance { margin: 0; padding: 0 12px 8px; }
+.geo-glance.is-compact { --cols: minmax(0, 1fr) 72px minmax(170px, 260px) 46px; }
+.geo-glance.is-compact .geo-row { padding: 3px 0; }
+
+/* ---- phones: rows stack, the tiles take the full width ------------------- */
+@media (max-width: 860px) {
+  .geo-glance-head { display: none; }
+  .geo-row { grid-template-columns: auto auto minmax(0, 1fr); grid-template-areas: "name name name" "state state state" "dir delta cov" "axis axis axis"; gap: 2px 14px; padding: 9px 0; border-bottom: 1px solid var(--rule); }
+  .geo-name { grid-area: name; }
+  .geo-state { grid-area: state; }
+  .geo-dir { grid-area: dir; }
+  .geo-tiles { grid-area: axis; }
+  .geo-delta { grid-area: delta; }
+  .geo-cov-cell { grid-area: cov; justify-self: end; }
+  .geo-glance.is-compact .geo-row { grid-template-columns: minmax(0, 1fr) auto auto; grid-template-areas: "name dir delta" "axis axis axis"; padding: 6px 0; }
+}
+@media (max-width: 700px) {
+  .geo-next { grid-template-columns: minmax(0, 1fr); }
+  .geo-x { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .geo-key { margin-left: 0; }
+  .geo-theater { margin-top: calc(var(--line) * 2); }
+  .geo-ev-head { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; white-space: normal; }
+  .geo-ctx li { grid-template-columns: minmax(0, 1fr); gap: 0; }
+}
+@media (max-width: 560px) {
+  .geo-daynav { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "mid mid" "prev next"; gap: 2px 14px; }
+  .geo-daynav-mid { grid-area: mid; justify-content: flex-start; }
+  .geo-daynav-prev { grid-area: prev; }
+  .geo-daynav-next { grid-area: next; }
+}
+@media (max-width: 480px) {
+  .geo-tl { --day-w: 40px; }
+  .geo-figs { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+  .geo-pulses { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+}
+
+.geo-watching { margin-top: calc(var(--line) * 3); min-width: 0; }
+.geo-watching ul { list-style: none; margin: 0; padding: 0; font-size: 13px; line-height: 20px; }
+.geo-watching li { padding: 2px 0; }
+
+/* ---- Skimmable layout: the day in 30 seconds, expanders, the desk's own visuals ---------------------------
+   One disclosure pattern everywhere (components/Expander.tsx): a native <details> whose summary is the blue
+   `.xt` accent. Mobile first: 16px gutters come from the page, nothing here forces a width. */
+.geo-thirty { margin: 0 0 14px; min-width: 0; }
+.geo-thirty ul { margin: 4px 0 0; padding: 0; list-style: none; }
+.geo-thirty li { border-top: 1px solid var(--rule); }
+.geo-thirty li:last-child { border-bottom: 1px solid var(--rule); }
+.geo-thirty-link { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; gap: 0 10px; align-items: center; padding: 9px 0; color: var(--text); text-decoration: none; min-width: 0; }
+.geo-thirty-link:hover .geo-thirty-text { color: var(--strong); text-decoration: underline; text-underline-offset: 3px; }
+.geo-thirty-flags { display: flex; gap: 3px; min-width: 0; }
+.geo-thirty-text { font-size: 15px; line-height: 1.35; overflow-wrap: anywhere; min-width: 0; }
+.geo-thirty-text .geo-micro { display: block; }
+
+.geo-exps { display: grid; gap: 0; margin: 12px 0 0; min-width: 0; }
+.geo-exps-top { margin: 0 0 14px; }
+.geo-exp { border-top: 1px solid var(--rule); min-width: 0; }
+.geo-exp:last-child { border-bottom: 1px solid var(--rule); }
+.geo-exp > summary { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 4px; padding: 10px 0; cursor: pointer; list-style: none; font-size: 13px; line-height: 20px; }
+.geo-exp > summary::-webkit-details-marker { display: none; }
+.geo-exp > summary::before { content: "▸"; flex: none; width: 14px; color: var(--link-accent); font-size: 11px; }
+.geo-exp[open] > summary::before { content: "▾"; }
+.geo-exp > summary:focus-visible { outline: 2px solid var(--link-accent); outline-offset: 2px; }
+.geo-exp-n { color: var(--muted); font-variant-numeric: tabular-nums; }
+.geo-exp-hint { color: var(--muted); font-size: 11px; }
+.geo-exp-body { display: grid; gap: 12px; padding: 2px 0 14px 14px; min-width: 0; }
+
+.geo-figure { margin: 0 0 16px; min-width: 0; max-width: 820px; }
+button.geo-figure-zoom { display: block; width: 100%; padding: 0; background: #fff; border: 1px solid var(--rule-strong); cursor: zoom-in; }
+button.geo-figure-zoom img, .geo-figure-big { display: block; width: 100%; height: auto; }
+.geo-figure figcaption { margin-top: 6px; font-size: 12px; line-height: 18px; color: var(--text); overflow-wrap: anywhere; }
+.geo-figure-tag { display: inline-block; margin-right: 6px; padding: 0 6px; border: 1px solid var(--link-accent); color: var(--link-accent); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+.geo-figure.is-schematic .geo-figure-tag { border-style: dashed; }
+.geo-figure-src { display: flex; flex-wrap: wrap; gap: 0 10px; margin-top: 2px; }
+
+/* The saga: the big picture, under a section's headline. Quieter than the headline, ahead of the developments. */
+.geo-saga { margin: 6px 0 0; max-width: 72ch; color: var(--muted); font-size: 13px; line-height: 19px; }
+.geo-gloss { margin: 0 0 8px; max-width: 72ch; color: var(--muted); font-size: 11px; line-height: 16px; }
+
+/* The Daily's edition switch (components/DomainSwitch.tsx): Geopolitics · AI. */
+.geo-domains { display: flex; gap: 14px; margin: 0 0 6px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+.geo-domain { color: var(--muted); text-decoration: none; padding: 2px 0; border-bottom: 1px solid transparent; }
+a.geo-domain:hover { color: var(--strong); border-bottom-color: var(--rule-strong); }
+.geo-domain.is-on { color: var(--strong); border-bottom-color: var(--accent); }

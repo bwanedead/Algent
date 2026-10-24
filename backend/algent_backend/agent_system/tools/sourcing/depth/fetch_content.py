@@ -134,6 +134,28 @@ def _cache_dir() -> Path:
     return here.parent / ".cache" / "fetch"
 
 
+def cache_dir() -> Path:
+    """Where fetched pages are cached (the product registry's ``fetch_cache`` store)."""
+    return _cache_dir()
+
+
+def prune_cache(*, apply: bool, now: float | None = None) -> dict[str, int]:
+    """Delete cache files older than the read TTL (a file past it is never served, only dead weight). Dry run unless ``apply``."""
+    horizon = (now if now is not None else time.time()) - _CACHE_TTL_S
+    d, found, freed = _cache_dir(), 0, 0
+    for p in d.glob("*.json") if d.is_dir() else ():
+        try:
+            st = p.stat()
+            if st.st_mtime >= horizon:
+                continue
+            found, freed = found + 1, freed + st.st_size
+            if apply:
+                p.unlink()
+        except OSError:
+            continue
+    return {"expired": found, "bytes": freed, "deleted": found if apply else 0}
+
+
 def _cache_get(url: str) -> dict[str, Any] | None:
     if not _cache_enabled():
         return None

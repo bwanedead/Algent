@@ -41,10 +41,12 @@ Docs sprawl is a real failure mode. To prevent it:
 - `agent-ergonomics-ethos.md` – fit the action seam to the agent's natural grammar; discover it empirically.
 
 ### Architecture — `architecture/`
+- `foundation.md` – **start here for ops**: the operating envelope. Every external dependency and server store with its limit, measured use, failure mode, guard and gap; ranked risks and the hardening plan. **A product exists only if it is in the product registry** (`backend/algent_backend/ops/products/registry.py`); §3 is generated from it and the backup, envelope budgets, timers, paid jobs and site contract are derived from it. New products add their entry before shipping.
 - `run-control-plane.md` – run directory contract, runs CLI, observability weave.
 - `map-analytics-stack.md` – accurate country-scale map figures for the newsroom analytics path.
 - `pulse-system.md` – Ohmega Pulse: situations, anchored Pulses, append-only influences, watches, storage.
-- `published-content.md` – publishing as a database write: `published_*` tables, anon-read RLS, the site's Supabase reader with file fallback.
+- `published-content.md` – how the site reads published documents (now from R2; legacy Supabase notes).
+- `database-budget.md` – storage architecture: server = record, R2 = publication, the R2 budget guard, egress, ship-data rollup, backups; legacy Postgres notes.
 - `agent-api.md` – the agent surface of the site: `/api/v1` JSON API, OpenAPI, remote MCP server, discovery files, and the API-key seam.
 - `instruments.md` – the numbers layer: free programmatic series (chokepoint transits, energy, rates, FX…), append-only store, moves vs each series' own history, evidence API.
 - `statements.md` – the record of who said what: primary transcripts (Kremlin, White House, State, FCDO, No 10, EC, China MFA), quote-validated extraction, append-only ledger, recall API.
@@ -52,6 +54,8 @@ Docs sprawl is a real failure mode. To prevent it:
 - `actors.md` – power profiles of states: the one country registry, World Bank/OWID/Wikidata/IMF sources, append-only store, profile/compare, publish feed and actor pages.
 - `intel-desk.md` – the intelligence desk: broad headline base, heat, per-theater novelty, new/active/quiet lifecycle, budgeted daily focus.
 - `geoledger.md` – the geospatial asset ledger: places that exist (WRI power plants, OSM infrastructure) and append-only, claimant-attributed status events; extraction from stored text, theater-map layer, `/api/v1/assets`, MCP `get_assets`.
+- `views.md` – server-built views: the server publishes small versioned answers (country, situation, entity, series, home, HUD, daily hub, search index) to R2 so no page or agent aggregates raw documents at request time; the agent-endpoint choice, the R2 operation estimate, rate limits.
+- `corpus-index.md` – the rebuildable SQLite index over the whole record (entities, relations, documents, claims, sources, events, series, full-text search) and the read-only query API agents and retrieval use; Phase B criteria.
 - `markets-track-record.md` – the reality feedback loop: Polymarket mirror (read-only), blind per-market forecasts, paper portfolio, Brier/log-loss vs the market, calibration, `/intel/track-record`, `/api/v1/track-record`. Paper only.
 - `ai-desk.md` – the AI desk: benchmark tracker (Epoch hub, SWE-bench, LMArena; freshness; capped self-reported discovery), the AI domain of the intel daily (`--domain ai`), `/intel/ai`, `/ai`, `/api/v1/ai-benchmarks`, how to schedule it.
 - `conflict-events-gnss.md` – the attack/conflict event log (GDELT keyless; ReliefWeb, ACLED, UCDP behind keys) and GPS-jamming zones derived from ADS-B navigation accuracy with a GPSJam cross-check: provenance fields (`basis`, `coverage_note`, `baseline_since`), dedupe, timers, `/intel/attacks`, `/intel/gnss`, `/api/v1/attacks`, `/api/v1/gnss`.
@@ -62,6 +66,8 @@ Docs sprawl is a real failure mode. To prevent it:
 ### Guides — `guides/`
 - `run-operator-entrypoint.md` – **start here** to operate runs; short hub that routes to the rest.
 - `worker-server.md` – the always-on server: what runs where (free jobs on timers, paid runs on request), how to trigger a run over SSH, access it holds, rebuild from nothing; `newsroom doctor` and the runner claim.
+- `deploy.md` – the deploy routine: merge, staging data, preview, `site deploy-check` + smoke test, promote; the Vercel env settings (`NEXT_PUBLIC_DATA_BASE` per target), what the hourly smoke test covers, after-hooks.
+- `accounts.md` – the account inventory (DigitalOcean, Cloudflare, GitHub, Vercel, registrar, Supabase paused, model/search/data providers, X): what each holds and where recovery lives; names only, plus the quarterly recovery pass.
 - `runner-handover.md` – move Ohmega between the server and the laptop (one runner at a time): release/claim, restore stores, search without the server, what lives where, `doctor`, `search-usage`.
 - `agent-cli-testing.md` – **canonical CLI guide**: full `runs` command/flag set, newsroom rail,
   post-t0 `--from-run`, promotion cooldown, watch/stop, cost rails, run layout.

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import type { CurvePoint, TraderPosition, TradeRow } from "@/lib/track-record";
 
 // The trader, made watchable: its equity against the mechanical baseline and against doing nothing, what it holds and why, and every trade it has made with
@@ -25,11 +27,11 @@ const R = 64;
 const T = 12;
 const B = 24;
 
-export function EquityCurve({ curve, bankroll }: { curve: CurvePoint[]; bankroll: number }) {
+export function EquityCurve({ curve, bankroll, name = "Trader", id = "tr-eq", showRule = true }: { curve: CurvePoint[]; bankroll: number; name?: string; id?: string; showRule?: boolean }) {
   if (curve.length === 0) {
-    return <p className="tr-empty">The trader has not been marked yet. Its first daily mark will start this line at ${bankroll.toLocaleString("en-US")}.</p>;
+    return <p className="tr-empty">The {name.toLowerCase()} has not been marked yet. Its first mark will start this line at ${bankroll.toLocaleString("en-US")}.</p>;
   }
-  const vals = curve.flatMap((c) => [c.trader, c.rule, c.flat]).filter((v): v is number => v !== null);
+  const vals = curve.flatMap((c) => [c.trader, showRule ? c.rule : null, c.flat]).filter((v): v is number => v !== null);
   const lo = Math.min(...vals);
   const hi = Math.max(...vals);
   const pad = Math.max(50, (hi - lo) * 0.15);
@@ -57,9 +59,9 @@ export function EquityCurve({ curve, bankroll }: { curve: CurvePoint[]; bankroll
     );
   return (
     <figure className="tr-fig tr-fig-wide">
-      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="tr-eq-t tr-eq-d" className="tr-svg">
-        <title id="tr-eq-t">Paper equity over time</title>
-        <desc id="tr-eq-d">Daily value of the trader&apos;s paper portfolio, of the rule-based baseline, and of the flat starting bankroll.</desc>
+      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby={`${id}-t ${id}-d`} className="tr-svg">
+        <title id={`${id}-t`}>Paper equity over time: {name}</title>
+        <desc id={`${id}-d`}>Daily value of the {name.toLowerCase()}&apos;s paper portfolio{showRule ? ", of the rule-based baseline," : ""} and of the flat starting bankroll.</desc>
         {ticks.map((v) => (
           <g key={v}>
             <line x1={L} x2={W - R} y1={py(v)} y2={py(v)} className="tr-grid" />
@@ -67,25 +69,48 @@ export function EquityCurve({ curve, bankroll }: { curve: CurvePoint[]; bankroll
           </g>
         ))}
         <path d={path((c) => c.flat)} className="tr-eq-flat" fill="none" />
-        <path d={path((c) => c.rule)} className="tr-eq-rule" fill="none" />
+        {showRule && <path d={path((c) => c.rule)} className="tr-eq-rule" fill="none" />}
         <path d={path((c) => c.trader)} className={`tr-eq-trader ${ahead ? "tr-ahead" : "tr-behind"}`} fill="none" />
         {n === 1 && last.trader !== null && <circle cx={px(0)} cy={py(last.trader)} r={3} className="tr-pt-ours" />}
-        {end("Trader", last.trader, ahead ? "tr-good" : "tr-bad")}
-        {end("Rules", last.rule, "tr-muted")}
+        {end(name, last.trader, ahead ? "tr-good" : "tr-bad")}
+        {showRule && end("Rules", last.rule, "tr-muted")}
         <text x={W - R + 6} y={py(last.flat) + (last.trader !== null && Math.abs(py(last.flat) - py(last.trader)) < 11 ? 14 : 3)} className="tr-endlabel tr-muted">Start {money(last.flat)}</text>
         <text x={L} y={H - 6} className="tr-tick">{curve[0].day}</text>
         <text x={W - R} y={H - 6} textAnchor="end" className="tr-tick">{last.day}</text>
       </svg>
       <figcaption className="tr-cap">
-        Value of each paper portfolio at the end of each day, from the same ${bankroll.toLocaleString("en-US")}. Solid: the trader. Thin: a fixed rule that buys whenever our
-        forecast and the price differ by enough. Dotted: doing nothing.
+        Value of each paper portfolio at the end of each day, from the same ${bankroll.toLocaleString("en-US")}. Solid: the {name.toLowerCase()}.{" "}
+        {showRule && "Thin: a fixed rule that buys whenever our forecast and the price differ by enough. "}Dotted: doing nothing.
       </figcaption>
     </figure>
   );
 }
 
-export function TraderPositions({ rows }: { rows: TraderPosition[] }) {
-  if (rows.length === 0) return <p className="tr-empty">The trader holds nothing right now.</p>;
+const VERDICT: Record<string, string> = { sufficient: "evidence sufficient", thin: "evidence thin", gap: "evidence gap" };
+
+// What the position was decided on: the corpus items the bot cited, newest first, linked to the entity or situation page when the site has one.
+function Trail({ r }: { r: TraderPosition }) {
+  if (r.trail.length === 0) return null;
+  return (
+    <details className="tr-trail">
+      <summary>
+        Evidence trail: {r.trail.length} corpus item{r.trail.length === 1 ? "" : "s"}
+        {r.evidence && `, ${VERDICT[r.evidence]}`}
+      </summary>
+      <ul>
+        {r.trail.map((t) => (
+          <li key={t.id}>
+            <span className="tr-tag">{t.kind || "item"}</span> {t.href ? <Link href={t.href} className="xt">{t.title}</Link> : t.title}
+            {t.date && <span className="tr-muted"> {t.date.slice(0, 10)}</span>}
+          </li>
+        ))}
+      </ul>
+    </details>
+  );
+}
+
+export function TraderPositions({ rows, empty = "The trader holds nothing right now." }: { rows: TraderPosition[]; empty?: string }) {
+  if (rows.length === 0) return <p className="tr-empty">{empty}</p>;
   return (
     <div className="tr-scroll">
       <table className="tr-table">
@@ -107,6 +132,7 @@ export function TraderPositions({ rows }: { rows: TraderPosition[] }) {
               <td className="q">
                 <Q url={r.url} text={r.question} />
                 {r.rationale && <span className="tr-why">{r.rationale}{r.rationale_on && ` (${r.rationale_on})`}</span>}
+                <Trail r={r} />
               </td>
               <td>{r.side.toUpperCase()}</td>
               <td className="n">{cents(r.entry)}</td>
@@ -114,7 +140,7 @@ export function TraderPositions({ rows }: { rows: TraderPosition[] }) {
               <td className="n">{money(r.cost)}</td>
               <td className="n">{money(r.value)}</td>
               <td className={`n ${r.pnl > 0 ? "tr-good" : r.pnl < 0 ? "tr-bad" : ""}`}>{usd(r.pnl)}</td>
-              <td>{r.ends}</td>
+              <td>{r.ends}{r.hours_left !== null && <span className="tr-why">{r.hours_left < 48 ? `${Math.max(0, r.hours_left).toFixed(0)} h left` : `${(r.hours_left / 24).toFixed(0)} d left`}</span>}</td>
             </tr>
           ))}
         </tbody>

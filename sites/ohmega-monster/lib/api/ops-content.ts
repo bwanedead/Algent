@@ -1,5 +1,6 @@
 import { getAllMeta, getArticle } from "@/lib/articles";
 
+import { corpusHits } from "./ops-corpus";
 import { apiUrl } from "./ops-desk";
 import { abs, arr, badRequest, docObj, enumParam, idParam, isObj, limitParam, lower, notFound, objs, paginate, str, type ApiResult, type Args } from "./util";
 
@@ -88,7 +89,7 @@ export async function articleOp(a: Args): Promise<ApiResult> {
 
 // ---- search ---------------------------------------------------------------------------------------------
 
-const SEARCH_TYPES = ["article", "theater", "pulse", "brief", "daily", "actor"] as const;
+const SEARCH_TYPES = ["article", "theater", "pulse", "brief", "daily", "actor", "entity", "document"] as const;
 type Hit = { type: (typeof SEARCH_TYPES)[number]; id: string; title: string; text: string; date: string; cite_as: string; api_url: string };
 
 async function corpus(): Promise<Hit[]> {
@@ -105,7 +106,7 @@ async function corpus(): Promise<Hit[]> {
   }
   for (const t of objs(theaters?.theaters)) {
     const id = str(t.theater_id);
-    hits.push({ type: "theater", id, title: str(t.name), text: str(t.domain), date: str(t.last_seen), cite_as: abs(`/intel/theaters/${id}`), api_url: apiUrl(`/theaters/${id}`) });
+    hits.push({ type: "theater", id, title: str(t.name), text: str(t.domain), date: str(t.last_seen), cite_as: abs(`/situations/${id}`), api_url: apiUrl(`/theaters/${id}`) });
   }
   for (const p of objs(pulses?.pulses)) {
     const id = str(p.id);
@@ -118,12 +119,13 @@ async function corpus(): Promise<Hit[]> {
   for (const d of objs(intel?.daily)) {
     const dom = str(d.domain);
     const date = str(d.date);
-    hits.push({ type: "daily", id: `${dom}/${date}`, title: str(d.headline), text: arr(d.theaters).map(str).join(" "), date, cite_as: abs(str(d.url) || `/geopolitics/${date}`), api_url: apiUrl(`/daily/${dom}/${date}`) });
+    hits.push({ type: "daily", id: `${dom}/${date}`, title: str(d.headline), text: arr(d.theaters).map(str).join(" "), date, cite_as: abs(str(d.url) || `/daily/${dom}/${date}`), api_url: apiUrl(`/daily/${dom}/${date}`) });
   }
   for (const x of objs(actors?.actors)) {
     const iso = str(x.iso2);
     hits.push({ type: "actor", id: iso, title: str(x.name), text: `${iso} ${str(x.region)}`, date: str(actors?.data_as_of), cite_as: abs(`/intel/actors/${iso}`), api_url: apiUrl(`/actors/${iso}`) });
   }
+  hits.push(...(await corpusHits())); // the corpus index: entities by name and alias, document titles (the server-built search index)
   return hits.filter((h) => h.title !== "");
 }
 
@@ -143,13 +145,13 @@ export async function searchOp(a: Args): Promise<ApiResult> {
     })
     .filter((x) => x.ok)
     .sort((x, y) => y.score - x.score || y.h.date.localeCompare(x.h.date));
-  const p = paginate(scored.map((x) => ({ type: x.h.type, id: x.h.id, title: x.h.title, date: x.h.date || null, cite_as: x.h.cite_as, api_url: x.h.api_url })), limitParam(a.limit, 20), a.cursor);
+  const p = paginate(scored.map((x) => ({ type: x.h.type, id: x.h.id, title: x.h.title, date: x.h.date || null, cite_as: x.h.cite_as, api_url: x.h.api_url || null })), limitParam(a.limit, 20), a.cursor);
   return {
     data: { query: q, results: p.items, total: p.total },
     as_of: null,
     cite_as: abs("/"),
     source: "ohmega.search",
     next_cursor: p.next_cursor,
-    note: "Plain text match over titles, headlines and names (not full article text). Fetch a result's api_url for the document.",
+    note: "Plain text match over titles, headlines, names and aliases (not document bodies). Fetch a result's api_url for the document; an entity hit opens with the entity tool (key).",
   };
 }

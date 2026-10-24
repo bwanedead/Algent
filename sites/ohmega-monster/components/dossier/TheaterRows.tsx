@@ -1,16 +1,20 @@
 import Link from "next/link";
 
+import Age from "@/components/Fresh";
+import NewDot from "@/components/NewDot";
 import type { Dossier, DossierIndexItem } from "@/lib/dossier";
-import { DIRECTION, dayLabel, isoDay } from "@/lib/dossier-view";
+import { situationHref } from "@/lib/desks";
+import { DIRECTION, isoDay } from "@/lib/dossier-view";
+import { CADENCE_HOURS, isStale } from "@/lib/fresh";
 import { BAND_LABEL, COVERAGE_DISPLAY } from "@/lib/intel";
 
 import { EscalationMini } from "./EscalationTrack";
 
-// The theater index as small multiples: every row is the same shape (name, escalation strip, top Pulse
-// band, coverage bars, last seen) on the same day axis and the same bar scale, so the eye learns one row
-// and reads the differences. Rows are grouped by escalation direction (3 chunks, most urgent first).
+// The situations index as small multiples: every row is the same shape (name, escalation strip, top Pulse
+// band, coverage bars, last report) on the same day axis and the same bar scale (one desk at a time: desks' scales differ), so the
+// eye learns one row and reads the differences.
 
-export type TheaterRow = { item: DossierIndexItem; dossier: Dossier | null };
+export type TheaterRow = { item: DossierIndexItem; dossier: Pick<Dossier, "escalation_history" | "coverage_series"> | null };
 
 function CoverBars({ series, days, max, name }: { series: { day: string; count: number }[]; days: string[]; max: number; name: string }) {
   const CW = 6;
@@ -36,9 +40,11 @@ function Row({ r, days, max, branch = false, branchOf = "" }: { r: TheaterRow; d
   const moving = item.escalation_direction === "rising" || item.escalation_direction === "easing";
   return (
     <li className={branch ? "th-row is-branch" : "th-row"}>
-      <Link href={`/intel/theaters/${item.theater_id}`} className="th-row-name">
-        <b>{item.name}</b>
-        {item.domain && <span className="th-domain">{item.domain}</span>}
+      <Link href={situationHref(item.theater_id)} className="th-row-name">
+        <b>
+          {item.name}
+          <NewDot id={`situation:${item.theater_id}`} stamp={item.last_seen} stale={isStale(item.last_seen, CADENCE_HOURS.situation)} />
+        </b>
         {branchOf && <span className="th-branch-of">branch of {branchOf}</span>}
         {item.state && (
           <span className={`th-state is-${item.state}`} title={item.last_novel ? `Last new development ${item.last_novel}` : undefined}>
@@ -54,25 +60,25 @@ function Row({ r, days, max, branch = false, branchOf = "" }: { r: TheaterRow; d
       </span>
       <span className="th-row-band">
         {item.max_band !== "unassessed" ? (
-          <span className={`intel-chip intel-band-${item.max_band}`} title="The most severe Pulse of this theater">
+          <span className={`intel-chip intel-band-${item.max_band}`} title="The most severe Pulse of this situation">
             {BAND_LABEL[item.max_band]}
           </span>
         ) : (
           <span className="th-when">not assessed</span>
         )}
       </span>
-      <span className="th-row-cov" title="How much of the world's headlines are about this theater">
+      <span className="th-row-cov" title="How much of the world's headlines are about this situation">
         {d && d.coverage_series.length > 0 && <CoverBars series={d.coverage_series} days={days} max={max} name={item.name} />}
         <span className="th-when">
           <span aria-hidden="true">{cov.glyph}</span> {cov.label}
         </span>
       </span>
       <span className="th-row-seen th-when">
-        {item.last_seen ? dayLabel(isoDay(item.last_seen) || item.last_seen) : ""}
+        <Age stamp={item.last_seen} cadenceHours={CADENCE_HOURS.situation} prefix="Last report " />
         {item.days_covered > 0 && (
           <>
             {" "}
-            · {item.days_covered} report{item.days_covered === 1 ? "" : "s"}
+            · {item.days_covered} report{item.days_covered === 1 ? "" : "s"} to date
           </>
         )}
       </span>

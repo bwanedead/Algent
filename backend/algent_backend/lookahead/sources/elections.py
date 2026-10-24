@@ -22,6 +22,7 @@ RAW = "https://en.wikipedia.org/w/index.php?title={year}_national_electoral_cale
 
 _DAY = re.compile(r"^(\d{1,2})(?:\s+([A-Za-z]+))?\s*[–-]\s*(\d{1,2})\s+([A-Za-z]+)|^(\d{1,2})\s+([A-Za-z]+)")
 _LINK = re.compile(r"\[\[(?:[^\]|]*\|)?([^\]]*)\]\]")
+_VOTE = re.compile(r"referend|plebiscite|initiative|recall", re.I)
 _REF = re.compile(r"<ref[^>]*?/>|<ref[^>]*>.*?</ref>", re.S)
 
 
@@ -74,7 +75,8 @@ def parse(wikitext: str, year: int) -> list[CalendarItem]:
             continue
         iso2 = cnames.iso2(country.replace("the ", "", 1) if country.startswith("the ") else country)
         title = f"{country}: {office}" if office else f"{country} election"
-        out.append(make("election", "elections", parent_date[0], title, PAGE.format(year=year), end_date=parent_date[1],
+        kind = "vote" if _VOTE.search(office) else "election"          # referendums, plebiscites, initiatives; runoffs stay elections ("(2nd round)")
+        out.append(make(kind, "elections", parent_date[0], title, PAGE.format(year=year), end_date=parent_date[1],
                         countries=[iso2] if iso2 else [], confidence="medium"))
     return out
 

@@ -11,7 +11,7 @@ import { absoluteAssetUrl, assetUrl } from "@/lib/assets";
 import { AI_IMAGE_LABEL, isGeneratedImage, pageHasGeneratedImages } from "@/lib/generated";
 import { SITE_URL } from "@/lib/site";
 
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS; new articles render on demand, no redeploy
+export const revalidate = 900; // lib/store.ts TTL.articles: a handful of publishes a day
 
 export async function generateStaticParams() {
   return (await getSlugs()).map((slug) => ({ slug }));

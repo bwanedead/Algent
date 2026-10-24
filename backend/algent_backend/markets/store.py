@@ -8,6 +8,10 @@ so the record cannot be quietly improved after the fact.
     trades.jsonl      the RULE book's paper trades: open / mark / settle (a position is a projection of its lines)
     decisions.jsonl   the TRADER's ledger: every decision (buy / sell / hold / settle) with its rationale and any guard clips
     equity.jsonl      one EquityPoint per book per day (the equity curves)
+    gaps.jsonl        what the bots looked for and the corpus did not hold (gaps.py); gap_fills.jsonl the research runs those asks became
+    research_trace.jsonl  one line per forecast / decision: queries, result ids, cited ids, tokens, cost, latency (trace.py; pruned by age)
+    day_runs.jsonl    one DayRun per run of the day book: the full tool trace, orders, cost (day.py; pruned by age)
+    day_wishes.jsonl  what the day agent wished the corpus held (product feedback); day_watchlist.jsonl its persisted watchlist (events)
     status.json       the last pass: when, what it found, what failed
 """
 
@@ -22,7 +26,7 @@ from typing import TypeVar
 from pydantic import BaseModel
 
 from . import flags
-from .contracts import Decision, EquityPoint, Forecast, Market, Snapshot, Trade
+from .contracts import DayRun, Decision, EquityPoint, Forecast, Gap, GapFill, Market, Snapshot, Trace, Trade, WatchEvent, Wish
 
 _ENV = "ALGENT_MARKETS_STORE"
 M = TypeVar("M", bound=BaseModel)
@@ -145,8 +149,10 @@ def append_trades(rows: list[Trade]) -> None:
     _append("trades.jsonl", rows)
 
 
-def decisions() -> list[Decision]:
-    return _read("decisions.jsonl", Decision)
+def decisions(book: str | None = "daily") -> list[Decision]:
+    """The ledger of one book (default the daily trader; lines written before the fast book existed have ``book`` "daily"); ``None`` = every book."""
+    rows = _read("decisions.jsonl", Decision)
+    return rows if book is None else [d for d in rows if d.book == book]
 
 
 def append_decisions(rows: list[Decision]) -> None:
@@ -161,6 +167,80 @@ def append_equity(rows: list[EquityPoint]) -> None:
     """Append points for days a book has no point yet: a day's mark is written once and never replaced."""
     have = {(e.book, e.day) for e in equity_points()}
     _append("equity.jsonl", [e for e in rows if (e.book, e.day) not in have])
+
+
+# ── research traces and gaps ─────────────────────────────────────────────────────────────────────
+def traces() -> list[Trace]:
+    return _read("research_trace.jsonl", Trace)
+
+
+def append_traces(rows: list[Trace]) -> None:
+    _append("research_trace.jsonl", rows)
+
+
+def prune_traces(now: datetime | None = None) -> int:
+    """Drop trace lines older than ``flags.TRACE_KEEP_DAYS`` (the only line type ever pruned: observability, not the scored record). Returns how many."""
+    now = now or datetime.now(UTC)
+    return _prune("research_trace.jsonl", traces(), now) + _prune("day_runs.jsonl", day_runs(), now)
+
+
+def _prune(name: str, rows: list, now: datetime) -> int:
+    keep = [t for t in rows if (parse_iso(t.at) or now) >= now - timedelta(days=flags.TRACE_KEEP_DAYS)]
+    if len(keep) == len(rows):
+        return 0
+    path = root() / name
+    tmp = path.with_suffix(".tmp")
+    tmp.write_text("".join(t.model_dump_json() + "\n" for t in keep), encoding="utf-8", newline="\n")
+    os.replace(tmp, path)
+    return len(rows) - len(keep)
+
+
+def day_runs() -> list[DayRun]:
+    return _read("day_runs.jsonl", DayRun)
+
+
+def append_day_run(run: DayRun) -> None:
+    _append("day_runs.jsonl", [run])
+
+
+def wishes() -> list[Wish]:
+    return _read("day_wishes.jsonl", Wish)
+
+
+def append_wishes(rows: list[Wish]) -> None:
+    _append("day_wishes.jsonl", rows)
+
+
+def watch_events() -> list[WatchEvent]:
+    return _read("day_watchlist.jsonl", WatchEvent)
+
+
+def append_watch(row: WatchEvent) -> None:
+    _append("day_watchlist.jsonl", [row])
+
+
+def watchlist() -> dict[str, WatchEvent]:
+    """Markets currently on the day agent's watchlist (the last event per market is an add)."""
+    last: dict[str, WatchEvent] = {}
+    for e in watch_events():
+        last[e.market_id] = e
+    return {k: e for k, e in last.items() if e.action == "add"}
+
+
+def gaps() -> list[Gap]:
+    return _read("gaps.jsonl", Gap)
+
+
+def append_gaps(rows: list[Gap]) -> None:
+    _append("gaps.jsonl", rows)
+
+
+def gap_fills() -> list[GapFill]:
+    return _read("gap_fills.jsonl", GapFill)
+
+
+def append_gap_fills(rows: list[GapFill]) -> None:
+    _append("gap_fills.jsonl", rows)
 
 
 # ── status ───────────────────────────────────────────────────────────────────────────────────────

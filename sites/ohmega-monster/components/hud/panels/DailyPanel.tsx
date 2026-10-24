@@ -25,7 +25,7 @@ export default function DailyPanel({ ctx }: PanelProps) {
           </li>
         ))}
       </ul>
-      <p className="hud-foot"><Link href="/geopolitics">Full report</Link></p>
+      <p className="hud-foot"><Link href="/daily/geopolitics">Full report</Link></p>
     </>
   );
 }

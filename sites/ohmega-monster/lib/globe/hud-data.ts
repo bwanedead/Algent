@@ -42,11 +42,17 @@ export type HudCounter = {
   key: "aircraft" | "ships" | "fires" | "quakes" | "outages";
   label: string;
   value: number;
+  /** The value as the stats registry words it ("≥ 55", "0 heard"). */
+  text: string;
   unit: string;
-  /** % against the median of the days before; null when there are too few days to call a normal. */
-  pct: number | null;
+  /** Against the median of the days before; null while our own history is too young (then `collecting` says since when) or too short to call a normal. */
+  delta: { text: string; sign: number } | null;
+  collecting: string | null;
   spark: number[];
   href: string;
+  /** Registry id and the plain hover lines (basis, source, scope, why a minimum, baseline). */
+  statId: string;
+  info: string[];
 };
 export type HudAnomaly = { id: string; sentence: string; direction: "above" | "below"; confidence: number; ongoing: boolean; iso: string[] };
 export type HudLive = { counters: HudCounter[]; anomalies: HudAnomaly[] };

@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 
 import Popover from "@/components/Popover";
 import { claimOf } from "@/lib/daily";
+import { situationHref } from "@/lib/desks";
 import type { Dossier, DossierForecast, IndicatorRow } from "@/lib/dossier";
 import { dayLabel, isoDay } from "@/lib/dossier-view";
 import type { IndicatorStatus } from "@/lib/intel";
@@ -165,11 +166,11 @@ function Elsewhere({ d, known }: { d: Dossier; known: Set<string> }) {
     <div className="th-out">
       {d.links.length > 0 && (
         <div>
-          <p className="th-sub">Linked theaters</p>
+          <p className="th-sub">Linked situations</p>
           <ul className="th-links">
             {d.links.slice(0, 5).map((l, i) => (
               <li key={i}>
-                {known.has(l.theater_id) ? <Anchor url={`/intel/theaters/${l.theater_id}`}>{l.name || l.theater_id}</Anchor> : <b>{l.name || l.theater_id}</b>}
+                {known.has(l.theater_id) ? <Anchor url={situationHref(l.theater_id)}>{l.name || l.theater_id}</Anchor> : <b>{l.name || l.theater_id}</b>}
                 {l.link && <span className="geo-muted"> {claimOf(l.link, 120)}</span>}
                 {l.date && <span className="th-when"> {dayLabel(isoDay(l.date) || l.date)}</span>}
               </li>

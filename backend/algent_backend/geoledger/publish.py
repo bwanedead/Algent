@@ -15,6 +15,7 @@ import json
 from collections.abc import Callable
 from typing import Any
 
+from algent_backend.publishing import published_db, site_data
 from algent_backend.publishing.published_db import _run
 
 from . import store
@@ -87,7 +88,14 @@ def publish(ledger: Ledger | None = None, *, full: bool = False, connect: Callab
     ledger = ledger or Ledger()
     ids, events, now = pending(ledger, full=full)
     if not ids and not events:
-        return {"db": True, "assets": 0, "events": 0, "note": "nothing new"}
+        return {"db": True, "ok": True, "assets": 0, "events": 0, "note": "nothing new"}
+    from . import site_docs
+
+    files = site_data.publish_built(lambda: site_docs.documents(ledger))        # the site's source: per-country / per-place / per-month files
+    if published_db.files_only(connect):
+        if files.get("ok"):
+            store.save_marker(now, ledger.base)                                  # "sent" now means "in the documents"
+        return {**files, "assets": len(ids), "events": len(events)}
 
     def work(conn: Any) -> dict:
         with conn.cursor() as cur:
@@ -103,4 +111,6 @@ def publish(ledger: Ledger | None = None, *, full: bool = False, connect: Callab
     result = _run(work, connect)
     if result.get("db"):
         store.save_marker(now, ledger.base)       # only after the commit: a failed publish is retried whole
+    if files.get("ok"):
+        result["files"] = files
     return result

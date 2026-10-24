@@ -46,7 +46,7 @@ export default function SiteCard({ s }: { s: SatSite }) {
       <p className="sat-links">
         {s.links.asset && <Link href={`/intel/places/${s.links.asset}`} className="xt">Place</Link>}
         {s.links.country && <Link href={`/intel/actors/${s.links.country}`} className="xt">{countryName(s.links.country)}</Link>}
-        {s.links.theater && <Link href={`/intel/theaters/${s.links.theater}`} className="xt">Theater</Link>}
+        {s.links.theater && <Link href={`/situations/${s.links.theater}`} className="xt">Situation</Link>}
         <a href={`https://www.openstreetmap.org/?mlat=${s.lat}&mlon=${s.lon}#map=14/${s.lat}/${s.lon}`} className="xt" rel="noopener noreferrer">Map</a>
       </p>
     </li>

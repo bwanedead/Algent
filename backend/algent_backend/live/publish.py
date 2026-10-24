@@ -2,7 +2,8 @@
 Publish live rows for the site: ``live_events`` (current events per feed) and ``live_stats`` (daily series values).
 
 Same contract as ``publishing/published_db``: never raises, idempotent, a no-op without ``DATABASE_URL`` (or with
-``ALGENT_DB_PUBLISH=0``). Events a feed no longer reports are marked ``active = false`` (kept as history, hidden
+``ALGENT_DB_PUBLISH=0``). An event that has not changed is not rewritten (the upsert's ``where ... is distinct from``): the feeds run every
+10-15 minutes and rewriting every event each time was the largest source of dead tuples and WAL (docs/architecture/database-budget.md). Events a feed no longer reports are marked ``active = false`` (kept as history, hidden
 from the public view). Stats: the completed days of the last ``PUBLISH_STATS_DAYS`` plus the running (partial) day.
 """
 
@@ -15,7 +16,7 @@ from typing import Any, Callable
 from algent_backend.instruments import store as istore
 from algent_backend.instruments.catalog import CATALOG
 from algent_backend.instruments.contracts import period_date
-from algent_backend.publishing.published_db import _run
+from algent_backend.publishing import site_data
 
 from . import flags, store
 from .contracts import LiveEvent
@@ -31,6 +32,11 @@ on conflict (id) do update
        countries = excluded.countries, severity = excluded.severity, starts_at = excluded.starts_at,
        ends_at = excluded.ends_at, source_url = excluded.source_url, tags = excluded.tags, data = excluded.data,
        active = true, updated_at = now()
+ where (live_events.title, live_events.detail, live_events.lat, live_events.lon, live_events.countries, live_events.severity,
+        live_events.starts_at, live_events.ends_at, live_events.source_url, live_events.tags, live_events.data, live_events.active)
+       is distinct from
+       (excluded.title, excluded.detail, excluded.lat, excluded.lon, excluded.countries, excluded.severity,
+        excluded.starts_at, excluded.ends_at, excluded.source_url, excluded.tags, excluded.data, true)
 """
 _RETIRE = "update live_events set active = false, updated_at = now() where feed = %s and active and not (id = any(%s))"
 _STAT = """
@@ -83,10 +89,41 @@ def _event_row(e: LiveEvent) -> tuple:
             e.source_url, e.source, e.tags, json.dumps(e.data, ensure_ascii=False).replace("\\u0000", ""))
 
 
+#: Newest events the site lists (it used to read ``limit=400`` from the table).
+SITE_EVENTS_MAX = 400
+STAT_COLUMNS = ("series_id", "period", "value", "partial", "name", "unit", "kind", "region", "lat", "lon", "source_url")
+
+
+def event_rows() -> list[dict[str, Any]]:
+    """The current events of every feed as the site's rows (``LiveEvent`` in lib/live-shared.ts), newest first. The local store keeps each
+    feed's last good snapshot, so a feed that is down still shows what it last saw, as the table did."""
+    rows = []
+    for e in store.read_events():
+        d = e.model_dump()
+        d["starts_at"], d["ends_at"] = d.pop("start") or None, d.pop("end")
+        rows.append(d)
+    rows.sort(key=lambda r: r["starts_at"] or "", reverse=True)
+    return site_data.stamped("live_events", rows[:SITE_EVENTS_MAX])
+
+
+def stat_docs(today: date) -> list[dict[str, Any]]:
+    """The chokepoint series of the last ``PUBLISH_STATS_DAYS`` plus the running day (``presence`` means stay server-side, as on the page)."""
+    return [dict(zip(STAT_COLUMNS, r)) for r in stat_rows(today) if r[6] != "presence"]
+
+
+def documents(*, with_stats: bool = True, today: date | None = None) -> dict[str, Any]:
+    """The live products as site documents: ``live/events.json`` and ``live/stats.json`` (anomalies are published by live memory)."""
+    docs: dict[str, Any] = {"live/events.json": {"events": event_rows()}}
+    if with_stats:
+        docs["live/stats.json"] = {"stats": stat_docs(today or date.today())}
+    return docs
+
+
 def publish(feed_events: dict[str, list[LiveEvent]], *, with_stats: bool = True, today: date | None = None,
             connect: Callable[[], Any] | None = None) -> dict[str, Any]:
-    """Upsert the given feeds' current events (retiring the rest of those feeds) and, optionally, the stats."""
+    """Publish the live events and stats as documents (the site's source) and, while the legacy flag is on, upsert the table rows too."""
     today = today or date.today()
+    files = site_data.publish_built(lambda: documents(with_stats=with_stats, today=today))
 
     def work(conn: Any) -> dict:
         n_events = 0
@@ -101,17 +138,21 @@ def publish(feed_events: dict[str, list[LiveEvent]], *, with_stats: bool = True,
                 cur.execute(_STAT, row)
         return {"events": n_events, "stats": len(rows)}
 
-    return _run(work, connect)
+    return site_data.also_postgres(files, work, connect)
 
 
 def publish_world(*, force: bool = False, connect: Callable[[], Any] | None = None) -> dict[str, Any]:
     """Publish the /live page's basemap (document ``live/world.json``) once; ``force`` re-sends it."""
-    from algent_backend.publishing.published_db import publish_documents
-
     from . import worldmap
 
+    from algent_backend.publishing.published_db import publish_documents
+
+    from algent_backend.publishing import object_store
+
+    target = object_store.select()
+    ident = target.ident if target else "off"      # the marker is per object store: a new store needs the basemap once
     marker = store.root() / "world_published"
-    if marker.exists() and not force:
+    if marker.exists() and marker.read_text(encoding="utf-8").strip() == ident and not force:
         return {"db": True, "world": "already published"}
     world = worldmap.build()
     if world is None:
@@ -119,5 +160,5 @@ def publish_world(*, force: bool = False, connect: Callable[[], Any] | None = No
     res = publish_documents({"live/world.json": world}, connect=connect)
     if res.get("db"):
         marker.parent.mkdir(parents=True, exist_ok=True)
-        marker.write_text("1", encoding="utf-8")
+        marker.write_text(ident, encoding="utf-8")
     return res

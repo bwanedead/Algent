@@ -2,11 +2,12 @@ import { parseMap, type TheaterMap } from "./daily";
 import { bandAt } from "./band";
 import { parseOnRecord, type OnRecord } from "./record-model";
 import { maxBand, parseCoverage, safeUrl, type Band, type Coverage, type Direction, type IndicatorStatus, type Pace } from "./intel";
+import { situationHref } from "./desks";
 import { intelDoc, intelSlugs } from "./store";
 
 // Theater dossiers: one living record per theater, written by the backend as JSON to
 // the documents theaters/index.json and theaters/<theater_id>.json (ohmega.dossier/1), read through
-// lib/store.ts (Supabase, content files as the fallback). Parsed defensively: a missing document, a missing
+// lib/store.ts (published files in R2, content files as the fallback). Parsed defensively: a missing document, a missing
 // index or a malformed file yields empty states, never a build failure.
 const ID_RE = /^[\w.-]+$/;
 
@@ -120,7 +121,7 @@ export function linkTarget(u: string): { href: string; external: boolean } | nul
 }
 
 // ---- parsers --------------------------------------------------------------------------------
-function parseIndexItem(raw: Obj): DossierIndexItem | null {
+export function parseIndexItem(raw: Obj): DossierIndexItem | null {
   const id = str(raw.theater_id);
   if (!id || !ID_RE.test(id)) return null;
   return {
@@ -207,6 +208,20 @@ function parseForecast(raw: Obj, i: number): DossierForecast | null {
   };
 }
 
+export function parseEscalationHistory(v: unknown): EscalationPoint[] {
+  return objs(v)
+    .map((e) => ({ date: str(e.date), direction: oneOf(e.direction, DIRECTIONS, "unclear"), pace: oneOf(e.pace, PACES, "flat") }))
+    .filter((e) => e.date)
+    .sort(byDate((e) => e.date));
+}
+
+export function parseCoverageSeries(v: unknown): CoveragePoint[] {
+  return objs(v)
+    .map((c) => ({ day: str(c.day), count: num(c.count) ?? 0, editions: num(c.editions) ?? 0 }))
+    .filter((c) => c.day)
+    .sort(byDate((c) => c.day));
+}
+
 function parseDossier(raw: unknown, id: string): Dossier | null {
   if (!isObj(raw)) return null;
   const cur = isObj(raw.current) ? raw.current : null;
@@ -235,14 +250,8 @@ function parseDossier(raw: unknown, id: string): Dossier | null {
         }
       : null,
     pulses: objs(raw.pulses).map(parsePulse).filter((p): p is DossierPulse => p !== null),
-    escalation_history: objs(raw.escalation_history)
-      .map((e) => ({ date: str(e.date), direction: oneOf(e.direction, DIRECTIONS, "unclear"), pace: oneOf(e.pace, PACES, "flat") }))
-      .filter((e) => e.date)
-      .sort(byDate((e) => e.date)),
-    coverage_series: objs(raw.coverage_series)
-      .map((c) => ({ day: str(c.day), count: num(c.count) ?? 0, editions: num(c.editions) ?? 0 }))
-      .filter((c) => c.day)
-      .sort(byDate((c) => c.day)),
+    escalation_history: parseEscalationHistory(raw.escalation_history),
+    coverage_series: parseCoverageSeries(raw.coverage_series),
     timeline: objs(raw.timeline).map(parseTimelineItem).filter((t) => t.headline),
     places: objs(raw.places)
       .map((p) => ({ name: str(p.name), country: str(p.country), count: num(p.count) ?? 0, last_date: str(p.last_date) }))
@@ -339,8 +348,15 @@ export async function dossierList(): Promise<DossierIndexItem[]> {
 
 export const dossierIds = async (): Promise<string[]> => (await dossierList()).map((i) => i.theater_id);
 
+/** A Spotlight story with a single report is a one-day item of the Daily, not yet a situation: it appears in the Daily and its archive
+ *  until a second report follows (docs/architecture/information-architecture.md §2). Its page still exists, it is just never listed or linked. */
+export const isSpotlightOneOff = (i: Pick<DossierIndexItem, "theater_id" | "days_covered">): boolean => i.theater_id.startsWith("thr_spot_") && i.days_covered <= 1;
+
+/** The ids that count as situations: every dossier except Spotlight one-offs. Used wherever a situation is linked or listed. */
+export const situationIds = async (): Promise<string[]> => (await dossierList()).filter((i) => !isSpotlightOneOff(i)).map((i) => i.theater_id);
+
 /** Where a theater's dossier lives, or null when it has none (so callers link only what exists). `known` is
  *  the set from `dossierIds()`, fetched once per page so rendering stays synchronous. */
 export function dossierPath(theaterId: string, known: ReadonlySet<string>): string | null {
-  return ID_RE.test(theaterId) && known.has(theaterId) ? `/intel/theaters/${theaterId}` : null;
+  return ID_RE.test(theaterId) && known.has(theaterId) ? situationHref(theaterId) : null;
 }

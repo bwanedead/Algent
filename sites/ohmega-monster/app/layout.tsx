@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import NavLinks from "@/components/NavLinks";
 import ThemeToggle from "@/components/ThemeToggle";
+import { dailyBase, DESKS } from "@/lib/desks";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
 import "./globals.css";
@@ -47,13 +48,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <footer className="site-footer">
           <div className="shell footer-row">
             <nav aria-label="Secondary navigation">
-              <Link href="/intel/theaters">Theaters</Link>
-              <Link href="/intel/actors">Actors</Link>
-              <Link href="/intel/briefs">Briefs</Link>
-              <Link href="/intel/record">Record</Link>
+              {/* Mirrors the hubs: the five places, then the desks' dailies and the most used data pages, then the machine doors. */}
+              <Link href="/daily">Daily</Link>
+              {DESKS.map((d) => (
+                <Link key={d.id} href={dailyBase(d.id)}>{d.label}</Link>
+              ))}
+              <Link href="/situations">Situations</Link>
+              <Link href="/articles">Articles</Link>
+              <Link href="/globe">Globe</Link>
+              <Link href="/calendar">Calendar</Link>
+              <Link href="/explore">Explore</Link>
+              <Link href="/live">Live map</Link>
+              <Link href="/pulses">Pulses</Link>
+              <Link href="/intel/forecasts">Forecasts</Link>
               <a href="/feed.xml">RSS</a>
               <a href="/sitemap.xml">Sitemap</a>
-              <a href="/developers">Developers</a>
+              <Link href="/developers">Developers</Link>
             </nav>
           </div>
         </footer>

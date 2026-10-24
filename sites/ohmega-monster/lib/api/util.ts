@@ -27,6 +27,10 @@ export type ApiResult = {
   note?: string;
   /** Opaque cursor for the next page, when there is one. */
   next_cursor?: string | null;
+  /** Which products and documents the data was derived from (a server-built view's provenance block). */
+  provenance?: unknown;
+  /** The kinds of number the data holds, in the stats-registry vocabulary (official, our_count, our_derived, model, reported ...), when it holds any. */
+  basis?: string[];
 };
 
 export class ApiError extends Error {

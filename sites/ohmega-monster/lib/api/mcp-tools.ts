@@ -6,8 +6,10 @@ import { searchOp } from "./ops-content";
 import { anomaliesOp, instrumentOp, instrumentsOp, liveEventsOp } from "./ops-data";
 import { attacksOp, gnssOp } from "./ops-conflict";
 import { calendarOp, sanctionsOp } from "./ops-forward";
+import { aboutOp, entityOp, relatedOp, seriesOp, timelineOp } from "./ops-corpus";
 import { maritimeOp } from "./ops-maritime";
 import { KIND_ORDER as MARITIME_KINDS } from "@/lib/maritime-shared";
+import { KINDS, TOPICS } from "@/lib/calendar-shared";
 import { dailyOp, pulseOp, pulsesOp, statementsOp, theaterOp, theatersOp } from "./ops-desk";
 import { arr, isObj, objs, type ApiResult, type Args, type Obj } from "./util";
 
@@ -131,12 +133,65 @@ export const TOOLS: Tool[] = [
   {
     name: "search",
     title: "Search",
-    description: "Text search over titles, headlines and names of articles, theaters, Pulses, briefs, daily reports and actors. Returns ids and citable URLs; fetch details with the matching get_* tool or the result's api_url.",
+    description:
+      "Text search over titles, headlines and names of articles, theaters, Pulses, briefs, daily reports and actors, and over the corpus: any country, organisation, person, place, vessel, lab, model or situation by name or alias (type entity; open one with the entity tool) and document titles (type document). Names and titles only, not document bodies. Returns ids and citable URLs; fetch details with the matching tool or the result's api_url.",
     inputSchema: schema(
-      { q: str_("Query words (all must match)."), type: str_("Restrict to one kind.", { enum: ["article", "theater", "pulse", "brief", "daily", "actor"] }), limit: limit_(20), cursor: cursor_ },
+      { q: str_("Query words (all must match)."), type: str_("Restrict to one kind.", { enum: ["article", "theater", "pulse", "brief", "daily", "actor", "entity", "document"] }), limit: limit_(20), cursor: cursor_ },
       ["q"],
     ),
     run: searchOp,
+  },
+  {
+    name: "entity",
+    title: "Entity from the corpus",
+    description:
+      "Who or what a name is, from the corpus behind the reports: a country, organisation, person, place, vessel, lab, model or situation. Returns aliases, counts, the latest status, typed relations (head of state, affiliated with, stance...), what it is most connected to, its measured series (each with a basis: official, our_count, our_derived, model, reported) and the newest documents, claims and events with their sources. An ambiguous name returns alternatives (pass key to choose); a country wins over a same-named place. Use about, timeline, related and series for more.",
+    inputSchema: schema({ name: str_("A name or alias, e.g. 'Strait of Hormuz', 'IRGC', 'France'."), key: str_("A key from a previous result's match.key (wins over the name), e.g. entity/org/nato.") }),
+    run: entityOp,
+  },
+  {
+    name: "about",
+    title: "Everything about an entity since a date",
+    description:
+      "Documents (dailies, briefs, profiles, statements, articles), claims (with grounding, confidence and source URLs) and events about an entity, newest first, each with the product and record it came from. The corpus holds the newest material per entity (about 15 documents, 10 claims, 15 events); the result says when a since is older than that.",
+    inputSchema: schema({
+      entity: str_("A name or alias."),
+      key: str_("A key from a previous result (wins over entity)."),
+      since: str_("Only on or after this date (YYYY-MM-DD)."),
+      kinds: str_("Comma-separated. claim, event, document select whole sections; any other value filters by item kind (daily, brief, profile, development ...)."),
+      limit: limit_(30),
+    }),
+    run: aboutOp,
+  },
+  {
+    name: "timeline",
+    title: "Timeline of an entity",
+    description: "An entity's documents and events in date order (oldest first), each with sources; a development repeated across reports appears once.",
+    inputSchema: schema({ entity: str_("A name or alias."), key: str_("A key from a previous result."), since: str_("Only on or after this date (YYYY-MM-DD)."), limit: limit_(50) }),
+    run: timelineOp,
+  },
+  {
+    name: "related",
+    title: "What an entity is connected to",
+    description:
+      "What an entity is most connected to and why: typed edges x3, shared claims x2, shared events x1.5, shared documents x1 (the parts are shown, so you can see whether a link was stated or only co-occurred), plus the typed relations with their evidence.",
+    inputSchema: schema({ entity: str_("A name or alias."), key: str_("A key from a previous result."), kinds: str_("Only related entities of these kinds, comma-separated (country, org, person, place ...)."), limit: limit_(15) }),
+    run: relatedOp,
+  },
+  {
+    name: "series",
+    title: "Measured series from the corpus",
+    description:
+      "A measured series with its unit and basis (official = published by the body that measures it; our_count = a minimum from our receivers; our_derived = our computation; model = a model's reading; reported = a figure a source cited): one metric across the entities that have it (gdp, population, chk_hormuz_transits, bench.* ...), or one entity's own series (pass entity or key). A name matching several metrics returns the candidates.",
+    inputSchema: schema({
+      metric: str_("A metric id, or the start of one ending in . or * to list a family, e.g. gdp, chk_hormuz_transits, bench."),
+      entity: str_("An entity whose own series to return."),
+      key: str_("A key from a previous result."),
+      since: str_("Only points on or after this date or year."),
+      limit: limit_(30),
+      cursor: cursor_,
+    }),
+    run: seriesOp,
   },
   {
     name: "get_statements",
@@ -185,12 +240,15 @@ export const TOOLS: Tool[] = [
     name: "get_calendar",
     title: "What is coming",
     description:
-      "Dated upcoming items, soonest first: elections, central-bank rate decisions (Fed, ECB, Bank of England), UN Security Council meetings, OPEC+ meetings, and deadlines or meetings Ohmega's own reports named. Each has a source URL and a confidence (high = official schedule, medium = compiled from announcements, low = extracted from our earlier reports and unconfirmed). A date is a plan, not an outcome.",
+      "Dated upcoming items, soonest first and merged across sources: elections and referendums, central-bank decisions, data releases (GDP, PCE, jobs), commodity reports, summits, court hearings, AI and tech events, launches, resolution dates of the prediction markets we track, and deadlines Ohmega's own reports named. Each has a topic, an importance (3 major .. 1 routine), a grade (official, announced, estimated, unconfirmed) and its source URLs. A date is a plan, not an outcome.",
     inputSchema: schema({
-      kind: str_("Kind of item.", { enum: ["election", "central_bank", "summit", "security_council", "opec", "deadline", "vote"] }),
+      kind: str_("Kind of item.", { enum: [...KINDS.map((k) => k.id)] }),
+      topic: str_("Topic.", { enum: [...TOPICS.map((t) => t.id)] }),
       country: str_("ISO alpha-2 code the item concerns, e.g. US."),
-      confidence: str_("Confidence.", { enum: ["high", "medium", "low"] }),
-      days: str_("Days ahead (default 45, max 240)."),
+      situation: str_("Situation id the item is linked to."),
+      grade: str_("Grade.", { enum: ["official", "announced", "estimated", "unconfirmed"] }),
+      min_importance: str_("1 routine, 2 notable (default), 3 major.", { enum: ["1", "2", "3"] }),
+      days: str_("Days ahead (default 45, max 180)."),
       limit: limit_(30),
       cursor: cursor_,
     }),
@@ -313,6 +371,8 @@ export async function runTool(tool: Tool, args: Args): Promise<string> {
     source: r.source,
     ...(r.verification ? { verification: r.verification } : {}),
     ...(r.note ? { note: r.note } : {}),
+    ...(r.provenance ? { provenance: r.provenance } : {}),
+    ...(r.basis && r.basis.length > 0 ? { basis: r.basis } : {}),
     ...(r.next_cursor ? { next_cursor: r.next_cursor } : {}),
     license: LICENSE,
   };

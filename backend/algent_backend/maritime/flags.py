@@ -31,6 +31,10 @@ ACTIVITY_KEEP_H = 4 * 24
 RETAIN_DAYS = 30
 #: At most this many events are kept in the current picture (newest first): a storage / reader bound.
 EVENTS_MAX = 3000
+#: A still-going event is re-sent to the site table at most this often when only its moving parts changed (last heard, evidence, detail
+#: numbers): the site shows the event's state and words, which are in the table at once whenever they change. Six hours keeps the
+#: "last seen" on the page honest while cutting ~70 rewrites a day per ongoing event to 4.
+PUBLISH_REFRESH_H = 6
 #: Points of evidence kept on one event.
 EVIDENCE_POINTS = 24
 
@@ -126,3 +130,15 @@ LOITER_FULL_S = 3 * LOITER_MIN_S
 DESK_LINES = 6
 SWEEP_LINES = 8
 DESK_RECENT_DAYS = 2
+
+# ── the long record (log.jsonl): transitions only ────────────────────────────────────────────────
+#: Raw log lines are kept this many days, then only the daily summary (``daily/<day>.json.gz``, never deleted) remains. Why seven: nothing
+#: reads the log back (the detectors use the profile book, the activity grid and ``events.json``), so it exists for a person asking "what
+#: happened this week"; a compact line is ~0.2 KB, so a week is a few MB, while the day summaries carry the long view.
+LOG_KEEP_DAYS = 7
+#: A vessel's flag of one kind is written to the log at most once per this many seconds (its first line stays; the event itself still lives
+#: in the picture). Each value is the least time in which a NEW event of that kind can honestly appear for the same vessel, so anything
+#: sooner is the same behaviour seen again: a gap needs ``GAP_MIN_S`` of fresh silence, an encounter ``STS_MIN_S`` and a dwell
+#: ``LOITER_MIN_S`` to qualify; a sanctioned sighting is one event per vessel per list entry per day, and one line per raw-log window is
+#: enough for a vessel that stays in view; an identity change is evidence with its own timestamp (distinct, never repeated), so no cooldown.
+LOG_COOLDOWN_S: dict[str, int] = {"ais_gap": GAP_MIN_S, "sts": STS_MIN_S, "loiter": LOITER_MIN_S, "sanctioned": LOG_KEEP_DAYS * 86400, "identity": 0}

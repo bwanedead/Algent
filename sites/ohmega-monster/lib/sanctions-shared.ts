@@ -73,3 +73,6 @@ export function byCountry(rows: SanctionsRow[], today: string, days = 30): Count
 }
 
 export const addDaysIso = (d: string, n: number): string => iso(ms(d) + n * MS);
+
+/** The one window every sanctions count uses (page, door hint, country panel). Collection began 2026-10-01, so the real span is shorter until day 90. */
+export const SANCTIONS_WINDOW_DAYS = 90;

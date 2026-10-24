@@ -15,6 +15,7 @@ from . import flags
 from .book import Holding, side_price
 
 PROMPT_VERSION = "trader-v1"
+PROMPT_VERSION_RESEARCH = "trader-v2"
 
 ROLE = """\
 You run a paper-money portfolio on prediction markets for an intelligence desk. Nothing here is real money; what matters is that your decisions
@@ -47,11 +48,30 @@ How to think:
 """.format(pos_frac=flags.MAX_POSITION_FRAC, exp_frac=flags.MAX_EXPOSURE_FRAC, ticket=flags.TRADE_MIN_TICKET)
 
 
+RESEARCH_ADDENDUM = """
+Where "what the desk knows" comes from. It is what the desk's own corpus returned for queries planned for these markets: dated documents, claims,
+events and entities, each with a bracketed id. Nothing outside the corpus is available. For each market, cite in `cited` the ids you actually
+leaned on, and say in `evidence` how well they served you: "sufficient", "thin" or "gap". If a market is thin or a gap and the missing piece would
+change your mind, name it in `gap_topic` (one specific thing the desk's research could look into: a person, event, document or figure) and what you
+would do with it in `gap_why`. Thin evidence is a reason to hold or size small, not a reason to trust the crowd or the desk's number blindly.
+"""
+
+FAST_ADDENDUM = """
+This is the FAST book. Only markets that settle within days are shown, and you are asked again every few hours, so the same market comes back with
+a newer price and newer evidence. Resolution is close: a position taken here is judged within days, so favour clear, well-evidenced gaps and do not
+sit in markets whose answer is already priced in by the rules and the calendar. Nothing is urgent; holding is still the default.
+"""
+
+
 class TraderCall(BaseModel):
     market: str = Field(description="The market's label exactly as shown, e.g. M3.")
     action: Literal["buy_yes", "buy_no", "sell", "hold"] = Field(description="buy_yes, buy_no, sell (close or reduce what you hold) or hold.")
     stake_usd: float = Field(default=0.0, description="Paper dollars: to spend on a buy, or of current value to sell. 0 for a hold.")
     rationale: str = Field(description="One or two plain-English sentences a reader can follow: why you act, or why you stand aside.")
+    cited: list[str] = Field(default_factory=list, description="Ids (bracketed, in 'what the desk knows') you leaned on for this market.")
+    evidence: Literal["sufficient", "thin", "gap"] = Field(default="sufficient", description="How well the evidence served this market.")
+    gap_topic: str = Field(default="", description="When thin or a gap and it matters: the one specific thing the desk should research next.")
+    gap_why: str = Field(default="", description="What you would do with it.")
 
 
 class TraderOut(BaseModel):
@@ -110,9 +130,9 @@ def render_case(c: Case) -> str:
     return "\n".join(lines)
 
 
-def render_task(day: str, cases: list[Case], *, cash: float, equity: float, invested: float, n_open: int) -> str:
+def render_task(day: str, cases: list[Case], *, cash: float, equity: float, invested: float, n_open: int, fast: bool = False) -> str:
     room = max(0.0, flags.MAX_EXPOSURE_FRAC * flags.BANKROLL - invested)
-    head = (f"TODAY: {day}\n\nYOUR BOOK: started with ${flags.BANKROLL:,.0f}; cash ${cash:,.0f}; {n_open} open positions costing ${invested:,.0f}; "
+    head = (f"TODAY: {day}\n\n" + ("BOOK: fast (markets settling within days, decided every few hours).\n\n" if fast else "") + f"YOUR BOOK: started with ${flags.BANKROLL:,.0f}; cash ${cash:,.0f}; {n_open} open positions costing ${invested:,.0f}; "
             f"worth ${equity:,.0f} in all ({equity - flags.BANKROLL:+,.0f} since the start). Room for new positions: ${room:,.0f}.\n\n")
     body = "\n\n".join(render_case(c) for c in cases)
     return head + body + "\n\nTASK: one decision for each market above, using its label."

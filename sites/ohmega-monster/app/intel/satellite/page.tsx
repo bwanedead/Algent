@@ -5,8 +5,8 @@ import PageTag from "@/components/PageTag";
 import SiteCard from "@/components/satellite/SiteCard";
 import { bySignal, satelliteDoc } from "@/lib/satellite";
 
-import "@/app/geopolitics/geopolitics.css";
-import "../theaters/theaters.css";
+import "@/app/daily/daily.css";
+import "@/app/situations/situations.css";
 
 export const metadata: Metadata = {
   title: "Satellite watch",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 // Satellite watch (backend `satellite/`): the places the ledger, today's developments and the maritime chokepoints say matter, each as a before / after
 // pair of Sentinel-2 chips of the same ground, with a change score that is a machine signal (never an interpretation), the chip's own cloud share, and
 // VIIRS night lights against the site's own earlier nights. The document is rebuilt by the server's daily pass.
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 1800; // lib/store.ts TTL.daily: a desk publishes twice a day
 
 export default async function SatellitePage() {
   const doc = await satelliteDoc();
@@ -27,7 +27,7 @@ export default async function SatellitePage() {
   return (
     <div className="intel-page th-page">
       <p className="th-kicker">
-        <PageTag kind="tool" detail="Satellite" /> <Link href="/globe" className="xt">globe →</Link>
+        <PageTag kind="data" detail="Satellite" /> <Link href="/globe" className="xt">globe →</Link>
       </p>
       <h1 className="th-claim">Satellite watch</h1>
       <p className="th-asof">

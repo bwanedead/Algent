@@ -1,4 +1,4 @@
-import Crumbs, { INTEL_CRUMB, THEATERS_CRUMB } from "@/components/Crumbs";
+import Crumbs, { SITUATIONS_CRUMB } from "@/components/Crumbs";
 import { CoverSpark } from "@/components/DailyVisuals";
 import LinkedText from "@/components/entities/LinkedText";
 import PageTag from "@/components/PageTag";
@@ -28,9 +28,9 @@ export function DossierTop({ d }: { d: Dossier }) {
   const asOf = cur?.date ? dayLabel(isoDay(cur.date) || cur.date) : "";
   return (
     <header className="th-head">
-      <Crumbs trail={[INTEL_CRUMB, THEATERS_CRUMB]} />
+      <Crumbs trail={[SITUATIONS_CRUMB]} />
       <p className="th-kicker">
-        <PageTag kind="theater" detail="Living file" />
+        <PageTag kind="situation" detail="Living file" />
         <span>{d.name}</span>
         {d.domain && <span className="th-domain">{d.domain}</span>}
       </p>
@@ -68,7 +68,7 @@ export function DossierTop({ d }: { d: Dossier }) {
             <span className="th-k">Reports</span> {d.days_covered}
           </span>
         )}
-        <span className="th-cov" title="How much of the world's headlines are about this theater">
+        <span className="th-cov" title="How much of the world's headlines are about this situation">
           <span className="th-k"><Term id="coverage">Coverage</Term></span> <span aria-hidden="true">{cov.glyph}</span> {cov.label}
           {d.coverage_series.length > 1 && <CoverSpark series={d.coverage_series} coverage={cur?.coverage ?? "steady"} name={d.name} />}
         </span>

@@ -4,7 +4,7 @@ import PageTag from "@/components/PageTag";
 
 import { getMenus, hostOf, menuLabel, type RadarMenu } from "@/lib/radar";
 
-// One menu, plus the way through the archive. Shared by /headlines (newest) and /headlines/[slug].
+// One menu, plus the way through the archive. Shared by /daily/headlines (newest) and /daily/headlines/[slug].
 export default async function HeadlinesView({ menu }: { menu: RadarMenu }) {
   const all = await getMenus();
   const i = all.findIndex((m) => m.slug === menu.slug);
@@ -14,13 +14,13 @@ export default async function HeadlinesView({ menu }: { menu: RadarMenu }) {
   return (
     <article className="radar-page">
       <header className="article-header">
-        <p className="ptag-row"><PageTag kind="headlines" detail="Not verified" /></p>
+        <p className="ptag-row"><PageTag kind="daily" detail="Headlines · not verified" /></p>
         <h1>Headlines</h1>
         <p className="dek">{menuLabel(menu)}</p>
         {/* Said once, plainly: what this is and how far it has been checked. */}
         <p className="radar-note">
           What crossed the wire, as other outlets reported it — not yet independently verified by
-          us. Verified reporting is in the Daily, the Theaters and Articles.
+          us. Verified reporting is in the Daily, the Situations and Articles.
         </p>
       </header>
 
@@ -51,8 +51,8 @@ export default async function HeadlinesView({ menu }: { menu: RadarMenu }) {
       </ol>
 
       <nav className="radar-pager" aria-label="Earlier and later headline editions">
-        {newer ? <Link href={`/headlines/${newer.slug}`}>← Newer: {menuLabel(newer)}</Link> : <span />}
-        {older ? <Link href={`/headlines/${older.slug}`}>Older: {menuLabel(older)} →</Link> : <span />}
+        {newer ? <Link href={`/daily/headlines/${newer.slug}`}>← Newer: {menuLabel(newer)}</Link> : <span />}
+        {older ? <Link href={`/daily/headlines/${older.slug}`}>Older: {menuLabel(older)} →</Link> : <span />}
       </nav>
 
       <section className="radar-archive" aria-label="All editions">
@@ -63,7 +63,7 @@ export default async function HeadlinesView({ menu }: { menu: RadarMenu }) {
               {m.slug === menu.slug ? (
                 <strong>{menuLabel(m)}</strong>
               ) : (
-                <Link href={`/headlines/${m.slug}`}>{menuLabel(m)}</Link>
+                <Link href={`/daily/headlines/${m.slug}`}>{menuLabel(m)}</Link>
               )}
               <span className="radar-count"> — {m.leads.length} headlines</span>
             </li>

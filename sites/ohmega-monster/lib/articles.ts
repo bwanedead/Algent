@@ -1,9 +1,9 @@
 import matter from "gray-matter";
 
-import { articleSource, articleSources } from "./store";
+import { articleFronts, articleSource } from "./store";
 
-// Articles are markdown with frontmatter, written by the publish pipeline. They are read from Supabase
-// (published_articles.markdown) or, as the transitional fallback, content/articles/*.md — see lib/store.ts.
+// Articles are markdown with frontmatter, written by the publish pipeline. They are read from the published files
+// (articles/index.json for the lists, articles/<slug>.json for one body) or, as the transitional fallback, content/articles/*.md — see lib/store.ts.
 
 // The transparency appendix ("the receipts") begins at this heading in the article body. We split
 // it out so the page can render it as a collapsible, skippable section.
@@ -48,8 +48,9 @@ export type Article = ArticleMeta & {
 };
 
 export async function getAllMeta(): Promise<ArticleMeta[]> {
-  return (await articleSources())
-    .map((a) => toMeta(`${a.slug}.md`, matter(a.markdown).data))
+  // The list pages read the one small index of front matter (articles/index.json), never every article's body.
+  return (await articleFronts((md) => matter(md).data))
+    .map((a) => toMeta(`${a.slug}.md`, a.data))
     // Newest first, on the full publish timestamp — `date` is day-granular, so sorting on it left
     // same-day pieces (routine for a newsroom) in arbitrary order. Falls back to `date` for older
     // articles written before published_at existed.
@@ -57,7 +58,7 @@ export async function getAllMeta(): Promise<ArticleMeta[]> {
 }
 
 export async function getSlugs(): Promise<string[]> {
-  return (await articleSources()).map((a) => a.slug);
+  return (await articleFronts((md) => matter(md).data)).map((a) => a.slug);
 }
 
 export async function getArticle(slug: string): Promise<Article | null> {

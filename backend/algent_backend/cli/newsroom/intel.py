@@ -311,8 +311,14 @@ def _daily_rederive(args: Any, only: list[str]) -> int:
     if result.get("error"):
         print(json.dumps({"date": as_of, "domain": args.domain, "error": result["error"]}, indent=2, ensure_ascii=False))
         return 1
+    extra: dict[str, Any] = {}
+    if args.rerender:      # the day's saved visuals go back out (native stills rebuilt from saved specs, no model); what was never saved is named
+        from algent_backend.agent_system.agents.intel import visuals_store
+        from algent_backend.publishing import asset_store
+
+        extra["visuals_republish"] = visuals_store.republish(args.domain, as_of, result["report"], asset_store.upload)
     report = {"date": as_of, "domain": args.domain, "path": result["path"], "html": result.get("html"),
-              **{k: result[k] for k in ("redone", "kept", "warnings", "tagged", "asked", "visuals_run", "produced") if k in result},
+              **{k: result[k] for k in ("redone", "kept", "warnings", "tagged", "asked", "visuals_run", "produced") if k in result}, **extra,
               "publish": publish_intel(), "backup": sync.backup(note="intel daily rederive")}
     print(json.dumps(report, indent=2, ensure_ascii=False))
     return 0

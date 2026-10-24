@@ -18,7 +18,7 @@ import "./maritime.css";
 
 const PAGE = 60;
 
-export default function MaritimeTable({ rows, nowMs }: { rows: MaritimeEvent[]; nowMs: number }) {
+export default function MaritimeTable({ rows, nowMs, kindTotals }: { rows: MaritimeEvent[]; nowMs: number; kindTotals?: Record<string, number> }) {
   const [kind, setKind] = useState<MaritimeKind | "">("");
   const [flag, setFlag] = useState("");
   const [area, setArea] = useState("");
@@ -45,7 +45,7 @@ export default function MaritimeTable({ rows, nowMs }: { rows: MaritimeEvent[]; 
             <li key={k}>
               <button type="button" className={`mb-count${kind === k ? " is-on" : ""}`} aria-pressed={kind === k} onClick={() => { setKind(kind === k ? "" : k); reset(); }}>
                 <span><span className="mb-dot" style={{ background: KIND_COLOR[k] }} aria-hidden="true" />{KIND_LABEL[k]}</span>
-                <span className="mb-count-n">{byKind.find((c) => c.key === k)?.n ?? 0}</span>
+                <span className="mb-count-n">{kindTotals?.[k] ?? byKind.find((c) => c.key === k)?.n ?? 0}</span>
               </button>
             </li>
           ))}

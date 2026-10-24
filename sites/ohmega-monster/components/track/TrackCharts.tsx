@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { Bucket, DiffPoint } from "@/lib/track-record";
 
 // Two plain pictures. Calibration: when we say X%, how often does it happen (on the diagonal = honest; below it = overconfident); our points are filled, the
@@ -77,5 +78,16 @@ export function BrierSeries({ series }: { series: DiffPoint[] }) {
       </svg>
       <figcaption className="tr-cap">Running mean of (our Brier minus the market's) over {series.length} resolved markets. Now {last.diff > 0 ? "+" : ""}{last.diff.toFixed(3)}.</figcaption>
     </figure>
+  );
+}
+
+// A chart with the question it answers, a one-sentence reading guide, and a refusal to draw anything below the verdict threshold ("Too early: 2 of 30").
+export function ChartCard({ title, guide, have, need, children }: { title: string; guide: string; have: number; need: number; children: ReactNode }) {
+  return (
+    <div className="tr-card">
+      <h3 className="tr-h3">{title}</h3>
+      <p className="tr-note">{guide}</p>
+      {have >= need ? children : <p className="tr-empty">Too early: {have} of {need} markets needed before this chart means anything.</p>}
+    </div>
   );
 }

@@ -16,7 +16,7 @@ import { fetchSnapshot, type AircraftDoc, type PointsDoc, type TileDoc, type Til
 import { decodeAircraft, decodePoints, decodeVessels, type Entity, type Kind } from "./entities";
 import { DOT_ZOOM, type Tracks } from "./TrackLayers";
 
-const POLL_MS = 60_000;
+const POLL_MS = 180_000; // the stream republishes every 3 min (backend live/flags.py R2_SNAPSHOT_SECONDS): polling faster only re-reads the same object
 const MOVE_DEBOUNCE_MS = 250;
 
 export type LayerMeta = { n: number; counts: Record<string, number>; as_of: string };

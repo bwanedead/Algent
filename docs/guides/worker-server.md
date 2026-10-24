@@ -21,17 +21,86 @@ so it can be rebuilt from scratch instead of repaired by hand.
 | `ohmega-instruments` | every 6 h | public data series | free |
 | `ohmega-statements` | every 6 h | official statement transcripts (collection only) | free |
 | `ohmega-backup` | daily 06:15 | stores → private `algent-data` archive | free |
+| `ohmega-db-prune` | daily 03:40 | retention windows on the growing Postgres tables + `VACUUM` (`newsroom db prune --apply`; a no-op while the Postgres flag is off) | free |
+| `ohmega-maritime-rollup` | daily 04:05 | daily per-zone ship summaries + retention of the raw maritime event log (`newsroom maritime rollup --apply`) | free |
+| `ohmega-backup-snapshot` | daily 06:40 | tar.gz of every irreplaceable store -> the private R2 bucket, 14 daily / 8 weekly / 12 monthly (`newsroom backup snapshot`) | free |
+| `ohmega-backup-drill` | monthly, day 1, 07:30 | restore the latest snapshot to a temp dir and verify counts + hashes; ok/FAIL to `~/ops-log.md` (`newsroom backup restore-drill`) | free |
+| `ohmega-envelope` | daily 07:10 | one-line operating-envelope summary to `~/ops-log.md` (`newsroom envelope --log`) | free |
+| `ohmega-housekeeping` | daily 03:55 | expire the page-fetch cache and per-job run logs older than 30 days (`newsroom products housekeeping --apply`) | free |
 | `ohmega-menu` | daily 05:00 | newsroom menu (`run --to menu`) | **paid** |
 | `ohmega-daily-1` | daily 05:30 | geopolitics daily, part 1 (Europe/Asia morning) | **paid** |
 | `ohmega-daily-2` | daily 17:30 | geopolitics daily, part 2 (Americas), appended to the same report | **paid** |
 | `ohmega-watchdog` | every 2 min | kills paid runs over their time/spend limits | free |
 | SearXNG (Docker) | always | our own metasearch on 127.0.0.1:8080 | free |
 
+### Timers come from the product registry (do not edit units by hand)
+
+Every timer, its command, its calendar and its lock behaviour is an entry in `backend/algent_backend/ops/products/registry.py` (docs/architecture/foundation.md §3);
+`install_schedules.sh` writes one service+timer per line of `newsroom products timers`, and `jobs.sh <job>` is a one-line router to `newsroom products run <job>`
+(which queues for the shared job lock unless the job opts out: watchdog, live feeds, flows, satellite; priority, memory guard and run ledger: next section). To add a job: add it to its product's `jobs`, push, then run
+`install_schedules.sh` once. After a deploy: `newsroom products check --text` (registry rules, stores present, every registered timer installed and enabled, orphan
+timers, snapshot coverage, freshness, budgets). `ohmega-housekeeping` (daily 03:55, free) expires the page-fetch cache and per-job run logs older than 30 days
+(`newsroom products housekeeping [--apply]`).
+
+### The job runner: priority line, memory guard, run ledger (`ops/jobq`)
+
+systemd stays the clock. Every timer still runs `jobs.sh <job>` -> `newsroom products run <job>`; that call now goes through `ops/jobq/runner.py`. For a job that takes the shared lock (`~/.ohmega-jobs.lock`, still one `flock`):
+
+- **Priority.** Each registry job has a class (`Job.priority`; paid jobs are always 1): 1 editorial (the dailies, menu, markets-daily), 2 publication (`corpus-build`, `views`, `views-fast`, `site-smoke`), 3 collector (the default), 4 housekeeping (backups, prunes, envelope, rollup). Waiters are served by class, then nearer deadline (`Job.deadline_min`: finish within N minutes of the slot; `daily-1` 120, i.e. by 07:30), then arrival. The line is `~/.ohmega-jobs.d/waiting/<job>.json` (one file per waiting job, ignored once its pid is dead) plus `holder.json`.
+- **Running jobs are not killed.** The one exception is a job registered `preemptible` (idempotent housekeeping: `housekeeping`, `staging-prune`, `backup-drill`): an editorial or publication waiter SIGTERMs it after `PREEMPT_AFTER_MIN` (3) if `PREEMPT_HOUSEKEEPING` is on (`ops/jobq/flags.py`). It ends as `preempted`, exit 0, and its next slot reruns it.
+- **Coalescing.** A second firing of a job that is already waiting, or (collectors, publication, housekeeping) already running, is logged `coalesced` and exits 0: the one in front runs once when the lock is free.
+- **Skipped busy, never silent.** A job waits at most its class limit (`MAX_WAIT_MIN`: editorial 300, publication 120, collector 45, housekeeping 240 min), capped at its own `every_min` (it never waits past the slot that would replace it); `Job.max_wait_min` overrides. Past that it is `skipped` with the reason ("busy: lock held by daily-1 (waited 45 min, max 45)" or "memory: ..."), in the ledger; editorial/publication skips also go to `~/ops-log.md` and exit 1. (Before this the lock waited an hour and then raised an uncaught timeout.)
+- **Memory guard.** A lock-taking job starts only if `MemAvailable - expected peak >= floor`. Expected peak: the ledger's p95 peak RSS after 3 runs, else `Job.est_mb`, else the class default. Floor: for each service seen running (AIS, SearXNG) its largest sampled RSS minus its RSS now, plus 150 MB slack, never below 250 MB (the envelope's fail line). A breach is one `breach` ledger row per waiting run; the job keeps waiting until memory frees or its max wait passes.
+- **Lock-free jobs** (watchdog, update, live feeds, flows, satellite, views-fast, site-smoke) never wait and are not guarded; they are ledgered (not when quick and every < 15 min: the watchdog's 720 runs a day would drown the signal).
+- **After-hooks** (`Job.then`) are queued as jobs of their own after the parent's lock is released, with their own priority; the ledger row carries `parent`.
+- **Paid guarantees are unchanged**: kill switch, runner claim, spend halt, the single transient retry (which still sleeps 30 min inside the lock, see open questions in the build report), and the watchdog's limits all live in `ops/schedule.py`, which the queue calls as the job's work.
+
+Ledger `backend/runs_data/jobs.jsonl`: one line per run (`kind: run`: queued/start/end, duration, exit, `outcome` ok|failed|skipped|coalesced|preempted, `wait_s`, `waited_for`, `peak_rss_mb` from `wait4` on the child, `mem_avail_mb`, `svc` RSS of the services at start, `deadline_missed`, `parent`) and per guard breach (`kind: breach`). Retention: rows older than 30 days and all but the newest 20,000 are dropped when the file passes 4 MB.
+
+```
+newsroom products runs [--days 7] [--json]           per job: runs, failed, skipped, coalesced, p50/p95 duration, lock wait p50/p95/max, p95 peak RSS, missed deadlines
+newsroom products capacity [--new-desk ai-daily]     measured busy share + waits; the modelled day (tight hours, peak memory); one more desk; the split rule
+newsroom envelope --text | grep queue_               queue_waits, queue_busy, queue_memory (also in newsroom doctor as envelope:queue_*)
+```
+
+After the deploy nothing needs installing (no new timers or services); the ledger fills as timers fire. Check in a day: `newsroom products runs --days 1`, then `newsroom products capacity`.
+
+#### Capacity today
+
+Measured: nothing yet (the ledger starts with this deploy). Modelled from the registry's calendars and duration estimates (daily 1 about 70 min as observed; daily 2 45, AI daily 40, markets-daily 15, menu 30 are guesses; corpus-build 1 at 190 MB measured, everything else a few minutes): the lock is busy about 295 min a day, **20% of 24 h**, concentrated at 05:00-07:00 UTC (menu 05:00, daily 1 05:30-06:40, the 06:15 backup and 06:40 snapshot queue behind it, then markets-daily 07:30) and around 09:00 (AI daily) and 17:30 (daily 2). Modelled worst-case memory (AIS and SearXNG at their peaks plus everything that can overlap) is about 3.3 GB of the 4 GB, at 06:00. Housekeeping waits behind the morning dailies by design (about 100 min for `staging-prune`). One more paid daily of the AI daily's size fits in the quietest half-hour for +40 min (23% busy) with no added waiting. These are estimates until the ledger has three runs of a job; `newsroom products capacity` says which jobs are measured and which are not.
+
+#### When one box is not enough (the split rule)
+
+Why these numbers: all heavy work shares one lock, so the lock is a single-server queue; a new arrival waits about rho/(1-rho) service times (rho = busy share). At 50% that is 1 service time (every job can still start within a typical job's length), at 60% 1.5, at 75% 3 (a 70-minute daily would wait 3.5 hours: past its deadline and into the next slot). Memory is the other limit: the 4 GB box carries the AIS stream (~1.4 GB) and SearXNG permanently, so a heavy job is a guest in what is left.
+
+Plan a second droplet (move the collectors, housekeeping and SearXNG there; keep editorial and publication on the first) when ANY of these holds, evaluated by `newsroom products capacity` ("SPLIT RULE") from the ledger:
+
+1. the lock was busy at least **60% of the last 7 days**;
+2. **3 or more memory-floor breaches** in 7 days (`queue_memory` fails at the same number);
+3. **2 or more editorial/publication deadline misses** in 7 days;
+4. **any editorial or publication job skipped busy** in 7 days (it means a product did not publish);
+5. before adding a desk: the projection says the lock would pass 60% with it.
+
+Warnings come earlier (`queue_busy` warns at 50%, fails at 75%). Not triggers: a skipped or coalesced collector (its next slot replaces it), a modelled tight hour (a daily is supposed to fill its window). If the rule trips but memory is the cause, a 8 GB droplet of the same type is the cheaper first move.
+
+### After-hooks, the smoke test and staging (`Job.then`)
+
+A job may name `then` jobs in the registry; once it exits 0 they run as jobs of their own (own lock and gates, after the parent's lock is released), and a failing hook
+never changes the parent's result. The dailies and `markets-daily` end with `views-fast` (Home, the globe HUD and the daily hub reflect the new report within minutes) and
+`site-smoke`; `views` ends with `site-smoke`. `site-smoke` (hourly at :17, free, no lock) runs `newsroom site smoke --log` against production: about 60 paced requests (registry pages,
+sampled dynamic pages, `/api/v1`, redirects, freshness). It writes `~/ops-log.md` only when a run fails and when it recovers, keeps the last report for the `site` row of `newsroom envelope`
+(fail while failing, warn after 3 h without a run), and needs no Node (stdlib Python, so it also runs here). `staging-prune` (daily 05:05) deletes preview data older than 14 days. Deploy routine: `deploy.md`.
+
+```
+newsroom site smoke [--base https://<preview>] [--json]       newsroom site deploy-check [--url URL | --ref organic-dev]
+newsroom publish stage-from-prod [--dry-run]                  newsroom publish staging-prune [--dry-run]     newsroom publish staging-status
+newsroom views build --target staging                         newsroom publish rebuild-all --target staging
+```
+
 ### The paid timers (operator-authorised, unattended): menu, daily 1, daily 2, markets-daily
 
 Times are in-repo flags: the editions in `intel/flags.py` (`EDITIONS`), the menu in `ops/flags.py` (`MENU_UTC`);
-`markets-daily` (the Polymarket paper trader: forecasts, trades, marks; `markets/flags.py` `DAILY_UTC`, 07:30) is the fourth; change one and re-run `infra/server/install_schedules.sh`. Each unit runs `jobs.sh <job>` → `newsroom schedule run
-<job>` (`ops/schedule.py`), under the same job lock as everything else, so paid jobs never overlap (the menu, then
+`markets-daily` (the Polymarket paper trader: forecasts, trades, marks; `markets/flags.py` `DAILY_UTC`, 07:30) is the fourth; change one and re-run `infra/server/install_schedules.sh`. Each unit runs `jobs.sh <job>` → `newsroom products run <job>` → `ops/schedule.py` (the kill switch, runner claim and spend halt), under the same job lock as everything else, so paid jobs never overlap (the menu, then
 daily 1, simply queue). Before it spends, a job checks, and on any "no" exits 0 having spent nothing and says why:
 
 1. the kill switch (`SCHEDULED_PAID_RUNS` in `ops/flags.py`, or `ALGENT_SCHEDULED_PAID_RUNS=0`);
@@ -72,6 +141,12 @@ Logs: `journalctl -u ohmega-<job> -n 50`; timers: `systemctl list-timers 'ohmega
   rebuild or key change.
 - The server is not a dependency: `newsroom runner status|claim|release` records which machine runs paid work
   and publishes, and the laptop can take over. Procedure: `docs/guides/runner-handover.md`.
+- **The server is the system of record; the site reads published files from Cloudflare R2** (decision 2026-10-22, `docs/architecture/database-budget.md`).
+  `newsroom storage status` (and the `object store` line of `newsroom doctor`) is the R2 free-tier guard: month-to-date Class A/B operations and
+  stored bytes, projections, warn at 70%, **writes refused at 90%**. `newsroom publish rebuild-all [--dry-run]` republishes everything from the local
+  stores; `newsroom maritime store|rollup` shows and compacts the ship data. The Postgres tools (`newsroom db size|prune|diet|vacuum-full`) apply
+  only if `database/flags.POSTGRES_PUBLISH` is switched back on. Never let a writer rewrite a big document on a timer without a content-hash skip.
+- `newsroom envelope` measures every register row of `docs/architecture/foundation.md` (disk, RAM, journal, each store, R2, backup age, restore drill, feeds, search, spend) as ok/warn/fail against `ops/envelope_flags.py`; `newsroom doctor` embeds the rows it lacks. Accounts and where recovery lives: `accounts.md`.
 - `newsroom search-usage` shows how search is doing (who answers, free vs paid, failures).
 
 ## Watchdog
@@ -89,8 +164,10 @@ See what it did: `tail runs_data/watchdog.jsonl` (one JSON line per pass/kill/ha
 ## Source of truth for data
 
 Once runs happen on the server, **its stores are the live ones**; the laptop stops running jobs so the two
-never both write and both publish. The private `algent-data` archive (nightly + after runs) is the recovery copy;
-Supabase (next step) becomes the working database.
+never both write and both publish. The recovery copy is the nightly **R2 snapshot** (`newsroom backup snapshot`, private bucket `R2_BACKUP_BUCKET`, restore with
+`newsroom backup restore --to DIR`, proven monthly by `restore-drill`); the private `algent-data` mirror (nightly + after runs) is a second path for files
+under 10 MB. Both read the one coverage list, `data_backup/sync.py` (pinned by `tests/test_backup_coverage.py`). There is no working database: R2 holds only the
+publication, rebuilt at any time with `newsroom publish rebuild-all`.
 
 ## Access it holds
 
@@ -98,8 +175,8 @@ Supabase (next step) becomes the working database.
   **after the cut-over to `"db"` (`docs/architecture/published-content.md`) it can become read-only**: a publish is
   then database rows plus Storage uploads and never pushes; keep read access for `git pull`) and `algent-data`
   (write: backups). Revoke or downgrade under each repo → Settings → Deploy keys.
-- In db mode the worker env also needs `DATABASE_URL`, `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` (see
-  `docs/credentials.md`). The `.site-live/` directory stays as a local staging area; no git runs against it.
+- In db mode (objects are the publish) the worker env needs the five `R2_*` names (see `docs/credentials.md`; `DATABASE_URL` / `SUPABASE_*` are
+  optional legacy). The `.site-live/` directory stays as a local staging area (and is backed up); no git runs against it.
 - Secrets: `~/algent.env` (chmod 600), copied from the laptop by `scp`, linked as `backend/.env`. Key names and
   purposes: `docs/credentials.md` (manifest).
 - Still to log in on the server (operator, interactive): the chart harnesses `grok-build` and `codex`.
@@ -160,8 +237,13 @@ dropped when it leaves the board. The ICAO address and registration are never pu
 published as `coverage.json.gz` and drawn as a faint layer, so empty ocean reads as "no receiver" and not "no ships". Honest limits:
 aisstream is volunteer terrestrial AIS (about 40 nautical miles from a coast receiver); open ocean needs satellite AIS, which is paid.
 
-**Transport.** Nothing per-object goes to Postgres. Every 60 s the service writes compact JSON to the public Storage bucket
-`published-assets` under `live/` via `publishing/asset_store` (cache header `public, max-age=30` so a CDN can answer repeat fetches, unchanged
+**R2 profile (current).** The text below describes the Supabase profile (60 s cycle, tiles, 16+16 trail shards: ~440 000 PUTs a day, 13x R2's free
+Class A tier). On R2 (`live/flags.py` `cost_capped()`) the service publishes only `vessels`, `aircraft`, `points`, `summary` every **180 s** and
+`coverage` + 4 ship + 4 aircraft trail shards every **900 s** (no tiles, no `density`): ~2 800 objects a day, 8% of the free tier; the site polls
+every 180 s and falls back to the full snapshots where tiles are missing. The write budget is in `docs/architecture/database-budget.md`.
+
+**Transport.** Nothing per-object goes to Postgres. Every 60 s (Supabase profile) the service writes compact JSON to the public bucket
+under `live/` via `publishing/asset_store` (cache header `public, max-age=30` so a CDN can answer repeat fetches, unchanged
 files skipped by content hash, uploads in parallel; content types `application/json` and `application/gzip` only, bucket migration `008`).
 The vessel and aircraft boards go out as (`live/points.py`, `live/tiles.py`, constants in `live/flags.py`):
 
@@ -261,7 +343,7 @@ a count is flagged only when it beats every day in its recent window and sits ou
 
 A keyed feed without its key reports `needs <KEY> (free registration at <url>)` in `newsroom live status` and `newsroom doctor`
 (check `live:<feed>`) and nothing else breaks. Timers are installed by `infra/server/install_schedules.sh` from
-`newsroom live schedule`; the stream service restarts always.
+`newsroom products timers` (the live cadences come from `live/flags.py` through the registry); the stream service restarts always.
 
 Where it goes: numeric results are `live_*` instrument series (completed UTC days only; the day being counted sits in
 `live_store/running_*.json`, so a half-counted today never reads as a collapse), which flow through the numbers, freshness

@@ -3,16 +3,15 @@ import { SITE_URL } from "@/lib/site";
 
 import { assetOp, assetsOp, gridOp } from "./ops-assets";
 import { articleOp, articlesOp, searchOp } from "./ops-content";
+import { aboutOp, entityOp, relatedOp, seriesOp, timelineOp } from "./ops-corpus";
 import { anomaliesOp, instrumentOp, instrumentsOp, liveEventsOp } from "./ops-data";
 import { calendarOp, sanctionsOp } from "./ops-forward";
-import { attacksOp, gnssOp } from "./ops-conflict";
 import { maritimeOp } from "./ops-maritime";
 import { satelliteOp } from "./ops-satellite";
 import { aiBenchmarksOp } from "./ops-ai";
 import { trackRecordOp } from "./ops-track";
 import { KIND_ORDER as MARITIME_KINDS } from "@/lib/maritime-shared";
-import { KINDS } from "@/lib/calendar-shared";
-import { EVENT_SOURCES, EVENT_TYPES } from "@/lib/conflict-shared";
+import { KINDS, TOPICS } from "@/lib/calendar-shared";
 import {
   actorOp, actorsOp, apiUrl, briefOp, changesOp, dailyOp, deskAsOf, forecastsOp, pulseOp, pulsesOp, statementsOp, theaterOp, theatersOp,
 } from "./ops-desk";
@@ -40,6 +39,9 @@ const Q_CURSOR: QueryParam = { name: "cursor", description: "Opaque cursor from 
 export const pagingParams = (): QueryParam[] => [Q_LIMIT, Q_CURSOR];
 
 const SINCE = "Only items on or after this date or instant (YYYY-MM-DD or ISO 8601).";
+const Q_ENTITY: QueryParam = { name: "entity", description: "A name or alias of a country, organisation, person, place, vessel, lab, model or situation.", example: "Strait of Hormuz" };
+const Q_KEY: QueryParam = { name: "key", description: "A view key from a previous result's match.key (exact; wins over the name), e.g. entity/org/nato or country/FR." };
+const Q_LIST_LIMIT: QueryParam = { name: "limit", description: "How many items per list (default 30, max 200).", example: "20" };
 const BANDS = ["calm", "elevated", "severe", "critical", "unassessed"] as const;
 
 export const ROUTES: Route[] = [
@@ -167,13 +169,18 @@ export const ROUTES: Route[] = [
   {
     path: "/calendar",
     summary:
-      "What is coming: dated upcoming items (elections, central-bank rate decisions, UN Security Council meetings, OPEC+ meetings, deadlines and meetings our own reports named), soonest first, each with its source and a confidence. A date is a plan, not an outcome.",
+      "What is coming: dated upcoming items (elections and referendums, central-bank decisions, data releases, commodity reports, summits, courts, AI and tech events, launches, our markets' resolution dates, deadlines our own reports named), soonest first and merged across sources, each with a topic, an importance, a grade and its sources. A date is a plan, not an outcome.",
     paged: true,
     query: [
       { name: "kind", description: "Kind of item.", enum: KINDS.map((k) => k.id) },
+      { name: "topic", description: "Topic chip on /calendar.", enum: TOPICS.map((t) => t.id) },
       { name: "country", description: "ISO 3166-1 alpha-2 code the item concerns.", example: "US" },
-      { name: "confidence", description: "high = official schedule; medium = compiled from announcements; low = extracted from our own earlier reports.", enum: ["high", "medium", "low"] },
-      { name: "days", description: "How many days ahead (default 45, max 240).", example: "30" },
+      { name: "situation", description: "Situation id the item is linked to (from our own watches).", example: "sit_russia_nato" },
+      { name: "grade", description: "official = the body's own schedule; announced = compiled or company-confirmed; estimated = from a rule or projection; unconfirmed = our own reading.", enum: ["official", "announced", "estimated", "unconfirmed"] },
+      { name: "confidence", description: "The older three-level form of grade: high = official, medium = announced or estimated, low = unconfirmed.", enum: ["high", "medium", "low"] },
+      { name: "min_importance", description: "1 routine, 2 notable (default), 3 major.", enum: ["1", "2", "3"] },
+      { name: "routine", description: "true: include routine items (weekly stock reports, UN Security Council meetings).", enum: ["true", "false"] },
+      { name: "days", description: "How many days ahead (default 45, max 180).", example: "30" },
     ],
     run: (_p, q) => calendarOp(q),
   },
@@ -190,35 +197,6 @@ export const ROUTES: Route[] = [
       { name: "since", description: SINCE, example: "2026-10-01" },
     ],
     run: (_p, q) => sanctionsOp({ ...q, source: q.list }),
-  },
-  {
-    path: "/attacks",
-    summary:
-      "The attack log: attacks, clashes and mass-violence events (and humanitarian reports) from GDELT, ACLED, UCDP and ReliefWeb in one schema: when, where (lat/lon, country), parties, kind, fatalities where the source states them, the source and how it was coded (machine, curated, report). Ohmega's own count of what was reported since it began collecting: a minimum. Carries provenance (basis, coverage note, collecting-since) on the response and every row.",
-    paged: true,
-    query: [
-      { name: "type", description: "Kind of event.", enum: EVENT_TYPES.map((t) => t.id) },
-      { name: "source", description: "Which source reported it.", enum: Object.keys(EVENT_SOURCES) },
-      { name: "coding", description: "machine = software-read news (GDELT); curated = researcher-checked (ACLED, UCDP); report = a published humanitarian report.", enum: ["machine", "curated", "report"] },
-      { name: "country", description: "ISO 3166-1 alpha-2 code of the place.", example: "UA" },
-      { name: "days", description: "How many days back (default 14, max 30).", example: "7" },
-      { name: "since", description: SINCE, example: "2026-10-01" },
-    ],
-    run: (_p, q) => attacksOp(q),
-  },
-  {
-    path: "/gnss",
-    summary:
-      "GPS/GNSS interference zones: one-degree cells where an unusual share of aircraft report poor navigation accuracy (ADS-B NACp), with severity, a new/intensifying flag against the cell's own history, and a cross-check against GPSJam's independent daily file. Ohmega's own estimate (basis our_estimate, a minimum, with the date collection began) plus GPSJam's top band (third_party).",
-    paged: true,
-    query: [
-      { name: "source", description: "ohmega_adsb = Ohmega's own estimate; gpsjam = GPSJam.org's file.", enum: ["ohmega_adsb", "gpsjam"] },
-      { name: "severity", description: "Band of the degraded share.", enum: ["low", "medium", "high"] },
-      { name: "flag", description: "Only zones that are new or intensifying against their own history.", enum: ["new", "intensifying"] },
-      { name: "country", description: "ISO 3166-1 alpha-2 code of the land under the cell centre.", example: "LT" },
-      { name: "days", description: "1 = the newest day only (default); up to 30 days of history.", example: "7" },
-    ],
-    run: (_p, q) => gnssOp(q),
   },
   {
     path: "/maritime",
@@ -294,13 +272,53 @@ export const ROUTES: Route[] = [
   },
   {
     path: "/search",
-    summary: "Text search over titles, headlines and names of articles, theaters, Pulses, briefs, daily reports and actors.",
+    summary:
+      "Text search over titles, headlines and names of articles, theaters, Pulses, briefs, daily reports and actors, and over the corpus index: every country, organisation, person, place, vessel, lab, model and situation by name or alias (type=entity) and the titles of published documents (type=document). Names and titles only, never document bodies.",
     paged: true,
     query: [
       { name: "q", description: "Query words (all must match), 2-200 characters.", example: "hormuz" },
-      { name: "type", description: "Restrict to one kind.", enum: ["article", "theater", "pulse", "brief", "daily", "actor"] },
+      { name: "type", description: "Restrict to one kind.", enum: ["article", "theater", "pulse", "brief", "daily", "actor", "entity", "document"] },
     ],
     run: (_p, q) => searchOp(q),
+  },
+  {
+    path: "/entity",
+    summary:
+      "Who or what a name is, from the corpus: aliases, counts, the latest status, typed relations (head of state, affiliated with, stance...), what it is most connected to, its measured series (each with a basis) and the newest documents, claims and events with their sources. A country, an organisation, a person, a place, a vessel, a lab, a model or a situation. Ambiguous names return alternatives; a country wins over a same-named place.",
+    query: [{ ...Q_ENTITY, name: "name", description: "A name or alias to resolve (or pass key)." }, Q_KEY],
+    run: (_p, q) => entityOp(q),
+  },
+  {
+    path: "/about",
+    summary:
+      "Everything the corpus holds about an entity since a date: documents (dailies, briefs, profiles, statements, articles), claims (with grounding, confidence and their source URLs) and events, newest first, each with the product and record it came from.",
+    query: [Q_ENTITY, Q_KEY, { name: "since", description: SINCE, example: "2026-10-01" }, { name: "kinds", description: "Comma-separated: claim, event, document select whole sections; any other value filters by item kind (daily, brief, profile, development, status_damaged ...).", example: "claim,event" }, Q_LIST_LIMIT],
+    run: (_p, q) => aboutOp(q),
+  },
+  {
+    path: "/timeline",
+    summary: "An entity's documents and events in date order (oldest first); a development repeated by several reports appears once.",
+    query: [Q_ENTITY, Q_KEY, { name: "since", description: SINCE, example: "2026-10-01" }, Q_LIST_LIMIT],
+    run: (_p, q) => timelineOp(q),
+  },
+  {
+    path: "/related",
+    summary: "What an entity is most connected to and why: typed edges x3, shared claims x2, shared events x1.5, shared documents x1 (the parts are shown), plus the typed relations with their evidence.",
+    query: [Q_ENTITY, Q_KEY, { name: "kinds", description: "Only related entities of these kinds (comma-separated: country, org, person, place, ...).", example: "country,org" }, Q_LIST_LIMIT],
+    run: (_p, q) => relatedOp(q),
+  },
+  {
+    path: "/series",
+    summary:
+      "A measured series from the corpus with its unit and basis (official, our_count, our_derived, model, reported): one metric across the entities that have it (gdp, population, chk_hormuz_transits, bench.* ...), or an entity's own series (pass entity or key). A metric name that matches several returns the candidates.",
+    query: [
+      { name: "metric", description: "A metric id, or the start of one ending in . or * to list a family.", example: "gdp" },
+      Q_ENTITY,
+      Q_KEY,
+      { name: "since", description: SINCE, example: "2020-01-01" },
+    ],
+    paged: true,
+    run: (_p, q) => seriesOp(q),
   },
   {
     path: "/changes",

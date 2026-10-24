@@ -1,0 +1,66 @@
+/* Hubs (Daily hub, Situations, Data, Home's today block): navigation pages. Cards and rows are whole links, hairline rules, no boxes
+   beyond one card border. Built on the shared tokens; sits on top of app/situations/situations.css (th-*). */
+.hub-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: calc(var(--line) * 1.5) 24px; margin-top: calc(var(--line) * 1.5); }
+.hub-card { min-width: 0; padding: 12px 14px 14px; border: 1px solid var(--rule-strong); }
+.hub-card-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
+.hub-card-head h2 { flex: 1 1 auto; margin: 0; min-width: 0; font-size: 15px; line-height: 22px; color: var(--strong); letter-spacing: -0.01em; }
+.intel-page.th-page .hub-card-head h2 a { text-decoration: none; }
+.intel-page.th-page .hub-card-head h2 a:hover { text-decoration: underline; text-decoration-color: var(--accent); }
+.hub-cadence { margin: 0; color: var(--muted); font-size: 11px; line-height: 16px; }
+.hub-headline { display: block; margin: 8px 0 0; color: var(--strong); font-size: 16px; line-height: 22px; font-weight: 600; letter-spacing: -0.015em; overflow-wrap: anywhere; }
+.intel-page.th-page a.hub-headline { text-decoration: none; }
+.intel-page.th-page a.hub-headline:hover { text-decoration: underline; text-decoration-color: var(--accent); }
+.hub-parts { display: flex; flex-wrap: wrap; gap: 2px 14px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 11px; line-height: 16px; color: var(--muted); }
+.hub-parts .is-done { color: var(--text); }
+.hub-parts .is-late { font-style: italic; opacity: 0.7; }
+.hub-list { margin: 10px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--rule); }
+.hub-list li { border-bottom: 1px solid var(--rule); }
+.hub-row { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 0 10px; align-items: baseline; padding: 7px 2px; min-width: 0; color: var(--text); text-decoration: none; font-size: 12px; line-height: 18px; }
+.intel-page.th-page a.hub-row { color: var(--text); text-decoration: none; }
+.hub-row:hover, .hub-row:focus-visible { background: var(--vl-hover); }
+.hub-row-what { min-width: 0; display: flex; flex-direction: column; gap: 1px; overflow-wrap: anywhere; }
+.hub-row-name { color: var(--strong); font-weight: 600; }
+.hub-row-claim { color: var(--muted); font-size: 11px; line-height: 16px; }
+.hub-row-tag { margin-left: 6px; font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); font-weight: 400; }
+.hub-foot { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 10px 0 0; font-size: 12px; line-height: 18px; }
+.hub-days { display: flex; flex-wrap: wrap; gap: 2px 10px; margin: 6px 0 0; padding: 0; list-style: none; font-size: 11px; line-height: 16px; }
+.hub-other { margin-top: calc(var(--line) * 2); padding-top: 10px; border-top: 1px solid var(--rule); font-size: 12px; line-height: 18px; }
+
+/* Situations: tabs per desk, rows, a folded quiet group. */
+.hub-tabs { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: calc(var(--line) * 1.5) 0 0; padding: 0; list-style: none; border-bottom: 1px solid var(--rule-strong); }
+.hub-tab { padding: 6px 0; background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; color: var(--muted); font: inherit; font-size: 12px; letter-spacing: 0.09em; text-transform: uppercase; cursor: pointer; }
+.hub-tab:hover { color: var(--strong); }
+.hub-tab[aria-selected="true"] { color: var(--strong); border-bottom-color: var(--accent); }
+.hub-tab-n { margin-left: 6px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.hub-quiet { margin-top: calc(var(--line) * 1.5); }
+.hub-quiet > summary { cursor: pointer; color: var(--muted); font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; list-style: none; padding: 4px 0; }
+.hub-quiet > summary::-webkit-details-marker { display: none; }
+.hub-quiet > summary::before { content: "▸ "; }
+.hub-quiet[open] > summary::before { content: "▾ "; }
+.hub-note { margin: 8px 0 0; color: var(--muted); font-size: 12px; line-height: 18px; max-width: 80ch; }
+
+/* Data hub groups. */
+.hub-group { margin-top: calc(var(--line) * 2); min-width: 0; }
+.hub-group > h2 { margin: 0; color: var(--strong); font-size: 15px; line-height: 22px; letter-spacing: -0.01em; }
+.hub-group > .th-lead { margin-bottom: 6px; }
+.door-when { display: flex; align-items: baseline; justify-content: flex-end; gap: 0; }
+
+/* Judgments pages: one shared explanation and a switch between the two views. */
+.jd-switch { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 8px 0 0; font-size: 12px; letter-spacing: 0.09em; text-transform: uppercase; }
+.jd-switch a, .jd-switch span { padding: 2px 0; border-bottom: 1px solid transparent; text-decoration: none; color: var(--muted); }
+.jd-switch .is-on { color: var(--strong); border-bottom-color: var(--accent); }
+.jd-desk { margin: 8px 0 0; max-width: 80ch; color: var(--text); font-size: 12px; line-height: 19px; }
+
+/* Home: today across desks. */
+.hm-today { margin-top: calc(var(--line) * 1.5); }
+.hm-today-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 0 24px; margin: 4px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--rule-strong); }
+.hm-today-grid > li { border-bottom: 1px solid var(--rule); min-width: 0; }
+.hm-today-item { display: block; padding: 9px 4px; color: var(--text); text-decoration: none; }
+.hm-today-item:hover, .hm-today-item:focus-visible { background: var(--vl-hover); }
+.hm-today-k { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); }
+.hm-today-line { display: block; margin-top: 2px; color: var(--strong); font-size: 14px; line-height: 20px; font-weight: 600; letter-spacing: -0.01em; overflow-wrap: anywhere; }
+
+@media (max-width: 700px) {
+  .hub-row { grid-template-columns: 1fr; gap: 2px 0; }   /* phone: the direction sits above the name instead of squeezing beside it */
+}
+.hub-row .vl-dir { white-space: nowrap; }

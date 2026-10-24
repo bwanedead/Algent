@@ -4,7 +4,7 @@ import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 // The RSS feed is the contract between "published" and "announced": indexers and readers consume it,
 // and the future X-posting pipe can too ("new item in the feed -> compose a post"), fully decoupled
 // from the backend. Static — regenerated at build, which is every publish (a commit to site-live).
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 900; // lib/store.ts TTL.articles: a handful of publishes a day
 
 function esc(s: string): string {
   return s

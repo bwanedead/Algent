@@ -479,4 +479,4 @@ def test_evidence_renders_the_anomaly_block_and_the_site_serves_the_endpoint_and
     site = Path(__file__).resolve().parents[2] / "sites" / "ohmega-monster" / "lib"
     assert 'path: "/anomalies"' in (site / "api" / "router.ts").read_text(encoding="utf-8")
     assert 'name: "get_live_anomalies"' in (site / "api" / "mcp-tools.ts").read_text(encoding="utf-8")
-    assert '"live_anomalies"' in (site / "live.ts").read_text(encoding="utf-8")
+    assert 'live/anomalies.json' in (site / "live.ts").read_text(encoding="utf-8")

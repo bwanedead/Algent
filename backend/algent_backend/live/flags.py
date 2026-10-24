@@ -148,3 +148,44 @@ PUBLISH_FULL_SNAPSHOT = True
 UPLOAD_WORKERS = 8
 #: A ship is "dark" when it was last heard moving this long ago while the board still holds it (it leaves at AIS_VESSEL_TTL_S).
 DARK_AFTER_S = 900
+
+# ── the write budget (R2: 1 M Class A operations a month free; docs/architecture/database-budget.md, "R2 budget") ─────────────────
+#: Every changed object costs one Class A operation, so the live layers are shaped to fit well under ~15% of the free tier on R2:
+#:
+#:   per cycle (R2): vessels, aircraft, points, summary = 4 objects (the ~300 tiles, ``tiles/index`` and ``density`` are NOT published:
+#:                   the site falls back to ``points`` + the full documents, which R2's free egress can afford)
+#:   every R2_SNAPSHOT_SECONDS (180):   4 x 480 cycles = 1 920 a day
+#:   every R2_TRACKS_SECONDS (900):     coverage + 4 + 4 shards = 9 x 96 = 864 a day
+#:   energy (15 min) + fires (3 h) + flows + satellite + live events/stats/anomalies: ~0.6 k a day
+#:   => ~3.4 k a day = ~100 k a month = 10% of the free 1 M.        (Supabase mode keeps the old 60 s / tiles / 16 shards.)
+R2_SNAPSHOT_SECONDS = 180
+R2_TRACKS_SECONDS = 900
+R2_TRACK_SHARDS = 4
+
+
+def cost_capped() -> bool:
+    """True when objects go to R2: the cadence and file count below apply (a Supabase backend keeps the original generous profile)."""
+    from algent_backend.database import flags as db
+
+    return db.object_backend() == "r2"
+
+
+def snapshot_seconds() -> int:
+    return R2_SNAPSHOT_SECONDS if cost_capped() else SNAPSHOT_SECONDS
+
+
+def tracks_seconds() -> int:
+    return R2_TRACKS_SECONDS if cost_capped() else PERSIST_SECONDS
+
+
+def track_shards(air: bool = False) -> int:
+    return R2_TRACK_SHARDS if cost_capped() else (AIR_TRACK_SHARDS if air else TRACK_SHARDS)
+
+
+def tiles_enabled() -> bool:
+    """Tiles + density are hundreds of objects a cycle: off on R2 (the client falls back to points + the full snapshots)."""
+    return not cost_capped()
+
+
+def full_snapshot() -> bool:
+    return PUBLISH_FULL_SNAPSHOT or not tiles_enabled()

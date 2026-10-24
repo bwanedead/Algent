@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import EnergyPanel from "@/components/live/EnergyPanel";
 import LiveWorldMap from "@/components/live/LiveWorldMap";
-import { maritimeEvents } from "@/lib/maritime";
+import { maritimeLive } from "@/lib/maritime";
 import { liveAnomalies, liveEnergy, liveEvents, liveStats, liveSummary, liveWorld, whenUtc } from "@/lib/live";
 
 import "./live.css";
@@ -14,15 +14,15 @@ export const metadata: Metadata = {
   description: "What the world's public sensors show right now: ships and aircraft moving, fire hotspots, earthquakes, internet outages, chokepoint traffic and energy.",
 };
 
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS; the map itself polls the snapshots every minute
+export const revalidate = 120; // lib/store.ts TTL.live; the map itself polls the snapshots (every 3 min, as the stream republishes them)
 
 export default async function LivePage() {
-  const [events, stats, world, summary, energy, anomalies, maritime] = await Promise.all([liveEvents(), liveStats(), liveWorld(), liveSummary(), liveEnergy(), liveAnomalies(), maritimeEvents()]);
+  const [events, stats, world, summary, energy, anomalies, maritime] = await Promise.all([liveEvents(), liveStats(), liveWorld(), liveSummary(), liveEnergy(), liveAnomalies(), maritimeLive()]);
   const updated = events.reduce((m, e) => (e.updated_at > m ? e.updated_at : m), "");
   return (
     <div className="intel-page live-page">
       <div className="intel-strip" role="group" aria-label="Live status">
-        <span className="intel-strip-title"><PageTag kind="tool" detail="Live" /></span>
+        <span className="intel-strip-title"><PageTag kind="data" detail="Live" /></span>
         <span className="live-muted">{updated ? `events updated ${whenUtc(updated)}` : "no live data yet"}</span>
       </div>
       <h1 className="live-h1">What the world&apos;s public sensors show right now</h1>

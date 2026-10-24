@@ -48,4 +48,4 @@
 .l3 { --nt-lane: var(--muted); }
 
 .nt-still { display: block; width: 100%; height: auto; background: #fff; border: 1px solid var(--rule-strong); }
-.nt-wait { min-height: 120px; }
+.nt-wait { min-height: 240px; } /* a sized still while the spec loads: the page does not jump when the timeline opens */

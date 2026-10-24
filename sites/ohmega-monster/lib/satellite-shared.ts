@@ -2,6 +2,8 @@
 // Server reads live in lib/satellite.ts. Every number the backend publishes carries its provenance (`basis`, `method_note`, `baseline_since`,
 // `n_obs`); `provText` turns it into the sentence the info hover shows, so a site with little history says so instead of implying a long baseline.
 
+import { DATA_BASE, dataUrl } from "./data-base";
+
 export type Provenance = {
   /** "our_computation": computed by Ohmega from the imagery, not reported by a source. */
   basis: string;
@@ -81,10 +83,10 @@ export type SatelliteDoc = {
   sites: SatSite[];
 };
 
-const BASE = (process.env.NEXT_PUBLIC_SUPABASE_URL || "").replace(/\/+$/, "");
 
-/** Where a chip is served from (the public bucket); "" when the site has no storage configured. */
-export const chipUrl = (key: string): string => (BASE ? `${BASE}/storage/v1/object/public/published-assets/${key}` : "");
+
+/** Where a chip is served from (the public object store); "" when the site has no bucket configured. */
+export const chipUrl = (key: string): string => (DATA_BASE ? dataUrl(key) : "");
 
 export const CHANGE_WORD: Record<ChangeLabel, string> = {
   changed: "Changed",

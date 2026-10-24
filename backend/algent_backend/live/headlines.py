@@ -14,7 +14,7 @@ import statistics
 from datetime import datetime
 from typing import Any, Iterable
 
-from . import flags, store
+from . import flags, provenance, store
 from .contracts import LiveEvent, iso
 from .regions import FIRE_BOXES, GATES, REGIONS
 
@@ -142,4 +142,5 @@ def build(now: datetime, rows: list[tuple] | None = None, extra_fresh: dict[str,
     fresh = {**({"ships": gates_now["as_of"]} if gates_now.get("as_of") else {}), **(extra_fresh or {})}
     return {"v": 1, "as_of": iso(now), "headlines": compute(store.read_events(), rows, gates_now, now), "gates": gates,
             "fresh": freshness(store.read_status(), fresh),
-            "fires": {k: fires[k] for k in ("as_of", "detections", "occupied") if k in fires}}
+            "fires": {**{k: fires[k] for k in ("as_of", "detections", "occupied") if k in fires}, "scope": "world"},
+            "provenance": provenance.build(now.date())}

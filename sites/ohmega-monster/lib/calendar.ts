@@ -1,33 +1,34 @@
-import { dbRows } from "@/lib/store";
+import { tableDoc, TTL } from "@/lib/store";
 
-import { addDays, ahead, type CalendarRow } from "./calendar-shared";
+import { addDays, ahead, KINDS as KIND_LIST, norm, type CalendarRow } from "./calendar-shared";
 
 export * from "./calendar-shared";
 
-const KINDS = new Set(["election", "central_bank", "summit", "security_council", "opec", "deadline", "vote"]);
+// The forward calendar, read from one published file (backend `lookahead/publish.py`): `calendar/next.json` holds the active items from 14 days
+// back to 180 ahead, already merged across sources and ranked. Every window the calendar pages ask for is cut from it here (a country's own rows
+// are also published as `calendar/country/<ISO>.json`, and cut by the server into the country view, backend `views/country.py`). [] when nothing is published.
 
-const valid = (r: CalendarRow): boolean => KINDS.has(r.kind) && /^\d{4}-\d{2}-\d{2}$/.test(r.on_date);
+const KINDS = new Set<string>(KIND_LIST.map((k) => k.id));
+
+const valid = (r: CalendarRow): boolean => KINDS.has(r.kind) && r.active !== false && /^\d{4}-\d{2}-\d{2}$/.test(r.on_date);
 
 /** UTC today as YYYY-MM-DD (the calendar is dated in UTC, like the daily). */
 export const todayIso = (): string => new Date().toISOString().slice(0, 10);
 
-/** Active items from a week back (a running window may have started) to `days` ahead; [] without a database. Filtered to what is still ahead. */
-export async function calendarItems(days = 45): Promise<CalendarRow[]> {
-  const today = todayIso();
-  const rows = await dbRows<CalendarRow>(
-    "calendar_items",
-    `select=*&active=eq.true&on_date=gte.${addDays(today, -7)}&on_date=lte.${addDays(today, days)}&order=on_date.asc&limit=600`,
-  );
-  return ahead(rows.filter(valid), today);
+async function items(): Promise<Required<CalendarRow>[]> {
+  const doc = await tableDoc<{ items?: CalendarRow[] }>("calendar/next.json", TTL.tables);
+  return (doc?.items ?? []).filter(valid).map(norm);
 }
 
-/** What is coming up that concerns one country (an actor page), soonest first. */
-export async function calendarForCountry(iso: string, days = 120, limit = 6): Promise<CalendarRow[]> {
-  if (!/^[A-Za-z]{2}$/.test(iso)) return [];
+/** Active items still ahead of (or running on) today, up to `days` on, soonest first. Routine items (importance 1) are included: callers that want
+ *  the notable ones filter on `importance`. */
+export async function calendarItems(days = 45): Promise<Required<CalendarRow>[]> {
   const today = todayIso();
-  const rows = await dbRows<CalendarRow>(
-    "calendar_items",
-    `select=*&active=eq.true&countries=cs.{${iso.toUpperCase()}}&on_date=gte.${addDays(today, -7)}&on_date=lte.${addDays(today, days)}&order=on_date.asc&limit=60`,
-  );
-  return ahead(rows.filter(valid), today).slice(0, limit);
+  const hi = addDays(today, days);
+  return ahead((await items()).filter((r) => r.on_date <= hi), today) as Required<CalendarRow>[];
+}
+
+/** The whole published window, past 14 days included (context for the /calendar page), soonest first. */
+export async function calendarWindow(): Promise<Required<CalendarRow>[]> {
+  return (await items()).sort((a, b) => a.on_date.localeCompare(b.on_date) || b.importance - a.importance || a.title.localeCompare(b.title));
 }

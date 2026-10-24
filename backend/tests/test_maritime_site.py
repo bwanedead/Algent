@@ -26,7 +26,7 @@ def test_the_site_type_carries_every_published_column_and_the_kinds_match():
 
 def test_the_agent_surface_the_layer_the_page_and_the_vessel_history_exist_and_the_layer_is_off_by_default():
     assert 'path: "/maritime"' in _site("lib", "api", "router.ts") and 'name: "get_maritime_behaviour"' in _site("lib", "api", "mcp-tools.ts")
-    assert '"maritime_events"' in _site("lib", "maritime.ts") and "maritimeOp" in _site("lib", "api", "ops-maritime.ts")
+    assert 'maritime/recent.json' in _site("lib", "maritime.ts") and "maritimeOp" in _site("lib", "api", "ops-maritime.ts")
     live = _site("components", "live", "LiveWorldMap.tsx")
     assert 'new Set(["coverage", "shadow"])' in live and "ohmega-live-off-v3" in live and "shadowLayers" in live
     assert 'shadow: ["shadow", "shadow-track"]' in _site("components", "live", "liveLayers.ts")

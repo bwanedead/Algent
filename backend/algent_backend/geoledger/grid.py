@@ -22,6 +22,7 @@ from collections.abc import Callable
 from datetime import UTC, date, datetime, timedelta
 from typing import Any
 
+from algent_backend.publishing import site_data
 from algent_backend.publishing.published_db import _run
 
 from .contracts import Asset, StatusEvent, latest
@@ -248,9 +249,11 @@ def publish_rollups(ledger: Ledger | None = None, *, as_of: str | None = None, i
     except Exception as exc:  # noqa: BLE001
         return {"db": False, "grid": 0, "error": f"{type(exc).__name__}: {str(exc)[:160]}"}
 
+    files = site_data.publish_built(lambda: {f"geo/grid/{d['iso']}.json": d for d in docs})
+
     def work(conn: Any) -> dict:
         with conn.cursor() as cur:
             cur.executemany(_ROW, [(d["iso"], d["as_of"], json.dumps(d, ensure_ascii=False).replace("\\u0000", "")) for d in docs])
         return {"grid": len(docs)}
 
-    return _run(work, connect)
+    return site_data.also_postgres(files, work, connect)

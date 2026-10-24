@@ -170,6 +170,20 @@ def _build_tracker_compare(spec: tc.TrackerCompare, by_id: dict[str, vf.Fact], a
     return notes, graphs.tracker_compare_svg(spec)
 
 
+#: form -> (strict spec class, SVG still builder): rebuild a still from a SAVED spec with no model call (``visuals_store.republish``).
+_STILLS: dict[str, tuple[type, Callable[[Any], str]]] = {
+    "timeline": (ts.Timeline, native_preview.timeline_svg), "mapstory": (ms.MapStory, native_preview.mapstory_svg),
+    "network": (ns.Network, graphs.network_svg), "flow": (fs.FlowMap, graphs.flow_svg),
+    "tracker_compare": (tc.TrackerCompare, graphs.tracker_compare_svg),
+}
+
+
+def redraw_still(form: str, spec: dict[str, Any]) -> str:
+    """The SVG still of a saved native spec (the JSON ``produce`` published), drawn with today's renderer."""
+    cls, draw = _STILLS[form]
+    return draw(cls.model_validate(spec))
+
+
 def _fact_ids(spec: Any) -> list[str]:
     """Every fact id a built spec cites, in order."""
     objs = [*getattr(spec, "events", []), *getattr(spec, "steps", []), *getattr(spec, "nodes", []), *getattr(spec, "edges", []),

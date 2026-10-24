@@ -1,15 +1,19 @@
-import { dbRows } from "@/lib/store";
+import { tableDoc, TTL } from "@/lib/store";
 
 import { asStatus, asType, type GeoAsset, type GeoEvent, type GeoLogRow, type GridDoc } from "./geoledger-shared";
 
 export * from "./geoledger-shared";
 
-// Server reads of the geospatial asset ledger (migration 009: `geo_assets`, `geo_asset_events`, anon read-only).
-// Everything degrades to "nothing": no database, an empty table or a failed request yields empty lists, and the map
-// simply draws no infrastructure layer. Server-only: client components import lib/geoledger-shared.ts instead.
+// Server reads of the geospatial asset ledger, from published files (backend `geoledger/site_docs.py`), no database:
+//   geo/countries.json         which countries have a file and the box their places lie in
+//   geo/c/<ISO>.json           the places of one country that have a status, plus its largest places without one
+//   geo/events-assets.json     every place with a status event, most events first
+//   geo/a/<id>.json            one place and its whole history (only places with events have one)
+//   geo/events/<YYYY-MM>.json  every event dated in a month
+//   geo/grid/<ISO>.json        the grid-impact rollup of one country
+// Everything degrades to "nothing": an unpublished file yields empty lists, and the map simply draws no infrastructure layer
+// (a failing bucket throws, lib/store.ts). Server-only: client components import lib/geoledger-shared.ts instead.
 
-const ASSET_COLS = "id,name,aliases,type,country,lat,lon,loc_precision,capacity_mw,fuel,attrs,source,licence,provenance,status,status_on,status_by,events,merged_into";
-const EVENT_COLS = "id,asset_id,occurred_on,occurred_at,status,claimant,confidence,sources,provenance,observed_at,note,via";
 const ID = /^[\w.-]+$/;
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -23,7 +27,7 @@ const strs = (v: unknown): string[] => (Array.isArray(v) ? v.filter((x): x is st
 
 type Raw = Record<string, unknown>;
 
-function toAsset(r: Raw): GeoAsset | null {
+export function toAsset(r: Raw): GeoAsset | null {
   const id = str(r.id);
   if (!ID.test(id)) return null;
   const prec = str(r.loc_precision);
@@ -50,7 +54,7 @@ function toAsset(r: Raw): GeoAsset | null {
   };
 }
 
-function toEvent(r: Raw): GeoEvent | null {
+export function toEvent(r: Raw): GeoEvent | null {
   const status = asStatus(r.status);
   if (!status || !ID.test(str(r.id)) || !DAY.test(str(r.occurred_on))) return null;
   const conf = str(r.confidence);
@@ -80,50 +84,80 @@ export type AssetFilter = {
   limit?: number;
 };
 
-function filterQuery(f: AssetFilter): string {
-  const q: string[] = [`select=${ASSET_COLS}`, "merged_into=is.null"];            // a merged duplicate is its target now
+type CountryIndex = { iso: string; n: number; n_events: number; bbox: [number, number, number, number] | null };
+/** Most country files one bbox query will fetch (a theater frame spans one to three countries). */
+const MAX_COUNTRY_FILES = 8;
+
+const assetsOf = async (rel: string): Promise<GeoAsset[]> =>
+  ((await tableDoc<{ assets?: Raw[] }>(rel, TTL.tables))?.assets ?? []).map(toAsset).filter((a): a is GeoAsset => a !== null);
+
+const overlaps = (a: [number, number, number, number], b: [number, number, number, number]): boolean => a[0] <= b[2] && a[2] >= b[0] && a[1] <= b[3] && a[3] >= b[1];
+
+/** The published files a filter needs: one country's, the countries whose places lie in the frame, or the places that have events. */
+async function candidates(f: AssetFilter): Promise<GeoAsset[]> {
+  if (f.country) return assetsOf(`geo/c/${f.country.toUpperCase()}.json`);
   if (f.bbox) {
-    const [w, s, e, n] = f.bbox;
-    q.push(`lat=gte.${s}`, `lat=lte.${n}`, `lon=gte.${w}`, `lon=lte.${e}`);
+    const frame = f.bbox;
+    const index = (await tableDoc<{ countries?: CountryIndex[] }>("geo/countries.json", TTL.tables))?.countries ?? [];
+    const isos = index.filter((c) => c.bbox && overlaps(c.bbox, frame)).sort((a, b) => b.n_events - a.n_events).slice(0, MAX_COUNTRY_FILES).map((c) => c.iso);
+    return (await Promise.all(isos.map((iso) => assetsOf(`geo/c/${iso}.json`)))).flat();
   }
-  if (f.type) q.push(`type=eq.${encodeURIComponent(f.type)}`);
-  if (f.country) q.push(`country=eq.${encodeURIComponent(f.country)}`);
-  if (f.status) q.push(`status=eq.${encodeURIComponent(f.status)}`);
-  if (f.hasEvents === true) q.push("events=gt.0");
-  if (f.hasEvents === false) q.push("events=eq.0");
-  q.push("order=events.desc,capacity_mw.desc.nullslast,id.asc", `limit=${Math.min(Math.max(f.limit ?? 200, 1), 2000)}`);
-  return q.join("&");
+  return f.hasEvents === false ? [] : assetsOf("geo/events-assets.json");
 }
 
-/** Places matching a filter (an API read). [] without a database. */
+/** Places matching a filter (an API read, a map frame). [] when nothing is published. A query with neither a frame nor a country only
+ *  sees the places that have events (the full ledger is not published as one file). */
 export async function queryAssets(f: AssetFilter): Promise<GeoAsset[]> {
-  return (await dbRows<Raw>("geo_assets", filterQuery(f))).map(toAsset).filter((a): a is GeoAsset => a !== null);
+  const rows = (await candidates(f)).filter((a) => {
+    if (a.merged_into) return false; // a merged duplicate is its target now
+    if (f.bbox) {
+      const [w, s, e, n] = f.bbox;
+      if (a.lat === null || a.lon === null || a.lat < s || a.lat > n || a.lon < w || a.lon > e) return false;
+    }
+    if (f.type && a.type !== f.type) return false;
+    if (f.country && a.country !== f.country.toUpperCase()) return false;
+    if (f.status && a.status !== f.status) return false;
+    if (f.hasEvents === true && a.events <= 0) return false;
+    if (f.hasEvents === false && a.events > 0) return false;
+    return true;
+  });
+  rows.sort((a, b) => b.events - a.events || (b.capacity_mw ?? -1) - (a.capacity_mw ?? -1) || a.id.localeCompare(b.id));
+  return rows.slice(0, Math.min(Math.max(f.limit ?? 200, 1), 2000));
+}
+
+/** One place and its history (`geo/a/<id>.json`); only places with a status event, and merged spellings, have one. */
+async function placeDoc(id: string): Promise<{ asset: GeoAsset | null; events: GeoEvent[] } | null> {
+  if (!ID.test(id)) return null;
+  const doc = await tableDoc<{ asset?: Raw; events?: Raw[] }>(`geo/a/${id}.json`, TTL.tables);
+  if (!doc?.asset) return null;
+  return { asset: toAsset(doc.asset), events: (doc.events ?? []).map(toEvent).filter((e): e is GeoEvent => e !== null) };
 }
 
 export async function getAsset(id: string): Promise<GeoAsset | null> {
-  if (!ID.test(id)) return null;
-  const rows = await dbRows<Raw>("geo_assets", `select=${ASSET_COLS}&id=eq.${encodeURIComponent(id)}&limit=1`);
-  return rows.length > 0 ? toAsset(rows[0]) : null;
+  return (await placeDoc(id))?.asset ?? null;
 }
 
 /** Every event of one place, oldest first. */
 export async function assetHistory(id: string): Promise<GeoEvent[]> {
-  if (!ID.test(id)) return [];
-  const rows = await dbRows<Raw>("geo_asset_events", `select=${EVENT_COLS}&asset_id=eq.${encodeURIComponent(id)}&order=occurred_on.asc,observed_at.asc&limit=500`);
-  return rows.map(toEvent).filter((e): e is GeoEvent => e !== null);
+  const events = (await placeDoc(id))?.events ?? [];
+  return events.sort((a, b) => a.occurred_on.localeCompare(b.occurred_on) || a.observed_at.localeCompare(b.observed_at)).slice(0, 500);
 }
 
 /**
- * The grid-impact rollup of one country (table `geo_grid`, migration 010, written by the backend), or null: no database, no row,
- * or a row that is not the document we know. The document is trusted only in shape (windows present), never in kind.
+ * The grid-impact rollup of one country (`geo/grid/<ISO>.json`, written by the backend), or null: not published, or a document that is
+ * not the one we know. The document is trusted only in shape (windows present), never in kind.
  */
 export async function getGrid(iso: string): Promise<GridDoc | null> {
   const code = iso.toUpperCase();
   if (!/^[A-Z]{2}$/.test(code)) return null;
-  const rows = await dbRows<Raw>("geo_grid", `select=iso,as_of,doc&iso=eq.${code}&limit=1`);
-  const doc = rows[0]?.doc as GridDoc | undefined;
-  if (!doc || typeof doc !== "object" || !doc.windows || !doc.windows["30"] || !doc.windows["7"] || !doc.installed) return null;
-  return { ...doc, iso: code, provenance: "ohmega_derived" };
+  return gridFromDoc(code, await tableDoc<GridDoc>(`geo/grid/${code}.json`, TTL.tables));
+}
+
+/** The grid rollup of a country from a document that carries it (the published file, or a country view's copy of it): trusted only in shape. */
+export function gridFromDoc(iso: string, doc: unknown): GridDoc | null {
+  const g = doc as GridDoc | null;
+  if (!g || typeof g !== "object" || !g.windows || !g.windows["30"] || !g.windows["7"] || !g.installed) return null;
+  return { ...g, iso, provenance: "ohmega_derived" };
 }
 
 /** The country most of these places are in ("" when none): where a theater map's struck power plants are. */
@@ -137,11 +171,18 @@ export function dominantCountry(assets: GeoAsset[]): string {
 export async function eventsFor(ids: string[], since: string, until: string, limit = 300): Promise<GeoEvent[]> {
   const safe = ids.filter((i) => ID.test(i)).slice(0, 400);
   if (safe.length === 0 || !DAY.test(since) || !DAY.test(until)) return [];
-  const rows = await dbRows<Raw>(
-    "geo_asset_events",
-    `select=${EVENT_COLS}&asset_id=in.(${safe.join(",")})&occurred_on=gte.${since}&occurred_on=lte.${until}&order=occurred_on.desc,observed_at.desc&limit=${limit}`,
-  );
-  return rows.map(toEvent).filter((e): e is GeoEvent => e !== null);
+  const wanted = new Set(safe);
+  const months: string[] = []; // every YYYY-MM the window touches: one small file each
+  for (let d = new Date(`${since.slice(0, 7)}-01T00:00:00Z`); d.toISOString().slice(0, 7) <= until.slice(0, 7) && months.length < 24; d = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 1))) {
+    months.push(d.toISOString().slice(0, 7));
+  }
+  const files = await Promise.all(months.map((m) => tableDoc<{ events?: Raw[] }>(`geo/events/${m}.json`, TTL.tables)));
+  return files
+    .flatMap((doc) => doc?.events ?? [])
+    .map(toEvent)
+    .filter((e): e is GeoEvent => e !== null && wanted.has(e.asset_id) && e.occurred_on >= since && e.occurred_on <= until)
+    .sort((a, b) => b.occurred_on.localeCompare(a.occurred_on) || b.observed_at.localeCompare(a.observed_at))
+    .slice(0, limit);
 }
 
 export type TheaterInfra = { assets: GeoAsset[]; log: GeoLogRow[]; /** Grid-impact rollup of the country the frame's struck power plants are mostly in. */ grid: GridDoc | null };

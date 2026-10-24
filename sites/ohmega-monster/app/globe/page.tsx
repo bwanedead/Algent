@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: "A personal intelligence board around an interactive globe: pick a country or theater to open its panel, pin what you want to track, and arrange the report, Pulses, live counters, calendar, sanctions and paper trader your way.",
 };
 
-export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+export const revalidate = 300; // lib/store.ts: mixes the daily with the live strip, so it follows the faster of the two (live 120 s, daily 1800 s)
 
 export default async function GlobePage() {
   const [data, hud] = await Promise.all([globeData(), hudData()]);
