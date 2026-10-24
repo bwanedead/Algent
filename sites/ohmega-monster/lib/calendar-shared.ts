@@ -215,10 +215,10 @@ export function indexByDay<T extends { on_date: string; end_date: string | null 
 export type CalFilter ={ topics: ReadonlySet<CalendarTopic>; country: string; situation: string; routine: boolean };
 export const NO_FILTER: CalFilter = { topics: new Set(), country: "", situation: "", routine: false };
 
-/** Rows that pass a filter: any chosen topic (none chosen = all), the country, the situation, and, unless `routine`, importance above 1. */
+/** Rows that pass a filter: any chosen topic (none chosen = all), the country, the situation, and, unless `routine` or the row's topic chip is chosen, importance above 1. */
 export function filterRows(rows: Required<CalendarRow>[], f: CalFilter): Required<CalendarRow>[] {
   return rows.filter(
-    (r) => (f.topics.size === 0 || f.topics.has(r.topic)) && (!f.country || r.countries.includes(f.country)) && (!f.situation || r.situations.includes(f.situation)) && (f.routine || r.importance > 1),
+    (r) => (f.topics.size === 0 || f.topics.has(r.topic)) && (!f.country || r.countries.includes(f.country)) && (!f.situation || r.situations.includes(f.situation)) && (f.routine || r.importance > 1 || f.topics.has(r.topic)),   // choosing a topic chip shows its routine rows too (e.g. Markets: ~350 resolution dates)
   );
 }
 
