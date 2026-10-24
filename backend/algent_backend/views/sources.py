@@ -141,5 +141,13 @@ def default_tables() -> Tables:
         from algent_backend.markets import score
         return {"data/track-record.json": score.track_record()}
 
-    return Tables({"sanctions/": sanctions, "calendar/": calendar, "geo/a/": places, "geo/grid/": grid, "live/anomalies": anomalies,
+    def conflict() -> dict[str, Any]:
+        from algent_backend.conflict import publish
+        return publish.documents()
+
+    def gnss() -> dict[str, Any]:
+        from algent_backend.gnss import publish
+        return publish.documents()
+
+    return Tables({"conflict/": conflict, "gnss/": gnss, "sanctions/": sanctions, "calendar/": calendar, "geo/a/": places, "geo/grid/": grid, "live/anomalies": anomalies,
                    "data/track-record": track})

@@ -4,6 +4,7 @@ import { LICENSE } from "./envelope";
 import { assetOp, assetsOp, gridOp } from "./ops-assets";
 import { searchOp } from "./ops-content";
 import { anomaliesOp, instrumentOp, instrumentsOp, liveEventsOp } from "./ops-data";
+import { attacksOp, gnssOp } from "./ops-conflict";
 import { calendarOp, sanctionsOp } from "./ops-forward";
 import { aboutOp, entityOp, relatedOp, seriesOp, timelineOp } from "./ops-corpus";
 import { maritimeOp } from "./ops-maritime";
@@ -268,6 +269,38 @@ export const TOOLS: Tool[] = [
       cursor: cursor_,
     }),
     run: (a) => sanctionsOp({ ...a, source: a.list }),
+  },
+  {
+    name: "get_attack_events",
+    title: "Attack and conflict events",
+    description:
+      "Attacks, clashes and mass-violence events reported by GDELT (machine-coded from news), ACLED and UCDP (researcher-curated) and ReliefWeb (humanitarian reports), in one schema: date, place and coordinates, country, parties, kind, fatalities where a source states them, source and coding. Ohmega's own count of what was reported since it began collecting, so a minimum; the response carries provenance (basis, coverage note, collecting-since). Machine-coded rows can duplicate or misplace an event and never carry casualties.",
+    inputSchema: schema({
+      type: str_("Kind of event.", { enum: ["bombing", "airstrike", "armed_clash", "assault", "mass_violence", "report"] }),
+      source: str_("Which source.", { enum: ["gdelt", "reliefweb", "acled", "ucdp"] }),
+      coding: str_("machine, curated or report.", { enum: ["machine", "curated", "report"] }),
+      country: str_("ISO alpha-2 code of the place, e.g. UA."),
+      days: str_("Days back (default 14, max 14: the published window)."),
+      since: str_("Only on or after this date."),
+      limit: limit_(30),
+      cursor: cursor_,
+    }),
+    run: attacksOp,
+  },
+  {
+    name: "get_gnss_interference",
+    title: "GPS interference zones",
+    description:
+      "Where aircraft report poor navigation accuracy, a sign of GPS jamming or spoofing: one-degree cells with severity, a new/intensifying flag against the cell's own history and a cross-check against GPSJam. Ohmega's own estimate from ADS-B (basis our_estimate; a minimum, since only aircraft heard by volunteer receivers where Ohmega samples are seen; the response states since when) plus GPSJam's highest band. Not proof of who is jamming.",
+    inputSchema: schema({
+      source: str_("ohmega_adsb or gpsjam.", { enum: ["ohmega_adsb", "gpsjam"] }),
+      severity: str_("Band of the degraded share.", { enum: ["low", "medium", "high"] }),
+      flag: str_("Only new or intensifying zones.", { enum: ["new", "intensifying"] }),
+      country: str_("ISO alpha-2 code of the land under the cell, e.g. LT."),
+      limit: limit_(30),
+      cursor: cursor_,
+    }),
+    run: gnssOp,
   },
   {
     name: "get_maritime_behaviour",

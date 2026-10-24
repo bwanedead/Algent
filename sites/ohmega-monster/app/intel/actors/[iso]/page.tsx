@@ -151,6 +151,8 @@ function watchOf(iso: string, view: CountryView | null) {
   return {
     grid: gridFromDoc(iso, view?.grid ?? null),
     sanctions: view?.sanctions ?? [],
+    attacks: view?.attacks ?? null,
+    jam: view?.gnss ?? null,
     upcoming: ahead(view?.calendar ?? [], todayIso()).slice(0, UPCOMING_SHOWN),
     pulses: (snap?.situations ?? []).flatMap((s) => s.pulses.map((p) => toWallPulse(p, s.title))),
   };
@@ -159,7 +161,7 @@ function watchOf(iso: string, view: CountryView | null) {
 /** A state with no power profile yet but a place in the news: the same linked sections, without the numbers. */
 async function ActorStub({ iso }: { iso: string }) {
   const [ctx, view] = await Promise.all([actorContext(iso), countryView(iso)]);
-  const { grid, sanctions, upcoming } = watchOf(iso, view);
+  const { grid, sanctions, upcoming, attacks, jam } = watchOf(iso, view);
   if (!ctx) notFound();
   return (
     <div className="intel-page th-page">
@@ -172,7 +174,7 @@ async function ActorStub({ iso }: { iso: string }) {
       <h1 className="th-claim">{ctx.name}: where it appears in the desk&apos;s reporting</h1>
       <p className="th-note">There is no power profile for {ctx.name} yet (economy, energy, military). Everything below comes from the theaters, statements and daily reports that name it.</p>
       {grid && <GridImpact grid={grid} name={ctx.name} />}
-      <ActorWatch name={ctx.name} sanctions={sanctions} upcoming={upcoming} today={todayIso()} />
+      <ActorWatch name={ctx.name} sanctions={sanctions} upcoming={upcoming} today={todayIso()} attacks={attacks} jam={jam} />
       <InvolvedIn name={ctx.name} theaters={ctx.theaters} />
       <ActorOnRecord name={ctx.name} said={ctx.said} about={ctx.saidAbout} />
       <ActorDevelopments name={ctx.name} items={ctx.developments} />
@@ -188,7 +190,7 @@ export default async function ActorPage({ params }: { params: Params }) {
     return <ActorStub iso={params.iso} />;
   }
   const [ctx, view] = await Promise.all([actorContext(a.iso2), countryView(a.iso2)]);
-  const { grid, sanctions, upcoming, pulses: involved } = watchOf(a.iso2, view);
+  const { grid, sanctions, upcoming, attacks, jam, pulses: involved } = watchOf(a.iso2, view);
   const lookup = new Map(involved.map((p) => [p.id, p] as const));
   const pulses = a.involved.pulses.map((p) => lookup.get(p.id)).filter((p): p is NonNullable<typeof p> => !!p);
   const { head_of_state: hos, head_of_government: hog, nuclear: nuke } = a.leadership;
@@ -262,7 +264,7 @@ export default async function ActorPage({ params }: { params: Params }) {
       <p className="th-note">Bars show the share of states this actor is ahead of. Rank is among states, each at its latest year.</p>
 
       {grid && <GridImpact grid={grid} name={a.name} />}
-      <ActorWatch name={a.name} sanctions={sanctions} upcoming={upcoming} today={todayIso()} />
+      <ActorWatch name={a.name} sanctions={sanctions} upcoming={upcoming} today={todayIso()} attacks={attacks} jam={jam} />
       {ctx && <InvolvedIn name={a.name} theaters={ctx.theaters} />}
       {ctx && ctx.said.length > 0 && <ActorOnRecord name={a.name} said={ctx.said} about={ctx.saidAbout} />}
       {ctx && <ActorDevelopments name={a.name} items={ctx.developments} />}

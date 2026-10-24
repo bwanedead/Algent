@@ -91,18 +91,21 @@ function resolve(def: StatDef, i: StatInput) {
   return { since, days, floor, prov };
 }
 
+/** A count that can only be a floor: our own partial-sensor counts, machine-coded counts, and any entry that says so. */
+export const isMinimum = (def: StatDef): boolean => def.minimum ?? (def.basis === "our_count" || def.basis === "machine_coded");
+
 function valueText(def: StatDef, i: StatInput, capped: boolean): string {
   if (i.value === null || i.value === undefined || i.value === "") return "–";
   const n = typeof i.value === "number" ? fmtNum(i.value, i.digits ?? 0) : i.value;
   if (capped) return `latest ${n}`;
-  if (def.basis === "our_count" && typeof i.value === "number") return i.value === 0 ? "0 heard" : `≥ ${n}`;
+  if (isMinimum(def) && typeof i.value === "number") return i.value === 0 ? (def.basis === "our_count" ? "0 heard" : "none seen") : `≥ ${n}`;
   return n;
 }
 
 function infoLines(def: StatDef, since: string, days: number | null, floor: number | null, prov: LayerProv | undefined, note?: string): string[] {
   const out = [`${BASIS_LABEL[def.basis]}: ${def.source.name}.`, `Counts: ${prov?.scope || def.scope}`];
   const limit = prov?.coverage_note || def.coverage;
-  if (limit) out.push(`${def.basis === "our_count" ? "Why a minimum" : "Limit"}: ${limit}`);
+  if (limit) out.push(`${isMinimum(def) ? "Why a minimum" : "Limit"}: ${limit}`);
   if (note) out.push(note);
   const unit = def.history_unit;
   const mine = since ? `our own series since ${shortDate(since)}${days !== null ? ` (${days} ${days === 1 ? "day" : "days"} so far)` : ""}` : "our own series";
@@ -138,7 +141,7 @@ export function statView(i: StatInput): StatView {
   return {
     def,
     text: valueText(def, shown, capped),
-    minimum: def.basis === "our_count",
+    minimum: isMinimum(def),
     model: def.basis === "model",
     capped,
     window: i.window ?? "",

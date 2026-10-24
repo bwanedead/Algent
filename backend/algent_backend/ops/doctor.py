@@ -500,6 +500,51 @@ def check_sanctions() -> dict[str, Any]:
     return {"sanctions": _check(WARN, "stale: " + "; ".join(bad)) if bad else _check(OK, "all three lists fetched recently")}
 
 
+def _stale(row: dict, hours: float) -> bool:
+    from datetime import datetime, timezone
+
+    return (datetime.now(timezone.utc) - datetime.fromisoformat(row["last_ok"])).total_seconds() > hours * 3600
+
+
+def check_conflict() -> dict[str, Any]:
+    """Conflict event log: GDELT fetched within its staleness window. A keyed source that was never configured is fine ("needs key"); one that
+    worked before and went stale is a warning. Nothing on this machine is fine (not collected here)."""
+    try:
+        from algent_backend.conflict import flags, store
+
+        status = store.load_status()
+        if not status:
+            return {"conflict": _check(OK, "no conflict store on this machine (log not collected here)")}
+        bad = []
+        for src, hours in flags.STALE_HOURS.items():
+            row = status.get(src) or {}
+            if row.get("last_ok") and _stale(row, hours):
+                bad.append(f"{src} (last ok {row['last_ok'][:16]}Z)")
+            elif not row.get("last_ok") and not row.get("needs_key") and src == "gdelt":
+                bad.append("gdelt (never fetched" + (f": {scrub(row.get('last_error', ''))}" if row.get("last_error") else "") + ")")
+        waiting = [s for s in flags.STALE_HOURS if (status.get(s) or {}).get("needs_key") and not (status.get(s) or {}).get("last_ok")]
+    except Exception as exc:  # noqa: BLE001
+        return {"conflict": _check(WARN, f"unknown: {scrub(exc)}")}
+    if bad:
+        return {"conflict": _check(WARN, "stale: " + "; ".join(bad))}
+    return {"conflict": _check(OK, "event log fresh" + (f" (waiting for keys: {', '.join(waiting)})" if waiting else ""))}
+
+
+def check_gnss() -> dict[str, Any]:
+    """GNSS interference: our ADS-B pass ran within its window. Nothing on this machine is fine."""
+    try:
+        from algent_backend.gnss import flags, store
+
+        row = store.load_status().get("ohmega_adsb")
+        if row is None:
+            return {"gnss": _check(OK, "no gnss store on this machine (not collected here)")}
+        if not row.get("last_ok") or _stale(row, flags.STALE_HOURS):
+            return {"gnss": _check(WARN, f"stale: ADS-B pass last ok {str(row.get('last_ok', 'never'))[:16]}" + (f" ({scrub(row.get('last_error', ''))})" if row.get("last_error") else ""))}
+    except Exception as exc:  # noqa: BLE001
+        return {"gnss": _check(WARN, f"unknown: {scrub(exc)}")}
+    return {"gnss": _check(OK, f"ADS-B pass fresh; {store.baseline_days()} closed day(s) of baseline")}
+
+
 def check_maritime() -> dict[str, Any]:
     """Maritime behaviour memory: the stream service cycled recently (state.json) and the profile book exists. Nothing here is fine (the stream runs elsewhere)."""
     try:
@@ -642,7 +687,7 @@ def run_checks(env: dict[str, str] | None = None, probes: Probes | None = None,
     checks: dict[str, Any] = {}
     for part in (check_keys(env), check_database(env, probes), check_object_store(env), check_search(env, probes), check_reads(probes),
                  check_harnesses(probes), check_publish(env, probes, repo), check_runner(probes),
-                 check_system(probes), check_watchdog(probes), check_schedule(probes), check_quota(probes), check_instruments(), check_live(env), check_sanctions(), check_maritime(), check_calendar(), check_markets(), check_ai_benchmarks(), check_satellite(), check_basemap(probes), check_envelope(env, probes), check_products(env, probes)):
+                 check_system(probes), check_watchdog(probes), check_schedule(probes), check_quota(probes), check_instruments(), check_live(env), check_sanctions(), check_conflict(), check_gnss(), check_maritime(), check_calendar(), check_markets(), check_ai_benchmarks(), check_satellite(), check_basemap(probes), check_envelope(env, probes), check_products(env, probes)):
         checks.update(part)
     if checks.get("database", {}).get("status") == OK:        # the size check needs a reachable database
         checks.update(check_db_budget(env, probes))

@@ -36,7 +36,7 @@ Header: **Daily · Situations · Articles · Globe · Data** (logo → Home)
 | `/situations/<id>` | The living file (see §2) |
 | `/articles` | as now |
 | `/globe` | The HUD (in the nav now, no longer behind the spinner) |
-| `/explore` | Hub (was `/data`; the label "Explore" since 2026-10-24), grouped: **Measured** (live map, maritime, sanctions, calendar, AI benchmarks, countries, statements record) · **Judgments** (Pulses, forecasts + track record merged into one scored page) · **For machines** (API, MCP, feeds) |
+| `/explore` | Hub (was `/data`; the label "Explore" since 2026-10-24), grouped: **Measured** (live map, maritime, sanctions, satellite, attack log `/intel/attacks`, GPS interference `/intel/gnss`, calendar, AI benchmarks, countries, statements record) · **Judgments** (Pulses, forecasts + track record merged into one scored page) · **For machines** (API, MCP, feeds) |
 
 Entity pages (events, places, countries) stay where they are, linked from text. Every hub row carries an **as-of age** and a "new since your last visit" dot (localStorage).
 
@@ -78,6 +78,8 @@ A page reads **one** server-built view (`docs/architecture/views.md`), not the r
 | `/intel/actors/[iso]` | the actor document + `views/country/<ISO>` | 4 h |
 | `/intel/actors` | the published `actors/index.json` | per publish |
 | `/intel/events/<date>/<theater>/<n>` | `views/event/<date>/<theater>` | 4 h |
+| `/intel/attacks` | `conflict/recent.json` (documents the server publishes; not a view) | 30 min |
+| `/intel/gnss` | `gnss/latest.json` | 30 min |
 | `/intel/places/[id]` | `views/entity/place/<id>` | 4 h |
 | every entity link in prose, `/intel/graph` | `views/graph` | 4 h |
 | `/api/v1/{entity,about,timeline,related,series,search}`, MCP tools of the same names | `views/entity/*`, `country/*`, `situation/*`, `series/*`, `search-index` | 4 h |

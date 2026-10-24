@@ -20,6 +20,12 @@ _GEO_EVENT = {"id": "str", "asset_id": "str", "occurred_on": "str", "occurred_at
 _MARITIME = {"id": "str", "kind": "str", "mmsi": "int", "name": "str", "imo": "str", "flag": "str", "ship_class": "str", "started_at": "str", "ended_at": "str|null", "state": "str",
              "active": "bool", "lat": "num|null", "lon": "num|null", "area": "str", "countries": ["str"], "confidence": "num", "summary": "str", "evidence": "list", "updated_at": "str"}
 
+_CONFLICT_ROW = {"id": "str", "source": "in:gdelt,reliefweb,acled,ucdp", "on_date": "str", "type": "str", "lat": "num|null", "lon": "num|null", "place": "str", "country": "str", "actor1": "str",
+                 "actor2": "str", "fatalities": "int|null", "articles": "int", "title": "str", "urls": ["str"], "coding": "in:machine,curated,report", "confidence": "in:low,medium,high",
+                 "basis": "str", "assets": [{"id": "str", "name": "str", "type": "str", "km": "num"}]}
+_ZONE_ROW = {"id": "str", "on_date": "str", "source": "in:ohmega_adsb,gpsjam", "cell": "str", "lat": "num", "lon": "num", "size_deg": "num", "country": "str", "severity": "in:low,medium,high",
+             "degraded_share": "num", "aircraft": "int", "flag": "str", "cross_check": "str"}
+
 SHAPES: dict[str, Any] = {
     # ── editorial ─────────────────────────────────────────────────────────────────────────────
     "ohmega.daily": {"domain": "str", "built_at": "str", "summary": {"headline": "str", "the_day?": ["str"]},
@@ -71,6 +77,14 @@ SHAPES: dict[str, Any] = {
     "ohmega.maritime.counts": {"total": "int", "ongoing": "int", "byKind": {"*": "int"}},
     "ohmega.sanctions": {"rows": [{"id": "str", "source": "str", "action": "str", "on_date": "str", "observed_on": "str", "ref": "str", "name": "str", "type": "str", "programmes": ["str"],
                                    "countries": ["str"], "imo": "str", "flag": "str", "owner": "str", "source_url": "str", "baseline": "bool", "asset_id": "str|null"}]},
+    "ohmega.conflict.recent": {"as_of": "str", "since": "str", "window_days": "int", "total": "int", "shown": "int", "capped": "bool",
+                               "by_day": {"*": {"events": "int", "machine": "int", "curated": "int"}}, "sources": {"*": {"keyed": "bool", "active": "bool", "last_ok": "str"}}, "coverage": {"*": "str"},
+                               "rows": [_CONFLICT_ROW]},
+    "ohmega.conflict.country": {"iso": "str", "as_of": "str", "window_days": "int", "total": "int", "capped": "bool", "rows": [_CONFLICT_ROW]},
+    "ohmega.gnss.latest": {"day": "str", "generated_at": "str", "samples": "int", "baseline_days": "int", "baseline_since": "str", "coverage": {"*": "str"},
+                           "ours": [_ZONE_ROW], "gpsjam": [_ZONE_ROW], "history": [{"day": "str", "zones": "int", "high": "int", "flagged": "int"}]},
+    "ohmega.gnss.overlay": {"v": "int", "as_of": "str", "date": "str", "zones": [{"lat": "num", "lon": "num", "r": "num", "s": "in:low,medium,high", "share": "num", "f": "str", "src": "in:o,g"}],
+                            "p": {"ours": {"basis": "str", "coverage_note": "str"}, "gpsjam": {"basis": "str", "coverage_note": "str"}}},
     "ohmega.calendar": {"items": [{"id": "str", "on_date": "str", "end_date": "str|null", "title": "str", "kind": "str", "countries": ["str"], "theaters": ["str"], "source": "str",
                                    "source_url": "str", "confidence": "str", "provenance": "str", "via": "str", "active": "bool",
                                    "situations": ["str"], "grade": "str", "topic": "str", "importance": "int", "sources": [{"source": "str", "url": "str"}]}]},
@@ -97,7 +111,7 @@ SHAPES: dict[str, Any] = {
     "ohmega.view.country": {**_ENV, "iso": "str", "name": "str", "region": "str", "capital": "str", "profiled": "bool",
                             "panel": {"iso": "str", "stats": [{"id": "str", "label": "str", "value": "num", "unit": "str"}], "counts": {"theaters": "int", "sanctions": "int", "calendar": "int"},
                                       "leaders": {"head_of_state": "str", "head_of_government": "str"}, "briefs": "list", "briefsTotal": "int"},
-                            "context": {"theaters": "list", "said": "list", "developments": "list", "related": "list"}, "sanctions": "list", "calendar": "list", "anomalies": "list"},
+                            "context": {"theaters": "list", "said": "list", "developments": "list", "related": "list"}, "sanctions": "list", "calendar": "list", "anomalies": "list", "attacks?": "any", "gnss?": "any"},
     "ohmega.view.situation": {**_ENV, "id": "str", "name": "str", "desk": "str", "domain": "str", "stream": {"days_total": "int", "full": "list", "index": "list", "index_total": "int"},
                               "involved": "list", "states": "list", "related": "list"},
     "ohmega.view.situations": {**_ENV, "desks": [{"desk": "str", "active": "list", "quiet": "list", "merged": "list"}]},
@@ -109,7 +123,7 @@ SHAPES: dict[str, Any] = {
     "ohmega.view.home": {**_ENV, "reports": "obj", "moving": [{"id": "str", "name": "str", "desk": "str", "stamp": "str"}], "coming": "list",
                          "facts": {"daily_stamp": "str", "situations": {"active": "int", "rising": "int", "stamp": "str"}, "actors": "int", "pulses": {"total": "int", "severe": "int", "built_at": "str"},
                                    "calendar_30d": "int", "sanctions": {"additions": "int", "newest_observed": "str"}}},
-    "ohmega.view.hud": {**_ENV, "globe": "any", "hud": {"asOf": "str", "daily": "any", "theaters": "list", "pulses": "list", "coming": "list", "sanctions": "list", "trader": "any"}},
+    "ohmega.view.hud": {**_ENV, "globe": "any", "hud": {"asOf": "str", "daily": "any", "theaters": "list", "pulses": "list", "coming": "list", "sanctions": "list", "trader": "any", "attacks?": "any", "gnss?": "any"}},
     "ohmega.view.daily-hub": {**_ENV, "desks": [{"desk": "str", "date": "str", "dates_total": "int", "recent": ["str"], "report": "any"}]},
     "ohmega.view.graph": {**_ENV, "theaters": "list", "ties": "obj", "names": "obj", "linkable": ["str"]},
     "ohmega.view.search-index": {**_ENV, "fields": {"entities": ["str"], "documents": ["str"]}, "entities": "list", "entities_total": "int", "documents": "list"},

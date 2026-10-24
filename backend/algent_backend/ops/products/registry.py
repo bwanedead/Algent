@@ -196,6 +196,31 @@ PRODUCTS: tuple[Product, ...] = (
         jobs=(Job("sanctions", ("sanctions", "fetch"), "2/6:25", every_min=360, what="sanctions list diffs"),),
         publishes=("sanctions/",), contracts=(K("ohmega.sanctions", 1, ("sanctions/recent.json", "sanctions/country/*.json")),), site_routes=("/intel/sanctions",), feeds_from=(), heartbeat=("sanctions_store/status.json",)),
     Product(
+        id="conflict", title="Attack log (conflict events)", owner="conflict",
+        what="Attacks, clashes and mass-violence events as one normalised record: GDELT (machine-coded from news, keyless, every 15 minutes) plus ReliefWeb, ACLED and UCDP built and inactive "
+             "until their keys are set. Stores events only, never a source's raw file; rolling retention by age and size.",
+        stores=(Store("conflict_store", loc.conflict, "ALGENT_CONFLICT_STORE", False, "every source is re-fetchable and the machine-coded part is bounded to a rolling window by design; the documents and the corpus index keep what they published",
+                      budget=_b(85, 120, 200, 20, 0, "estimate from a live pull (10-24: 11 GDELT files = 391 events = 0.22 MB, ~1.8 MB a day, x 45-day window, plus the small curated sources); prune also caps the folder at conflict/flags.py MAX_STORE_MB (150)")),),
+        retention=(Retention("prune", "event shards older than KEEP_DAYS_MACHINE (45; machine-coded only) or KEEP_DAYS_OTHER (365) are deleted, then the oldest until the folder is under MAX_STORE_MB (150)", "conflict/store.py::prune", "on-write"),),
+        why="re-fetchable events in a rolling window; nothing here is the only copy",
+        jobs=(Job("conflict", ("conflict", "fetch", "--source", "gdelt"), "*:4/15", every_min=15, lock=False, est_min=1, est_mb=200, what="GDELT 15-minute event files (keyless)"),
+              Job("reliefweb", ("conflict", "fetch", "--source", "reliefweb"), "*:41", every_min=60, lock=False, est_min=1, est_mb=150, what="ReliefWeb reports (needs an approved ALGENT_RELIEFWEB_APPNAME; reports so until set)"),
+              Job("conflict-daily", ("conflict", "fetch", "--source", "acled", "--source", "ucdp"), "*-*-* 05:20", every_min=1440, lock=False, est_min=2, est_mb=200,
+                  what="ACLED + UCDP (need ALGENT_ACLED_EMAIL/PASSWORD, ALGENT_UCDP_TOKEN; report so until set)")),
+        publishes=("conflict/",), contracts=(K("ohmega.conflict.recent", 1, ("conflict/recent.json",)), K("ohmega.conflict.country", 1, ("conflict/country/*.json",))),
+        site_routes=("/intel/attacks",), feeds_from=("geoledger",), heartbeat=("conflict_store/status.json",)),
+    Product(
+        id="gnss", title="GPS interference (jamming zones)", owner="gnss",
+        what="Zones where aircraft report poor navigation accuracy (ADS-B NACp), derived by us hourly from sampled ADS-B counts and cross-checked against GPSJam's top band. "
+             "Stores per-cell counts and derived zones only, never aircraft records or GPSJam's full file.",
+        stores=(Store("gnss_store", loc.gnss, "ALGENT_GNSS_STORE", True,
+                      budget=_b(9, 40, 150, 3, 0.1, "estimate from a live pass (10-24): an hour line is 5 KB (7 days kept, ~1 MB), GPSJam's top band 129 KB a day for 30 days (~4 MB) then only ours, closed-day sums ~10 KB a day; 400-day cap")),),
+        retention=(Retention("prune", "hour tallies older than HOURS_KEEP_DAYS (7) are dropped once their day sum is saved; zone files lose GPSJam's cells after ZONES_FULL_DAYS (30); everything goes after KEEP_DAYS (400)", "gnss/store.py::prune", "on-write"),),
+        irreplaceable=True, why="the baseline (closed-day sums and our zones) is our own derivation from ADS-B that cannot be re-fetched: past ADS-B is gone",
+        jobs=(Job("gnss", ("gnss", "run"), "*:12", every_min=60, lock=False, est_min=2, est_mb=150, what="ADS-B sample around known trouble spots + GPSJam top band, zones rebuilt"),),
+        publishes=("gnss/", "live/"), contracts=(K("ohmega.gnss.latest", 1, ("gnss/latest.json",)), K("ohmega.gnss.overlay", 1, ("live/gnss.json",))),
+        site_routes=("/intel/gnss",), feeds_from=(), heartbeat=("gnss_store/status.json",)),
+    Product(
         id="calendar", title="Calendar (look-ahead)", owner="lookahead",
         what="Upcoming elections, central-bank decisions, releases, commodity reports, summits, courts, AI/tech events, launches, our markets' resolutions and extracted deadlines; append-only revisions of items.",
         stores=(Store("calendar_store", loc.calendar, "ALGENT_CALENDAR_STORE", True,

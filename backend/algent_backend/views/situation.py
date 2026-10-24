@@ -20,7 +20,7 @@ from collections import defaultdict
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
-from . import dailies, flags, graph
+from . import dailies, flags, graph, signals
 from .base import View, make
 from .context import ViewContext
 
@@ -112,6 +112,8 @@ def build_one(ctx: ViewContext, tid: str, d: dict[str, Any], days: list[dict[str
         if other != tid and ref and ref["linked"] and shared:
             related.append({**ref, "shared": [{"iso2": iso, "name": names.get(iso, iso)} for iso in shared]})
     related.sort(key=lambda r: (-len(r["shared"]), _RANK.get(r["direction"], 3), r["name"]))
+    top_states = [iso for iso, _ in sorted(mine.items(), key=lambda kv: (-kv[1], kv[0]))][:flags.SITUATION_STATES]
+    signals_block = situation_signals(ctx, set(top_states))
     pulse_ids = {str(p.get("id")) for p in dailies.objs(d.get("pulses"))} | {str(p.get("id")) for e in days[:full_days] for p in dailies.objs(e.get("section", {}).get("pulses"))}
     pulse_names = {str(p.get("name")) for p in dailies.objs(d.get("pulses"))}
     newest_map = next((e["section"].get("map") for e in days[:full_days] if isinstance(e.get("section", {}).get("map"), dict)), None)
@@ -125,10 +127,27 @@ def build_one(ctx: ViewContext, tid: str, d: dict[str, Any], days: list[dict[str
         "pulses": [{k: p.get(k) for k in ("id", "name", "position", "band", "situation")} | {"history": dailies.objs(p.get("history"))[-flags.HUD_HISTORY_POINTS:]}
                    for p in dailies.objs(d.get("pulses"))],
         "actors": dailies.objs(d.get("actors"))[:20], "map_points": points[:40], "places": dailies.objs(d.get("places"))[:20],
-        "briefs": dailies.objs(d.get("briefs"))[:20], "current": d.get("current"),
+        "briefs": dailies.objs(d.get("briefs"))[:20], "current": d.get("current"), "signals": signals_block,
     }
     return make("situation", f"situation/{tid}", body, as_of=str(d.get("last_seen") or ""),
-                sources=[("situations", f"theaters/{tid}.json"), ("dailies", "daily/*"), ("actors", "actors/*.json"), ("pulses", "snapshots/latest")])
+                sources=[("situations", f"theaters/{tid}.json"), ("dailies", "daily/*"), ("actors", "actors/*.json"), ("pulses", "snapshots/latest"), ("conflict", "conflict/country/*.json"), ("gnss", "gnss/latest.json")])
+
+
+def situation_signals(ctx: ViewContext, isos: set[str]) -> dict[str, Any] | None:
+    """What the measured layers show over the situation's main states: the strongest reported attacks of the last 30 days and the GPS-interference zones over them.
+    Each is a count we make ourselves (a minimum) with its provenance; the block is None when neither product has anything for these states."""
+    events: list[dict[str, Any]] = []
+    total = 0
+    for iso in sorted(isos):
+        a = signals.attacks_of(ctx, iso, flags.SITUATION_ATTACKS)
+        if a:
+            total += a["total"]
+            events += a["rows"]
+    events.sort(key=lambda r: (r.get("coding") == "curated", r.get("fatalities") or 0, r.get("articles") or 0), reverse=True)
+    jam = signals.gnss_in(ctx, isos, flags.COUNTRY_ZONES)
+    if not events and not jam:
+        return None
+    return {"states": sorted(isos), "attacks": {"total": total, "window_days": 30, "rows": events[: flags.SITUATION_ATTACKS]} if events else None, "gnss": jam}
 
 
 def fit(make_view: Any, steps: tuple[int, ...]) -> View:

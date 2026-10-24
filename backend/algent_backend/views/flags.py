@@ -12,13 +12,13 @@ PREFIX = "views"
 # ── byte budgets (uncompressed canonical JSON; ~5-8x smaller gzipped) ─────────────────────────────────────────────────────────────────────
 #: Why each number: what the page it feeds can actually show, with headroom of ~2x over the measured fat case in tests/test_views_*.py.
 BUDGET_BYTES = {
-    "country": 160_000,        # panel stats + 120 briefs (~250 B) + context + 50 sanctions rows + 10 calendar + grid + series
+    "country": 175_000,        # panel stats + 120 briefs (~250 B) + context + 50 sanctions rows + 10 calendar + grid + series + 12 attack rows + 6 zones
     "situation": 600_000,      # newest 3 full Daily sections (each up to ~120 KB with its map) + a compact index of every other day
     "situations": 150_000,     # one slim row (+ 21-day strips) per situation, a few dozen situations
     "entity": 60_000,          # profile + 15 documents + 10 claims + 15 events + 12 relations + 12 series of <=24 points
     "event": 60_000,           # the developments of one theater-day (<= ~12 developments of a few hundred bytes)
     "home": 200_000,           # two trimmed desk reports (trackers, no map/visual specs) + moving situations + facts
-    "hud": 300_000,            # globe rows for ~250 countries + report block + theaters + pulses + calendar + sanctions + trader curve
+    "hud": 310_000,            # globe rows for ~250 countries + report block + theaters + pulses + calendar + sanctions + trader curve + 8 attacks + 8 zones
     "daily-hub": 60_000,       # per desk: 12 section rows + a date list
     "graph": 80_000,           # theater refs + state names + theater-state ties
     "series": 120_000,         # one metric across <= 60 entities x <= 24 points
@@ -31,6 +31,10 @@ BUDGET_BYTES = {
 COUNTRY_BRIEFS = 120           # briefs a country's history keeps (30 days x ~4/day); the panel scrolls, older ones are in the Dailies
 COUNTRY_SANCTIONS = 50
 COUNTRY_CALENDAR = 10
+COUNTRY_ATTACKS = 12           # the country panel lists the strongest events of the last 30 days; the total (all stored) rides along
+COUNTRY_ZONES = 6              # GPS-interference zones listed for a country
+SITUATION_ATTACKS = 8          # strongest events across the situation's main states
+SITUATION_STATES = 12          # states (heaviest ties first) whose events and zones a situation view reads
 COUNTRY_RELATED = 30
 COUNTRY_DEVELOPMENTS = 6       # the actor page's "recent developments" (the page shows 6)
 COUNTRY_SAID = 5
@@ -51,6 +55,9 @@ HUD_HISTORY_POINTS = 30
 HUD_COMING_DAYS = 14
 HUD_COMING = 10
 HUD_SANCTIONS = 10
+HUD_ATTACKS = 8
+HUD_ATTACK_DAYS = 3
+HUD_ZONES = 8
 HUD_TIES_PER_THEATER = 6
 HUD_CURVE_DAYS = 90
 HUD_POSITIONS = 6

@@ -30,6 +30,7 @@ import { COARSE_POLYS, GRAT, loadLand, toPolys, type Poly } from "@/lib/globe/sp
 import { centreOf, centredView, MAX_LAT, projectPoint, unproject, wrapLon } from "@/lib/globe/view";
 
 import FlowsOverlay from "../flows/FlowsOverlay";
+import GnssOverlay from "../gnss/GnssOverlay";
 import "../globe-spinner.css";
 import "./globe-viewer.css";
 
@@ -74,6 +75,7 @@ export default function GlobeViewer({ data, pick, onPick, highlight }: { data: G
     if (hintTimer.current) clearTimeout(hintTimer.current);
     hintTimer.current = setTimeout(() => setHintFlash(false), 1600);
   }).current;
+  const [showJam, setShowJam] = useState(false); // the GPS-interference layer (components/gnss/): zones as glows over the globe, never a grid
   const [showFlows, setShowFlows] = useState(false); // the flow layer (components/flows/): ships, grain and money in motion, drawn over the globe
   const [legendOpen, setLegendOpen] = useState(true); // open by default; the viewer's choice is remembered (read after mount, so the server render matches)
   const [mode, setModeState] = useState<Mode>("cycle");
@@ -483,6 +485,7 @@ export default function GlobeViewer({ data, pick, onPick, highlight }: { data: G
         </g>
       </svg>
       <FlowsOverlay active={showFlows} matrix={matrix} cam={cam} />
+      <GnssOverlay active={showJam} matrix={matrix} cam={cam} />
       <span ref={tag} className="gv-view-label" aria-hidden="true" />
       <div className="gv-controls" role="group" aria-label="Globe controls">
         <div className="gv-seg" role="group" aria-label="Mode">
@@ -503,6 +506,7 @@ export default function GlobeViewer({ data, pick, onPick, highlight }: { data: G
         )}
         <div className="gv-seg">
           <button type="button" className={showFlows ? "is-on" : ""} aria-pressed={showFlows} onClick={() => setShowFlows((v) => !v)}>Flows</button>
+          <button type="button" className={showJam ? "is-on" : ""} aria-pressed={showJam} onClick={() => setShowJam((v) => !v)}>Interference</button>
         </div>
         <div className="gv-seg gv-seg-right">
           <button type="button" aria-label="Zoom in" onClick={() => zoomBy(1.5)}>+</button>

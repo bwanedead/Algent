@@ -23,7 +23,7 @@ from typing import Any
 
 from algent_backend.actors import registry
 
-from . import dailies, flags, graph, mentions, situation
+from . import dailies, flags, graph, mentions, signals, situation
 from .base import View, make
 from .context import ISO, ViewContext
 
@@ -184,6 +184,7 @@ def isos(ctx: ViewContext, g: dict[str, Any], briefs: dict[str, list]) -> list[s
     found = set(ctx.actor_isos()) | set(g["names"]) | {c for m in g["ties"].values() for c in m} | set(briefs)
     for r in (x for x in ctx.rows("calendar/next.json", "items") if int(x.get("importance") or 2) >= 2):
         found |= {c for c in r.get("countries") or [] if isinstance(c, str)}
+    found |= {str(r.get("country")) for r in ctx.rows("conflict/recent.json", "rows") if r.get("country")} | {str(z.get("country")) for z in ctx.rows("gnss/latest.json", "ours") if z.get("country")}
     return sorted(c for c in found if ISO.match(c) and registry.get(c))
 
 
@@ -197,6 +198,8 @@ def build_one(ctx: ViewContext, iso: str, g: dict[str, Any], briefs: dict[str, l
     grid = ctx.table(f"geo/grid/{iso}.json")
     grid = grid if isinstance(grid, dict) and grid.get("windows") else None
     anomalies = [a for a in ctx.rows("live/anomalies.json", "anomalies") if a.get("active") and iso in (a.get("countries") or [])]
+    attacks = signals.attacks_of(ctx, iso)
+    jam = signals.gnss_in(ctx, {iso}, flags.COUNTRY_ZONES)
     my_briefs = briefs.get(iso, [])
     lead = (actor or {}).get("leadership") if isinstance((actor or {}).get("leadership"), dict) else {}
     leaders = {"head_of_state": ((lead or {}).get("head_of_state") or {}).get("name", ""), "head_of_government": ((lead or {}).get("head_of_government") or {}).get("name", "")}
@@ -209,20 +212,22 @@ def build_one(ctx: ViewContext, iso: str, g: dict[str, Any], briefs: dict[str, l
                    "statements7d": sum(1 for s in dailies.objs((actor or {}).get("statements")) if str(s.get("date")) >= week_ago),
                    "sanctions": sum(1 for r in sanctions if str(r.get("on_date")) >= (today - timedelta(days=SANCTIONS_WINDOW_DAYS)).isoformat()),
                    "calendar": sum(1 for r in calendar if str(r.get("end_date") or r.get("on_date")) >= ctx.today and str(r.get("on_date")) <= (today + timedelta(days=CALENDAR_PANEL_DAYS)).isoformat()),
-                   "anomalies": len(anomalies)},
+                   "anomalies": len(anomalies),
+                   "attacks": (attacks or {}).get("total", 0), "jamming": (jam or {}).get("total", 0)},
         "grid": {"line": grid.get("line", ""), "asOf": grid.get("as_of", "")} if grid and grid.get("line") else None,
         "leaders": leaders, "briefs": my_briefs[: flags.COUNTRY_BRIEFS], "briefsTotal": len(my_briefs),
     }
     body = {
         "iso": iso, "name": name, "region": (actor or {}).get("region") or (country.region if country else ""), "capital": (actor or {}).get("capital") or (country.capital if country else ""),
         "profiled": actor is not None, "panel": panel, "context": context, "sanctions": sanctions, "sanctionsTotal": sanctions_total, "calendar": calendar, "grid": grid,
-        "snapshot": pulses_of(ctx, actor),
+        "snapshot": pulses_of(ctx, actor), "attacks": attacks, "gnss": jam,
         "anomalies": [{k: a.get(k) for k in ("id", "sentence", "direction", "confidence", "series", "starts_at", "ends_at")} for a in anomalies[:10]],
         **corpus_block(ctx, iso),
     }
     return make("country", f"country/{iso}", body, as_of=(ctx.daily_dates(flags.GLOBE_DOMAIN) or [""])[0],
                 sources=[("actors", f"actors/{iso}.json"), ("dailies", "daily/geopolitics"), ("sanctions", f"sanctions/country/{iso}.json"), ("calendar", "calendar/next.json"),
-                         ("geoledger", f"geo/grid/{iso}.json"), ("corpus_index", "country entity")])
+                         ("geoledger", f"geo/grid/{iso}.json"), ("conflict", f"conflict/country/{iso}.json"), ("gnss", "gnss/latest.json"),
+                         ("corpus_index", "country entity")])
 
 
 def build(ctx: ViewContext) -> list[View]:

@@ -2,6 +2,7 @@ import { cache } from "react";
 
 import { aiBenchmarks } from "./ai-benchmarks";
 import { getAllMeta } from "./articles";
+import { conflictFacts, latestZones } from "./conflict";
 import { CADENCE_HOURS, newest } from "./fresh";
 import { liveSummary } from "./live";
 import { maritimeCounts, maritimeLive } from "./maritime";
@@ -37,7 +38,7 @@ export type Door = {
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
 const hints = cache(async () => {
-  const [home, articles, menus, live, maritime, maritimeNewest, track, ai, satellite, st] = await Promise.all([
+  const [home, articles, menus, live, maritime, maritimeNewest, track, ai, satellite, attacks, jam, st] = await Promise.all([
     homeView(),
     getAllMeta(),
     getMenus(),
@@ -47,7 +48,9 @@ const hints = cache(async () => {
     trackRecord(),
     aiBenchmarks(),
     satelliteDoc(),
-    productStatuses(["sanctions", "calendar", "ai_benchmarks", "markets", "maritime", "menu"]),
+    conflictFacts(),
+    latestZones(),
+    productStatuses(["sanctions", "calendar", "ai_benchmarks", "markets", "maritime", "menu", "conflict", "gnss"]),
   ]);
   const f = home?.facts;
   // One universe for every situation count: the active ones (not quiet, not merged, not a one-day Spotlight), across all desks.
@@ -78,6 +81,15 @@ const hints = cache(async () => {
     headlines: { hint: menus[0] ? plural(menus[0].leads.length, "headline") : "", ...withStatus(menus[0]?.builtAt ?? "", st.menu) },
     live: { hint: live && live.headlines.length > 0 ? `${plural(live.headlines.length, "signal")} now` : "", stamp: live?.as_of ?? "" },
     satellite: satellite && satellite.counts.with_imagery > 0 ? `${plural(satellite.counts.with_imagery, "place")}${satellite.counts.changed > 0 ? ` · ${satellite.counts.changed} changed` : ""}` : "",
+    attacks: {
+      // The count is every event stored in the window (a minimum, "≥ n"), not the rows the document carries.
+      hint: attacks && attacks.total > 0 ? `${statView({ id: "attacks_events", value: attacks.total }).text} events · last ${attacks.days} days` : "",
+      ...withStatus(attacks?.asOf ?? "", st.conflict),
+    },
+    gnss: {
+      hint: jam ? `${statView({ id: "gnss_zones", value: jam.zones.filter((z) => z.source === "ohmega_adsb").length }).text} zones · ${shortDate(jam.day)}` : "",
+      ...withStatus(jam?.asOf ?? "", st.gnss),
+    },
     calendar: calendar30 > 0 ? `${plural(calendar30, "date")} · next 30 days` : "",
     calendarStatus: withStatus("", st.calendar),
     maritime: {
@@ -123,6 +135,8 @@ export async function dataGroups(): Promise<DataGroup[]> {
         { href: "/intel/maritime", title: "Maritime", line: "Ships that went dark, met at sea, changed identity or matched a sanctions list.", hint: h.maritime.hint, stamp: h.maritime.stamp, checked: h.maritime.checked, cadenceHours: CADENCE_HOURS.maritime },
         { href: "/intel/sanctions", title: "Sanctions", line: "Who was added to or removed from the US, UK and EU lists.", hint: h.sanctions.hint, stamp: h.sanctions.stamp, checked: h.sanctions.checked, cadenceHours: CADENCE_HOURS.sanctions },
         { href: "/intel/satellite", title: "Satellite", line: "Fresh imagery of struck and watched places, before and after, with change flagged as a machine signal.", hint: h.satellite },
+        { href: "/intel/attacks", title: "Attack log", line: "Attacks, clashes and mass-violence events reported by GDELT, ACLED and others, with the source and its limits.", hint: h.attacks.hint, stamp: h.attacks.stamp, checked: h.attacks.checked, cadenceHours: CADENCE_HOURS.attacks },
+        { href: "/intel/gnss", title: "GPS interference", line: "Where aircraft report poor navigation accuracy: signs of GPS jamming, cross-checked against GPSJam.", hint: h.gnss.hint, stamp: h.gnss.stamp, checked: h.gnss.checked, cadenceHours: CADENCE_HOURS.gnss },
         { href: "/calendar", title: "Calendar", line: "What is scheduled in the next 30 days, with sources.", hint: h.calendar, ...h.calendarStatus, cadenceHours: CADENCE_HOURS.calendar },
         { href: "/intel/ai", title: "AI benchmarks", line: "Frontier model scores on public benchmarks, open against closed, lab by lab.", hint: h.ai.hint, stamp: h.ai.stamp, checked: h.ai.checked, cadenceHours: CADENCE_HOURS.benchmarks },
         { href: "/intel/actors", title: "Countries", line: "Population, economy, energy and military of each state.", hint: h.actors },

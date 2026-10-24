@@ -7,8 +7,9 @@
 // hear part of the world; a comparison to "usual" is our own history, which is young, so it is withheld until `min_history`.
 
 /** official: a third party's figure, as published. our_count: our count from partial-coverage sensors (a minimum).
- *  our_derived: our own derivation/estimate from data. model: a model's reading or extraction. */
-export type Basis = "official" | "our_count" | "our_derived" | "model";
+ *  our_derived: our own derivation/estimate from data. model: a model's reading or extraction.
+ *  machine_coded: software read news text and coded it as data (GDELT): it can duplicate, misplace or misread, so every count of it is a minimum. */
+export type Basis = "official" | "our_count" | "our_derived" | "model" | "machine_coded";
 /** none: no comparison is drawn. official_prior: the source's own earlier figures (year ago, prior week). our_history: OUR series. */
 export type BaselineKind = "none" | "official_prior" | "our_history";
 export type HistoryUnit = "days" | "resolved markets" | "statements";
@@ -38,6 +39,8 @@ export type StatDef = {
   unit: string;
   /** Components/libs that render it (the audit script checks these exist). */
   surfaces: string[];
+  /** A count that can only be a floor (a partial view of the world): rendered "≥ n" whatever its basis. `our_count` and `machine_coded` always are. */
+  minimum?: boolean;
 };
 
 const DAYS_FLOOR = 21; // live memory MIN_WEEKS=3 (backend live/memory/flags.py): younger baselines are "learning". The live summary overrides it.
@@ -285,6 +288,50 @@ export const STATS: StatDef[] = [
     coverage: "Collection began 2026-10-01: 'none removed' means none seen since then.", baseline_since: "2026-10-01", since_from: "sanctions", surfaces: ["app/intel/sanctions/page.tsx", "lib/sections.ts"],
   }),
   def({
+    id: "attacks_events", label: "Attacks and clashes reported (all sources)", basis: "our_count", source: { name: "Ohmega's tally of GDELT, ReliefWeb, ACLED and UCDP reports (backend conflict/)", url: "/intel/attacks" }, unit: "events",
+    scope: "Events the sources reported inside the named window, one record across sources: an event that two sources both report is merged within a couple of days. A reported event is not a confirmed one.",
+    coverage: "No source sees every attack and the keyed sources (ReliefWeb, ACLED, UCDP) only count once their keys are set, so this is the least that happened, never a census. A cap on the rows shown is never the count.",
+    minimum: true, baseline_since: "2026-10-24", surfaces: ["components/conflict/AttackLog.tsx", "components/hud/panels/AttacksPanel.tsx", "lib/sections.ts", "app/intel/attacks/page.tsx"],
+  }),
+  def({
+    id: "attacks_machine", label: "Events coded by software from news (GDELT)", basis: "machine_coded", source: { name: "GDELT 2.0 events, read by Ohmega (keyless)", url: "https://www.gdeltproject.org/data.html" }, unit: "events",
+    scope: "GDELT events of CAMEO classes 18 to 20 (assault, fight, mass violence) geocoded to a city or region and reported by at least two articles, repeats merged. The software reads headlines: it never states casualties.",
+    coverage: "It can count one attack twice, put it in the wrong town or read a figure of speech as violence, and it only sees what media report.",
+    minimum: true, baseline_since: "2026-10-24", surfaces: ["components/conflict/AttackLog.tsx"],
+  }),
+  def({
+    id: "attacks_curated", label: "Events checked by researchers (ACLED, UCDP)", basis: "official", source: { name: "ACLED and UCDP GED, as published", url: "https://acleddata.com/" }, unit: "events",
+    scope: "Events researchers coded from media and local partners, with fatalities where they state them. Counted only once the operator has set the keys; until then this reads as none.",
+    coverage: "The most reliable of the sources, but reporting lags and some areas are thinly covered.", minimum: true, baseline_since: "2026-10-24", surfaces: ["components/conflict/AttackLog.tsx"],
+  }),
+  def({
+    id: "attacks_countries", label: "Countries with reported events", basis: "our_count", source: { name: "Ohmega's tally of the sources' reports", url: "/intel/attacks" }, unit: "countries",
+    scope: "Countries (by the place the source gave) with at least one event in the stored window. An event with no resolved country is not counted here.",
+    coverage: "Only what sources report; a country missing from the list may simply be unreported.", minimum: true, baseline_since: "2026-10-24", surfaces: ["components/conflict/AttackLog.tsx"],
+  }),
+  def({
+    id: "gnss_zones", label: "GPS interference zones (our estimate)", basis: "our_derived", source: { name: "Ohmega, from the navigation accuracy aircraft broadcast (ADS-B via adsb.lol; backend gnss/)", url: "/intel/gnss" }, unit: "zones",
+    scope: "One-degree cells where an unusual share of aircraft reported poor position accuracy (NACp below 7) in the UTC day, scored once enough aircraft were seen. A sign of jamming or spoofing, never proof of who.",
+    coverage: "Only aircraft that broadcast ADS-B and are heard by volunteer receivers are seen, and only where Ohmega samples, so zones are a minimum.",
+    minimum: true, baseline_since: "2026-10-24", surfaces: ["components/conflict/GnssView.tsx", "components/hud/panels/GnssPanel.tsx", "lib/sections.ts", "app/intel/gnss/page.tsx"],
+  }),
+  def({
+    id: "gnss_high", label: "High-severity interference zones", basis: "our_derived", source: { name: "Ohmega ADS-B estimate (backend gnss/)", url: "/intel/gnss" }, unit: "zones",
+    scope: "Our zones in which at least 30% of aircraft observations were degraded (backend gnss/flags.py HIGH_SHARE).", coverage: "A minimum, for the same reason as all our zones.",
+    minimum: true, baseline_since: "2026-10-24", surfaces: ["components/conflict/GnssView.tsx"],
+  }),
+  def({
+    id: "gnss_flagged", label: "Zones new or intensifying against their own history", basis: "our_derived", source: { name: "Ohmega ADS-B estimate (backend gnss/)", url: "/intel/gnss" }, unit: "zones",
+    scope: "Zones whose share is a robust outlier of the same cell's earlier days, or a cell that was quiet and is not. Flags start only after a week of our own history.",
+    coverage: "Our history is young, so a flag says 'unusual for this cell since we began watching'.", baseline: "our_history", baseline_since: "2026-10-24", min_history: 7, history_unit: "days",
+    min_history_origin: "backend gnss/flags.py FLAG_AFTER_DAYS=7: no cell is flagged before a week of closed days", minimum: true, surfaces: ["components/conflict/GnssView.tsx"],
+  }),
+  def({
+    id: "gnss_gpsjam", label: "GPSJam cells in its top band", basis: "official", source: { name: "GPSJam.org daily file, top band only", url: "https://gpsjam.org/" }, unit: "cells",
+    scope: "GPSJam's cells (about 22 km) where at least 10% of aircraft were degraded, from its own method and cut-offs. Shown beside our estimate as an independent check.",
+    coverage: "Their method, not ours; we store only the top band.", surfaces: ["components/conflict/GnssView.tsx"],
+  }),
+  def({
     id: "calendar_items", label: "Calendar items", basis: "official", source: { name: "Official schedules and Ohmega extraction", url: "/calendar" }, unit: "items",
     scope: "Dated items from official sources; items our own extraction found are marked unconfirmed.", coverage: "A title date that disagrees with the item date marks it unconfirmed.", surfaces: ["app/calendar/page.tsx"],
   }),
@@ -318,4 +365,5 @@ export const BASIS_LABEL: Record<Basis, string> = {
   our_count: "Our count (a minimum)",
   our_derived: "Our own derivation",
   model: "Model-assessed",
+  machine_coded: "Machine-coded from news (a minimum)",
 };

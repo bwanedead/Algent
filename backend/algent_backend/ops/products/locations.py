@@ -64,6 +64,18 @@ def sanctions() -> Path:
     return root()
 
 
+def conflict() -> Path:
+    from algent_backend.conflict.store import root
+
+    return root()
+
+
+def gnss() -> Path:
+    from algent_backend.gnss.store import root
+
+    return root()
+
+
 def calendar() -> Path:
     from algent_backend.lookahead.store import root
 

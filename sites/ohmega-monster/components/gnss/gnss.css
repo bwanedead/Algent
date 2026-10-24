@@ -1,0 +1,18 @@
+/* The globe's interference layer (components/gnss/): a transparent canvas plus a small legend that is also the source switches. Hairlines and the site's tokens only. */
+.gj-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+.gj-status { position: absolute; right: 10px; top: 64px; margin: 0; padding: 4px 8px; border: 1px solid var(--rule); background: color-mix(in srgb, var(--bg) 88%, transparent); font-size: 11px; color: var(--muted); }
+.gj-panel { position: absolute; right: 10px; top: 64px; width: min(268px, calc(100% - 20px)); padding: 4px 8px 8px; border: 1px solid var(--rule); background: color-mix(in srgb, var(--bg) 90%, transparent); font-size: 11px; color: var(--muted); cursor: default; }
+.gj-head { margin: 2px 0 4px; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--strong); }
+.gj-head i { font-style: normal; letter-spacing: 0; text-transform: none; color: var(--muted); margin-left: 6px; }
+.gj-panel ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 1px; }
+.gj-panel li { display: flex; align-items: center; gap: 4px; }
+.gj-panel li button { appearance: none; display: flex; flex: 1; align-items: center; gap: 7px; border: 0; background: transparent; color: var(--muted); font: inherit; padding: 2px 2px; text-align: left; cursor: pointer; opacity: 0.55; }
+.gj-panel li button.is-on { color: var(--strong); opacity: 1; }
+.gj-panel li button:hover { background: color-mix(in srgb, var(--link-accent) 10%, transparent); }
+.gj-panel li button:focus-visible { outline: 2px solid var(--link-accent); outline-offset: 1px; }
+.gj-sw { flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--band-severe); }
+.gj-sw-ring { background: transparent; border: 1.5px solid var(--band-severe); }
+.gj-name { flex: 1; }
+.gj-val { font-variant-numeric: tabular-nums; }
+.gj-note { margin: 5px 0 0; line-height: 1.35; }
+@media (max-width: 640px) { .gj-panel { top: 112px; width: min(230px, calc(100% - 20px)); } .gj-status { top: 112px; } }

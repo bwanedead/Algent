@@ -7,7 +7,7 @@ export const SLOTS: SlotId[] = ["top", "left", "right", "bottom"];
 export const SLOT_LABEL: Record<SlotId, string> = { top: "Top", left: "Left", right: "Right", bottom: "Bottom" };
 
 /** Board panels exist once each ("singleton"); context panels belong to one place picked on the globe (`ref` = ISO code or theater id). */
-export type SingletonKind = "daily" | "theaters" | "pulses" | "live" | "coming" | "sanctions" | "trader" | "tweets" | "flows" | "satellite";
+export type SingletonKind = "daily" | "theaters" | "pulses" | "live" | "coming" | "sanctions" | "trader" | "tweets" | "flows" | "satellite" | "attacks" | "gnss";
 export type ContextKind = "country" | "theater";
 export type PanelKind = SingletonKind | ContextKind;
 
@@ -35,7 +35,7 @@ const make = (kind: PanelKind, ref = "", pinned = false): PanelState => ({ id: p
 
 /** Where a panel type goes when it is added. */
 export const HOME_SLOT: Record<PanelKind, SlotId> = {
-  daily: "left", theaters: "left", pulses: "right", trader: "right", live: "top", coming: "bottom", sanctions: "bottom", tweets: "right", flows: "right", satellite: "bottom", country: "right", theater: "right",
+  daily: "left", theaters: "left", pulses: "right", trader: "right", live: "top", coming: "bottom", sanctions: "bottom", tweets: "right", flows: "right", satellite: "bottom", attacks: "bottom", gnss: "bottom", country: "right", theater: "right",
 };
 
 /** The board a first-time visitor sees. Tweets stay off it until there is a feed (see HudTweet in lib/globe/hud-data.ts). */
@@ -94,7 +94,7 @@ export function movePanel(b: Board, id: string, to: "up" | "down" | SlotId): Boa
 
 // ---- persistence (the hook owns the storage; these two are pure) ----------------------------------------------------------------
 
-const KINDS: readonly PanelKind[] = ["daily", "theaters", "pulses", "live", "coming", "sanctions", "trader", "tweets", "flows", "satellite", "country", "theater"];
+const KINDS: readonly PanelKind[] = ["daily", "theaters", "pulses", "live", "coming", "sanctions", "trader", "tweets", "flows", "satellite", "attacks", "gnss", "country", "theater"];
 
 /** The board as it is remembered: every panel but the unpinned context ones (those are only a look at a place). */
 export function toSaved(b: Board): Board {

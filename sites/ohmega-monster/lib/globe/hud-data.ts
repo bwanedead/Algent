@@ -59,6 +59,14 @@ export type HudLive = { counters: HudCounter[]; anomalies: HudAnomaly[] };
 export type HudComing = { date: string; end: string; title: string; kind: string; label: string; iso: string[]; url: string; ours: boolean; until: string };
 export type HudSanction = { id: string; name: string; type: string; source: string; date: string; iso: string[]; programme: string; url: string };
 
+/** One reported attack for the HUD (see lib/conflict-shared.ts). `machine` marks software-read news (GDELT). */
+export type HudAttack = { id: string; date: string; type: string; place: string; iso: string[]; source: string; machine: boolean; fatalities: number | null; reports: number; url: string };
+/** The attack panel: the strongest recent rows and the count of everything stored in the window (a minimum: registry id `attacks_events`). */
+export type HudAttacks = { rows: HudAttack[]; total: number; days: number };
+export type HudJam = { id: string; where: string; iso: string[]; severity: "low" | "medium" | "high"; share: number; flag: "" | "new" | "intensifying"; lat: number; lon: number };
+/** The GPS-interference panel: the strongest zones of the newest day from Ohmega's own estimate (registry id `gnss_zones`). */
+export type HudGnss = { day: string; zones: HudJam[]; total: number };
+
 export type HudTrader = {
   asOf: string;
   bankroll: number;
@@ -97,6 +105,8 @@ export type HudData = {
   live: HudLive | null;
   coming: HudComing[];
   sanctions: HudSanction[];
+  attacks: HudAttacks | null;
+  gnss: HudGnss | null;
   trader: HudTrader | null;
   tweets: HudTweet[] | null;
 };

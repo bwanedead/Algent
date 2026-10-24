@@ -1,6 +1,6 @@
 """
 The searchable corpus: every source becomes ``Doc`` rows. Ids are citable and carry their kind:
-``daily:<date>:<theater>``, ``statement:<id>``, ``sanction:<id>``, ``calendar:<id>``, ``geo:<event id>``, and ``claim:<id>`` (profile claims,
+``daily:<date>:<theater>``, ``statement:<id>``, ``sanction:<id>``, ``calendar:<id>``, ``geo:<event id>``, ``conflict:<id>``, ``gnss:<id>``, and ``claim:<id>`` (profile claims,
 ranked by the research corpus itself: see ``search.py``).
 
 Loaders read local stores, best-effort and independently: a missing or broken store is simply absent. ``today`` bounds every source from above
@@ -20,7 +20,7 @@ from . import flags
 @dataclass(frozen=True)
 class Doc:
     id: str
-    kind: str                       # daily | statement | sanction | calendar | geo
+    kind: str                       # daily | statement | sanction | calendar | geo | conflict | gnss
     date: str                       # YYYY-MM-DD, "" when unknown
     title: str
     text: str
@@ -98,7 +98,30 @@ def _geo(today: date) -> list[Doc]:
     return out
 
 
-LOADERS = (_daily, _statements, _sanctions, _calendar, _geo)
+def _conflict(today: date) -> list[Doc]:
+    from algent_backend.conflict import store as cx
+    from algent_backend.conflict.contracts import TYPE_LABEL
+
+    return [Doc(f"conflict:{e.id}", "conflict", e.date, f"{TYPE_LABEL[e.type]}, {e.place or e.country} ({e.source}, {e.coding}-coded)",
+                " ".join([e.title, e.place, e.country, e.actor1, e.actor2, e.type.replace("_", " "), *(a.name for a in e.assets)]))
+            for e in cx.events(flags.CONFLICT_DAYS, today) if e.date <= today.isoformat() and e.confidence != "low"]
+
+
+def _gnss(today: date) -> list[Doc]:
+    from algent_backend.gnss import store as gx
+
+    floor = (today - timedelta(days=flags.GNSS_DAYS)).isoformat()
+    out = []
+    for day in gx.zone_days():
+        if not floor <= day <= today.isoformat():
+            continue
+        for z in gx.load_zones(day).get("zones", []):
+            out.append(Doc(f"gnss:{z['id']}", "gnss", day, f"GNSS interference, {z['country'] or 'sea/border'} ({z['severity']})",
+                           f"GPS jamming interference {z['severity']} {z['flag']} {z['country']} cell {z['cell']}: {z['degraded_share']:.0%} of aircraft degraded"))
+    return out
+
+
+LOADERS = (_daily, _statements, _sanctions, _calendar, _geo, _conflict, _gnss)
 
 
 def load_all(today: date) -> list[Doc]:

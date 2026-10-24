@@ -88,6 +88,10 @@ class Evidence:
     anomaly_rollup: dict[str, Any] = field(default_factory=dict)   # what was normal / abnormal in the theater's watched places (the compounding record)
     maritime: str = ""                                      # OHMEGA MARITIME block (maritime/: AIS behaviour events in areas the theater touches)
     n_maritime: int = 0
+    conflict: str = ""                                      # OHMEGA CONFLICT LOG block (conflict/: reported attacks, clashes and mass-violence events)
+    n_conflict: int = 0
+    gnss: str = ""                                          # OHMEGA GNSS INTERFERENCE block (gnss/: zones where aircraft report poor navigation accuracy)
+    n_gnss: int = 0
     coming: str = ""                                        # COMING UP block (lookahead/: dated items in the next 14 days touching the theater)
     n_coming: int = 0
     coming_rows: list[dict[str, Any]] = field(default_factory=list)   # the same items as compact rows, stored on the daily's section
@@ -109,7 +113,7 @@ class Evidence:
 
     def render(self) -> str:
         """The blocks for a writer's task text ('' when there are none), ending in a blank line."""
-        parts = [p for p in (self.instruments, self.benchmarks, self.live, self.grid, self.anomalies, self.maritime, self.coming, self.statements, *self.histories) if p]
+        parts = [p for p in (self.instruments, self.benchmarks, self.live, self.grid, self.anomalies, self.maritime, self.conflict, self.gnss, self.coming, self.statements, *self.histories) if p]
         return "\n\n".join(parts) + "\n\n" if parts else ""
 
 
@@ -315,6 +319,28 @@ def _maritime_block(theater: Theater, actors: Any) -> tuple[str, set[str], int]:
         return "", set(), 0
 
 
+# ── conflict log and GNSS interference ───────────────────────────────────────────────────────
+def _theater_iso(theater: Theater, actors: Any) -> set[str]:
+    """ISO2 codes of the countries the theater stands behind (same corroboration rule as the other country-keyed blocks)."""
+    from algent_backend.actors import registry
+
+    countries = {c.name: c.iso2 for c in registry.load().values()}
+    names = corroborated(lambda text: {n for n in countries if _find(_words(text), _words(n), text)}, theater, actors)
+    return {countries[n] for n in names}
+
+
+def _conflict_blocks(theater: Theater, actors: Any, day: date) -> tuple[str, set[str], int, str, set[str], int]:
+    """Ohmega's tally of reported attacks (``conflict``) and its GNSS-interference zones (``gnss``) over the theater's countries. Never raises."""
+    try:
+        from algent_backend.conflict import desk as conflict_desk
+        from algent_backend.gnss import desk as gnss_desk
+
+        iso = _theater_iso(theater, actors)
+        return (*conflict_desk.block(iso, day), *gnss_desk.block(iso, day))
+    except Exception:  # noqa: BLE001 - an aid to the writer, never its gate
+        return "", set(), 0, "", set(), 0
+
+
 # ── statements ────────────────────────────────────────────────────────────────────────────────
 def _entities(s: Statement) -> set[str]:
     return {e.casefold() for e in (s.speaker, s.affiliation, *s.about) if e and e.strip()}
@@ -469,6 +495,8 @@ def for_theater(theater: Theater, *, as_of: str | date, actors: list[str] | tupl
         ev.live_urls = ev.live_urls | anomaly_urls
         ev.maritime, maritime_urls, ev.n_maritime = _maritime_block(theater, actors)
         ev.live_urls = ev.live_urls | maritime_urls
+        ev.conflict, c_urls, ev.n_conflict, ev.gnss, g_urls, ev.n_gnss = _conflict_blocks(theater, actors, day)
+        ev.live_urls = ev.live_urls | c_urls | g_urls
         ev.coming, ev.coming_urls, ev.n_coming, ev.coming_rows = _coming_block(theater, actors, day)
     except Exception as exc:  # noqa: BLE001 - sensing is an aid; a broken store must not cost the report
         return Evidence(error=f"{type(exc).__name__}: {str(exc)[:160]}")
@@ -532,8 +560,13 @@ def across_theaters(*, as_of: str | date, days: int = CROSS_DAYS, domain: str = 
         from algent_backend.maritime import desk as maritime_desk
 
         sea, sea_urls, n_sea = maritime_desk.block_all()                    # strongest AIS behaviour events anywhere
+        from algent_backend.conflict import desk as conflict_desk
+        from algent_backend.gnss import desk as gnss_desk
+
+        hits, hit_urls, n_hits = conflict_desk.block_all(day)               # the strongest reported attacks anywhere
+        jam, jam_urls, n_jam = gnss_desk.block_all(day)                     # the strongest GNSS interference zones anywhere
         return Evidence(instruments=evidence.render_block(rows, as_of=day), statements=statements_block(shown, days),
-                        live=live, live_urls=live_urls | odd_urls | sea_urls, n_live=n_live, anomalies=odd, n_anomalies=n_odd, maritime=sea, n_maritime=n_sea, n_instruments=len(rows), n_statements=len(shown), shown=shown,
+                        live=live, live_urls=live_urls | odd_urls | sea_urls | hit_urls | jam_urls, n_live=n_live, anomalies=odd, n_anomalies=n_odd, maritime=sea, n_maritime=n_sea, conflict=hits, n_conflict=n_hits, gnss=jam, n_gnss=n_jam, n_instruments=len(rows), n_statements=len(shown), shown=shown,
                         instrument_urls={r["source_url"] for r in rows if r["public_display"]},
                         statement_urls={s.source_url for s in shown})
     except Exception as exc:  # noqa: BLE001
@@ -549,6 +582,10 @@ def summary_for_report(ev: Evidence) -> dict[str, Any]:
         out["anomalies"] = ev.n_anomalies
     if ev.n_maritime:
         out["maritime"] = ev.n_maritime
+    if ev.n_conflict:
+        out["conflict"] = ev.n_conflict
+    if ev.n_gnss:
+        out["gnss"] = ev.n_gnss
     if ev.n_coming:
         out["coming"] = ev.n_coming
     if ev.n_benchmarks:

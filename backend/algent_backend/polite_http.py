@@ -88,6 +88,27 @@ def get(url: str, params: dict[str, Any] | None = None, *, headers: dict[str, st
     raise SourceError(f"{url} failed after {RETRIES + 1} attempts: {last}")
 
 
+def post_form(url: str, data: dict[str, str], *, headers: dict[str, str] | None = None) -> str:
+    """POST a form (an OAuth token request) and return the body text; retries transient failures, never memoised.
+    401/403 raise ``SourceUnavailable`` (bad credentials are not a bug)."""
+    hdrs = {"User-Agent": USER_AGENT, "Accept": "application/json", **(headers or {})}
+    last: Exception | None = None
+    for attempt in range(RETRIES + 1):
+        _pace(url)
+        try:
+            resp = httpx.post(url, data=data, headers=hdrs, timeout=TIMEOUT_S, follow_redirects=True)
+        except httpx.HTTPError as exc:
+            last = exc
+        else:
+            if resp.status_code in (400, 401, 403):
+                raise SourceUnavailable(f"{url} -> HTTP {resp.status_code} (credentials refused)")
+            if resp.status_code == 200:
+                return resp.text
+            last = RuntimeError(f"HTTP {resp.status_code}")
+        time.sleep(1.0 * (attempt + 1))
+    raise SourceError(f"{url} failed after {RETRIES + 1} attempts: {last}")
+
+
 def get_bytes(url: str, params: dict[str, Any] | None = None, *, headers: dict[str, str] | None = None) -> bytes:
     """GET ``url`` and return the raw body (an image chip); same pacing, retries and error contract as ``get``; never memoised."""
     hdrs = {"User-Agent": USER_AGENT, "Accept": "*/*", **(headers or {})}
