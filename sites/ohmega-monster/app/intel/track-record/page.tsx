@@ -6,6 +6,7 @@ import PageTag from "@/components/PageTag";
 
 import { BrierSeries, CalibrationChart } from "@/components/track/TrackCharts";
 import { AccuracyByEvidence, BookComparison, EvidenceStats, GapsList, HorizonTable } from "@/components/track/EvidencePanel";
+import { DayGroups, DayRuns, DayStats, Wishes } from "@/components/track/DayBook";
 import { EquityCurve, TraderPositions, TradeLog } from "@/components/track/TraderBook";
 import { Disagreements, OpenPositions, Resolved } from "@/components/track/TrackTables";
 import { hitRateView } from "@/lib/stats/render";
@@ -104,6 +105,31 @@ export default async function TrackRecordPage() {
                   <HorizonTable h={t.horizons} />
                 </>
               )}
+            </>
+          )}
+
+          {t.day && (
+            <>
+              <h2 className="tr-h2">The day book</h2>
+              <p className="tr-note">
+                A third paper book with its own ${t.day.limits.bankroll.toLocaleString("en-US")}. It is handed no list of markets: {t.day.run_hours.length} times a day
+                ({t.day.run_hours.map((h) => `${String(h).padStart(2, "0")}:${String(t.day?.run_minute ?? 0).padStart(2, "0")}`).join(", ")} UTC) it searches Polymarket for markets that settle
+                within {t.day.horizon_hours} hours, reads our corpus, and buys or sells whatever it judges worth it, or holds cash. It can sell at any time, so a win can be a profit taken early.
+                {t.day.since ? ` Trading since ${t.day.since}.` : " It has not traded yet."}
+              </p>
+              <DayStats d={t.day} />
+              <EquityCurve curve={t.day.curve} bankroll={t.day.limits.bankroll} name="Day book" id="tr-day" showRule={false} />
+              <h3 className="tr-h3">What it holds now, and when each bet resolves</h3>
+              <TraderPositions rows={t.day.open_positions} empty="The day book holds nothing right now." />
+              <h3 className="tr-h3">Results by horizon</h3>
+              <DayGroups d={t.day} />
+              <h3 className="tr-h3">Every trade, with its reason</h3>
+              <TradeLog rows={t.day.log} />
+              <h3 className="tr-h3">Recent runs: what it browsed and why</h3>
+              <DayRuns rows={t.day.runs} />
+              <h3 className="tr-h3">What it wished we knew</h3>
+              <p className="tr-note">At the end of each run it says what information it wanted that our corpus does not hold. This is our to-do list for which data sources to add.</p>
+              <Wishes rows={t.day.wishes} />
             </>
           )}
 

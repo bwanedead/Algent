@@ -173,6 +173,16 @@ check("sanctions, calendar, maritime, the geoledger, AI benchmarks and the track
   assert.equal(tr.evidence.accuracy.forecasts[0].shown, false);
   assert.equal(tr.evidence.accuracy.forecasts[0].brier_ours, null);
   assert.equal(tr.horizons.books.fast.positions, 1);
+  // The day book: its positions carry time to resolution, an un-shown horizon group stays withheld, runs and the data wishes parse.
+  assert.equal(tr.day.horizon_hours, 48);
+  assert.deepEqual(tr.day.run_hours, [8, 14, 20]);
+  assert.equal(tr.day.open_positions[0].hours_left, 6.5);
+  assert.equal(tr.day.by_horizon[0].shown, false);
+  assert.equal(tr.day.by_horizon[0].hit_rate, null);
+  assert.equal(tr.day.runs[0].orders[0].reason, "Already counted.");
+  assert.equal(tr.day.wishes[0].source, "parliament feed");
+  assert.equal(tr.day.watchlist[0].market_id, "d2");
+  assert.equal(tr.trader.open_positions.length, 0);
 });
 
 check("live events, stats, anomalies, the world map, the snapshot layers the map polls, flows and satellite", async () => {

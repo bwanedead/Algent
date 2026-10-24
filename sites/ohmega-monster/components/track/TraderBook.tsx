@@ -140,7 +140,7 @@ export function TraderPositions({ rows, empty = "The trader holds nothing right 
               <td className="n">{money(r.cost)}</td>
               <td className="n">{money(r.value)}</td>
               <td className={`n ${r.pnl > 0 ? "tr-good" : r.pnl < 0 ? "tr-bad" : ""}`}>{usd(r.pnl)}</td>
-              <td>{r.ends}</td>
+              <td>{r.ends}{r.hours_left !== null && <span className="tr-why">{r.hours_left < 48 ? `${Math.max(0, r.hours_left).toFixed(0)} h left` : `${(r.hours_left / 24).toFixed(0)} d left`}</span>}</td>
             </tr>
           ))}
         </tbody>
