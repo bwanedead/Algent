@@ -189,7 +189,7 @@ def _ops_log(probes: Probes, line: str) -> None:
 
 
 def _link(job: Job, day: str) -> str:
-    if job.name == "markets-daily":
+    if job.name in ("markets-daily", "markets-gaps"):
         return f"{SITE}/intel/track-record"
     if job.name == "ai-daily":
         return f"{SITE}/ai/{day}"

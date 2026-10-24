@@ -55,7 +55,7 @@ def _units() -> Iterator[Unit]:
     for f in mk.forecasts():
         forecasts[f.market_id].append(f)
     decisions: dict[str, list] = defaultdict(list)
-    for d in mk.decisions():
+    for d in mk.decisions(None):
         decisions[d.market_id].append(d)
     for m in sorted(mk.markets().values(), key=lambda m: m.id):
         s, f, d = snaps.get(m.id, []), forecasts.get(m.id, []), decisions.get(m.id, [])

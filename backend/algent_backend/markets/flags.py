@@ -101,6 +101,68 @@ TRADE_EVIDENCE_CHARS = 2400
 #: Price path shown per market: one point per day for this many days.
 TRADE_PATH_DAYS = 14
 
+# ── corpus-only research (research.py) ───────────────────────────────────────────────────────────
+#: Master switch. On, a forecast or a trade decision reads ONLY what the corpus query API returns for queries a cheap planning call proposes (no
+#: open-web search anywhere in the decision path). Off, the older blind evidence (evidence.py) is used. The harness has no tool calling, so this
+#: is planned retrieval: plan call -> we run the queries against the corpus -> the decision call reads the results.
+RESEARCH_ENABLED = True
+#: With research on, the decision sees ONLY corpus results (so the track record measures the corpus). False adds evidence.py's blocks beside them.
+#: If the corpus index is missing the pass falls back to evidence.py and the trace says so.
+CORPUS_ONLY = True
+#: Planning rounds per market (forecast) or per batch (trade). A second round sees the first round's result lines and may ask for more.
+RESEARCH_MAX_ROUNDS = 2
+#: Queries per round (per market), results kept per query, and characters of results shown to the decision call per market.
+RESEARCH_QUERIES_PER_ROUND = 4
+RESEARCH_ROWS_PER_QUERY = 6
+RESEARCH_CHARS_PER_MARKET = 3200
+#: Per planning-call hard cap (cost.scoped). A plan is a small structured answer over a short task.
+RESEARCH_PLAN_CAP_USD = 0.02
+RESEARCH_PLAN_EFFORT = "low"
+#: Rows of a corpus answer older than this many days are not offered (a 4-year-old daily does not bear on a question settled this month).
+RESEARCH_LOOKBACK_DAYS = 120
+#: Research traces (research_trace.jsonl, one line per decision) older than this are pruned by the refresh job; scoring never reads them (the
+#: forecast and decision lines carry their own cited ids).
+TRACE_KEEP_DAYS = 60
+#: "Rich" evidence for the accuracy split: a decision that cited at least this many corpus items; fewer is "thin". Shown only at MIN_RESOLVED_FOR_VERDICT.
+RICH_MIN_CITED = 3
+#: Items shown in a position's evidence trail on the page.
+TRAIL_MAX = 12
+
+# ── gaps: what the bots looked for and the corpus did not hold (gaps.py) ─────────────────────────
+#: A gap is a request, never a lookup: it lands in gaps.jsonl and the daily fill job researches it into the corpus through the ordinary research
+#: pipeline. The bot sees the result the next time, as corpus content. Operator-authorised ceiling: $0.50 a day.
+GAP_FILL_ENABLED = True
+#: When the unattended ``markets-gaps`` job fires (UTC HH:MM): after the markets-daily pass (07:30) has recorded the day's asks.
+GAPS_UTC = "08:45"
+GAP_FILL_USD_PER_DAY = 0.50
+#: Each fill is one profile research run. Its estimated cost is booked at this figure per run until the ledger measures it (the budget gate still
+#: halts real overspend), so at most GAP_FILL_USD_PER_DAY // GAP_FILL_EST_USD runs a day.
+GAP_FILL_EST_USD = 0.25
+#: Hard USD cap handed to each research run (the profile loop honours a vector's ``cost_cap_usd``; its own ceiling is $1.00).
+GAP_FILL_RUN_CAP_USD = 0.25
+GAP_FILL_MAX_PER_DAY = 2
+#: A topic asked for again within this many days of a fill is not researched again (the profile store keeps history; the corpus already has it).
+GAP_REFILL_DAYS = 14
+#: A gap needs at least this many distinct asks (market x decision) to be worth a run, unless it is the only candidate; ties go to the newest.
+GAP_MIN_ASKS = 1
+
+# ── the fast book: markets that settle soon, decided every few hours (trader.py with the FAST book) ──
+FAST_ENABLED = True
+#: Only markets ending within this many days (and no sooner than FAST_MIN_HOURS_LEFT hours) are in the fast book.
+FAST_HORIZON_DAYS = 7
+FAST_MIN_HOURS_LEFT = 6
+#: Cadence of the registry job (hours; the job and this stay in step) and the shortest gap before the same market is decided again.
+FAST_EVERY_H = 4
+FAST_RECHECK_H = 3.5
+#: Spend: per run and per UTC day (forecasts that feed the fast book + its trade call), and markets looked at per run.
+FAST_MAX_USD_PER_RUN = 0.12
+FAST_MAX_USD_PER_DAY = 0.60
+FAST_MAX_MARKETS_PER_RUN = 12
+#: A fast market needs a blind forecast no older than this many hours to be offered for a NEW position; a missing or older one is re-forecast
+#: (at most FAST_FORECASTS_PER_RUN a run, blind as ever) before the trade call.
+FAST_FORECAST_MAX_AGE_H = 36.0
+FAST_FORECASTS_PER_RUN = 4
+
 # ── scoring ──────────────────────────────────────────────────────────────────────────────────────
 #: Calibration buckets are this wide (probability): ten of them.
 CALIBRATION_BUCKET = 0.1

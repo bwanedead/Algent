@@ -58,3 +58,12 @@
 .tr-verb { color: var(--strong); font-weight: 600; letter-spacing: 0.02em; }
 .tr-table tr.is-win td { background: color-mix(in srgb, var(--band-calm, #6fae7e) 8%, transparent); }
 .tr-today { margin: 0 0 8px; color: var(--muted); font-size: 12px; line-height: 18px; }
+
+/* Evidence trail on a position, the gaps list and a sub-heading */
+.tr-h3 { margin: 14px 0 4px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.tr-trail { margin-top: 3px; font-size: 11px; line-height: 16px; }
+.tr-trail > summary { cursor: pointer; color: var(--muted); }
+.tr-trail > ul { margin: 3px 0 0; padding: 0 0 0 4px; list-style: none; }
+.tr-trail > ul > li { padding: 1px 0; overflow-wrap: anywhere; }
+.tr-gaps { margin: 0 0 8px; padding: 0; list-style: none; font-size: 12px; line-height: 18px; }
+.tr-gaps > li { padding: 5px 0; border-bottom: 1px solid var(--rule); overflow-wrap: anywhere; }
