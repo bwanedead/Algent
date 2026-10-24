@@ -37,6 +37,7 @@ class Market(BaseModel):
     map_score: int = 0
     first_seen: str = ""
     updated_at: str = ""
+    origin: str = ""                                       # "day" = saved only because the day book bought it (not mirrored for us: never forecast)
 
 
 class Snapshot(BaseModel):
@@ -131,7 +132,7 @@ class Decision(BaseModel):
 class EquityPoint(BaseModel):
     """A book's value at the end of a day: cash plus open positions at their current side price. Written once per (book, day), never edited."""
 
-    book: Literal["trader", "rule", "fast"]
+    book: Literal["trader", "rule", "fast", "day"]
     day: str
     at: str
     cash: float
@@ -219,3 +220,73 @@ def trace_id(kind: str, ref: str, at: str) -> str:
 
 def gap_id(market_id: str, topic: str, at: str) -> str:
     return "gp-" + hashlib.sha1(f"{market_id}|{topic}|{at}".encode()).hexdigest()[:14]
+
+
+# ── the day book's runs (day.py) ─────────────────────────────────────────────────────────────────
+class ToolEvent(BaseModel):
+    """One tool call of a day run: what the agent asked for, what came back (clipped) and how long it took."""
+
+    n: int
+    turn: int
+    tool: str
+    args: dict = Field(default_factory=dict)
+    result: str = ""                          # what the agent was shown (clipped to flags.DAY_RESULT_CHARS)
+    ok: bool = True
+    ms: int = 0
+    market_id: str = ""                       # the market the call concerned, when it did
+    ref: str = ""                             # buy / sell: the ledger line (Decision.id) it produced or tried to
+
+
+class DayRun(BaseModel):
+    """The full trace of one run of the day book: every tool call, the orders it led to, the cost and why it stopped. Append-only; pruned by age."""
+
+    id: str
+    at: str
+    day: str
+    turns: int = 0
+    tool_calls: int = 0
+    events: list[ToolEvent] = Field(default_factory=list)
+    considered: list[dict] = Field(default_factory=list)    # markets the agent looked at: {id, question, ends}
+    queries: list[str] = Field(default_factory=list)        # corpus queries, as "tool(arg)"
+    orders: list[str] = Field(default_factory=list)         # Decision ids written by buy / sell calls (filled, clipped and refused alike)
+    summary: str = ""                                       # the agent's own closing note on what it did and why
+    usd: float = 0.0
+    tokens: int = 0                                         # estimated (characters / 4)
+    stopped: str = ""                                       # why the loop ended: done | turn limit | tool-call limit | run budget | day budget | error ...
+    settled: int = 0
+    equity: float | None = None
+    cash: float | None = None
+
+
+class Wish(BaseModel):
+    """Product feedback from the day agent at the end of a run: information it wanted that our corpus lacks, and what would supply it. Not a research
+    request (``request_research`` asks for a topic now); this says which data SOURCES to add. Append-only."""
+
+    id: str
+    at: str
+    day: str
+    run_id: str
+    topic: str
+    why: str = ""                             # why it mattered, for which market
+    market_id: str = ""
+    question: str = ""
+    source: str = ""                          # the source or data type that would supply it
+
+
+class WatchEvent(BaseModel):
+    """The agent's watchlist, persisted between runs as add / remove events (the list is their projection; the last event per market wins)."""
+
+    id: str
+    at: str
+    market_id: str
+    action: Literal["add", "remove"]
+    question: str = ""
+    note: str = ""
+
+
+def wish_id(run_id: str, topic: str) -> str:
+    return "ws-" + hashlib.sha1(f"{run_id}|{topic}".encode()).hexdigest()[:14]
+
+
+def day_run_id(at: str) -> str:
+    return "dr-" + hashlib.sha1(at.encode()).hexdigest()[:14]

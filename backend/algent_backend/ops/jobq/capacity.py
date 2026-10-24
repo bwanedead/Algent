@@ -22,6 +22,8 @@ DAY_MIN = 1440
 
 # ── calendars ────────────────────────────────────────────────────────────────────────────────────
 def _expand(field_: str, limit: int) -> list[int]:
+    if "," in field_:                                   # a list: ``8,14,20``
+        return sorted({v for part in field_.split(",") for v in _expand(part, limit)})
     if field_ == "*":
         return list(range(limit))
     if "/" in field_:

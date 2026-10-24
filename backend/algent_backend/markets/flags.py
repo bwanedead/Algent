@@ -163,6 +163,47 @@ FAST_MAX_MARKETS_PER_RUN = 12
 FAST_FORECAST_MAX_AGE_H = 36.0
 FAST_FORECASTS_PER_RUN = 4
 
+# ── the day book: a 0-2 day agent that browses Polymarket and chooses its own bets (day.py, day_tools.py, browse.py) ──
+#: Paper only, a third book beside daily and fast. It is handed no market list: it searches Polymarket live (all categories the blocklist allows)
+#: and our mirror, reads our corpus, and buys and sells freely under the same guards. Its own $10k, its own caps, its own spend cap.
+DAY_ENABLED = True
+#: The unattended ``markets-day`` job fires at these hours, every day, at minute DAY_RUN_MINUTE (UTC). Chosen to miss the 05:00-07:00 crunch (menu,
+#: dailies, ai-bench, backups) and to sit 20 minutes after the fast book's :20 pass.
+DAY_RUN_HOURS: tuple[int, ...] = (8, 14, 20)
+DAY_RUN_MINUTE = 40
+#: Markets browsed and tradable: ending within this many hours (and no sooner than DAY_MIN_HOURS_LEFT). Searches default to the full window.
+DAY_HORIZON_H = 48
+DAY_MIN_HOURS_LEFT = 1.0
+#: Liquidity and volume floors use the mirror's (MIN_LIQUIDITY_USD, MIN_VOLUME_USD) and the category blocklist is BLOCK_TAGS: one definition of
+#: "a market worth trading". Rows the browser returns per search.
+DAY_SEARCH_LIMIT = 10
+DAY_SEARCH_LIMIT_MAX = 25
+#: Own book: the same fixed paper $10k and caps as the others unless retuned here (guards.apply takes these).
+DAY_BANKROLL = BANKROLL
+DAY_MAX_POSITION_FRAC = 0.05
+DAY_MAX_EXPOSURE_FRAC = 0.5
+#: The tool loop's bounds. It is a loop of structured turns on the house model (no native tool calling in this harness): each turn the agent names
+#: tool calls, we execute them, it reads the results and names more, until it says it is done or a bound is hit. Spend: per run, per UTC day
+#: (operator ceiling $0.50, inside the global spend halt) and per model call.
+DAY_MAX_TURNS = 7
+DAY_MAX_TOOL_CALLS = 24
+DAY_MAX_CALLS_PER_TURN = 6
+DAY_MAX_ORDERS_PER_RUN = 6
+DAY_MAX_USD_PER_RUN = 0.15
+DAY_MAX_USD_PER_DAY = 0.45
+DAY_CALL_CAP_USD = 0.05
+DAY_EFFORT = "low"
+#: What one tool result may show the agent (characters), and how much of the transcript is re-sent each turn (older results are collapsed to a line).
+DAY_RESULT_CHARS = 1800
+DAY_TRANSCRIPT_CHARS = 26000
+#: The recent price path shown by market(): hourly points over this many hours, thinned to at most this many.
+DAY_PATH_HOURS = 24
+DAY_PATH_POINTS = 12
+#: The page lists this many recent runs (compact "what it browsed and why"); run lines older than TRACE_KEEP_DAYS are pruned with the other traces.
+DAY_RUNS_SHOWN = 12
+#: Win rate and P&L by hold horizon (hours between entry and the market's end) are shown only once a bucket holds MIN_RESOLVED_FOR_VERDICT closed positions.
+DAY_HORIZON_BUCKETS: tuple[tuple[str, float, float], ...] = (("under 6 hours", 0.0, 6.0), ("6 to 24 hours", 6.0, 24.0), ("24 to 48 hours", 24.0, 1e9))
+
 # ── scoring ──────────────────────────────────────────────────────────────────────────────────────
 #: Calibration buckets are this wide (probability): ten of them.
 CALIBRATION_BUCKET = 0.1
