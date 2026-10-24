@@ -1,7 +1,7 @@
 # Published content — the site reads published files from R2
 
 > Code: `backend/algent_backend/publishing/` (`object_store.py`, `object_docs.py`, `asset_store.py`, `site_data.py`, `rebuild.py`, `site_git.py`),
-> the domain publishers (`live/publish.py`, `maritime/publish.py`, `sanctions/publish.py`, `lookahead/publish.py`, `geoledger/site_docs.py`),
+> the domain publishers (`live/publish.py`, `maritime/publish.py`, `sanctions/publish.py`, `lookahead/publish.py`, `geoledger/site_docs.py`, `conflict/publish.py`, `gnss/publish.py`),
 > `sites/ohmega-monster/lib/store.ts` + `lib/data-base.ts` + `lib/assets.ts` (readers). **Storage architecture, budgets and the runbook:
 > `database-budget.md`.** There is no database on the read path (decision 2026-10-22).
 
@@ -43,6 +43,7 @@ Document paths (`kind` = first segment). The table-shaped products are listed in
 | `data/<rel>` | the agent feeds, byte-for-byte what `public/data/<rel>` was | `app/feeds/[...path]/route.ts`, `situation.ts` |
 | `live/events|stats|anomalies.json`, `live/world.json` | live products | `live.ts` |
 | `maritime/…`, `sanctions/…`, `calendar/next.json`, `geo/…`, `articles/…` | table-shaped products | `maritime.ts`, `sanctions.ts`, `calendar.ts`, `geoledger.ts`, `articles.ts` |
+| `conflict/recent.json`, `conflict/country/<ISO>.json`, `gnss/latest.json`, `live/gnss.json` | the attack log and GPS interference (events and derived zones only; `conflict-events-gnss.md`) | `conflict.ts`, `components/gnss/useGnss.ts` |
 
 ## Contracts and status files
 
