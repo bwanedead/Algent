@@ -333,7 +333,11 @@ def test_the_report_withholds_win_rates_until_the_verdict_threshold_and_shows_ru
     run = sec["runs"][0]
     assert run["orders"][0]["reason"] == "Talks are on." and run["n_considered"] >= 1 and run["queries"] and run["usd"] > 0
     assert sec["wishes"][0]["topic"] == "Live parliament vote tallies" and sec["wishes"][0]["source"] == "parliament feed" and sec["wishes"][0]["runs"] == 1
-    assert [r["hours_left"] for r in sec["open_positions"]] == [] and sec["log"][0]["action"] == "sell"
+    assert [r["hours_left"] for r in sec["open_positions"]] == [] and sec["log"][0]["action"] == "sell" and sec["last_at"].startswith(NOW.date().isoformat())
+    held = Session(now=NOW + timedelta(hours=2), get=fake_get())
+    held.run(1, Call(tool="buy", market="a2", side="no", usd=100, reason="r"))
+    pos = day_report.section(NOW.date().isoformat())["open_positions"][0]
+    assert pos["now_at"].startswith(NOW.date().isoformat()) and pos["ends_at"].endswith(":00") and pos["url"].startswith("https://polymarket.com/event/")
 
 
 def test_wishes_aggregate_across_runs_by_distinct_runs():

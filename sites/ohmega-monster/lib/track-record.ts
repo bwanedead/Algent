@@ -58,7 +58,7 @@ export type TraderPosition = {
   value: number; pnl: number; opened: string; rationale: string; rationale_on: string; ours: number | null;
   evidence: "" | "sufficient" | "thin" | "gap"; trail: TrailItem[];
   // Additive: when it ends (to the minute, UTC) and hours left; null on documents from before the day book.
-  ends_at: string; hours_left: number | null;
+  ends_at: string; hours_left: number | null; now_at: string;
 };
 export type TradeRow = {
   id: string; market_id: string; question: string; url: string; day: string; action: "buy_yes" | "buy_no" | "sell" | "settle"; side: "yes" | "no";
@@ -73,6 +73,7 @@ export type Trader = {
   log: TradeRow[];
   today: { decided: number; bought: number; sold: number; held: number; clipped: number };
   since: string;
+  last_at: string;
   limits: { bankroll: number; max_position_frac: number; max_exposure_frac: number; slippage: number; min_ticket: number };
 };
 // The fast book (backend `markets/books.py`): the same trader on markets that settle within days, decided every few hours. Shaped like the daily trader.
@@ -184,7 +185,7 @@ function parseTrader(raw: unknown, fallbackRule: Portfolio): Trader {
       market_id: str(r.market_id), question: str(r.question), url: httpOnly(r.url), ends: str(r.ends), side: r.side === "no" ? "no" : "yes", shares: n0(r.shares),
       entry: n0(r.entry), now: num(r.now), cost: n0(r.cost), value: n0(r.value), pnl: n0(r.pnl), opened: str(r.opened), rationale: str(r.rationale),
       rationale_on: str(r.rationale_on), ours: num(r.ours), evidence: verdict(r.evidence), trail: list(r.trail).map(trailItem),
-      ends_at: str(r.ends_at), hours_left: num(r.hours_left),
+      ends_at: str(r.ends_at), hours_left: num(r.hours_left), now_at: str(r.now_at),
     })),
     log: list(t.log).map((r) => ({
       id: str(r.id), market_id: str(r.market_id), question: str(r.question), url: httpOnly(r.url), day: str(r.day),
@@ -195,6 +196,7 @@ function parseTrader(raw: unknown, fallbackRule: Portfolio): Trader {
     })),
     today: { decided: n0(td.decided), bought: n0(td.bought), sold: n0(td.sold), held: n0(td.held), clipped: n0(td.clipped) },
     since: str(t.since),
+    last_at: str(t.last_at),
     limits: {
       bankroll: n0(lim.bankroll) || fallbackRule.bankroll, max_position_frac: n0(lim.max_position_frac), max_exposure_frac: n0(lim.max_exposure_frac),
       slippage: n0(lim.slippage), min_ticket: n0(lim.min_ticket),

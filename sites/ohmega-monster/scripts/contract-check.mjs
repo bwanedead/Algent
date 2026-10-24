@@ -175,6 +175,8 @@ check("sanctions, calendar, maritime, the geoledger, AI benchmarks and the track
   assert.equal(tr.horizons.books.fast.positions, 1);
   // The day book: its positions carry time to resolution, an un-shown horizon group stays withheld, runs and the data wishes parse.
   assert.equal(tr.day.horizon_hours, 48);
+  assert.equal(tr.day.open_positions[0].now_at, `${tr.day.since}T12:05`);
+  assert.ok(tr.day.last_at.length > 0);
   assert.deepEqual(tr.day.run_hours, [8, 14, 20]);
   assert.equal(tr.day.open_positions[0].hours_left, 6.5);
   assert.equal(tr.day.by_horizon[0].shown, false);

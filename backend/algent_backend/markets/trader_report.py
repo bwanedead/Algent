@@ -65,6 +65,12 @@ def _hours_left(end_date: str) -> float | None:
     return round((end - datetime.now(UTC)).total_seconds() / 3600, 1) if end else None
 
 
+def _price_at(rows: list) -> str:
+    """When the newest live price on file was taken (to the minute, UTC): the page says 'as of HH:MM' beside every live price."""
+    live = [s for s in rows if s.source == "live"]
+    return live[-1].at[:16] if live else ""
+
+
 def open_positions(ds: list[Decision]) -> list[dict[str, Any]]:
     ms, prices, held, words = store.markets(), store.snapshots_by_market(), book.holdings(ds), _last_words(ds)
     rows = []
@@ -84,7 +90,7 @@ def open_positions(ds: list[Decision]) -> list[dict[str, Any]]:
         rows.append({"market_id": mid, "question": m.question, "url": m.url, "ends": m.end_date[:10], "side": h.side, "shares": round(h.shares, 2),
                      "entry": round(h.entry, 4), "now": None if p is None else round(book.side_price(p, h.side), 4), "cost": round(h.cost, 2),
                      "value": round(value, 2), "pnl": round(value - h.cost, 2), "opened": h.opened_at[:10],
-                     "ends_at": m.end_date[:16], "hours_left": _hours_left(m.end_date),
+                     "ends_at": m.end_date[:16], "hours_left": _hours_left(m.end_date), "now_at": _price_at(prices.get(mid, [])),
                      "rationale": w.rationale if w else "", "rationale_on": w.day if w else "", "ours": w.ours if w else None,
                      "evidence": w.evidence if w else "", "trail": trail.resolve(cited.get(mid, [])[:flags.TRAIL_MAX], corpus) if cited.get(mid) else []})
     return sorted(rows, key=lambda r: -r["cost"])
@@ -119,6 +125,6 @@ def section(day: str | None = None, book_name: str = "daily") -> dict[str, Any]:
     ds = store.decisions(book_name)
     day = day or store.now_iso()[:10]
     return {"summary": _summary(ds, books.get(book_name).equity), "rule": paper.summary(), "curve": curve(book_name), "open_positions": open_positions(ds), "log": log(ds),
-            "today": today(ds, day), "since": min((d.day for d in ds), default=""), "spend_usd": round(sum(d.usd for d in ds), 4),
+            "today": today(ds, day), "last_at": max((d.at for d in ds), default=""), "since": min((d.day for d in ds), default=""), "spend_usd": round(sum(d.usd for d in ds), 4),
             "limits": {"bankroll": flags.BANKROLL, "max_position_frac": flags.MAX_POSITION_FRAC, "max_exposure_frac": flags.MAX_EXPOSURE_FRAC,
                        "slippage": flags.SLIPPAGE, "min_ticket": flags.TRADE_MIN_TICKET}}
