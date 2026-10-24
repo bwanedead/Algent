@@ -109,6 +109,46 @@ def post_form(url: str, data: dict[str, str], *, headers: dict[str, str] | None 
     raise SourceError(f"{url} failed after {RETRIES + 1} attempts: {last}")
 
 
+def get_bytes(url: str, params: dict[str, Any] | None = None, *, headers: dict[str, str] | None = None) -> bytes:
+    """GET ``url`` and return the raw body (an image chip); same pacing, retries and error contract as ``get``; never memoised."""
+    hdrs = {"User-Agent": USER_AGENT, "Accept": "*/*", **(headers or {})}
+    last: Exception | None = None
+    for attempt in range(RETRIES + 1):
+        _pace(url)
+        try:
+            resp = httpx.get(url, params=params, headers=hdrs, timeout=TIMEOUT_S, follow_redirects=True)
+        except httpx.HTTPError as exc:
+            last = exc
+        else:
+            if resp.status_code in (401, 403):
+                raise SourceUnavailable(f"{resp.url} -> HTTP {resp.status_code} (access denied)")
+            if resp.status_code == 200:
+                return resp.content
+            last = RuntimeError(f"HTTP {resp.status_code}")
+        time.sleep(1.0 * (attempt + 1))
+    raise SourceError(f"{url} failed after {RETRIES + 1} attempts: {last}")
+
+
+def post_json(url: str, body: dict[str, Any], *, headers: dict[str, str] | None = None) -> Any:
+    """POST a JSON body and return the decoded JSON answer (a STAC search); retries transient failures; never memoised."""
+    hdrs = {"User-Agent": USER_AGENT, "Accept": "application/json", **(headers or {})}
+    last: Exception | None = None
+    for attempt in range(RETRIES + 1):
+        _pace(url)
+        try:
+            resp = httpx.post(url, json=body, headers=hdrs, timeout=TIMEOUT_S, follow_redirects=True)
+        except httpx.HTTPError as exc:
+            last = exc
+        else:
+            if resp.status_code in (401, 403):
+                raise SourceUnavailable(f"{resp.url} -> HTTP {resp.status_code} (access denied)")
+            if resp.status_code == 200:
+                return resp.json()
+            last = RuntimeError(f"HTTP {resp.status_code}")
+        time.sleep(1.0 * (attempt + 1))
+    raise SourceError(f"{url} failed after {RETRIES + 1} attempts: {last}")
+
+
 def stream_lines(url: str, *, headers: dict[str, str] | None = None) -> Iterator[str]:
     """Yield a large text body line by line without holding it in memory (a big CSV); no retry or memo.
     Raises ``SourceError`` on a non-200 status or a transport failure before the first line."""

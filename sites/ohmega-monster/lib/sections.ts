@@ -13,6 +13,7 @@ import { maritimeEvents } from "./maritime";
 import { getMenus } from "./radar";
 import { recordLedger } from "./record";
 import { recentSanctions } from "./sanctions";
+import { satelliteDoc } from "./satellite";
 import { trackRecord } from "./track-record";
 
 // The site's sections as doors: one line saying what is behind each, plus a small live hint read from the
@@ -25,7 +26,7 @@ export type Door = { href: string; title: string; line: string; hint: string };
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
 const hints = cache(async () => {
-  const [daily, theaters, actors, ledger, snap, articles, menus, live, upcoming, sanctions, maritime, track, ai, aiDaily, attacks, jam] = await Promise.all([
+  const [daily, theaters, actors, ledger, snap, articles, menus, live, upcoming, sanctions, maritime, track, ai, aiDaily, attacks, jam, satellite] = await Promise.all([
     latestDaily("geopolitics"),
     dossierList(),
     actorIds(),
@@ -42,6 +43,7 @@ const hints = cache(async () => {
     latestDaily("ai"),
     recentEvents(3, 800),
     latestZones(),
+    satelliteDoc(),
   ]);
   const ahead30 = upcoming.filter((r) => r.on_date <= addDays(todayIso(), 30));
   const active = theaters.filter((t) => !t.merged_into);
@@ -65,6 +67,7 @@ const hints = cache(async () => {
     aiDaily: aiDaily ? fmtDay(aiDaily.date) : "",
     attacks: attacks.length > 0 ? `${plural(attacks.length, "event")} · last 3 days` : "",
     gnss: jam && jam.zones.length > 0 ? `${plural(jam.zones.filter((z) => z.source === "ohmega_adsb").length || jam.zones.length, "zone")} · ${fmtDay(jam.day)}` : "",
+    satellite: satellite && satellite.counts.with_imagery > 0 ? `${plural(satellite.counts.with_imagery, "place")}${satellite.counts.changed > 0 ? ` · ${satellite.counts.changed} changed` : ""}` : "",
     sanctions: sanctions.length > 0 ? `${plural(sanctions.filter((s) => s.action === "designated").length, "addition")} · last 30 days` : "",
   };
 });
@@ -92,6 +95,7 @@ export async function toolDoors(): Promise<Door[]> {
     { href: "/intel/attacks", title: "Attack log", line: "Attacks, clashes and mass-violence events reported by GDELT, ACLED and others, with the source and its limits.", hint: h.attacks },
     { href: "/intel/gnss", title: "GPS interference", line: "Where aircraft report poor navigation accuracy: signs of GPS jamming, cross-checked against GPSJam.", hint: h.gnss },
     { href: "/intel/maritime", title: "Maritime", line: "Ships that went dark, met at sea, changed identity or matched a sanctions list.", hint: h.maritime },
+    { href: "/intel/satellite", title: "Satellite", line: "Fresh imagery of struck and watched places, before and after, with change flagged as a machine signal.", hint: h.satellite },
     { href: "/intel/forecasts", title: "Forecasts", line: "Every open forecast on one timeline, and the track record.", hint: "" },
     { href: "/intel/track-record", title: "Track record", line: "Our forecasts scored against Polymarket prices, misses included. Paper only.", hint: h.track },
     { href: "/ai", title: "AI Daily", line: "The Daily for artificial intelligence: the labs' race, chips, policy, security, open weights and capital.", hint: h.aiDaily },

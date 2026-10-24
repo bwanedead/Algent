@@ -37,6 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/intel/maritime`, lastModified: new Date() },
     { url: `${SITE_URL}/intel/attacks`, lastModified: new Date() },
     { url: `${SITE_URL}/intel/gnss`, lastModified: new Date() },
+    { url: `${SITE_URL}/intel/satellite`, lastModified: new Date() },
     { url: `${SITE_URL}/intel/track-record`, lastModified: new Date() },
     { url: `${SITE_URL}/intel/ai`, lastModified: new Date() },
     { url: `${SITE_URL}/ai`, lastModified: new Date() },

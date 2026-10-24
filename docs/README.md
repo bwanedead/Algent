@@ -57,6 +57,7 @@ Docs sprawl is a real failure mode. To prevent it:
 - `conflict-events-gnss.md` – the attack/conflict event log (GDELT keyless; ReliefWeb, ACLED, UCDP behind keys) and GPS-jamming zones derived from ADS-B navigation accuracy with a GPSJam cross-check: provenance fields (`basis`, `coverage_note`, `baseline_since`), dedupe, timers, `/intel/attacks`, `/intel/gnss`, `/api/v1/attacks`, `/api/v1/gnss`.
 - `maritime-behaviour.md` – vessel behaviour from our own AIS (AIS gaps, STS candidates, identity changes, sanctioned vessels, loitering over cable corridors): profile memory, detectors and their thresholds, publish, `/intel/maritime`, `/api/v1/maritime`, MCP `get_maritime_behaviour`.
 - `flows.md` – the world's circulation: ship lanes derived from our own AIS (places, lane network, hops, rates, anomalies), grain and money from UN Comtrade (annual, separate), the `flows` document, the globe's Flows layer and HUD panel.
+- `satellite.md` – satellite watch: data-driven watch list, keyless Sentinel-2 chips and VIIRS night lights, the pure-Python change signal and its honesty rules, provenance on every number, `/intel/satellite`, `/api/v1/satellite`, the HUD panel, the daily timer.
 
 ### Guides — `guides/`
 - `run-operator-entrypoint.md` – **start here** to operate runs; short hub that routes to the rest.

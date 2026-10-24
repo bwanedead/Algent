@@ -25,6 +25,7 @@ const GLYPH: Record<string, GlyphName> = {
   "/intel/maritime": "ship",
   "/intel/attacks": "event",
   "/intel/gnss": "radar",
+  "/intel/satellite": "globe",
   "/intel/track-record": "pulse",
   "/intel/ai": "pulse",
   "/ai": "globe",

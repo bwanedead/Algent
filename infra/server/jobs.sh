@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # The server's scheduled jobs, one entry point so systemd units stay one-liners:
 #
-#   jobs.sh library | instruments | statements | sanctions | calendar | markets | ai-benchmarks | ai-discovery | backup | watchdog | flows | conflict | reliefweb | conflict-daily | gnss | live <feed>   free
+#   jobs.sh library | instruments | statements | sanctions | calendar | markets | ai-benchmarks | ai-discovery | backup | watchdog | flows | conflict | reliefweb | conflict-daily | gnss | satellite | live <feed>   free
 #   jobs.sh menu | daily-1 | daily-2 | markets-daily                       PAID, unattended (operator-authorised)
 #
 # Free work: crawl, AI benchmark scores, a capped (<$0.10/day, ai_benchmarks/flags.py) discovery of lab-claimed scores, public data series, statement transcripts without extraction, the archive backup.
@@ -26,6 +26,8 @@ case "${1:-}" in
     conflict-daily) exec $PY -m algent_backend.cli newsroom conflict fetch --source acled --source ucdp ;;
     gnss)           exec $PY -m algent_backend.cli newsroom gnss run ;;
 esac
+# The satellite pass (a dozen keyless imagery lookups, a few minutes, daily) is free and stays out of the lock too: it must not wait behind a daily.
+if [ "${1:-}" = "satellite" ]; then exec $PY -m algent_backend.cli newsroom satellite run; fi
 exec 9>"$HOME/.ohmega-jobs.lock"
 flock -w 3600 9
 
@@ -35,7 +37,6 @@ case "${1:?usage: jobs.sh library|instruments|statements|sanctions|calendar|conf
     statements)  $PY -m algent_backend.cli newsroom statements collect --no-extract --no-reported ;;
     sanctions)   $PY -m algent_backend.cli newsroom sanctions fetch ;;
     calendar)    $PY -m algent_backend.cli newsroom calendar refresh ;;
-    gnss)        $PY -m algent_backend.cli newsroom gnss run ;;
     markets)     $PY -m algent_backend.cli newsroom markets refresh ;;
     ai-benchmarks) $PY -m algent_backend.cli newsroom ai-benchmarks fetch ;;
     ai-discovery)  $PY -m algent_backend.cli newsroom ai-benchmarks discover ;;
