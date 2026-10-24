@@ -39,9 +39,9 @@ def _hold(held: Holding | None, clips: list[str]) -> Fill:
 
 
 def apply(action: str, requested: float, *, held: Holding | None, yes_price: float | None, cash: float, exposure: float,
-          tradable: bool) -> Fill:
+          tradable: bool, position_frac: float | None = None, exposure_frac: float | None = None, bankroll: float | None = None) -> Fill:
     """What the book does with one request. ``yes_price`` is the market's current YES price (None: no fresh price), ``exposure`` the cost of
-    all open positions, ``tradable`` whether the market is still open."""
+    all open positions, ``tradable`` whether the market is still open. A book with its own caps (the day book) passes them; the default is the daily book's."""
     clips: list[str] = []
     requested = max(0.0, float(requested or 0.0))
     if action not in ACTIONS:
@@ -52,15 +52,16 @@ def apply(action: str, requested: float, *, held: Holding | None, yes_price: flo
         return _hold(held, ["market is closed to trading: held"])
     if yes_price is None:
         return _hold(held, ["no recent price on file: held"])
-    return _sell(requested, held, yes_price, clips) if action == "sell" else _buy(action, requested, held, yes_price, cash, exposure, clips)
+    return _sell(requested, held, yes_price, clips) if action == "sell" else _buy(action, requested, held, yes_price, cash, exposure, clips, (flags.MAX_POSITION_FRAC if position_frac is None else position_frac) * (flags.BANKROLL if bankroll is None else bankroll),
+                                                                                                          (flags.MAX_EXPOSURE_FRAC if exposure_frac is None else exposure_frac) * (flags.BANKROLL if bankroll is None else bankroll))
 
 
-def _buy(action: str, requested: float, held: Holding | None, yes_price: float, cash: float, exposure: float, clips: list[str]) -> Fill:
+def _buy(action: str, requested: float, held: Holding | None, yes_price: float, cash: float, exposure: float, clips: list[str], max_position: float, max_exposure: float) -> Fill:
     side = "yes" if action == "buy_yes" else "no"
     if held is not None and held.side != side:
         return _hold(held, [f"already holds {held.side.upper()}; sell it before buying {side.upper()}: held"])
-    room = {"cash": cash, "position limit": flags.MAX_POSITION_FRAC * flags.BANKROLL - (held.cost if held else 0.0),
-            "exposure limit": flags.MAX_EXPOSURE_FRAC * flags.BANKROLL - exposure}
+    room = {"cash": cash, "position limit": max_position - (held.cost if held else 0.0),
+            "exposure limit": max_exposure - exposure}
     stake = requested
     for name, limit in room.items():
         if stake > max(0.0, limit):

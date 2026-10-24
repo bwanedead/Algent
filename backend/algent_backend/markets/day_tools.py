@@ -1,0 +1,203 @@
+"""
+The day book's tools: what one run of the agent can DO, executed by us and logged. Browsing (``browse.py``), the corpus (``research.run_query``, with its
+blindness filter), a filed research request (``gaps.py``) and two paper orders. Orders go through the SAME guards and ledger as the other books
+(``guards.apply``, ``book.holdings``, ``Decision`` lines tagged ``book: "day"``); a clipped or refused order is answered to the agent with its reason and
+recorded as a ledger line (a refused one is a ``hold`` carrying the reason in ``clips``). PAPER ONLY: nothing here can reach a venue.
+
+A ``Session`` is one run's state: the ledger as it grows, what was browsed, queried and ordered, and the corpus ids shown (only those may be cited).
+"""
+
+from __future__ import annotations
+
+import time
+from datetime import datetime, timedelta
+from typing import Any
+
+from algent_backend.retrieval.docs import clip
+
+from . import book, browse, flags, gaps, guards, research, store
+from .contracts import Decision, Snapshot, ToolEvent, decision_id
+from .day_prompt import PROMPT_VERSION, Call
+from .polymarket import Fetch, num
+
+CORPUS_TOOLS = ("entity", "about", "search", "timeline", "related", "series")
+
+
+def _args(call: Call) -> dict[str, Any]:
+    return {k: v for k, v in call.model_dump(exclude_defaults=True).items() if k != "tool"}
+
+
+def _money(x: float) -> str:
+    return f"{'-' if x < 0 else ''}${abs(x):,.2f}"
+
+
+class Session:
+    def __init__(self, *, now: datetime, get: Fetch, corpus: Any = None, ds: list[Decision] | None = None) -> None:
+        self.now, self.get, self.corpus = now, get, corpus
+        self.ds: list[Decision] = list(ds if ds is not None else store.decisions("day"))
+        self.events: list[ToolEvent] = []
+        self.considered: dict[str, dict[str, str]] = {}
+        self.queries: list[str] = []
+        self.orders: list[str] = []
+        self.shown: set[str] = set()
+        self.attempts = 0
+
+    # ── the dispatcher ───────────────────────────────────────────────────────────────────────────
+    def run(self, turn: int, call: Call) -> ToolEvent:
+        t0 = time.monotonic()
+        ok, ref = True, ""
+        try:
+            text, ref = getattr(self, "t_" + call.tool)(call)
+        except Exception as exc:  # noqa: BLE001 - a failed tool is a result the agent reads, never a crash
+            ok, text = False, f"error: {type(exc).__name__}: {str(exc)[:160]}"
+        ev = ToolEvent(n=len(self.events) + 1, turn=turn, tool=call.tool, args=_args(call), result=clip(text, flags.DAY_RESULT_CHARS), ok=ok,
+                       ms=int((time.monotonic() - t0) * 1000), market_id=call.market.strip(), ref=ref)
+        self.events.append(ev)
+        return ev
+
+    def _see(self, v: browse.View) -> None:
+        self.considered.setdefault(v.market.id, {"id": v.market.id, "question": v.market.question, "ends": v.market.end_date[:16]})
+
+    # ── browsing ─────────────────────────────────────────────────────────────────────────────────
+    def t_search_markets(self, c: Call) -> tuple[str, str]:
+        rows = browse.search(c.query, now=self.now, get=self.get, ends_within_h=c.ends_within_h or None, min_liquidity=c.min_liquidity or None, limit=c.limit or None)
+        for v in rows:
+            self._see(v)
+        if not rows:
+            return "no market matched (the window, liquidity floor and category blocklist all apply)", ""
+        return "\n".join(f"{r['id']} | {r['question']} | ends {r['ends']} ({r['hours_left']} h) | YES {r['yes']} | spread {r['spread']} | liq ${r['liquidity']:,} | {r['source']}"
+                         for r in (browse.row(v, self.now) for v in rows)), ""
+
+    def t_market(self, c: Call) -> tuple[str, str]:
+        v = browse.load(c.market, get=self.get, with_path=True)
+        if v is None:
+            return f"unknown market {c.market!r}", ""
+        self._see(v)
+        return browse.dump(v, self.now), ""
+
+    def _labels(self) -> dict[str, str]:
+        held = book.holdings(self.ds)
+        return {f"P{i}": mid for i, (mid, _) in enumerate(sorted(held.items(), key=lambda kv: -kv[1].cost), 1)}
+
+    def t_portfolio(self, _c: Call | None = None) -> tuple[str, str]:
+        held, ms = book.holdings(self.ds), store.markets()
+        by_market = store.snapshots_by_market()
+        fresh: dict[str, str] = {}
+        for mid in held:                                   # a live mark for each position; a failure falls back to the last snapshot on file
+            try:
+                v = browse.load(mid, get=self.get)
+            except Exception:  # noqa: BLE001
+                v = None
+            if v is not None and v.yes is not None:
+                fresh[mid] = ""
+                if store.due_for_snapshot(by_market, mid, self.now):
+                    store.append_snapshots([self._snap(v)])
+            else:
+                fresh[mid] = " (price from the last snapshot)"
+        prices = store.snapshots_by_market()
+        pt = book.point("day", self.now, cash_=book.cash(self.ds), held=held, realised_=book.realised(self.ds), prices=prices)
+        lines = [f"cash {_money(pt.cash)} | equity {_money(pt.equity)} (P&L {_money(pt.equity - flags.DAY_BANKROLL)}) | invested {_money(sum(h.cost for h in held.values()))} "
+                 f"of the {_money(flags.DAY_MAX_EXPOSURE_FRAC * flags.DAY_BANKROLL)} limit | per-market limit {_money(flags.DAY_MAX_POSITION_FRAC * flags.DAY_BANKROLL)}"]
+        for lab, mid in self._labels().items():
+            h, m = held[mid], ms.get(mid)
+            p = book.last_price(prices.get(mid, []))
+            value = h.shares * book.side_price(p, h.side) if p is not None else h.cost
+            end = store.parse_iso(m.end_date) if m else None
+            left = f"{(end - self.now).total_seconds() / 3600:.1f} h to resolution" if end else "no end time"
+            lines.append(f"{lab} [{mid}] {h.side.upper()} {m.question if m else mid} | {h.shares:.1f} sh, entry {h.entry:.3f}, now "
+                         f"{'?' if p is None else round(book.side_price(p, h.side), 3)}, cost {_money(h.cost)}, value {_money(value)}, P&L {_money(value - h.cost)} | {left}{fresh[mid]}")
+        if not held:
+            lines.append("no open positions")
+        return "\n".join(lines), ""
+
+    # ── the corpus ───────────────────────────────────────────────────────────────────────────────
+    def _corpus(self, c: Call) -> tuple[str, str]:
+        if self.corpus is None:
+            return "the corpus index is not available on this machine; nothing to read", ""
+        if not c.query.strip():
+            return "give a query: an entity name or a few distinctive words", ""
+        hits = research.run_query(self.corpus, research.Query(tool=c.tool, arg=c.query, since=c.since, kinds=c.kinds), today=self.now.date())  # type: ignore[arg-type]
+        self.queries.append(f"{c.tool}({c.query.strip()[:80]})")
+        self.shown.update(h.id for h in hits)
+        return "\n".join(h.line(300) for h in hits) or "nothing in the corpus", ""
+
+    t_entity = t_about = t_search = t_timeline = t_related = t_series = _corpus
+
+    def t_request_research(self, c: Call) -> tuple[str, str]:
+        g = gaps.record(c.query, c.reason, market_id=c.market.strip() or "day", question=self.considered.get(c.market.strip(), {}).get("question", ""), book="day",
+                        kind="trade", at=self.now.isoformat(timespec="seconds"))
+        self.queries.append(f"request_research({c.query.strip()[:80]})")
+        return ("filed for the desk's research job; it lands in the corpus later, not in this run" if g else "not filed (empty, or already asked for this market)"), ""
+
+    # ── orders ───────────────────────────────────────────────────────────────────────────────────
+    def _snap(self, v: browse.View) -> Snapshot:
+        return Snapshot(market_id=v.market.id, at=self.now.isoformat(timespec="seconds"), p=v.yes or 0.0, bid=v.bid, ask=v.ask,
+                        last=num(v.raw.get("lastTradePrice")), volume=v.market.volume)
+
+    def _line(self, action: str, v: browse.View | None, mid: str, c: Call, fill: guards.Fill, clips: list[str], requested: float) -> Decision:
+        self.attempts += 1
+        at = (self.now + timedelta(seconds=len(self.orders))).isoformat(timespec="seconds")
+        end = store.parse_iso(v.market.end_date) if v else None
+        cited = [i for i in c.cited if i in self.shown]
+        return Decision(id=decision_id(mid, fill.action, f"{at}day{self.attempts}"), market_id=mid, at=at, day=at[:10], action=fill.action,  # type: ignore[arg-type]
+                        requested=round(requested, 2), side=fill.side, price=fill.price, shares=fill.shares, cash_flow=fill.cash_flow,  # type: ignore[arg-type]
+                        realised=fill.realised, rationale=" ".join(c.reason.split())[:420], clips=clips, ours=None, market=v.yes if v else None,
+                        model="house-" + flags.DAY_EFFORT, prompt_version=PROMPT_VERSION, usd=0.0, book="day", evidence_ids=cited,
+                        hours_to_end=round((end - self.now).total_seconds() / 3600, 1) if end else None)
+
+    def _order(self, kind: str, c: Call) -> tuple[str, str]:
+        mid = c.market.strip()
+        label = self._labels().get(mid.upper())
+        mid = label or mid
+        requested = max(0.0, float(c.usd or 0.0))
+        if kind == "sell" and c.all:
+            requested = 1e12
+        v = browse.load(mid, get=self.get) if mid else None
+        held = book.holdings(self.ds).get(mid)
+        why = ""
+        if self.attempts >= flags.DAY_MAX_ORDERS_PER_RUN:
+            why = f"order limit for this run reached ({flags.DAY_MAX_ORDERS_PER_RUN})"
+        elif v is None:
+            why = f"unknown market {mid!r}"
+        elif kind == "buy":
+            why = browse.tradable_why(v, self.now)
+            if c.side not in ("yes", "no"):
+                why = why or "side must be yes or no"
+        elif v.raw.get("closed") or v.raw.get("active") is False:
+            why = "the market is closed to trading (awaiting its resolution)"
+        elif v.yes is None:
+            why = "no live price"
+        action = "sell" if kind == "sell" else f"buy_{c.side}"
+        if why:
+            fill = guards.Fill("hold", held.side if held else "", clips=[f"refused: {why}"])
+        else:
+            assert v is not None and v.yes is not None
+            fill = guards.apply(action, requested, held=held, yes_price=v.yes, cash=book.cash(self.ds), exposure=sum(h.cost for h in book.holdings(self.ds).values()),
+                                tradable=True, position_frac=flags.DAY_MAX_POSITION_FRAC, exposure_frac=flags.DAY_MAX_EXPOSURE_FRAC, bankroll=flags.DAY_BANKROLL)
+        d = self._line(action, v, mid, c, fill, list(fill.clips), min(requested, 1e9))
+        store.append_decisions([d])
+        self.ds.append(d)
+        self.orders.append(d.id)
+        if v is not None:
+            self._see(v)
+        if d.action in ("buy_yes", "buy_no") and v is not None:
+            if mid not in store.markets():
+                store.save_markets([v.market.model_copy(update={"origin": "day"})])
+            store.append_snapshots([self._snap(v)])
+        return self._answer(d), d.id
+
+    def _answer(self, d: Decision) -> str:
+        left = f"cash now {_money(book.cash(self.ds))}"
+        trimmed = f" Trimmed or refused: {'; '.join(d.clips)}." if d.clips else ""
+        if d.action in ("buy_yes", "buy_no"):
+            return f"FILLED buy {d.side.upper()} {_money(-d.cash_flow)} = {d.shares:.1f} shares at {d.price:.3f} (quote plus slippage); {left}.{trimmed}"
+        if d.action == "sell":
+            return f"FILLED sell {d.side.upper()} {d.shares:.1f} shares at {d.price:.3f} for {_money(d.cash_flow)}, realised {_money(d.realised)}; {left}.{trimmed}"
+        return f"NOT FILLED.{trimmed or ' nothing to do.'} {left}."
+
+    def t_buy(self, c: Call) -> tuple[str, str]:
+        return self._order("buy", c)
+
+    def t_sell(self, c: Call) -> tuple[str, str]:
+        return self._order("sell", c)
+
