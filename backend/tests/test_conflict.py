@@ -92,6 +92,23 @@ def test_collector_cursor_dedupe_and_needs_key(monkeypatch):
     assert "since" in json.dumps(store.since()) or store.since()["gdelt"]
 
 
+def test_a_missing_newest_file_keeps_what_the_earlier_files_gave(monkeypatch):
+    files = {"20261020083000": [row()]}
+
+    def fetch(stamp):
+        if stamp not in files:
+            raise collect_mod.SourceError("HTTP 404")           # GDELT skips a file now and then, or lists one before it lands
+        return gdelt.parse(files[stamp], "t")
+
+    store.save_cursor(gdelt="20261020081500")
+    report = collect_mod.collect(["gdelt"], fetchers={"gdelt_latest": lambda: "20261020084500", "gdelt_file": fetch})
+    [g] = [r for r in report["sources"] if r["source"] == "gdelt"]
+    assert g["status"] == "ok" and g["new"] == 1 and g["pending"] == "20261020084500"
+    assert store.load_cursor()["gdelt"] == "20261020083000"      # the cursor stopped before the missing file: the next run takes it
+    nothing = collect_mod.collect(["gdelt"], fetchers={"gdelt_latest": lambda: "20261020091500", "gdelt_file": lambda s: (_ for _ in ()).throw(collect_mod.SourceError("404"))})
+    assert nothing["sources"][0]["status"] == "error"            # nothing read at all and the newest file missing is still a failure
+
+
 def test_reliefweb_parse_and_key_required(monkeypatch):
     body = json.dumps({"data": [{"id": 7, "fields": {"title": "Sudan: Attack on market kills 20", "date": {"created": "2026-10-19T10:00:00+00:00"},
                                                        "country": [{"name": "Sudan", "iso3": "SDN", "primary": True}], "url": "https://reliefweb.int/r/7",
@@ -136,24 +153,82 @@ def test_asset_join_only_within_range():
     assert near.assets[0].id == "a1" and near.assets[0].km < 2 and far.assets == []
 
 
-def test_publish_rows_respect_cap_watermark_and_shape(monkeypatch):
-    monkeypatch.setattr(flags, "PUBLISH_PER_DAY", 2)
+def _capture(monkeypatch) -> dict:
+    """Stand in for the object store: whatever the publisher builds is returned instead of sent."""
+    got: dict = {}
+    monkeypatch.setattr(pub.site_data, "publish_built", lambda build, **k: got.update(build()) or {"ok": True})
+    return got
+
+
+def test_documents_cap_rows_but_count_the_whole_record(monkeypatch):
+    monkeypatch.setattr(flags, "RECENT_MAX", 2)
     store.append(gdelt.parse([row(feature=f"F{i}", arts=str(i + 2)) for i in range(4)], "t"))
-    sent: list = []
+    docs = pub.documents(date(2026, 10, 21))
+    recent = docs["conflict/recent.json"]
+    assert (recent["total"], recent["shown"], recent["capped"]) == (4, 2, True)         # the cap is stated, never passed off as the total
+    assert [r["articles"] for r in recent["rows"]] == [5, 4] and recent["by_day"]["2026-10-20"] == {"events": 4, "machine": 4, "curated": 0}
+    assert recent["sources"]["gdelt"] == {"keyed": False, "active": False, "last_ok": ""} and recent["sources"]["acled"]["keyed"]
+    assert "coverage_note" not in recent["rows"][0] and "Machine-coded" in recent["coverage"]["gdelt"]
+    assert docs["conflict/country/UA.json"]["total"] == 4 and docs == pub.documents(date(2026, 10, 21))     # deterministic: an unchanged record re-sends nothing
 
-    class Cur:
-        def executemany(self, sql, rows): sent.extend(rows)
-        def __enter__(self): return self
-        def __exit__(self, *a): return False
 
-    class Conn(Cur):
-        def cursor(self): return Cur()
-        def commit(self): pass
+def test_published_documents_fit_their_contract(monkeypatch):
+    from algent_backend.contracts import spec
+    from algent_backend.contracts.shapes import SHAPES
 
-    out = pub.publish(today=date(2026, 10, 21), connect=lambda: Conn())
-    assert out["events"] == 2 and [r[13] for r in sent] == [5, 4]      # the two most-reported; `articles` column
-    assert len(sent[0]) == 21 and sent[0][18] == "third_party"          # basis column present
-    assert pub.publish(today=date(2026, 10, 21), connect=lambda: Conn())["events"] == 0
+    store.append(gdelt.parse([row()], "t"))
+    docs = pub.documents(date(2026, 10, 21))
+    assert spec.validate(docs["conflict/recent.json"], SHAPES["ohmega.conflict.recent"]) == []
+    assert spec.validate(docs["conflict/country/UA.json"], SHAPES["ohmega.conflict.country"]) == []
+    got = _capture(monkeypatch)
+    assert pub.publish(today=date(2026, 10, 21))["ok"] and set(got) == set(docs)
+
+
+def test_strongest_first_curated_over_machine():
+    store.append(gdelt.parse([row(arts="9")], "t"))
+    store.append([ConflictEvent(id=event_id("acled", "A", "2026-10-20"), source="acled", date="2026-10-20", observed_at="t", type="airstrike", country="UA", fatalities=3,
+                                coding="curated", confidence="high", basis="third_party")])
+    rows = pub.documents(date(2026, 10, 21))["conflict/recent.json"]["rows"]
+    assert [r["source"] for r in rows] == ["acled", "gdelt"]
+
+
+def test_stored_line_drops_the_constant_and_reads_back_whole():
+    [e] = gdelt.parse([row()], "t")
+    assert "coverage_note" not in e.stored()
+    store.append([e])
+    assert "Machine-coded" in store.shard("2026-10-20")[0].coverage_note
+
+
+def test_streaming_reads_skip_torn_lines_and_count_without_models():
+    store.append(gdelt.parse([row(), row(feature="F2", arts="5")], "t"))
+    with store.shard_path("2026-10-20").open("a") as fh:
+        fh.write("not json\n")
+    assert len(list(store.iter_events(30, date(2026, 10, 21)))) == 2
+    assert store.day_counts(30, date(2026, 10, 21))["2026-10-20"]["events"] == 3        # lines, not models: a torn line is still a line
+
+
+def _old(day: str, coding: str = "machine") -> ConflictEvent:
+    return ConflictEvent(id=event_id("gdelt", day, day), source="gdelt", date=day, observed_at="t", type="assault", coding=coding, confidence="low", basis="third_party")
+
+
+def test_retention_by_age_machine_short_curated_long():
+    today = date(2026, 10, 24)
+    store.append([_old("2026-10-20"), _old("2026-08-01"), _old("2026-08-02", "curated"), _old("2025-09-01", "curated")])
+    out = store.prune(today)
+    assert out["dropped"] == 2 and store.shard_days() == ["2026-08-02", "2026-10-20"]    # the 84-day-old machine shard and the 417-day-old curated one are gone
+
+
+def test_retention_by_size_drops_oldest_first(monkeypatch):
+    monkeypatch.setattr(flags, "MAX_STORE_MB", 0.0008)                                    # ~800 bytes: room for two of the three one-event shards
+    store.append([_old(f"2026-10-{d:02d}") for d in (20, 21, 22)])
+    store.prune(date(2026, 10, 24))
+    assert store.shard_days() == ["2026-10-21", "2026-10-22"]
+
+
+def test_collect_prunes_after_every_pass():
+    store.append([_old("2025-01-01")])
+    rep = collect_mod.collect(["gdelt"], today=date(2026, 10, 24), fetchers={"gdelt_latest": lambda: "20261024000000", "gdelt_file": lambda s: []})
+    assert rep["retention"]["dropped"] == 1 and "2025-01-01" not in store.shard_days()
 
 
 def test_desk_block_marks_basis_and_minimum():

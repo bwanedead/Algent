@@ -4,7 +4,7 @@
     newsroom conflict fetch [--source gdelt ...] [--no-publish]   read the sources, dedupe, join assets, store, publish
     newsroom conflict events [--days N] [--country XX] [--type T] [--limit N]   recent events from the local log
     newsroom conflict status                                      per source: last good fetch, key needs, collecting since
-    newsroom conflict publish [--full]                            push stored events to the site database
+    newsroom conflict publish                                     rebuild the documents (conflict/recent.json, conflict/country/<ISO>.json) and send what changed
 
 Every command prints one JSON document. See ``conflict/`` and docs/architecture/conflict-events-gnss.md.
 """
@@ -31,9 +31,8 @@ def add_parser(sub: Any) -> None:
     e.add_argument("--limit", type=int, default=40)
     e.set_defaults(handler=run_events)
     verbs.add_parser("status", help="per-source freshness").set_defaults(handler=run_status)
-    pb = verbs.add_parser("publish", help="push stored events to the site database")
-    pb.add_argument("--full", action="store_true", help="resend the recent window, not just what is new")
-    pb.set_defaults(handler=run_publish)
+    verbs.add_parser("publish", help="rebuild the published documents and send what changed").set_defaults(handler=run_publish)
+    verbs.add_parser("prune", help="apply the store's retention now (age and size; also runs after every fetch)").set_defaults(handler=run_prune)
 
 
 def _emit(doc: Any) -> int:
@@ -63,10 +62,16 @@ def run_status(_args: Any) -> int:
     from algent_backend.conflict import store
 
     return _emit({"store": str(store.root()), "events": store.line_count(), "collecting_since": store.collecting_since(), "since": store.since(),
-                  "cursor": store.load_cursor(), "sources": store.load_status()})
+                  "cursor": store.load_cursor(), "size_mb": round(store.size_mb(), 2), "sources": store.load_status()})
 
 
-def run_publish(args: Any) -> int:
+def run_publish(_args: Any) -> int:
     from algent_backend.conflict import publish
 
-    return _emit(publish.publish(full=args.full))
+    return _emit(publish.publish())
+
+
+def run_prune(_args: Any) -> int:
+    from algent_backend.conflict import store
+
+    return _emit({**store.prune(), "size_mb": round(store.size_mb(), 2)})

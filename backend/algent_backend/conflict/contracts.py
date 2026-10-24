@@ -13,7 +13,7 @@ from __future__ import annotations
 import hashlib
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 SourceId = Literal["gdelt", "reliefweb", "acled", "ucdp"]
 EventType = Literal["bombing", "airstrike", "armed_clash", "assault", "mass_violence", "report"]
@@ -69,8 +69,18 @@ class ConflictEvent(BaseModel):
     coding: Coding
     confidence: Confidence
     basis: Basis
-    coverage_note: str = ""
+    coverage_note: str = ""                         # the source's limit, in words; not stored per event (it is the same for a source): filled in on read
     assets: list[AssetRef] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def _coverage(self) -> "ConflictEvent":
+        if not self.coverage_note:
+            self.coverage_note = COVERAGE.get(self.source, "")
+        return self
+
+    def stored(self) -> str:
+        """The line the store keeps: everything but the per-source constant."""
+        return self.model_dump_json(exclude={"coverage_note"})
 
 
 def event_id(source: str, key: str, date: str) -> str:

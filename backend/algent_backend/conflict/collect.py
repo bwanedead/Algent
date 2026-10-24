@@ -47,7 +47,10 @@ def _gdelt(row: dict[str, Any], fetch_file: Callable[[str], list[ConflictEvent]]
             evs = fetch_file(stamp)
         except SourceError:
             if stamp == last:
-                raise                                       # the newest file not being there yet is a failure: try again next run
+                if files == 0:
+                    raise                                   # nothing read this run and the newest file is missing: a failure, try again next run
+                row["pending"] = stamp                      # not there yet (GDELT also skips a file now and then): the next run takes it, or steps past it
+                break
             store.save_cursor(gdelt=stamp)                  # an older file GDELT never produced: do not wait for it forever
             continue
         fresh = novel(evs)
@@ -92,4 +95,4 @@ def collect(sources: list[str] | None = None, *, today: date | None = None, fetc
             row.update(status="error", error=f"{type(exc).__name__}: {str(exc)[:200]}")
             store.save_status(src, last_error=row["error"], last_error_at=store.now_iso())
         rows.append(row)
-    return {"as_of": today.isoformat(), "sources": rows, "new": len(found)}
+    return {"as_of": today.isoformat(), "sources": rows, "new": len(found), "retention": store.prune(today)}

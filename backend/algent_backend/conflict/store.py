@@ -5,19 +5,21 @@ Conflict store on disk — an append-only event log sharded by event date, plus 
     <root>/status.json                 per source: last good fetch, last error, counts
     <root>/cursor.json                 GDELT: the stamp of the last 15-minute file read
     <root>/since.json                  per source: the day we first stored anything from it (the "collecting since" of every count)
-    <root>/published.json              per shard: lines the publisher has consumed and rows it sent to the site database
 
 Root: ``ALGENT_CONFLICT_STORE`` or ``conflict_store``. Shards keep a 15-minute collector from ever loading the whole history: a run reads only
-the few shards near the events it is about to add.
+the few shards near the events it is about to add. ONLY events are stored (never a source's raw file) and ``prune`` bounds the folder by age and by
+size (``flags.KEEP_DAYS_*``, ``flags.MAX_STORE_MB``): the registry's budget for this store is these numbers.
 """
 
 from __future__ import annotations
 
 import json
 import os
+from collections.abc import Iterator
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 
+from . import flags
 from .contracts import ConflictEvent
 
 _ENV = "ALGENT_CONFLICT_STORE"
@@ -91,7 +93,7 @@ def append(new: list[ConflictEvent]) -> list[ConflictEvent]:
             p = shard_path(day)
             p.parent.mkdir(parents=True, exist_ok=True)
             with p.open("a", encoding="utf-8", newline="\n") as fh:
-                fh.write("\n".join(e.model_dump_json() for e in write) + "\n")
+                fh.write("\n".join(e.stored() for e in write) + "\n")
             fresh += write
     for src in {e.source for e in fresh}:
         note_since(src)
@@ -148,20 +150,80 @@ def collecting_since() -> str:
     return min(s.values()) if s else ""
 
 
-def published() -> dict[str, dict[str, int]]:
-    """Per shard day: ``lines`` consumed by the publisher and ``sent`` rows actually pushed (the per-day cap counts the latter)."""
-    return {k: {"lines": int(v.get("lines", 0)), "sent": int(v.get("sent", 0))} for k, v in _read_json("published.json").items() if isinstance(v, dict)}
-
-
-def save_published(marks: dict[str, dict[str, int]]) -> None:
-    _write_json("published.json", marks)
-
-
-def lines_after(day: str, n: int) -> list[ConflictEvent]:
-    out = []
-    for line in _lines(day)[n:]:
-        try:
-            out.append(ConflictEvent.model_validate_json(line))
-        except ValueError:
+# -- streaming reads and retention -----------------------------------------------------------------
+def iter_events(days: int, today: date | None = None) -> Iterator[ConflictEvent]:
+    """Events dated within the last ``days`` days, one at a time (a publisher that keeps only the strongest few never holds a shard)."""
+    today = today or date.today()
+    floor, top = (today - timedelta(days=days)).isoformat(), today.isoformat()
+    for d in shard_days():
+        if not floor <= d <= top:
             continue
+        try:
+            with shard_path(d).open(encoding="utf-8") as fh:
+                for line in fh:
+                    try:
+                        yield ConflictEvent.model_validate_json(line)
+                    except ValueError:
+                        continue                            # a torn line must not hide the rest
+        except OSError:
+            continue
+
+
+def day_counts(days: int, today: date | None = None) -> dict[str, dict[str, int]]:
+    """Per event date: ``{"events": n, "machine": n, "curated": n}`` (the rest are reports) over the whole shard (a count never limited by what a document carries). Reads lines, not models."""
+    today = today or date.today()
+    floor, top = (today - timedelta(days=days)).isoformat(), today.isoformat()
+    out: dict[str, dict[str, int]] = {}
+    for d in shard_days():
+        if floor <= d <= top:
+            lines = _lines(d)
+            out[d] = {"events": len(lines), "machine": sum(1 for x in lines if '"coding":"machine"' in x), "curated": sum(1 for x in lines if '"coding":"curated"' in x)}
     return out
+
+
+def _size(p: Path) -> int:
+    try:
+        return p.stat().st_size
+    except OSError:
+        return 0
+
+
+def size_mb() -> float:
+    return sum(_size(shard_path(d)) for d in shard_days()) / 1_000_000
+
+
+def prune(today: date | None = None) -> dict[str, int]:
+    """The store's retention (the registry names this function). Drops event shards older than the window (machine-coded GDELT: ``KEEP_DAYS_MACHINE``;
+    anything else: ``KEEP_DAYS_OTHER``), then, if the folder is still over ``MAX_STORE_MB``, the oldest shards until it is not. A shard is one event date, so a
+    day holds events of every source; it counts as machine-coded only when every event in it is. Never raises: a file that will not delete stays for the next pass."""
+    today = today or date.today()
+    machine_floor = (today - timedelta(days=flags.KEEP_DAYS_MACHINE)).isoformat()
+    other_floor = (today - timedelta(days=flags.KEEP_DAYS_OTHER)).isoformat()
+    dropped = freed = 0
+
+    def drop(day: str) -> None:
+        nonlocal dropped, freed
+        p = shard_path(day)
+        n = _size(p)
+        try:
+            p.unlink()
+        except OSError:
+            return
+        dropped, freed = dropped + 1, freed + n
+
+    for day in shard_days():
+        if day < other_floor or (day < machine_floor and _is_machine_only(day)):
+            drop(day)
+    over = size_mb() - flags.MAX_STORE_MB
+    for day in shard_days():                                   # oldest first
+        if over <= 0:
+            break
+        before = _size(shard_path(day)) / 1_000_000
+        drop(day)
+        over -= before
+    return {"dropped": dropped, "freed_kb": freed // 1000}
+
+
+def _is_machine_only(day: str) -> bool:
+    return all(e.coding == "machine" for e in shard(day))
+

@@ -29,10 +29,22 @@ MAX_URLS = 3
 #: Dedupe looks at the event-date shards within this many days of an incoming event (the same attack is re-reported for a day or two).
 DEDUPE_DAYS = 2
 
-#: Windows for readers.
-PUBLISH_DAYS = 30
-#: The site database gets at most this many events a day (most-reported first): a bound on database growth, not on the local record.
-PUBLISH_PER_DAY = 400
+#: Storage discipline (operator rule: keep events only, never raw dumps; the size is bounded here, not by hand). GDELT's 15-minute files are streamed
+#: and reduced to the few kept events on the way in, so nothing but events is ever stored. Event shards (one file per event date) are then kept for a
+#: rolling window, and a store above ``MAX_STORE_MB`` drops its oldest machine-coded shards first (``store.prune``, run by every collection pass).
+#: Machine-coded events (GDELT) are cheap to re-derive and noisy; researcher-coded and report rows are few and kept longer.
+KEEP_DAYS_MACHINE = 45
+KEEP_DAYS_OTHER = 365
+MAX_STORE_MB = 150
+
+#: Published documents (``conflict/publish.py``). recent.json: the newest window, strongest events first, one document the log page and the globe read;
+#: country/<ISO>.json: one country's slice for its panel. A cap is stated in the document (``capped``), never passed off as a total.
+RECENT_DAYS = 14
+RECENT_MAX = 1200
+COUNTRY_DAYS = 30
+COUNTRY_MAX = 120
+#: Days of per-day counts published (the log's sparkline and the "events per day" figure; counts come from the whole stored shard, not the capped rows).
+COUNT_DAYS = 30
 DESK_DAYS = 7
 DESK_LINES = 8
 SWEEP_LINES = 8
