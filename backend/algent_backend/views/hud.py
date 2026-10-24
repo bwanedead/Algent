@@ -15,7 +15,7 @@ from collections import defaultdict
 from datetime import date, timedelta
 from typing import Any
 
-from . import dailies, flags, graph, mentions, themes
+from . import dailies, flags, graph, mentions, signals, themes
 from .base import View, make
 from .context import ViewContext
 
@@ -145,7 +145,8 @@ def hud(ctx: ViewContext, g: dict[str, Any]) -> dict[str, Any]:
     since = (today - timedelta(days=SANCTION_RECENT_DAYS)).isoformat()
     sanctions = sorted((r for r in ctx.rows("sanctions/recent.json", "rows") if r.get("action") == "designated" and str(r.get("on_date")) >= since),
                        key=lambda r: str(r.get("on_date")), reverse=True)[: flags.HUD_SANCTIONS]
-    return {"asOf": dates[0] if dates else "", "daily": block, "theaters": theaters or [], "pulses": movers, "coming": coming, "sanctions": sanctions, "trader": trader(ctx)}
+    return {"asOf": dates[0] if dates else "", "daily": block, "theaters": theaters or [], "pulses": movers, "coming": coming, "sanctions": sanctions, "trader": trader(ctx),
+            "attacks": signals.attacks_recent(ctx, flags.HUD_ATTACK_DAYS, flags.HUD_ATTACKS), "gnss": signals.gnss_in(ctx, None, flags.HUD_ZONES)}
 
 
 def trader(ctx: ViewContext) -> dict[str, Any] | None:
@@ -167,4 +168,5 @@ def build(ctx: ViewContext) -> list[View]:
     body = {"globe": globe(ctx, g), "hud": hud(ctx, g)}
     return [make("hud", "hud", body, as_of=str((body["globe"] or {}).get("asOf") or body["hud"]["asOf"]),
                  sources=[("dailies", "daily/geopolitics"), ("actors", "actors/*.json"), ("sanctions", "sanctions/recent.json"), ("calendar", "calendar/next.json"),
-                          ("pulses", "snapshots/latest"), ("markets", "data/track-record.json"), ("live", "live/anomalies.json")])]
+                          ("pulses", "snapshots/latest"), ("markets", "data/track-record.json"), ("live", "live/anomalies.json"),
+                          ("conflict", "conflict/recent.json"), ("gnss", "gnss/latest.json")])]

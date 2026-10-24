@@ -33,6 +33,11 @@ _MARITIME = {"id": "m1", "kind": "ais_gap", "mmsi": 123456789, "mmsi2": None, "n
              "confidence": 0.8, "rationale": "r", "summary": "Went silent for 9 hours.", "detail": {}, "evidence": [[1760000000, 26.5, 56.3, 11.0, "last"]], "provenance": "ohmega_derived", "updated_at": AT}
 _SANCTION = {"id": "sx1", "source": "ofac", "action": "designated", "on_date": "2026-10-20", "observed_on": "2026-10-21", "ref": "R1", "name": "MAR AZUL", "type": "vessel",
              "programmes": ["IRAN"], "countries": ["IR"], "imo": "9876543", "flag": "PA", "owner": "X Ltd", "source_url": "https://ofac.treasury.gov/", "baseline": False, "asset_id": "plant1"}
+_CONFLICT = {"id": "cx-1", "source": "gdelt", "on_date": TODAY, "type": "airstrike", "lat": 33.5, "lon": 36.3, "place": "Damascus", "country": "SY", "actor1": "Israel", "actor2": "Syria",
+             "fatalities": None, "articles": 4, "title": "Damascus", "urls": ["https://example.org/a"], "coding": "machine", "confidence": "low", "basis": "third_party",
+             "assets": [{"id": "plant1", "name": "Bandar Abbas power plant", "type": "power_plant", "km": 2.5}]}
+_ZONE = {"id": "gz-1", "on_date": TODAY, "source": "ohmega_adsb", "cell": "54,20", "lat": 54.5, "lon": 20.5, "size_deg": 1.0, "country": "RU", "severity": "high", "degraded_share": 0.4,
+         "aircraft": 120, "flag": "new", "cross_check": "agrees"}
 _CAL = {"id": "c1", "on_date": "2099-01-15", "end_date": None, "title": "Gulf summit", "kind": "summit", "countries": ["IR", "SA"], "theaters": [], "source": "official",
         "source_url": "https://example.org/summit", "confidence": "high", "provenance": "aggregated", "via": "", "active": True,
         "situations": [], "grade": "official", "topic": "diplomacy", "importance": 3, "sources": [{"source": "official", "url": "https://example.org/summit"}]}
@@ -114,6 +119,13 @@ def _examples() -> dict[str, tuple[str, dict[str, Any]]]:
     add("ohmega.maritime.events", "maritime/recent.json", {"events": [_MARITIME]})
     add("ohmega.maritime.counts", "maritime/counts.json", {"total": 1, "ongoing": 1, "byKind": {"ais_gap": 1}})
     add("ohmega.sanctions", "sanctions/recent.json", {"rows": [_SANCTION]})
+    add("ohmega.conflict.recent", "conflict/recent.json", {"as_of": AT, "since": "2026-10-24", "window_days": 14, "total": 1, "shown": 1, "capped": False, "by_day": {TODAY: {"events": 1, "machine": 1, "curated": 0}},
+                                                           "sources": {"gdelt": {"keyed": False, "active": True, "last_ok": AT}}, "coverage": {"gdelt": "Machine-coded."}, "rows": [_CONFLICT]})
+    add("ohmega.conflict.country", "conflict/country/SY.json", {"iso": "SY", "as_of": AT, "window_days": 30, "total": 1, "capped": False, "rows": [_CONFLICT]})
+    add("ohmega.gnss.latest", "gnss/latest.json", {"day": TODAY, "generated_at": AT, "samples": 20, "baseline_days": 3, "baseline_since": "2026-10-20", "coverage": {"ohmega_adsb": "Our estimate."},
+                                                   "ours": [_ZONE], "gpsjam": [], "history": [{"day": TODAY, "zones": 1, "high": 1, "flagged": 1}]})
+    add("ohmega.gnss.overlay", "live/gnss.json", {"v": 1, "as_of": AT, "date": TODAY, "zones": [{"lat": 54.5, "lon": 20.5, "r": 1.0, "s": "high", "share": 0.4, "f": "new", "src": "o"}],
+                                                  "p": {"ours": {"basis": "our_estimate", "coverage_note": "Our estimate."}, "gpsjam": {"basis": "third_party", "coverage_note": "Theirs."}}})
     add("ohmega.calendar", "calendar/next.json", {"items": [_CAL]})
     add("ohmega.geo.place", "geo/a/plant1.json", {"asset": _ASSET, "events": [_GEO_EVENT]})
     add("ohmega.geo.assets", "geo/c/IR.json", {"assets": [_ASSET]})
