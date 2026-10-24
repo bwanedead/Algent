@@ -190,12 +190,14 @@ PRODUCTS: tuple[Product, ...] = (
         publishes=("sanctions/",), contracts=(K("ohmega.sanctions", 1, ("sanctions/recent.json", "sanctions/country/*.json")),), site_routes=("/intel/sanctions",), feeds_from=(), heartbeat=("sanctions_store/status.json",)),
     Product(
         id="calendar", title="Calendar (look-ahead)", owner="lookahead",
-        what="Upcoming elections, central-bank decisions, summits, OPEC+ and extracted deadlines; append-only revisions of items.",
-        stores=(Store("calendar_store", loc.calendar, "ALGENT_CALENDAR_STORE", True, budget=_b(2, 100, 500, 100, 0.3, "estimate: one revision line per changed item")),),
+        what="Upcoming elections, central-bank decisions, releases, commodity reports, summits, courts, AI/tech events, launches, our markets' resolutions and extracted deadlines; append-only revisions of items.",
+        stores=(Store("calendar_store", loc.calendar, "ALGENT_CALENDAR_STORE", True,
+                      budget=_b(1, 100, 500, 100, 0.1, "estimate (unmeasured): ~700 items x ~0.7 KB on first fill; a revision line only when a date moves (launches, markets); published: calendar/next.json ~250 KB + ~80 country files, each hash-skipped")),),
         retention=(Retention("append-only", "items.jsonl keeps every revision; status.json is replaced", "lookahead/store.py::root", "on-write"),),
         irreplaceable=True, why="revision history (a moved or withdrawn date) cannot be re-fetched",
-        jobs=(Job("calendar", ("calendar", "refresh"), "*-*-* 04:40", every_min=1440, what="calendar refresh"),),
-        publishes=("calendar/",), contracts=(K("ohmega.calendar", 1, ("calendar/next.json",)),), site_routes=("/calendar",), feeds_from=("statements",), heartbeat=("calendar_store/status.json",)),
+        jobs=(Job("calendar", ("calendar", "refresh", "--group", "schedules"), "*-*-* 04:40", every_min=1440, priority=3, est_min=3, est_mb=150, what="calendar: official schedules (daily class)"),
+              Job("calendar-fast", ("calendar", "refresh", "--group", "fast"), "3/6:35", every_min=360, priority=3, est_min=4, est_mb=150, what="calendar: earnings, launches, our markets and watches (six-hourly class)")),
+        publishes=("calendar/",), contracts=(K("ohmega.calendar", 1, ("calendar/next.json", "calendar/country/*.json")),), site_routes=("/calendar",), feeds_from=("statements",), heartbeat=("calendar_store/status.json",)),
     Product(
         id="ai_benchmarks", title="AI benchmarks", owner="ai_benchmarks",
         what="Benchmark scores (Epoch hub, SWE-bench, LMArena) and lab-claimed scores found by one capped model call a day.",

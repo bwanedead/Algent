@@ -177,7 +177,7 @@
       "feeds_from": [
         "statements"
       ],
-      "refresh_minutes": 1440
+      "refresh_minutes": 360
     },
     {
       "id": "ai_benchmarks",

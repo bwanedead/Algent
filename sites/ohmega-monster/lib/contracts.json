@@ -322,7 +322,8 @@
         1
       ],
       "paths": [
-        "calendar/next.json"
+        "calendar/next.json",
+        "calendar/country/*.json"
       ],
       "product": "calendar"
     },

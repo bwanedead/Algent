@@ -1,9 +1,10 @@
 """
-Publish the calendar to the site database (migration 012: ``calendar_items``, anon read-only).
+Publish the calendar to the site: ``calendar/next.json`` (every active item in the window, merged across sources and ranked) and
+``calendar/country/<ISO>.json`` (that country's rows, for its actor page and the country filter). The object store skips a document
+whose content hash is unchanged, so a daily run with nothing new writes nothing; documents are small (budget in the registry).
 
-Never raises, idempotent, a no-op without ``DATABASE_URL`` (the contract of ``publishing/published_db``). The calendar is a few
-hundred rows, so every run upserts the items from a week ago onward (including withdrawn ones, which flip ``active`` off); a
-row whose content is unchanged is not rewritten.
+The window is 14 days back (context: what just happened or was just decided) and 180 ahead (``sources.HORIZON_DAYS``). The legacy
+Postgres table (migration 012, anon read-only) stays behind its flag and receives only the original seven kinds its check allows.
 """
 
 from __future__ import annotations
@@ -15,10 +16,13 @@ from typing import Any
 from algent_backend.publishing import published_db, site_data
 from algent_backend.publishing.published_db import _run
 
-from . import store
+from . import merge, rank, store
 from .contracts import CalendarItem
+from .sources import HORIZON_DAYS, LOOKBACK_DAYS
 
-KEEP_DAYS_BACK = 7
+KEEP_DAYS_BACK = LOOKBACK_DAYS
+AHEAD_DAYS = HORIZON_DAYS
+LEGACY_KINDS = ("election", "central_bank", "summit", "security_council", "opec", "deadline", "vote")
 _ROW = """
 insert into calendar_items (id, on_date, end_date, title, kind, countries, theaters, source, source_url, confidence, provenance, via, active)
 values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
@@ -38,18 +42,36 @@ def row(i: CalendarItem) -> tuple:
             i.provenance, i.via, i.active)
 
 
-#: The site reads one document: active items from a week back to ``AHEAD_DAYS`` ahead (the page shows 45, an actor page 120).
-AHEAD_DAYS = 120
+#: The table's columns first (rows are ``CalendarRow`` in lib/calendar-shared.ts), then the additive ones.
 COLUMNS = ("id", "on_date", "end_date", "title", "kind", "countries", "theaters", "source", "source_url", "confidence", "provenance", "via", "active")
 
 
-def documents(today: date | None = None) -> dict[str, Any]:
-    """``calendar/next.json``: the active items in the window, soonest first (rows as ``CalendarRow`` in lib/calendar-shared.ts)."""
-    today = today or date.today()
+def as_row(i: CalendarItem) -> dict[str, Any]:
+    out = dict(zip(COLUMNS, row(i)))
+    out.update(situations=i.situations, grade=i.grade, topic=i.topic, importance=i.importance,
+               sources=i.sources or [{"source": i.source, "url": i.source_url}])
+    return out
+
+
+def window_items(today: date, hot: set[str] | None = None) -> list[CalendarItem]:
+    """Active store items in the window, merged across sources, each with its importance, soonest first."""
     lo, hi = (today - timedelta(days=KEEP_DAYS_BACK)).isoformat(), (today + timedelta(days=AHEAD_DAYS)).isoformat()
-    rows = [dict(zip(COLUMNS, row(i))) for i in store.current().values() if i.active and (i.end_date or i.date) >= lo and i.date <= hi]
-    rows.sort(key=lambda r: (r["on_date"], r["id"]))
-    return {"calendar/next.json": {"items": rows}}
+    items = [i for i in store.current().values() if i.active and (i.end_date or i.date) >= lo and i.date <= hi]
+    hot = rank.hot_theaters() if hot is None else hot
+    return [i.model_copy(update={"importance": rank.importance(i, hot)}) for i in merge.merge(items)]
+
+
+def documents(today: date | None = None, hot: set[str] | None = None) -> dict[str, Any]:
+    """``calendar/next.json`` and one ``calendar/country/<ISO>.json`` per country with an item."""
+    rows = sorted((as_row(i) for i in window_items(today or date.today(), hot)), key=lambda r: (r["on_date"], -r["importance"], r["id"]))
+    docs: dict[str, Any] = {"calendar/next.json": {"items": rows}}
+    by_country: dict[str, list[dict[str, Any]]] = {}
+    for r in rows:
+        for c in r["countries"]:
+            if len(c) == 2:
+                by_country.setdefault(c.upper(), []).append(r)
+    docs.update({f"calendar/country/{c}.json": {"items": rs} for c, rs in sorted(by_country.items())})
+    return docs
 
 
 def publish(*, today: date | None = None, connect: Callable[[], Any] | None = None) -> dict[str, Any]:
@@ -64,7 +86,7 @@ def publish(*, today: date | None = None, connect: Callable[[], Any] | None = No
 
 def _publish_table(*, today: date | None = None, connect: Callable[[], Any] | None = None) -> dict[str, Any]:
     horizon = ((today or date.today()) - timedelta(days=KEEP_DAYS_BACK)).isoformat()
-    items = [i for i in store.current().values() if (i.end_date or i.date) >= horizon]
+    items = [i for i in store.current().values() if (i.end_date or i.date) >= horizon and i.kind in LEGACY_KINDS]
     if not items:
         return {"db": True, "items": 0, "note": "nothing to send"}
 
