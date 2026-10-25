@@ -62,9 +62,12 @@ def window_items(today: date, hot: set[str] | None = None) -> list[CalendarItem]
 
 
 def documents(today: date | None = None, hot: set[str] | None = None) -> dict[str, Any]:
-    """``calendar/next.json`` and one ``calendar/country/<ISO>.json`` per country with an item."""
-    rows = sorted((as_row(i) for i in window_items(today or date.today(), hot)), key=lambda r: (r["on_date"], -r["importance"], r["id"]))
-    docs: dict[str, Any] = {"calendar/next.json": {"items": rows}}
+    """``calendar/next.json`` and one ``calendar/country/<ISO>.json`` per country with an item. Market resolution dates (hundreds of them) go to
+    their own ``calendar/markets.json`` for the Predictions page only: in the general calendar, the Daily strips and Home they drowned the
+    events a reader actually watches (operator, 2026-10-25)."""
+    every = sorted((as_row(i) for i in window_items(today or date.today(), hot)), key=lambda r: (r["on_date"], -r["importance"], r["id"]))
+    rows = [r for r in every if r["kind"] != "market_resolves"]
+    docs: dict[str, Any] = {"calendar/next.json": {"items": rows}, "calendar/markets.json": {"items": [r for r in every if r["kind"] == "market_resolves"]}}
     by_country: dict[str, list[dict[str, Any]]] = {}
     for r in rows:
         for c in r["countries"]:

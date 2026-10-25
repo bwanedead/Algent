@@ -229,7 +229,7 @@ PRODUCTS: tuple[Product, ...] = (
         irreplaceable=True, why="revision history (a moved or withdrawn date) cannot be re-fetched",
         jobs=(Job("calendar", ("calendar", "refresh", "--group", "schedules"), "*-*-* 04:40", every_min=1440, priority=3, est_min=3, est_mb=150, what="calendar: official schedules (daily class)"),
               Job("calendar-fast", ("calendar", "refresh", "--group", "fast"), "3/6:35", every_min=360, priority=3, est_min=4, est_mb=150, what="calendar: earnings, launches, our markets and watches (six-hourly class)")),
-        publishes=("calendar/",), contracts=(K("ohmega.calendar", 1, ("calendar/next.json", "calendar/country/*.json")),), site_routes=("/calendar",), feeds_from=("statements",), heartbeat=("calendar_store/status.json",)),
+        publishes=("calendar/",), contracts=(K("ohmega.calendar", 1, ("calendar/next.json", "calendar/markets.json", "calendar/country/*.json")),), site_routes=("/calendar",), feeds_from=("statements",), heartbeat=("calendar_store/status.json",)),
     Product(
         id="ai_benchmarks", title="AI benchmarks", owner="ai_benchmarks",
         what="Benchmark scores (Epoch hub, SWE-bench, LMArena) and lab-claimed scores found by one capped model call a day.",
