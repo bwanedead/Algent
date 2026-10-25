@@ -21,7 +21,7 @@ import "./calendar.css";
 
 type Row = Required<CalendarRow>;
 type View = "week" | "month" | "list";
-const VIEWS: { id: View; label: string }[] = [{ id: "week", label: "Week" }, { id: "month", label: "Month" }, { id: "list", label: "List" }];
+const VIEWS: { id: View; label: string }[] = [{ id: "month", label: "Month" }, { id: "list", label: "Feed" }];   // week view dropped (operator, 2026-10-25)
 const CELL_MAX = 3;
 
 /** Three small bars: how many are filled is the importance (1 routine, 2 notable, 3 major). */
@@ -105,13 +105,13 @@ function Detailed({ r, past }: { r: Row; past: boolean }) {
 }
 
 export default function CalendarView({ rows, today }: { rows: Row[]; today: string }) {
-  const [view, setView] = useState<View>("week");
+  const [view, setView] = useState<View>("month");
   const [topics, setTopics] = useState<Set<CalendarTopic>>(new Set());
   const [country, setCountry] = useState("");
   const [situation, setSituation] = useState("");
   const [routine, setRoutine] = useState(false);
   const [past, setPast] = useState(false);
-  const [anchor, setAnchor] = useState(weekStart(today));
+  const [anchor, setAnchor] = useState(`${today.slice(0, 7)}-01`);
 
   const present = useMemo(() => new Set(rows.map((r) => r.topic)), [rows]);
   const countries = useMemo(() => countriesOf(rows), [rows]);
@@ -268,7 +268,7 @@ export default function CalendarView({ rows, today }: { rows: Row[]; today: stri
                     ))}
                   </ul>
                   {c.items.length > CELL_MAX && (
-                    <button type="button" className="cal-more" onClick={() => { setView("week"); setAnchor(weekStart(c.date)); }}>
+                    <button type="button" className="cal-more" onClick={() => setView("list")}>
                       +{c.items.length - CELL_MAX} more
                     </button>
                   )}

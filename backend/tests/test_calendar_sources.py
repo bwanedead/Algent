@@ -242,7 +242,7 @@ def test_documents_carry_the_additive_fields_and_per_country_files(tmp_path, mon
     store.sync("fed", [make("central_bank", "fed", "2026-12-09", "Fed rate decision", "https://f", countries=["US"])], TODAY)
     store.sync("boj", [make("central_bank", "boj", "2026-12-18", "Bank of Japan rate decision", "https://b", countries=["JP"])], TODAY)
     docs = pub.documents(TODAY, hot=set())
-    assert sorted(docs) == ["calendar/country/JP.json", "calendar/country/US.json", "calendar/next.json"]
+    assert sorted(docs) == ["calendar/country/JP.json", "calendar/country/US.json", "calendar/markets.json", "calendar/next.json"]
     r = docs["calendar/next.json"]["items"][0]
     assert (r["grade"], r["topic"], r["importance"], r["sources"]) == ("official", "central_banks", 3, [{"source": "fed", "url": "https://f"}])
     assert [x["title"] for x in docs["calendar/country/JP.json"]["items"]] == ["Bank of Japan rate decision"]

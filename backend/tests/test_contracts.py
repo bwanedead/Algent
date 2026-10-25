@@ -140,7 +140,7 @@ def test_the_sanctions_calendar_maritime_geo_and_live_builders_fit_the_shapes(tm
     from algent_backend.sanctions import publish as sanctions_publish
 
     assert _check(sanctions_publish.documents(date(2026, 10, 23))) == 1                    # an empty store still yields the recent document
-    assert _check(calendar_publish.documents(date(2026, 10, 23))) == 1
+    assert _check(calendar_publish.documents(date(2026, 10, 23))) == 2                     # next.json + the Predictions-only markets.json
     from algent_backend.maritime import publish as maritime_publish
 
     assert _check(maritime_publish.documents()) >= 3
