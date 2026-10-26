@@ -1,45 +1,77 @@
-# The world model: what the brain keeps (vision, 2026-10-25)
+# The world model: what the brain keeps and how it learns (vision v2, 2026-10-26)
 
-Operator's framing: we are building a brain that takes in the world and makes judgments. We have ~10 GB. The goal is the **highest compression of
-reality** we can hold: high-signal, nuance-carrying, continually evolving, judged by **predictive ability**, not by officialness. "Official" is
-one actor's claim with its own incentives. A good model keeps the space of explanations open where the truth isn't known, without leaning into
-one. Two people seeing the same news reach different conclusions because they run different world models; the model is the product.
+Operator's framing, refined in discussion (see also the essay "On Delineation", 2026-10-26). Ohmega is not a better intelligence database.
+It is a continually evolving, evidence-grounded **model of the world**. It compresses observations into actors, conditions, relationships and
+mechanisms; it keeps uncertainty where truth is unknown; it predicts; and it seeks observations that could improve or overturn its understanding.
+It is judged by the predictive, explanatory and transferable value of that model, never by how much it collects.
 
-## Principles
-1. **Observations ≠ interpretations.** We store *who claimed what, when, and with what incentive*, never "what is true". A state statement, a
-   wire story and a ship track are all observations with a source.
-2. **Competing hypotheses per situation.** Each situation holds an explicit set of explanations (e.g. France unrest: H1 the stated cost-of-living/
-   schools story; H2 a legitimacy/representation crisis; H3 …; "other/unknown"), each with a weight. The official account is one hypothesis among
-   others, not the default. Unresolved space stays visible.
-3. **Information = what moves the model.** An observation is worth keeping in proportion to how much it shifts hypothesis weights (its likelihood
-   ratio between hypotheses), its novelty against baseline, and its source's reliability. Evidence that discriminates nothing is noise; we summarise
-   and drop it. This is the compression rule.
-4. **Revealed behaviour over stated positions.** Money, prices, ships, flights, jamming, satellite change, who shows up and where are harder to fake
-   than statements. Divergence between what actors say and what they do is itself one of the strongest signals.
-5. **Sources earn trust by track record, per topic.** Every source and actor gets a reliability and a bias estimate, learned from how its past
-   claims held up, not from its status. Narrative divergence between sources is signal.
-6. **Discriminating indicators.** Each hypothesis says what we'd expect to see if it were true. We watch those indicators specifically, so new
-   observations land on a question.
-7. **Prediction closes the loop.** Hypotheses generate forecasts (Pulses, calendar watches, market bets). Reality scores them and re-weights both
-   the hypotheses and the sources that supported them. This is how the model stays honest and keeps evolving.
+> Don't optimise for how much the brain remembers. Optimise for how much of the world it can reconstruct, explain and anticipate from what it
+> remembers.
 
-## Shape (what is stored)
-- **Graph:** entities, relations and dated observations with provenance (the corpus index today).
-- **Situations → hypotheses → indicators**, with weights and a dated weight history (why each move happened, citing the observations).
-- **Source/actor reliability and stance** per topic.
-- **Forecasts and their scores** (Pulses, markets, watches).
-- **Compressed history:** raw items roll into "what changed" summaries once they stop moving weights.
+> **Governing principle: preserve evidence, version interpretation, isolate experimentation, judge methods by their consequences.**
 
-At our scale this fits easily: millions of observations and their weights are a few GB of structured text. No neural network is needed now: the
-"weights" are interpretable numbers (hypothesis probabilities, source reliabilities, edge strengths) that the system updates continuously.
-Embeddings can come later for retrieval.
+## 1. What the brain must be able to do
+- **Delineate.** Find the fork between possible worlds, sharpen it, and search for the detail that fits one and not the other. Record exactly
+  what each observation established: *hard* (a possibility contradicted, given stated assumptions), *soft* (relative weights moved), or
+  *restructure* (no listed explanation fits, so add a mechanism, actor or variable). "Store only what the evidence earned."
+- **Hold a worldview landscape.** Compressed regularities about how things behave (institutions, incentives, coalitions, deception, markets, physical
+  systems). They tilt a question before the reasons are articulated, and they flag configurations that "move like fake water". Intuition
+  proposes and flags; it is not counted as independent evidence unless it has been calibrated on held-out history.
+- **Model minds and networks.** Actors have goals, beliefs (possibly wrong), capabilities, constraints and internal factions. The effective
+  unit of agency is sometimes an undeclared coalition, patronage network or institution.
+- **Reason about hidden structure without being institution-brained or tinfoil.** Official statements are claims with incentives. The key tool is
+  the **integrity counterfactual**: how would an actor bound by its stated duties behave here? Divergence from that path, especially costly
+  divergence that benefits the same parties repeatedly, reveals hidden objectives and affiliations. This holds even when the behaviour is
+  statistically *normal* (if collusion is the norm, anomaly detection sees nothing). The system keeps separate assessments for: shared interest,
+  ideological alignment, open coordination, tacit coordination, covert coordination and improper collusion. Inferred links are allowed in the
+  graph, labelled as inferred, tied to evidence and exposed to alternatives. It also remembers when suspicion turned out mundane.
+- **Track explanatory debt.** A persistent pattern the model can't explain is a first-class object that accumulates observations and candidate
+  mechanisms until it resolves (mundane, covert, or new mechanism) or stays open.
+- **Explore as well as exploit.** Refine known models, *and* notice what none of them anticipated. Some research is reserved for the unfamiliar.
+- **Know what it can't see.** Coverage is recorded: absence of a signal means something only where the signal would have been observable.
 
-## How it maps onto what exists
-The corpus index holds observations. Pulses become proper hypothesis sets with indicators. The prediction bots and the scored forecasts become the
-reality check. The Explore feeds are judged by whether they feed discriminating indicators: attack logs, ships, satellite and jamming stay only
-where they bear on a hypothesis we hold.
+## 2. Memory layers (logical, not separate databases)
+1. **Evidence:** original records, extracted observations, attributed claims and computed features, each with provenance (producer, method
+   version, sources) and **three timestamps**: when it happened, when it became available, and when we acquired it. Copies of one report are one
+   evidence chain, not ten.
+2. **World state:** actors, capabilities, relationships, dependencies and conditions over time.
+3. **Mechanisms:** how things influence each other (economic, political, military, institutional, psychological).
+4. **Beliefs and uncertainty:** possibility sets, the delineation ledger, explanatory debt and unknowns, with a dated history of every revision
+   and the evidence behind it, so any past state can be reconstructed without hindsight.
+5. **Predictions:** immutable dated forecasts, outcomes, scores and model versions.
 
-## First build steps (when usage allows)
-1. Hypothesis sets with indicators for the active situations; observations tagged with which hypotheses they support or weaken.
-2. Source reliability from resolved claims, forecasts and markets.
-3. Feed audit under rule 3: keep what discriminates, compress or drop the rest (attack log, maritime, satellite, GNSS first).
+Compression is reversible where possible. History and the record of *normal* behaviour are kept (baselines need them). The largest compression
+is conceptual: one good mechanism explains hundreds of events. Shared evidence is compressed conservatively, because a better future model may
+need what today's models ignore.
+
+## 3. Experimental architecture: competing brains, one evidence base
+Our own theories of how the brain should think may be wrong, so no single sense-making method is privileged.
+- **Shared evidence substrate:** observations and claims with provenance and time semantics. No protocol's conclusions overwrite it. Interpretive
+  steps that live in it (entity resolution, deduplication, extraction) are versioned and reversible, and protocols may disagree with them.
+- **Protocols, i.e. bots, as versioned manifests:** attention, extraction, memory, interpretation, hypothesis, evidence, investigation, prediction
+  and learning policies, plus model, prompts, tools and data access. Every meaningful change produces a new version.
+- **Isolated derived memory per protocol:** each has its own hypotheses, actor graph, worldview elements, summaries and research results, in
+  separate logical namespaces on shared physical storage. Nothing is promoted across branches unless an experiment says so. Branches can be
+  snapshotted and forked (A → A1/A2) and rolled back.
+- **Evaluation:** one experiment runner that gives protocols matched questions with strict information cutoffs (no leakage through
+  summaries), records forecasts, costs and traces, and scores them. Calibration and Brier/log scores are kept separate from trading P&L and from
+  market-selection skill; abstentions are evaluated too. Run component ablations as well as full-stack comparisons. The headline test: *does
+  access to the world model beat the same LLM given only recent news?* If not, the architecture hasn't earned its complexity.
+- **Adversarial evaluation for hidden-coordination reasoning:** use confirmed historical schemes, ordinary shared-interest behaviour and
+  genuinely ambiguous cases; measure detection, false positives, calibration, and sensitivity to framing ("suspicious" or "official" labels).
+
+## 4. Order of work
+1. Inventory what exists (corpus index, Pulses, bots, traces, ledgers, registry) and map it onto the layers above.
+2. **Experimental foundation:**
+   - an evidence substrate with provenance and the three timestamps;
+   - protocol manifests with isolated derived namespaces;
+   - the matched-question experiment runner, with today's bots as Protocol A, the control.
+3. Protocol B: delineation (possibility sets, the ledger, discriminating research).
+4. Protocol C: strategic worldview (actor goals, integrity counterfactuals, revealed interests, inferred affiliations, coalition incentives),
+   modelled deeply on two cases first: the Brazil 2026 runoff (contested institutions, affiliations) and Hormuz (strategic actors, physical
+   signals).
+5. Protocol D: B + C. Then the worldview mismatch detector, explanatory debt, and expected-value-of-information research.
+6. Memory and retention policy set by measured value (ablations), not by guesses. Neural or learned components come only where they
+   measurably beat explicit structure.
+
+Each stage advances when its evaluation shows it works, not on a calendar.
