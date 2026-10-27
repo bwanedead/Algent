@@ -112,7 +112,7 @@ def test_bad_model_output_and_failures_are_skipped_not_stored():
     def flaky(task, role=""):
         if "thing a" in task:
             raise RuntimeError("provider down")
-        return SimpleNamespace(probability=1.7, rationale="x", cited=[]), 0.01
+        return SimpleNamespace(probability=170, rationale="x", cited=[]), 0.01   # beyond 100: unusable even as a percent
 
     out = forecast.run(ask=flaky, now=NOW, record=RECORD)
     assert out["made"] == 0 and out["failed"] == 2 and store.forecasts() == []

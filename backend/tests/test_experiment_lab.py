@@ -239,3 +239,9 @@ def test_corpus_source_maps_documents_and_declares_acquisition_unreliable(tmp_pa
     assert src.acquired_known is False
     sid, items, meta = runner.build_snapshot(src, Q)
     assert [e.id for e in items] == ["a"] and meta["acquired_known"] is False
+
+
+def test_a_percent_answer_is_read_as_a_fraction_not_dropped():
+    from algent_backend.markets.forecast import as_probability
+    assert as_probability(0.3) == 0.3 and as_probability(2.0) == 0.02 and as_probability(55) == 0.55
+    assert as_probability(150) is None and as_probability(-1) is None and as_probability(None) is None and as_probability(True) is None

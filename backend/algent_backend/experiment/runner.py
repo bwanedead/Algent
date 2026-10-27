@@ -63,10 +63,12 @@ def run_branch(q: Question, b: Branch, snapshot: str, ask: Ask, *, live: bool = 
     started = store.now_iso()
     out, usd = ask(task, role)
     shown = {e.id for e in chosen}
+    from algent_backend.markets.forecast import as_probability
+
     p_raw = getattr(out, "probability", None)
-    ok = isinstance(p_raw, (int, float)) and 0.0 <= float(p_raw) <= 1.0
+    frac = as_probability(p_raw)                                                         # percent answers ("2" = 2%) are read, not dropped
     pp = proto.policies["prediction"].params
-    p = round(min(pp["p_max"], max(pp["p_min"], float(p_raw))), 4) if ok else None       # an unusable answer is an abstention, kept and evaluated
+    p = round(min(pp["p_max"], max(pp["p_min"], frac)), 4) if frac is not None else None  # an unusable answer is an abstention, kept and evaluated
     cited = [c for c in (getattr(out, "cited", None) or []) if c in shown]
     rationale = " ".join(str(getattr(out, "rationale", "")).split())[:900]
     manifest = {"question": q.id, "cutoff": q.cutoff, "snapshot": snapshot, "source": meta["source"], "acquired_known": meta["acquired_known"],
@@ -84,7 +86,7 @@ def run_branch(q: Question, b: Branch, snapshot: str, ask: Ask, *, live: bool = 
                     manifest_digest=store.digest(manifest), prompt_digest=store.digest(task), output_digest=store.digest(output), p=p, usd=round(float(usd), 6),
                     live=live, started_at=started, impl_shas={k: v.impl_sha for k, v in proto.policies.items() if v.impl_sha})
     store.write_once(f"runs/{rid}/run.json", rec)
-    if ok and memory_writes_enabled(proto):
+    if frac is not None and memory_writes_enabled(proto):
         branches.append_memory(b.id, Observation(id=f"{b.id}:{rid}", source_ids=cited or sorted(shown)[:1] or [q.id], method="blind-forecast",
                                                  method_version=proto.policies["prompts"].ref, text=f"{q.text} -> {p}: {rationale}", derived_at=store.now_iso(),
                                                  as_of=q.cutoff, branch=b.id), caller=b.id)

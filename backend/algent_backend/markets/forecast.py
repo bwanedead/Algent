@@ -74,6 +74,17 @@ class ForecastOut(BaseModel):
 Ask = Callable[[str, str], tuple[Any, float]]
 
 
+
+def as_probability(v: object) -> float | None:
+    """The model's probability as a fraction. Models sometimes answer in percent ("2" meaning 2%); a value in (1, 100] is read as percent rather
+    than dropped (that silently lost forecasts: a 2% answer was counted as failed). Anything else unusable is None."""
+    if not isinstance(v, (int, float)) or isinstance(v, bool):
+        return None
+    f = float(v)
+    if 1.0 < f <= 100.0:
+        f /= 100.0
+    return f if 0.0 <= f <= 1.0 else None
+
 def clamp(p: float) -> float:
     return round(min(flags.P_MAX, max(flags.P_MIN, float(p))), 4)
 
@@ -225,8 +236,8 @@ def run(*, ask: Ask | None = None, now: datetime | None = None, limit: int | Non
                 report["stopped"] = "the budget gate refused a call"
                 break
             continue
-        p = getattr(out, "probability", None)
-        if not isinstance(p, (int, float)) or not (0.0 <= float(p) <= 1.0):
+        p = as_probability(getattr(out, "probability", None))
+        if p is None:
             report["failed"] += 1
             continue
         plan_usd = res.usd if res else 0.0
