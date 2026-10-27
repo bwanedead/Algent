@@ -91,9 +91,15 @@ def load_protocol(pid: str) -> Protocol:
     return Protocol.model_validate(raw)
 
 
+def replace_policies(proto: Protocol, new: list[PolicyVersion], name: str) -> Protocol:
+    """A new protocol equal to ``proto`` except for the given policies (one per kind). The original is untouched; the new one names it as its parent."""
+    kinds = {p.kind for p in new}
+    return compose(name, [*(p for k, p in proto.policies.items() if k not in kinds), *new], parent=proto.id)
+
+
 def replace_policy(proto: Protocol, new: PolicyVersion, name: str) -> Protocol:
     """A new protocol equal to ``proto`` except for one policy. The original is untouched."""
-    return compose(name, [*(p for k, p in proto.policies.items() if k != new.kind), new], parent=proto.id)
+    return replace_policies(proto, [new], name)
 
 
 def freeze_blind_forecaster() -> Protocol:

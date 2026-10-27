@@ -7,6 +7,7 @@ An audit reads those files; it never re-derives them.
 
 from __future__ import annotations
 
+import json
 from collections.abc import Callable
 from typing import Any
 
@@ -87,6 +88,7 @@ def run_branch(q: Question, b: Branch, snapshot: str, ask: Ask, *, live: bool = 
     if research_trace is not None:
         manifest["research"] = research_trace
     output = {"p": p, "abstained": p is None, "raw_probability": p_raw, "invalid_reason": why_bad, "rationale": rationale, "cited": cited, "usd": usd,
+              "evidence_verdict": str(getattr(out, "evidence", "") or ""), "structured": _structured(out),
               "trace": {"policies": {k: v.ref for k, v in proto.policies.items()}, "policy_digests": {k: v.digest for k, v in proto.policies.items()}}}
     store.write_once(f"runs/{rid}/manifest.json", manifest)
     store.write_once(f"runs/{rid}/prompt.txt", task)
@@ -102,6 +104,12 @@ def run_branch(q: Question, b: Branch, snapshot: str, ask: Ask, *, live: bool = 
                                                  method_version=proto.policies["prompts"].ref, text=f"{q.text} -> {p}: {rationale}", derived_at=store.now_iso(),
                                                  as_of=q.cutoff, branch=b.id), caller=b.id)
     return rec
+
+
+def _structured(out: Any) -> dict[str, Any]:
+    """The mind's whole structured answer (a delineation's possibility set, a prior's reference class...), stored with the run. JSON-safe."""
+    raw = out.model_dump() if hasattr(out, "model_dump") else dict(vars(out)) if hasattr(out, "__dict__") else {}
+    return json.loads(json.dumps(raw, default=lambda o: vars(o) if hasattr(o, "__dict__") else str(o)))
 
 
 def memory_writes_enabled(proto: Any) -> bool:
@@ -139,7 +147,10 @@ def live_ask(proto: Any) -> Ask:
     from . import flags
 
     m = proto.policies["model"].params
-    return fc.default_ask(proto.policies["prompts"].params["role"], cap_usd=min(float(m["cap_usd"]), flags.RUN_CAP_USD), effort=m["effort"], max_tokens=int(m["max_tokens"]))
+    from .minds import schema_for
+
+    return fc.default_ask(proto.policies["prompts"].params["role"], schema_for(proto), cap_usd=min(float(m["cap_usd"]), flags.RUN_CAP_USD), effort=m["effort"],
+                          max_tokens=int(m["max_tokens"]))
 
 
 def verify(rid: str) -> list[str]:

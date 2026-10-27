@@ -15,7 +15,7 @@ from __future__ import annotations
 from datetime import timedelta
 from typing import Any
 
-from . import branches, controls, flags, policies, runner, score, sources, store
+from . import branches, controls, flags, minds, policies, runner, score, sources, store
 from .contracts import Branch, Protocol, Question
 
 
@@ -93,11 +93,11 @@ def questions_of(doc: dict[str, Any]) -> list[Question]:
     return out
 
 
-NAMED = {"p0": policies.freeze_blind_forecaster, "p0b": controls.freeze_production_research}
+NAMED = {"p0": policies.freeze_blind_forecaster, "p0b": controls.freeze_production_research, "p0b+prior": minds.freeze_prior, "b": minds.freeze_delineation}
 
 
 def protocol_named(name: str) -> Protocol:
-    """A named control (``p0``, ``p0b``) or a protocol id stored in the lab."""
+    """A named control or mind (``p0``, ``p0b``, ``p0b+prior``, ``b``) or a protocol id stored in the lab."""
     return NAMED[name]() if name in NAMED else policies.load_protocol(name)
 
 
@@ -109,8 +109,9 @@ def max_cost(proto: Protocol) -> float:
 
 
 def run(doc: dict[str, Any], names: list[str], source: Any, ask_for: Any, *, live: bool, cap_usd: float = flags.SET_RUN_CAP_USD, plan_ask_for: Any = None,
-        corpus: Any = None) -> dict[str, Any]:
-    """Every named protocol on every question of the set, controlled. A run already on disk is reused and costs nothing."""
+        corpus: Any = None, aware_ask_for: Any = None) -> dict[str, Any]:
+    """Every named protocol on every question of the set, controlled. A run already on disk is reused and costs nothing. With ``aware_ask_for`` each finished run
+    also gets its market-aware second output (``minds.run_aware``), once, counted against the same cap."""
     protos = [(n, protocol_named(n)) for n in names]
     bs: list[tuple[str, Branch]] = [(n, branches.ensure(n, p)) for n, p in protos]
     spent, done, reused, pending = 0.0, [], 0, []
@@ -121,6 +122,7 @@ def run(doc: dict[str, Any], names: list[str], source: Any, ask_for: Any, *, liv
             rid = runner.run_id_for(q, b.protocol_id, sid)
             if store.exists(f"runs/{rid}/run.json"):
                 reused += 1
+                spent, stopped = _aware(rid, q, b, aware_ask_for, live, spent, cap_usd, stopped, done, pending, name)
                 continue
             if not live:
                 pending.append({"question": q.id, "protocol": name, "max_usd": max_cost(policies.load_protocol(b.protocol_id))})
@@ -134,8 +136,23 @@ def run(doc: dict[str, Any], names: list[str], source: Any, ask_for: Any, *, liv
             rec = runner.run_branch(q, b, sid, ask_for(proto), live=True, plan_ask=pa, corpus=corpus)
             spent += rec.usd
             done.append({"question": q.id, "protocol": name, "run": rec.run_id, "p": rec.p, "usd": rec.usd})
+            spent, stopped = _aware(rec.run_id, q, b, aware_ask_for, live, spent, cap_usd, stopped, done, pending, name)
     return {"set": doc["id"], "live": live, "protocols": {n: p.id for n, p in protos}, "ran": done, "reused": reused, "spent_usd": round(spent, 4), "cap_usd": cap_usd,
             "not_run": pending, "max_usd_if_all_pending_run": round(sum(p["max_usd"] for p in pending), 4), "stopped": stopped}
+
+
+def _aware(rid: str, q: Question, b: Branch, aware_ask_for: Any, live: bool, spent: float, cap: float, stopped: str, done: list, pending: list, name: str) -> tuple[float, str]:
+    """The optional market-aware step for one finished run; skipped when already stored, when there is no reference price, or when the cap would be exceeded."""
+    if aware_ask_for is None or store.exists(f"runs/{rid}/aware.json") or q.reference.get("market_p") is None or (store.read_json(f"runs/{rid}/run.json") or {}).get("p") is None:
+        return spent, stopped
+    if not live or stopped or spent + flags.RUN_CAP_USD > cap:
+        pending.append({"question": q.id, "protocol": name, "stage": "aware", "max_usd": flags.RUN_CAP_USD})
+        return spent, stopped or ("" if not live else f"the ${cap:.2f} set cap would be exceeded by the next run (spent ${spent:.3f})")
+    doc = minds.run_aware(rid, q, aware_ask_for(policies.load_protocol(b.protocol_id)))
+    if doc:
+        done.append({"question": q.id, "protocol": name, "run": rid, "stage": "aware", "p": doc["p"], "usd": doc["usd"]})
+        spent += doc["usd"]
+    return spent, stopped
 
 
 def board(doc: dict[str, Any]) -> dict[str, Any]:
