@@ -16,6 +16,12 @@ corpus index, writes only to its own store (ALGENT_EXPERIMENT_STORE), and calls 
     newsroom lab branch --from BRANCH --name NAME [--evidence NAME@V]   fork a branch with ONE evidence policy changed; the original is untouched
     newsroom lab score                                      resolve what has settled and print the scoreboards (per mode)
     newsroom lab verify RUN_ID                              re-hash the stored files of a run against its record
+    newsroom lab audit RUN_ID|QUESTION_ID|--set ID [--corpus DIR]   replay integrity: every evidence item, feature, memory item and the reference price with its times vs
+                                                            the cutoff; LEAK / unproven / ok (--set picks the first answered question of the set)
+    newsroom lab errors --set ID|latest [--json]            per question and protocol: p, outcome, Brier, market, evidence and independent chains, relevance, a tag
+    newsroom lab tree [--json]                              protocol genealogy (parent, policies changed, abandoned ones marked)
+    newsroom lab retire PROTOCOL --reason TEXT              mark a protocol abandoned; its evidence, runs and scores stay
+    newsroom lab run --set ... --protocols p0b,p0b+prior,b [--aware]   names: p0, p0b, p0b+prior (base-rate first), b (delineation); --aware adds the market-aware second output
 
 Every command prints one JSON document.
 """
@@ -42,6 +48,7 @@ def add_parser(sub: Any) -> None:
     r.add_argument("--protocols", default="p0,p0b", help="with --set: comma-separated names (p0, p0b) or protocol ids")
     r.add_argument("--cap", type=float, help="with --set: total spend cap for this invocation in USD")
     r.add_argument("--corpus", help="corpus store directory (default: ALGENT_CORPUS_STORE / corpus_store)")
+    r.add_argument("--aware", action="store_true", help="with --set: after each independent forecast, ask once more with the market price shown (stored and scored apart)")
     r.add_argument("--k", type=int, help="documents each protocol may show the model")
     r.add_argument("--live", action="store_true", help="really call the model (cap per call: experiment/flags.RUN_CAP_USD)")
     r.set_defaults(handler=run_run)
@@ -63,6 +70,22 @@ def add_parser(sub: Any) -> None:
     sc = verbs.add_parser("score", help="scoreboards per mode, and the decision board")
     sc.add_argument("--set", dest="qset", help="restrict to a common question set (ID or latest)")
     sc.set_defaults(handler=run_score)
+    a = verbs.add_parser("audit", help="replay integrity audit of a run or a question")
+    a.add_argument("target", nargs="?", help="a run id or a question id")
+    a.add_argument("--set", dest="qset", help="audit the first answered question of this set (ID or latest)")
+    a.add_argument("--corpus", help="corpus store directory, to look up provenance of claim/event rows")
+    a.set_defaults(handler=run_audit)
+    e = verbs.add_parser("errors", help="per-question error breakdown")
+    e.add_argument("--set", dest="qset", default="latest")
+    e.add_argument("--json", action="store_true")
+    e.set_defaults(handler=run_errors)
+    t = verbs.add_parser("tree", help="protocol genealogy")
+    t.add_argument("--json", action="store_true")
+    t.set_defaults(handler=run_tree)
+    rt = verbs.add_parser("retire", help="mark a protocol abandoned (nothing is deleted)")
+    rt.add_argument("protocol")
+    rt.add_argument("--reason", required=True)
+    rt.set_defaults(handler=run_retire)
     v = verbs.add_parser("verify", help="integrity of a stored run")
     v.add_argument("run_id")
     v.set_defaults(handler=run_verify)
@@ -96,15 +119,16 @@ def run_questions(args: Any) -> int:
 def _set_run(args: Any) -> int:
     from algent_backend.corpus import paths
     from algent_backend.corpus.query import Corpus
-    from algent_backend.experiment import flags, qset, research_policy, runner, sources
+    from algent_backend.experiment import flags, minds, qset, research_policy, runner, sources
 
     doc = qset.load(args.qset)
     names = [n.strip() for n in args.protocols.split(",") if n.strip()]
     src = sources.CorpusSource(paths.db_file(args.corpus))
-    corpus = Corpus.open(args.corpus) if args.live and "p0b" in names else None
+    corpus = Corpus.open(args.corpus) if args.live and any(n in names for n in ("p0b", "p0b+prior", "b")) else None
     try:
         out = qset.run(doc, names, src, runner.live_ask, live=args.live, cap_usd=args.cap if args.cap is not None else flags.SET_RUN_CAP_USD,
-                       plan_ask_for=lambda pv: research_policy.live_plan_ask(pv.params), corpus=corpus)
+                       plan_ask_for=lambda pv: research_policy.live_plan_ask(pv.params), corpus=corpus,
+                       aware_ask_for=minds.live_aware_ask if args.aware else None)
     finally:
         if corpus is not None:
             corpus.close()
@@ -178,6 +202,46 @@ def run_score(args: Any) -> int:
     if args.qset:
         return _emit({"forecasts": qset.board(qset.load(args.qset)), "decisions": decision.board()})
     return _emit({**score.scoreboard(), "decisions": decision.board()})
+
+
+def run_audit(args: Any) -> int:
+    from algent_backend.corpus import paths
+    from algent_backend.experiment import audit, qset, store
+
+    db = paths.db_file(args.corpus) if args.corpus else None
+    target = args.target or (audit.pick_question(qset.load(args.qset)) if args.qset else "")
+    if not target:
+        print("lab audit needs a run id, a question id, or --set")
+        return 2
+    if store.exists(f"runs/{target}/run.json"):
+        return _emit(audit.audit_run(target, db=db))
+    return _emit(audit.audit_question(target, db=db))
+
+
+def run_errors(args: Any) -> int:
+    from algent_backend.experiment import errors, qset
+
+    report = errors.breakdown(qset.load(args.qset))
+    if args.json:
+        return _emit(report)
+    print(errors.render(report))
+    return 0
+
+
+def run_tree(args: Any) -> int:
+    from algent_backend.experiment import genealogy
+
+    nodes = genealogy.tree()
+    if args.json:
+        return _emit(nodes)
+    print(genealogy.render(nodes))
+    return 0
+
+
+def run_retire(args: Any) -> int:
+    from algent_backend.experiment import genealogy
+
+    return _emit(genealogy.retire(args.protocol, args.reason))
 
 
 def run_verify(args: Any) -> int:
