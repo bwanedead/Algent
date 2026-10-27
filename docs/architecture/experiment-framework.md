@@ -1,6 +1,6 @@
-# Experiment framework (phase 1: design and a minimal vertical slice)
+# Experiment framework (phase 1: design and a vertical slice; phase 2: faithful controls, acquisition time, common set)
 
-> Code: `backend/algent_backend/experiment/`. Registry product `experiments` (manual, off by default, not backed up). CLI: `newsroom lab ...`. Tests: `tests/test_experiment_lab.py`.
+> Code: `backend/algent_backend/experiment/` (+ `acquisition/` for the ledger). Registry products `experiments` (manual, off by default, not backed up) and `acquisition` (irreplaceable, backed up). CLI: `newsroom lab ...`. Tests: `tests/test_experiment_lab.py`, `test_experiment_phase2.py`, `test_acquisition_ledger.py`, `test_origin_chains.py`, `test_experiment_decision.py`, `test_experiment_qset.py`.
 > Philosophy: `docs/vision/world-model.md` v2 ("preserve evidence, version interpretation, isolate experimentation, judge methods by their consequences").
 > **Safety rule: additive and isolated.** No bot, the corpus index, publishing or the site imports this package. It only *reads* the markets store and the corpus index.
 
@@ -33,8 +33,11 @@ A protocol sees the world only through `access.Reader`, built per (cutoff, branc
 - **Branch-private objects** are visible to their own branch only, and only when `as_of <= cutoff`.
 - A derived object without sources or without a method/version is refused outright.
 - Whatever a retrieval policy returns is intersected with what the reader allows, so a buggy or greedy policy cannot widen access.
-- Known hole, stated plainly: the corpus index is derived and a full rebuild resets `ingested_at`, so for *historical* replay `CorpusSource` cannot vouch for
-  acquired time (`acquired_known: false`). The fix is the L1 acquisition ledger (phase 2). Live questions (cutoff = now) are unaffected.
+- **Acquisition time (phase 2, closed).** The corpus index is derived and a full rebuild resets `ingested_at`, so `CorpusSource` no longer uses it. The append-only
+  acquisition ledger (`acquisition/store.py`, `ledger.jsonl`, one line per (unit key, content fingerprint), written by every corpus build, never reset by a rebuild)
+  supplies `acquired_at`. `first_seen` is the build that first saw the content, an upper bound on when we held it. The first build against an empty ledger indexes a
+  record that already existed, so those entries are `backfill: true` and read as *unknown*, never as "now"; an edited unit is a new entry. `acquired_known` is true only
+  when the ledger vouches for every candidate (`n_acquired` says how many). Replay at cutoffs before the ledger began therefore still relies on publish time alone, and says so.
 
 ## 4. Policies, protocols, branches
 Independently versioned **policies**: attention, extraction, memory, interpretation, hypothesis, evidence, investigation, prediction, learning, plus
@@ -61,7 +64,9 @@ forecasts and resolutions only.
 Ten outlets repeating one source are one **chain**, not ten witnesses. `Evidence.origin_chain` names the records an item repeats or cites; corroboration is
 counted across *chains*, and independent investigations that reach the same fact by different routes do corroborate. **No mechanical dedupe**: repeats are kept
 (they carry timing, amplification and attribution signal); independence is a modelled property of the evidence graph, computed by a versioned L2 method, and
-a protocol may weigh it differently. Phase 1 stores the field and does not yet compute it.
+a protocol may weigh it differently. **Phase 2 computes it** (`origins.py`, method `origin-chain@1`, deterministic, no model): same canonical URL, or near-duplicate text
+(shared 4-word shingles, Jaccard >= `flags.DUP_JACCARD`, only for texts of 12+ words), connected components over the documents visible at the cutoff; the earliest is the
+chain's origin and every repeat's `origin_chain` names it. Snapshots store it, each run manifest records `chains` (`n_shown`, `n_independent`) and score rows carry both.
 
 ## 8. Case categories
 **Historically resolved** (replay under a cutoff; cheap, risk is leakage), **live unresolved** (the real test; frozen forecasts, scored later; the track-record
@@ -72,7 +77,9 @@ discipline of `markets-track-record.md`), **synthetic worlds with known hidden m
 1. **Snapshot, don't reconstruct.** `policies.freeze_blind_forecaster()` copies, once, the live `markets/forecast.py` role text (+ research addendum), output fields,
    the task format, the model settings (effort, temperature, max tokens, per-call cap) and the probability bounds into the store (`frozen/p0.json` points at it). Later calls
    return the stored capture whatever the code says. `test_frozen_task_format_matches_production_today` is a drift detector, not a dependency.
-2. **Next:** do the same for the trader and day books (prompt, tool specs, guards, books' flags), and capture their *state* (ledgers, decisions, gap files) by digest as the control's L3.
+2. **Phase 2, done:** `controls.freeze_production_research()` (P0b: P0 with `evidence/production-research@1`, superseding P0 which stays as is), `freeze_trader()` and `freeze_day_bot()`
+   (prompts, model settings, guards and flags; new `decision` policy kind). The trader is replayable (section 11); the day bot is frozen but NOT replayable (live multi-turn tool use).
+   Still open: capture the books' *state* (ledgers, decisions, gap files) by digest as the controls' L3.
 3. **Corpus index -> L1/L2.** `documents` map to L1 (`date` -> publish, `ingested_at` -> acquired, `product/kind` -> source); `claims`, `mentions`, `relations`, `events`, `entities`
    are L2 (derived by versioned adapters; today they carry `product`/`origin` but not method version or derivation time, which phase 2 adds). The index stays the production read path; the lab reads it read-only.
 4. Production is never changed: nothing imports `experiment/`, there is no timer, a live run needs `--live` and is capped (`flags.RUN_CAP_USD`) under the existing budget gate.
@@ -87,7 +94,27 @@ Without `--live` nothing is called; it freezes P0, builds the snapshot and print
 
 | Not in phase 1 | Why / next |
 |---|---|
-| L1 acquisition ledger with true acquired times; method-versioned L2 stamps in the corpus index | needed for trustworthy historical replay |
-| Origin-chain computation; independent mode runner; synthetic-world generator | designed above, fields present |
-| Production's model-planned research as a policy (`evidence/production-research`) | wrap `markets/research.py` over a Reader-filtered corpus |
-| Trader / day-book controls; bootstrap CIs over many questions; backup of the store | after the first live result matters |
+| Method-versioned L2 stamps in the corpus index (`derived_at`, method version on claims/events) | the lab hides derived rows by date and by source visibility, not yet by method version |
+| Independent mode runner; synthetic-world generator | designed above, fields present |
+| Day-bot replay (tool-capable harness over historical market state); trader/day-book L3 state capture | phase 3+ |
+| Bootstrap CIs over many questions; backup of the experiment store | after the first live result matters |
+| `related` and entity situations/relations in the cutoff corpus | not time-indexed, so omitted (`dropped`); the P0b control is slightly poorer than production there |
+
+## 11. What phase 2 closed
+1. **Faithful P0 (P0b).** `research_policy.py` runs production's `markets/research.py` (planner call, six corpus tools, renderer) through `cutoff_corpus.CutoffCorpus`: a document is visible
+   only if it is in the cutoff snapshot, a claim/event only with a known date <= cutoff and a visible source document, observations only up to the cutoff, entity profiles are
+   rebuilt from bounded queries. Test: a post-cutoff document that is the best match is invisible. The planner prompt and knobs are frozen as params; `knob_drift` and
+   `controls.impl_drift` report production moving since the freeze. Planner spend is added to the run's cost.
+2. **Acquisition ledger** (section 3). Registered as the irreplaceable `acquisition` product and backed up nightly.
+3. **Controls and decision replay.** `decision.replay` shows the frozen trader the market state at the cutoff (price and daily path up to it, the desk probability and evidence of a
+   named forecast run, a flat book), passes its answer through the frozen guards and fills hypothetically at the cutoff price (+ slippage). `decision.board` scores by realised P&L
+   once the market resolves, per protocol with a standard error and paired differences, apart from the forecast board (`lab score` prints both).
+4. **Common question set.** `lab questions --set build` (resolved markets, one per event, topic round-robin, cutoff 48 h before resolution, price on file; at least 20 when
+   available, else it says `short_of_target`), stored write-once and versioned under `sets/`. `lab run --set` runs each named protocol on every question in controlled mode under a
+   TOTAL cap (`flags.SET_RUN_CAP_USD`, `--cap`); re-running continues where the cap stopped it. The set scoreboard has per-protocol Brier/log with standard errors, abstentions, cost, and
+   paired differences with standard errors.
+5. **Origin chains** (section 7).
+
+**Phase 3 recommendation: Protocol B (delineation).** With P0b as the faithful control and a common set to judge on, the first method worth testing is a delineation step: before forecasting,
+split the question into its resolution trigger, the actors and the evidence that would bear on each, and retrieve per part (an `attention`/`interpretation` policy change, one component varied).
+Judge it on the common set against P0b with paired differences, and read `n_independent` to see whether it finds more independent witnesses rather than more repeats.

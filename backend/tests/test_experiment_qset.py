@@ -97,6 +97,22 @@ def test_run_set_runs_every_protocol_on_the_whole_set_under_a_total_cap_then_con
     assert pair["n_shared"] == 3 and pair["se"] is not None and pair["log_se"] is not None and pair["brier_diff"] is not None
 
 
+def test_frozen_trader_replays_over_a_forecast_protocols_runs_and_is_scored_apart():
+    from algent_backend.experiment import controls, decision, policies
+    doc = qset.build(min_n=3, max_n=3)
+    p0b = controls.freeze_production_research()
+    table = {policies.freeze_blind_forecaster().id: asks(0.2, 0.01), p0b.id: asks(0.8, 0.01)}
+    qset.run(doc, ["p0", "p0b"], sources.ListSource(DOCS), lambda proto: table[proto.id], live=True, cap_usd=5.0, plan_ask_for=lambda pv: plan, corpus=Empty())
+    trader = lambda task, role: (SimpleNamespace(decisions=[SimpleNamespace(market="M1", action="buy_yes", stake_usd=200, rationale="x", cited=[])]), 0.02)      # noqa: E731
+    dry = decision.replay_set(doc, p0b, live=False, cap_usd=1.0)
+    assert dry["decided"] == [] and len(dry["not_run"]) == 3
+    out = decision.replay_set(doc, p0b, live=True, cap_usd=1.0, ask=trader)
+    assert len(out["decided"]) == 3 and out["spent_usd"] == pytest.approx(0.06)
+    assert decision.replay_set(doc, p0b, live=True, cap_usd=1.0, ask=trader)["decided"] == []          # stored decisions are reused, never repaid
+    (row,) = decision.board()["protocols"].values()
+    assert row["n"] == 3 and row["trades"] == 3 and row["staked"] == 600.0
+
+
 def test_cli_builds_and_lists_sets(capsys):
     args = SimpleNamespace(limit=5, qset="build", min_n=2, hours=None)
     assert lab_cli.run_questions(args) == 0
