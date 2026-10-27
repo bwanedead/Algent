@@ -300,14 +300,15 @@ PRODUCTS: tuple[Product, ...] = (
                       budget=_b(0.1, 20, 100, 5, 0.5, "estimate (unmeasured): a run is ~30 KB (snapshot of <= 4000 documents is the bulk, stored once per question); no run is scheduled")),),
         retention=(Retention("append-only", "write-once files, never rewritten; a run is a few tens of KB and only a person starts one", "experiment/store.py::write_once", "manual"),),
         why="early lab data; a frozen control is small but re-capturing it later would capture later code, so back it up before relying on it",
-        manual="newsroom lab run|list|show|branch|score|verify (no timer on purpose: an experiment is a decision, and a live run spends money)",
+        manual="newsroom lab questions|run|decide|list|show|branch|score|verify (no timer on purpose: an experiment is a decision, and a live run spends money)",
         feeds_from=("markets", "corpus_index")),
     Product(
         id="acquisition", title="Acquisition ledger (when we first held each source)", owner="acquisition",
         what="Append-only ledger of the first time a corpus build saw each source unit (key + content hash). It survives every index rebuild, which resets the index's own ingest times; the experiment lab reads it to replay history without hindsight.",
         stores=(Store("acquisition_store", loc.acquisition, "ALGENT_ACQUISITION_STORE", True, budget=_b(0.5, 20, 100, 20, 0.2, "estimate (unmeasured): ~200 bytes a unit version; a few thousand units and a few new versions a day")),),
-        retention=(Retention("append-only", "ledger.jsonl is never rewritten; a unit version is one line, forever (small)", "acquisition/store.py::Ledger.flush", "job:corpus-build"),),
+        retention=(Retention("append-only", "ledger.jsonl is never rewritten; a unit version is one line, forever (small)", "acquisition/store.py::load", "job:corpus-build"),),
         irreplaceable=True, why="acquisition times cannot be reconstructed after the fact: a rebuild only knows when it ran, so a lost ledger loses what we held when",
+        manual="written by `newsroom corpus build` (the corpus-build job) as a side effect; read by `newsroom lab`; nothing to run by hand",
         feeds_from=("corpus_index",)),
     Product(
         id="library", title="Source library (crawl cache)", owner="library",
