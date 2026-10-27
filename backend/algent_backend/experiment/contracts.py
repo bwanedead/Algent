@@ -7,7 +7,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, Field
 
 #: The independently versioned parts of how an intelligence is constructed. A protocol is a composition of one version of each it uses.
-POLICY_KINDS = ("attention", "extraction", "memory", "interpretation", "hypothesis", "evidence", "investigation", "prediction", "learning", "model", "prompts", "tools")
+POLICY_KINDS = ("attention", "extraction", "memory", "interpretation", "hypothesis", "evidence", "investigation", "prediction", "decision", "learning", "model", "prompts", "tools")
 Mode = Literal["controlled", "independent"]
 
 
