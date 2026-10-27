@@ -24,8 +24,10 @@ _FETCH = 4          # over-fetch factor: rows are dropped after the query, so as
 
 
 class CutoffCorpus:
-    def __init__(self, corpus: Any, visible_ids: Iterable[str], cutoff: str):
+    def __init__(self, corpus: Any, visible_ids: Iterable[str], cutoff: str, ledger: dict[Any, dict[str, Any]] | None = None):
         self.corpus, self.visible, self.cutoff = corpus, set(visible_ids), cutoff
+        self._ledger = ledger                            # the acquisition ledger (loaded on first need); decides whether a row with no source document was held by the cutoff
+        self.unproven: Counter[str] = Counter()          # rows kept although nothing proves they predate the cutoff (audit only)
         self._t = store.parse_time(cutoff)
         if self._t is None:
             raise ValueError("a cutoff-bounded corpus needs a valid cutoff")
@@ -46,6 +48,24 @@ class CutoffCorpus:
             return ""
         return str(r[0] or "") if r else ""
 
+    def _held_by_cutoff(self, table: str, row_id: str) -> bool:
+        """False only when the ledger proves the unit holding this row first reached us AFTER the cutoff. An unknown acquisition time keeps the row but counts it as unproven."""
+        from algent_backend.acquisition import store as acq
+
+        db = getattr(self.corpus, "db", None)
+        try:
+            r = db.execute(f"SELECT s.fingerprint, t.origin FROM {table} t LEFT JOIN ingest_state s ON s.unit = t.origin WHERE t.id = ?", (row_id,)).fetchone() if db is not None else None
+        except Exception:  # noqa: BLE001 - an index without provenance tables: nothing to look up
+            r = None
+        if self._ledger is None:
+            self._ledger = acq.load()
+        got = acq.acquired_at(self._ledger.get((r[1], r[0]))) if r else ""
+        if not got:
+            self.unproven[f"{table}-without-source-document-acquisition-unknown"] += 1
+            return True
+        t = store.parse_time(got)
+        return t is not None and t <= self._t
+
     def _ok(self, row: dict[str, Any]) -> bool:
         kind, rid = row.get("type"), str(row.get("id", ""))
         if kind == "document":
@@ -54,6 +74,8 @@ class CutoffCorpus:
             doc = str(row.get("document_id") or "") or (self._claim_document(rid) if kind == "claim" else "")
             when = (row.get("at") or row.get("created_at") or row.get("date")) if kind == "claim" else (row.get("date") or row.get("at"))
             ok, reason = self._known_by_cutoff(when) and (not doc or doc in self.visible), "derived-after-cutoff-or-source-hidden"
+            if ok and not doc and kind in ("claim", "event"):          # no source document to test: the row's own date is only its EVENT time, so ask the acquisition ledger
+                ok, reason = self._held_by_cutoff("claims" if kind == "claim" else "events", rid), "ungrounded-derived-row-acquired-after-cutoff"
         if not ok:
             self.dropped[reason] += 1
         return ok

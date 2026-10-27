@@ -89,5 +89,5 @@ def retrieve(items: list[Evidence], q: Question, params: dict[str, Any], *, plan
         if ev is not None:
             kept.append((ln, ev))
     trace = {"queries": [r.model_dump() for r in res.runs], "rounds": res.rounds, "returned": len(res.returned), "shown": [e.id for _, e in kept],
-             "hidden_by_cutoff": dict(view.dropped), "knob_drift": knob_drift(params)}
+             "hidden_by_cutoff": dict(view.dropped), "unproven_derived_rows": dict(view.unproven), "knob_drift": knob_drift(params)}
     return Retrieved(chosen=[e for _, e in kept], text="\n".join(ln for ln, _ in kept), usd=float(res.usd), trace=trace)
