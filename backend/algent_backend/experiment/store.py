@@ -69,7 +69,7 @@ def write_once(rel: str, obj: Any) -> Path:
             raise Immutable(f"{rel} already exists with different content")
         return p
     p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(text, encoding="utf-8")
+    p.write_bytes(text.encode("utf-8"))           # bytes, so the file (and its digest) is the same on every OS
     return p
 
 
@@ -87,7 +87,7 @@ def exists(rel: str) -> bool:
 def append(rel: str, obj: Any) -> None:
     p = path(rel)
     p.parent.mkdir(parents=True, exist_ok=True)
-    with p.open("a", encoding="utf-8") as fh:
+    with p.open("a", encoding="utf-8", newline="\n") as fh:
         fh.write(canonical(obj) + "\n")
 
 
