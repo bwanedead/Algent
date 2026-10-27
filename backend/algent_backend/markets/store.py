@@ -5,6 +5,7 @@ so the record cannot be quietly improved after the fact.
     markets.jsonl     one Market REVISION per line (a changed market is a new line; the last line of an id wins)
     snapshots.jsonl   one price Snapshot per line (live passes and the CLOB history backfill)
     forecasts.jsonl   one Forecast per line: OURS, immutable once written
+    forecast_failures.jsonl  forecast calls that gave no usable probability (raw value + reason): visible, never dropped
     trades.jsonl      the RULE book's paper trades: open / mark / settle (a position is a projection of its lines)
     decisions.jsonl   the TRADER's ledger: every decision (buy / sell / hold / settle) with its rationale and any guard clips
     equity.jsonl      one EquityPoint per book per day (the equity curves)
@@ -26,7 +27,7 @@ from typing import TypeVar
 from pydantic import BaseModel
 
 from . import flags
-from .contracts import DayRun, Decision, EquityPoint, Forecast, Gap, GapFill, Market, Snapshot, Trace, Trade, WatchEvent, Wish
+from .contracts import DayRun, Decision, EquityPoint, Forecast, ForecastFailure, Gap, GapFill, Market, Snapshot, Trace, Trade, WatchEvent, Wish
 
 _ENV = "ALGENT_MARKETS_STORE"
 M = TypeVar("M", bound=BaseModel)
@@ -139,6 +140,19 @@ def forecasts() -> list[Forecast]:
 
 def append_forecast(f: Forecast) -> None:
     _append("forecasts.jsonl", [f])
+
+
+def forecast_failures() -> list[ForecastFailure]:
+    return _read("forecast_failures.jsonl", ForecastFailure)
+
+
+def append_forecast_failure(f: ForecastFailure) -> None:
+    _append("forecast_failures.jsonl", [f])
+
+
+def market_revisions(market_id: str) -> list[Market]:
+    """Every stored revision of one market, oldest first (``markets()`` returns only the latest). For replays that must see the market as it was."""
+    return [m for m in _read("markets.jsonl", Market) if m.id == market_id]
 
 
 def trades() -> list[Trade]:

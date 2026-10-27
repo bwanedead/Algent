@@ -70,10 +70,9 @@ def run_branch(q: Question, b: Branch, snapshot: str, ask: Ask, *, live: bool = 
     out, usd = ask(task, role)
     usd = float(usd or 0.0) + plan_usd
     shown = {e.id for e in chosen}
-    from algent_backend.markets.forecast import as_probability
+    from algent_backend.markets.forecast import read_probability
 
-    p_raw = getattr(out, "probability", None)
-    frac = as_probability(p_raw)                                                         # percent answers ("2" = 2%) are read, not dropped
+    frac, p_raw, why_bad = read_probability(out)                                         # strict: nothing is rescaled; an invalid answer is a recorded failure
     pp = proto.policies["prediction"].params
     p = round(min(pp["p_max"], max(pp["p_min"], frac)), 4) if frac is not None else None  # an unusable answer is an abstention, kept and evaluated
     cited = [c for c in (getattr(out, "cited", None) or []) if c in shown]
@@ -87,7 +86,7 @@ def run_branch(q: Question, b: Branch, snapshot: str, ask: Ask, *, live: bool = 
     manifest["chains"] = origins.summary(chosen)
     if research_trace is not None:
         manifest["research"] = research_trace
-    output = {"p": p, "abstained": p is None, "raw_probability": p_raw, "rationale": rationale, "cited": cited, "usd": usd,
+    output = {"p": p, "abstained": p is None, "raw_probability": p_raw, "invalid_reason": why_bad, "rationale": rationale, "cited": cited, "usd": usd,
               "trace": {"policies": {k: v.ref for k, v in proto.policies.items()}, "policy_digests": {k: v.digest for k, v in proto.policies.items()}}}
     store.write_once(f"runs/{rid}/manifest.json", manifest)
     store.write_once(f"runs/{rid}/prompt.txt", task)
@@ -96,6 +95,8 @@ def run_branch(q: Question, b: Branch, snapshot: str, ask: Ask, *, live: bool = 
                     manifest_digest=store.digest(manifest), prompt_digest=store.digest(task), output_digest=store.digest(output), p=p, usd=round(float(usd), 6),
                     live=live, started_at=started, impl_shas={k: v.impl_sha for k, v in proto.policies.items() if v.impl_sha})
     store.write_once(f"runs/{rid}/run.json", rec)
+    if frac is None:                                         # a visible failure row, never a silent drop
+        store.append("failures.jsonl", {"run": rid, "question": q.id, "protocol": proto.id, "raw": repr(p_raw)[:80], "reason": why_bad, "usd": round(float(usd), 6), "at": started})
     if frac is not None and memory_writes_enabled(proto):
         branches.append_memory(b.id, Observation(id=f"{b.id}:{rid}", source_ids=cited or sorted(shown)[:1] or [q.id], method="blind-forecast",
                                                  method_version=proto.policies["prompts"].ref, text=f"{q.text} -> {p}: {rationale}", derived_at=store.now_iso(),

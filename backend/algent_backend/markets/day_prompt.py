@@ -102,7 +102,7 @@ class Call(BaseModel):
     usd: float = Field(default=0.0, description="buy: paper dollars to spend; sell: dollars of current value to sell.")
     all: bool = Field(default=False, description="sell: close the whole position.")
     reason: str = Field(default="", description="buy / sell: the edge or why you are leaving, plain words; request_research: what you would do with it.")
-    p_yes: float = Field(default=0.0, description="buy / sell / size: YOUR probability that the market resolves YES (0 means not given).")
+    p_yes: float = Field(default=0.0, description="buy / sell / size: YOUR probability that the market resolves YES, a FRACTION strictly between 0 and 1 (0.07 means 7%; never write 7). 0 means not given.")
     action: Literal["list", "add", "remove", ""] = Field(default="", description="watchlist: what to do.")
     cited: list[str] = Field(default_factory=list, description="buy / sell: corpus ids from results that you relied on.")
     since: str = Field(default="", description="Corpus tools: ISO date to start from, or empty.")

@@ -67,6 +67,19 @@ class Forecast(BaseModel):
     hours_to_end: float | None = None         # time to the market's end when forecast (for horizon splits)
 
 
+class ForecastFailure(BaseModel):
+    """A forecast call that produced no usable probability: kept as a visible row (what was said, why it was refused, what it cost), never dropped."""
+
+    id: str                                   # the forecast id it would have had
+    market_id: str
+    made_at: str
+    raw: str = ""                             # the model's raw probability value (repr), or "" when the call itself failed
+    reason: str
+    usd: float = 0.0
+    book: str = "daily"
+    prompt_version: str = ""
+
+
 class Trade(BaseModel):
     """One paper action. ``open`` stakes ``stake`` paper dollars on ``side`` at ``price`` (the price of THAT side, after slippage);
     ``mark`` is the daily mark-to-market; ``settle`` closes the position at the outcome."""

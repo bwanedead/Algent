@@ -23,7 +23,7 @@ from pydantic import BaseModel, Field
 from . import books, gaps, research, trace
 from . import evidence as evidence_mod
 from . import flags, store
-from .contracts import Forecast, Market, forecast_id
+from .contracts import Forecast, ForecastFailure, Market, forecast_id
 
 PROMPT_VERSION = "blind-v1"
 PROMPT_VERSION_RESEARCH = "blind-v2"
@@ -63,7 +63,8 @@ would do with it. Do not name a gap you did not need.
 
 
 class ForecastOut(BaseModel):
-    probability: float = Field(description="Probability the question resolves YES, between 0 and 1 (never exactly 0 or 1).")
+    probability_pct: float = Field(description="Your probability that the question resolves YES as a WHOLE-NUMBER PERCENTAGE from 0 to 100 (7 means 7%, 55 means 55%). "
+                                               "Never a fraction: write 7, not 0.07. Avoid 0 and 100: you cannot be certain.")
     rationale: str = Field(description="Two to four sentences: base rate, what moved you from it, what would change your mind.")
     cited: list[str] = Field(default_factory=list, description="Evidence ids (bracketed ids in the evidence) that bore on the answer.")
     evidence: Literal["sufficient", "thin", "gap"] = Field(default="sufficient", description="How well the evidence served this question.")
@@ -76,14 +77,39 @@ Ask = Callable[[str, str], tuple[Any, float]]
 
 
 def as_probability(v: object) -> float | None:
-    """The model's probability as a fraction. Models sometimes answer in percent ("2" meaning 2%); a value in (1, 100] is read as percent rather
-    than dropped (that silently lost forecasts: a 2% answer was counted as failed). Anything else unusable is None."""
+    """READ PATH FOR OLD ROWS ONLY. The lenient reading used before the strict schema: a value in (1, 100] was taken as a percent. New output goes through
+    ``read_probability`` (strict, failures recorded); this stays so that rows written under the old schema can still be interpreted."""
     if not isinstance(v, (int, float)) or isinstance(v, bool):
         return None
     f = float(v)
     if 1.0 < f <= 100.0:
         f /= 100.0
     return f if 0.0 <= f <= 1.0 else None
+
+
+def _num(v: object) -> bool:
+    return isinstance(v, (int, float)) and not isinstance(v, bool)
+
+
+def read_probability(out: object) -> tuple[float | None, object, str]:
+    """(fraction or None, raw value, reason it was refused). STRICT: ``probability_pct`` must be a whole number 0..100 (a fraction written there, "0.07", is
+    refused rather than guessed at). An object that still carries the legacy ``probability`` field must hold a fraction in [0, 1]. Nothing is rescaled."""
+    if hasattr(out, "probability_pct"):
+        raw = out.probability_pct  # type: ignore[attr-defined]
+        if not _num(raw):
+            return None, raw, "probability_pct is not a number"
+        if not 0 <= raw <= 100:
+            return None, raw, "probability_pct is outside 0..100"
+        if raw != int(raw):
+            return None, raw, "probability_pct is not a whole number (a fraction written as a percent?)"
+        return raw / 100.0, raw, ""
+    raw = getattr(out, "probability", None)
+    if not _num(raw):
+        return None, raw, "no probability given"
+    if not 0 <= raw <= 1:
+        return None, raw, "probability is outside 0..1 (a fraction is required)"
+    return float(raw), raw, ""
+
 
 def clamp(p: float) -> float:
     return round(min(flags.P_MAX, max(flags.P_MIN, float(p))), 4)
@@ -226,6 +252,9 @@ def run(*, ask: Ask | None = None, now: datetime | None = None, limit: int | Non
             report["stopped"] = f"day budget reached (${usd_today:.2f})" if usd_today >= usd_cap else f"run budget reached (${spent_run:.2f})"
             break
         t0 = time.monotonic()
+        made_at = now.isoformat(timespec="seconds")
+        fid = forecast_id(m.id, made_at)
+        version = PROMPT_VERSION_RESEARCH if flags.RESEARCH_ENABLED else PROMPT_VERSION
         try:
             ev, res, mode = _evidence_for(m, now, plan_ask=plan_ask, corpus=corpus, record=record, index=index)
             out, usd = ask(task_for(m, ev, now.date()), role)
@@ -235,20 +264,22 @@ def run(*, ask: Ask | None = None, now: datetime | None = None, limit: int | Non
             if type(exc).__name__ == "BudgetRefusedError":
                 report["stopped"] = "the budget gate refused a call"
                 break
+            store.append_forecast_failure(ForecastFailure(id=fid, market_id=m.id, made_at=made_at, raw="", reason=f"call failed: {type(exc).__name__}: {str(exc)[:300]}",
+                                                          book=book, prompt_version=version))
             continue
-        p = as_probability(getattr(out, "probability", None))
-        if p is None:
+        p, raw_p, why = read_probability(out)
+        if p is None:                                                                          # an unusable answer is a visible failure row (the call was paid for)
             report["failed"] += 1
+            store.append_forecast_failure(ForecastFailure(id=fid, market_id=m.id, made_at=made_at, raw=repr(raw_p)[:80], reason=why, usd=round(usd + (res.usd if res else 0.0), 6),
+                                                          book=book, prompt_version=version))
             continue
         plan_usd = res.usd if res else 0.0
         usd = round(usd + plan_usd, 6)                                                         # planning is part of this forecast's cost
-        made_at = now.isoformat(timespec="seconds")
         shown = set(ev.ids)
         cited = [c for c in getattr(out, "cited", []) or [] if c in shown]                     # only ids that were actually shown
         verdict = (getattr(out, "evidence", "") or "") if mode == "corpus" else ""
         topic = " ".join(str(getattr(out, "gap_topic", "") or "").split()) if verdict in ("thin", "gap") else ""
         end = store.parse_iso(m.end_date)
-        fid = forecast_id(m.id, made_at)
         store.append_forecast(Forecast(id=fid, market_id=m.id, made_at=made_at, p=clamp(p),
                                        rationale=" ".join(str(getattr(out, "rationale", "")).split())[:900], evidence_ids=cited,
                                        theaters=m.theaters, model="house-low", prompt_version=PROMPT_VERSION_RESEARCH if mode == "corpus" else PROMPT_VERSION, usd=usd, book=book, evidence=verdict,

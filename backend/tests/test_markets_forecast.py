@@ -116,6 +116,17 @@ def test_bad_model_output_and_failures_are_skipped_not_stored():
 
     out = forecast.run(ask=flaky, now=NOW, record=RECORD)
     assert out["made"] == 0 and out["failed"] == 2 and store.forecasts() == []
+    rows = {f.market_id: f for f in store.forecast_failures()}                    # every failure is a visible row, with the raw value and the reason
+    assert len(rows) == 2 and "outside 0..1" in rows["b"].reason and rows["b"].raw == "170" and rows["b"].usd == 0.01 and "call failed" in rows["a"].reason
+
+
+def test_probability_is_read_strictly_never_rescaled():
+    ok = lambda **kw: forecast.read_probability(SimpleNamespace(**kw))  # noqa: E731
+    assert ok(probability_pct=7)[0] == 0.07 and ok(probability_pct=55.0)[0] == 0.55 and ok(probability_pct=0)[0] == 0.0
+    assert "whole number" in ok(probability_pct=0.07)[2]                       # a fraction in the percent field is refused, not guessed
+    assert "outside" in ok(probability_pct=101)[2] and "outside" in ok(probability_pct=-1)[2] and "not a number" in ok(probability_pct="7%")[2]
+    assert ok(probability=0.3)[0] == 0.3 and "fraction" in ok(probability=2)[2] and "no probability" in ok()[2]     # legacy shape: a fraction, no percent rescue
+    assert forecast.as_probability(2) == 0.02                                  # the lenient reading survives only as the read path for old rows
 
 
 def test_a_budget_refusal_ends_the_pass():
