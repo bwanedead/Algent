@@ -93,7 +93,7 @@ def questions_of(doc: dict[str, Any]) -> list[Question]:
     return out
 
 
-NAMED = {"p0": policies.freeze_blind_forecaster, "p0b": controls.freeze_production_research, "p0b+prior": minds.freeze_prior, "b": minds.freeze_delineation}
+NAMED = {"p0": policies.freeze_blind_forecaster, "p0b": controls.freeze_production_research, "p0b+prior": minds.freeze_prior, "b": minds.freeze_delineation, "b+prior": minds.freeze_combined}
 
 
 def protocol_named(name: str) -> Protocol:

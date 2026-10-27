@@ -168,6 +168,22 @@ def freeze_delineation() -> Protocol:
     return _frozen("b-delineation", build, "P0b with delineation as the only reasoning change; same evidence policy and model")
 
 
+def freeze_combined() -> Protocol:
+    """P3 = B + an explicit reference class and base rate (the 2x2 matrix: control, prior, delineation, both). Built from B with only the prompt
+    changed: the base-rate step comes first and the delineation's prior must start from it. Same evidence policy, model and output schema as B
+    (the reference class and base rate are written in ``prior_moved``)."""
+    def build() -> Protocol:
+        b = freeze_delineation()
+        tail = ("TASK: first state the reference class and its base rate (write them at the start of prior_moved), then delineate the question as instructed, "
+                "starting the possibility priors from that base rate, then give the probability this resolves YES and the one research request that would most change it.")
+        bp = b.policies["prompts"].params
+        prompts = policies.make("prompts", "delineation-prior", 1, {**bp, "prompt_version": "delineation-prior-v1", "role": bp["role"] + PRIOR_ADDENDUM,
+                                                                   "task_template": bp["task_template"].rsplit("TASK:", 1)[0] + tail, "derived_from": b.policies["prompts"].ref})
+        return policies.replace_policies(b, [prompts], "b-delineation-prior")
+
+    return _frozen("b-delineation-prior", build, "B with an explicit reference class and base rate first; evidence policy, model and schema identical to B")
+
+
 # ── the market-aware second output ─────────────────────────────────────────────────────────────────
 AwareAsk = Callable[[str, str], tuple[Any, float]]
 
