@@ -92,8 +92,8 @@ def calibration(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             for b, v in sorted(bins.items())]
 
 
-def scoreboard(*, resolve_now: bool = True) -> dict[str, Any]:
-    qs = questions()
+def scoreboard(*, resolve_now: bool = True, only: set[str] | None = None) -> dict[str, Any]:
+    qs = {k: v for k, v in questions().items() if only is None or k in only}
     resolved = {qid: res for qid, q in qs.items() if (res := (resolve(q) if resolve_now else _stored(qid))) and res.outcome != "void"}
     rows = [row(r, qs[r.question_id], resolved[r.question_id]) for r in runs() if r.question_id in resolved]
     board: dict[str, Any] = {}
@@ -105,18 +105,21 @@ def scoreboard(*, resolve_now: bool = True) -> dict[str, Any]:
             sc = [r for r in pr if not r["abstained"]]
             vs_mkt = [r["brier"] - r["market_brier"] for r in sc if "market_brier" in r]
             vs_base = [r["brier"] - r["base_brier"] for r in sc if "base_brier" in r]
-            per[pid] = {"n": len(pr), "abstained": len(pr) - len(sc), "brier": mean_se([r["brier"] for r in sc])[0], "log": mean_se([r["log"] for r in sc])[0],
+            per[pid] = {"n": len(pr), "abstained": len(pr) - len(sc), "brier": mean_se([r["brier"] for r in sc])[0], "brier_se": mean_se([r["brier"] for r in sc])[1], "log": mean_se([r["log"] for r in sc])[0],
+                        "log_se": mean_se([r["log"] for r in sc])[1],
                         "brier_minus_market": mean_se(vs_mkt)[0], "brier_minus_base": mean_se(vs_base)[0], "usd": round(sum(r["usd"] for r in pr), 4),
                         "calibration": calibration(sc)}
         pairs = {}
         pids = sorted(per)
         for i, a in enumerate(pids):
             for b in pids[i + 1:]:
-                by_q_a = {r["question"]: r["brier"] for r in mrows if r["protocol"] == a and not r["abstained"]}
-                by_q_b = {r["question"]: r["brier"] for r in mrows if r["protocol"] == b and not r["abstained"]}
-                d = [by_q_a[k] - by_q_b[k] for k in by_q_a.keys() & by_q_b.keys()]
-                m, se = mean_se(d)
-                pairs[f"{a} - {b}"] = {"n_shared": len(d), "brier_diff": m, "se": se, "note": "negative = first is better; one question is an anecdote, not a result"}
+                by_q_a = {r["question"]: r for r in mrows if r["protocol"] == a and not r["abstained"]}
+                by_q_b = {r["question"]: r for r in mrows if r["protocol"] == b and not r["abstained"]}
+                shared = by_q_a.keys() & by_q_b.keys()
+                m, se = mean_se([by_q_a[k]["brier"] - by_q_b[k]["brier"] for k in shared])
+                lm, lse = mean_se([by_q_a[k]["log"] - by_q_b[k]["log"] for k in shared])
+                pairs[f"{a} - {b}"] = {"n_shared": len(shared), "brier_diff": m, "se": se, "log_diff": lm, "log_se": lse,
+                                       "note": "negative = first is better; one question is an anecdote, not a result"}
         board[mode] = {"protocols": per, "differences": pairs, "rows": mrows}
     return {"modes": board, "unresolved": sorted(set(qs) - set(resolved))}
 

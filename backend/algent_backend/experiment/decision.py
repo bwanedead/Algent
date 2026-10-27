@@ -122,6 +122,35 @@ def live_trader_ask(proto: Protocol) -> Ask:
     return forecast.default_ask(proto.policies["prompts"].params["role"], trader_prompt.TraderOut, min(float(m["cap_usd"]), flags.RUN_CAP_USD), m["effort"], max_tokens=int(m["max_tokens"]))
 
 
+def replay_set(doc: dict[str, Any], forecast_proto: Protocol, *, live: bool, cap_usd: float, ask: Ask | None = None) -> dict[str, Any]:
+    """The frozen trader on every question of a set that ``forecast_proto`` has answered. A stored decision is reused; spend is bounded by ``cap_usd`` in total."""
+    from . import flags, qset
+
+    trader = controls.freeze_trader()
+    by_q = {r.question_id: r for r in score.runs() if r.protocol_id == forecast_proto.id and r.mode == "controlled"}
+    ask = ask or (live_trader_ask(trader) if live else None)
+    spent, out, pending, skipped, stopped = 0.0, [], [], [], ""
+    for q in qset.questions_of(doc):
+        run = by_q.get(q.id)
+        if run is None or run.p is None:
+            skipped.append({"question": q.id, "why": "no forecast run" if run is None else "the forecaster abstained"})
+            continue
+        if store.exists(f"decisions/{decision_id(q, trader, run)}/decision.json"):
+            continue
+        if not live or spent + flags.RUN_CAP_USD > cap_usd:
+            stopped = stopped or ("" if not live else f"the ${cap_usd:.2f} cap would be exceeded by the next decision (spent ${spent:.3f})")
+            pending.append(q.id)
+            continue
+        rec = replay(q, trader, run, ask, live=True)  # type: ignore[arg-type]
+        if rec is None:
+            skipped.append({"question": q.id, "why": "no market price at the cutoff"})
+            continue
+        spent += rec.usd
+        out.append({"question": q.id, "action": rec.action, "stake": round(-rec.cash_flow, 2), "usd": rec.usd})
+    return {"set": doc["id"], "live": live, "trader": trader.id, "forecast_protocol": forecast_proto.id, "decided": out, "spent_usd": round(spent, 4), "cap_usd": cap_usd,
+            "not_run": pending, "skipped": skipped, "stopped": stopped}
+
+
 # ── scoring: the decision board ──────────────────────────────────────────────────────────────────
 def decisions() -> list[DecisionRecord]:
     return [DecisionRecord.model_validate(r) for n in store.listing("decisions") if (r := store.read_json(f"decisions/{n}/decision.json"))]
