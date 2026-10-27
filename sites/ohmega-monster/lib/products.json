@@ -303,6 +303,16 @@
       "refresh_minutes": null
     },
     {
+      "id": "acquisition",
+      "title": "Acquisition ledger (when we first held each source)",
+      "routes": [],
+      "publishes": [],
+      "feeds_from": [
+        "corpus_index"
+      ],
+      "refresh_minutes": null
+    },
+    {
       "id": "library",
       "title": "Source library (crawl cache)",
       "routes": [],
