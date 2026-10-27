@@ -294,6 +294,15 @@ PRODUCTS: tuple[Product, ...] = (
         publishes=("data/track-record.json",), contracts=(K("ohmega.track-record", 2, ("data/track-record.json",), accepts=(1,)),),
         site_routes=("/intel/forecasts", "/intel/track-record"), feeds_from=("dailies", "profiles"), heartbeat=("markets_store/status.json",)),
     Product(
+        id="experiments", title="Experiment lab (protocol comparisons)", owner="experiment",
+        what="Phase 1 of the experiment framework: frozen and forked forecasting protocols compared on one question and one evidence snapshot; write-once manifests, prompts, outputs, resolutions. Off by default; read-only over the markets store and the corpus index.",
+        stores=(Store("experiment_store", loc.experiments, "ALGENT_EXPERIMENT_STORE", False, "an early lab: runs on resolved markets can be re-run from the markets store, and the first frozen control is a few KB; add to the backup (one line here) when a result starts to matter",
+                      budget=_b(0.1, 20, 100, 5, 0.5, "estimate (unmeasured): a run is ~30 KB (snapshot of <= 4000 documents is the bulk, stored once per question); no run is scheduled")),),
+        retention=(Retention("append-only", "write-once files, never rewritten; a run is a few tens of KB and only a person starts one", "experiment/store.py::write_once", "manual"),),
+        why="early lab data; a frozen control is small but re-capturing it later would capture later code, so back it up before relying on it",
+        manual="newsroom lab run|list|show|branch|score|verify (no timer on purpose: an experiment is a decision, and a live run spends money)",
+        feeds_from=("markets", "corpus_index")),
+    Product(
         id="library", title="Source library (crawl cache)", owner="library",
         what="The crawled pages the research and dailies read, in one SQLite file.",
         stores=(Store("library_store", loc.library, "ALGENT_LIBRARY_STORE", False, "the crawl cache (library.db): re-crawled by the library timer",
