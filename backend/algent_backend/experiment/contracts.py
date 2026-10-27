@@ -82,6 +82,7 @@ class Question(BaseModel):
     source: str = ""                    # e.g. market:<id>: where the resolution is read from
     category: Literal["historical", "live", "synthetic"] = "historical"
     common_set: bool = False            # part of the mandatory common question set (independent mode)
+    hints: dict[str, Any] = Field(default_factory=dict)      # what production's research is also told about a question: {"countries": [...], "theaters": [...]}
     reference: dict[str, Any] = Field(default_factory=dict)  # comparison values the protocols never see: market_p at the cutoff, base_rate
 
 

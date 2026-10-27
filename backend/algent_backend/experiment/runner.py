@@ -44,7 +44,7 @@ def run_id_for(q: Question, protocol_id: str, snapshot: str) -> str:
     return store.digest([q.id, protocol_id, snapshot])[:12]
 
 
-def run_branch(q: Question, b: Branch, snapshot: str, ask: Ask, *, live: bool = False, mode: str = "controlled") -> RunRecord:
+def run_branch(q: Question, b: Branch, snapshot: str, ask: Ask, *, live: bool = False, mode: str = "controlled", plan_ask: Any = None, corpus: Any = None) -> RunRecord:
     rid = run_id_for(q, b.protocol_id, snapshot)
     done = store.read_json(f"runs/{rid}/run.json")
     if done:                                                 # never redo paid work: the same (question, protocol, snapshot) is already on disk
@@ -53,15 +53,21 @@ def run_branch(q: Question, b: Branch, snapshot: str, ask: Ask, *, live: bool = 
     items, meta = load_snapshot(snapshot)
     reader = Reader(items, [], branches.read_memory(b.id, caller=b.id), cutoff=q.cutoff, branch=b.id)
     ev_pol = proto.policies["evidence"]
-    chosen = retriever(ev_pol)(reader.evidence(), q, ev_pol.params)
-    # defence in depth: whatever a policy returns must still be inside what the reader allows
-    allowed = {e.id for e in reader.evidence()}
-    chosen = [e for e in chosen if e.id in allowed]
+    plan_usd, research_trace, evidence_text = 0.0, None, None
+    if policies.is_planned(ev_pol):                          # production's planned research over the cutoff-bounded corpus: its own gate is CutoffCorpus
+        got = policies.rp.retrieve(reader.evidence(), q, ev_pol.params, plan_ask=plan_ask, corpus=corpus)
+        chosen, evidence_text, plan_usd, research_trace = got.chosen, got.text, got.usd, got.trace
+    else:
+        chosen = retriever(ev_pol)(reader.evidence(), q, ev_pol.params)
+        # defence in depth: whatever a policy returns must still be inside what the reader allows
+        allowed = {e.id for e in reader.evidence()}
+        chosen = [e for e in chosen if e.id in allowed]
     memory_seen = [m.id for m in reader.memory()]
-    task = render_task(proto, q, chosen, [m.text for m in reader.memory()])
+    task = render_task(proto, q, chosen, [m.text for m in reader.memory()], evidence_text)
     role = proto.policies["prompts"].params["role"]
     started = store.now_iso()
     out, usd = ask(task, role)
+    usd = float(usd or 0.0) + plan_usd
     shown = {e.id for e in chosen}
     from algent_backend.markets.forecast import as_probability
 
@@ -77,6 +83,8 @@ def run_branch(q: Question, b: Branch, snapshot: str, ask: Ask, *, live: bool = 
                                 "cutoff": q.cutoff},
                 "shown": [{"id": e.id, "content_hash": e.content_hash or store.digest(e.body), "event_time": e.event_time, "publish_time": e.publish_time,
                            "acquired_at": e.acquired_at} for e in chosen], "memory_seen": memory_seen}
+    if research_trace is not None:
+        manifest["research"] = research_trace
     output = {"p": p, "abstained": p is None, "raw_probability": p_raw, "rationale": rationale, "cited": cited, "usd": usd,
               "trace": {"policies": {k: v.ref for k, v in proto.policies.items()}, "policy_digests": {k: v.digest for k, v in proto.policies.items()}}}
     store.write_once(f"runs/{rid}/manifest.json", manifest)
@@ -103,14 +111,22 @@ def preview(q: Question, b: Branch, snapshot: str) -> list[str]:
     proto = policies.load_protocol(b.protocol_id)
     reader = Reader(load_snapshot(snapshot)[0], [], branches.read_memory(b.id, caller=b.id), cutoff=q.cutoff, branch=b.id)
     pol = proto.policies["evidence"]
+    if policies.is_planned(pol):
+        return ["(planned at run time by a model over the cutoff-bounded corpus)"]
     return [e.id for e in retriever(pol)(reader.evidence(), q, pol.params)]
 
 
-def run_controlled(q: Question, bs: list[Branch], source: Any, ask_for: Callable[[Any], Ask], *, live: bool = False) -> list[RunRecord]:
-    """Same snapshot and question for every branch; only the protocols differ."""
+def run_controlled(q: Question, bs: list[Branch], source: Any, ask_for: Callable[[Any], Ask], *, live: bool = False, plan_ask_for: Callable[[Any], Any] | None = None,
+                   corpus: Any = None) -> list[RunRecord]:
+    """Same snapshot and question for every branch; only the protocols differ. ``plan_ask_for``/``corpus`` serve protocols whose evidence policy plans research."""
     save_question(q)
     sid, _, _ = build_snapshot(source, q)
-    return [run_branch(q, b, sid, ask_for(policies.load_protocol(b.protocol_id)), live=live) for b in bs]
+    out = []
+    for b in bs:
+        proto = policies.load_protocol(b.protocol_id)
+        pa = plan_ask_for(proto.policies["evidence"]) if plan_ask_for and policies.is_planned(proto.policies["evidence"]) else None
+        out.append(run_branch(q, b, sid, ask_for(proto), live=live, plan_ask=pa, corpus=corpus))
+    return out
 
 
 def live_ask(proto: Any) -> Ask:

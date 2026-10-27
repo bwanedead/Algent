@@ -67,4 +67,5 @@ def question_from_market(market_id: str, cutoff: str) -> Question:
         raise ValueError("the cutoff must be a valid instant before the market resolved")
     snap = ms.price_at(ms.snapshots(market_id), cutoff)
     return Question(id=f"market-{market_id}-{cutoff[:10]}", text=m.question, rules=m.description, cutoff=cutoff, closes_at=m.end_date, source=f"market:{market_id}",
-                    category="historical" if m.status != "open" else "live", reference={"market_p": snap.p if snap else None, "market_p_at": snap.at if snap else ""})
+                    category="historical" if m.status != "open" else "live",
+                    hints={"countries": list(m.countries), "theaters": list(m.theaters)}, reference={"market_p": snap.p if snap else None, "market_p_at": snap.at if snap else ""})

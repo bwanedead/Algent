@@ -15,6 +15,7 @@ from collections.abc import Callable
 from typing import Any
 
 from . import flags, store
+from . import research_policy as rp
 from .contracts import POLICY_KINDS, Evidence, PolicyVersion, Protocol, Question
 
 #: Transcribed from ``markets.forecast.task_for`` at capture; ``tests/test_experiment_lab.py`` pins that they render alike, so drift in production shows up.
@@ -24,14 +25,16 @@ NO_EVIDENCE = "(The desk holds nothing relevant to this question. Say so and use
 Retriever = Callable[[list[Evidence], Question, dict[str, Any]], list[Evidence]]
 
 
-def sha_of(fn: Callable[..., Any]) -> str:
-    return hashlib.sha256(inspect.getsource(fn).encode("utf-8")).hexdigest()[:12]
+def sha_of(*fns: Callable[..., Any]) -> str:
+    """Hash of the source of the code a policy runs (several functions or classes are hashed together; one gives the same hash it always did)."""
+    return hashlib.sha256("\n".join(inspect.getsource(f) for f in fns).encode("utf-8")).hexdigest()[:12]
 
 
-def make(kind: str, name: str, version: int, params: dict[str, Any] | None = None, impl: Callable[..., Any] | None = None) -> PolicyVersion:
+def make(kind: str, name: str, version: int, params: dict[str, Any] | None = None, impl: Callable[..., Any] | list[Callable[..., Any]] | None = None) -> PolicyVersion:
     if kind not in POLICY_KINDS:
         raise ValueError(f"unknown policy kind {kind!r}")
-    pv = PolicyVersion(kind=kind, name=name, version=version, params=params or {}, impl_sha=sha_of(impl) if impl else "")
+    fns = impl if isinstance(impl, list) else [impl] if impl else []
+    pv = PolicyVersion(kind=kind, name=name, version=version, params=params or {}, impl_sha=sha_of(*fns) if fns else "")
     pv.digest = store.digest({"kind": kind, "name": name, "version": version, "params": pv.params, "impl": pv.impl_sha})
     store.write_once(f"policies/{pv.digest}.json", pv)
     return pv
@@ -60,6 +63,11 @@ RETRIEVERS: dict[tuple[str, int], Retriever] = {("recent-k", 1): recent_k, ("key
 
 def retriever(pv: PolicyVersion) -> Retriever:
     return RETRIEVERS[(pv.name, pv.version)]
+
+
+def is_planned(pv: PolicyVersion) -> bool:
+    """A policy that plans its own retrieval with a model call over the corpus (``research_policy``), instead of ranking the snapshot's documents."""
+    return pv.kind == "evidence" and (pv.name, pv.version) == (rp.NAME, rp.VERSION)
 
 
 def evidence_policy(name: str, version: int = 1, k: int = flags.EVIDENCE_K, body_chars: int = flags.BODY_CHARS) -> PolicyVersion:
@@ -116,9 +124,10 @@ def evidence_block(chosen: list[Evidence], body_chars: int) -> str:
     return "\n".join(f"[{e.id}] ({e.publish_time[:10]}, {e.source or e.kind}) {e.title}: {e.body[:body_chars]}".strip() for e in chosen)
 
 
-def render_task(proto: Protocol, q: Question, chosen: list[Evidence], memory_lines: list[str] | None = None) -> str:
+def render_task(proto: Protocol, q: Question, chosen: list[Evidence], memory_lines: list[str] | None = None, evidence_text: str | None = None) -> str:
+    """``evidence_text`` is for a policy that renders its own evidence (production research); otherwise the documents are rendered here."""
     prm = proto.policies["prompts"].params
-    body = evidence_block(chosen, int(proto.policies["evidence"].params["body_chars"])) or prm["no_evidence"]
+    body = (evidence_text if evidence_text is not None else evidence_block(chosen, int(proto.policies["evidence"].params.get("body_chars", flags.BODY_CHARS)))) or prm["no_evidence"]
     end = q.closes_at[:10] or "unspecified"
     left = ""
     c, e = store.parse_time(q.cutoff), store.parse_time(q.closes_at)
