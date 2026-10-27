@@ -10,7 +10,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
-from . import branches, policies, store
+from . import branches, origins, policies, store
 from .access import Reader
 from .contracts import Branch, Evidence, Observation, Question, RunRecord
 from .policies import render_task, retriever
@@ -28,10 +28,11 @@ def build_snapshot(source: Any, q: Question) -> tuple[str, list[Evidence], dict[
     """The shared evidence snapshot for a question: everything visible at the cutoff, stored by digest. Excluded ids are recorded with their reason
     (ids only, never bodies)."""
     reader = Reader(source.candidates(q.cutoff), [], [], cutoff=q.cutoff, branch="")
-    items = sorted(reader.evidence(), key=lambda e: e.id)
-    meta = {"cutoff": q.cutoff, "source": source.name, "acquired_known": source.acquired_known, "n_acquired": getattr(source, "n_acquired", None), "n_visible": len(items), "excluded": reader.excluded}
-    sid = store.digest({"items": [e.model_dump() for e in items], "meta": meta})
-    store.write_once(f"snapshots/{sid}.json", {"meta": meta, "items": [e.model_dump() for e in items]})
+    items = origins.annotate(sorted(reader.evidence(), key=lambda e: e.id))
+    meta = {"origin_method": origins.METHOD, "cutoff": q.cutoff, "source": source.name, "acquired_known": source.acquired_known, "n_acquired": getattr(source, "n_acquired", None), "n_visible": len(items), "excluded": reader.excluded}
+    dumped = [e.model_dump(exclude_defaults=True) | {"id": e.id} for e in items]
+    sid = store.digest({"items": dumped, "meta": meta})
+    store.write_once(f"snapshots/{sid}.json", {"meta": meta, "items": dumped})
     return sid, items, meta
 
 
@@ -83,6 +84,7 @@ def run_branch(q: Question, b: Branch, snapshot: str, ask: Ask, *, live: bool = 
                                 "cutoff": q.cutoff},
                 "shown": [{"id": e.id, "content_hash": e.content_hash or store.digest(e.body), "event_time": e.event_time, "publish_time": e.publish_time,
                            "acquired_at": e.acquired_at} for e in chosen], "memory_seen": memory_seen}
+    manifest["chains"] = origins.summary(chosen)
     if research_trace is not None:
         manifest["research"] = research_trace
     output = {"p": p, "abstained": p is None, "raw_probability": p_raw, "rationale": rationale, "cited": cited, "usd": usd,

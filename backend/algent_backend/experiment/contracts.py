@@ -23,6 +23,7 @@ class Evidence(BaseModel):
     publish_time: str = ""              # when it became public
     acquired_at: str = ""               # when we first held it ("" = unknown: a historical replay then relies on publish_time alone and says so)
     origin_chain: list[str] = Field(default_factory=list)   # ids of records this one repeats or cites: common origins are one chain, not many voices
+    url: str = ""                       # where it was published, when known (origin chains match on the canonical URL)
     content_hash: str = ""
 
 

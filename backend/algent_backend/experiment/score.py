@@ -60,7 +60,8 @@ def runs() -> list[RunRecord]:
 
 def row(r: RunRecord, q: Question, res: Resolution) -> dict[str, Any]:
     o = 1 if res.outcome == "yes" else 0
-    out: dict[str, Any] = {"run_id": r.run_id, "question": q.id, "protocol": r.protocol_id, "branch": r.branch_id, "mode": r.mode, "p": r.p, "outcome": res.outcome,
+    chains = (store.read_json(f"runs/{r.run_id}/manifest.json") or {}).get("chains") or {}
+    out: dict[str, Any] = {"n_shown": chains.get("n_shown"), "n_independent": chains.get("n_independent"), "run_id": r.run_id, "question": q.id, "protocol": r.protocol_id, "branch": r.branch_id, "mode": r.mode, "p": r.p, "outcome": res.outcome,
                            "usd": r.usd, "abstained": r.p is None}
     if r.p is not None:
         out.update(brier=brier(r.p, o), log=log_score(r.p, o))
