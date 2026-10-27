@@ -118,3 +118,41 @@ Without `--live` nothing is called; it freezes P0, builds the snapshot and print
 **Phase 3 recommendation: Protocol B (delineation).** With P0b as the faithful control and a common set to judge on, the first method worth testing is a delineation step: before forecasting,
 split the question into its resolution trigger, the actors and the evidence that would bear on each, and retrieve per part (an `attention`/`interpretation` policy change, one component varied).
 Judge it on the common set against P0b with paired differences, and read `n_independent` to see whether it finds more independent witnesses rather than more repeats.
+
+## 12. Production forecasting data flow (and the rule for lab protocols)
+Production has ONE probability-estimation method; the bots differ in what they do with it.
+
+| Step | Who | Where |
+|---|---|---|
+| Select which markets to forecast | the forecast pass: open, priced inside the skip band, not forecast recently, theater-mapped first then by volume; the fast book adds a horizon filter | `markets/forecast.candidates` |
+| Research | one model-planned corpus research per forecast (planner call, six corpus tools, renderer) | `markets/research.py` |
+| Set the probability | **the desk**: one blind structured call per market, never shown the price | `markets/forecast.py` (`ForecastOut.probability_pct`) |
+| Trade | the **daily trader** (desk probability + price + book), the **fast book** (same forecast code via `forecast.run(book="fast")`, horizon-filtered, own trader) and the **fixed-rule book** all consume the desk's forecasts; they differ only in trading | `trader.py`, `paper.py`, `books.py` |
+| Form its own judgement | only the **day bot**: an agentic loop over corpus and market tools, which picks markets, researches, states `p_yes` with each order and trades | `day_prompt.py`, `day_tools.py` |
+
+So there is no separate "forecasting method" per bot to compare: the lab's **unit of experiment is an independent forecasting mind**. Each protocol owns its research -> probability chain end to end
+and never sees another protocol's output, or the market price, before it commits. The market price may be shown afterwards, as a separately stored second output (section 14). A protocol that
+reads the desk's forecast is not a forecaster; it is a decision policy (`decision.replay`), scored on money apart from the forecast board.
+
+**Probability schema (strict).** Forecast output is `probability_pct`, a whole number 0..100, read by `markets.forecast.read_probability`. A fraction written there ("0.07"), a value outside
+0..100 or a non-number is NOT rescaled or guessed at: it becomes a visible failure row (`forecast_failures.jsonl` in production with forecast id, raw value, reason and cost; `failures.jsonl` in the
+lab). `forecast.as_probability` (the old lenient reading, "2" = 2%) remains only as the read path for rows written before the change. The day bot keeps `p_yes` as a fraction strictly inside (0, 1),
+already refused with a message otherwise; the trader emits no probability.
+
+## 13. Phase 3: making the lab trustworthy
+1. **Replay integrity audit** (`audit.py`, `lab audit RUN|QUESTION|--set`). Lists every evidence item, derived feature (origin chains are recomputed and compared), memory item and the reference price with event /
+   publish / acquired / derived times against the cutoff and a verdict `ok | unproven | LEAK`. Findings it produced and the fixes: (a) `question_from_market` read the market's LAST stored revision, which can carry
+   rules text or an end date added after resolution; it now reads the revision known at the cutoff (`sources.market_as_of`), a corrected text gets a new question id (`-rXXXX`), and a market first stored after the cutoff is reported `unproven`. (b) Claim and event rows
+   with no source document passed on their own event date alone; `CutoffCorpus` now asks the acquisition ledger and hides those whose unit first reached us after the cutoff (unknown acquisition is kept and counted in the run's research trace
+   as `unproven_derived_rows`). Runs made before these fixes are flagged by `lab audit` (code drift / question text) and should be re-run, not trusted.
+2. **Error breakdown** (`errors.py`, `lab errors --set latest`): per question and protocol, p, outcome, Brier, market at the cutoff, evidence count, independent chains, whether research found anything used, and a deterministic tag (extreme/overconfident,
+   wrong base rate, retrieval miss, out-of-coverage, possible leak, invalid output) or blank. Tag thresholds are operator knobs in `experiment/flags.py` and the tags are hints for a human.
+3. **Minds** (`minds.py`; names for `lab run --set --protocols`): `p0b+prior` (stated reference class and base rate first, then the update; weak evidence stays near the stated prior, not 50%) and `b` (delineation alone:
+   proposition, possibility set, discriminating evidence, per-observation accounting with hard/soft/restructure assumptions, unmodelled possibilities, prior and its movement, final probability, one research request, all stored in the run's `output.json`
+   under `structured`). Both change only the prompt and schema relative to P0b (`b` also raises the output ceiling, `model/house-low@2`, for the longer object); the evidence policy and model are P0b's, digest for digest.
+4. **Two outputs per forecast.** The independent estimate is stored and scored first; `--aware` then shows the same mind the price once and stores a market-aware estimate apart (`runs/<id>/aware.json`). The board reports, per protocol,
+   `independent_minus_market` (independent skill), `aware_minus_market` (what seeing the price buys) and `aware_minus_independent`.
+5. **Genealogy** (`genealogy.py`, `lab tree`, `lab retire`). Each protocol names its parent; the policies changed are derived from the two stored compositions. A retired protocol is only marked: its evidence, runs and scores stay on the boards.
+
+## 14. Server commands (common set, controlled; cost bound is per run: forecast cap $0.05 plus, for the planned research, planner caps)
+`lab questions --set build` -> `lab run --set latest --protocols p0b,p0b+prior,b` (dry run: prints what would run and the maximum cost) -> add `--live --cap USD` -> `lab run ... --aware --live` for the second output -> `lab score --set latest` -> `lab errors --set latest` -> `lab audit --set latest` -> `lab tree`.
