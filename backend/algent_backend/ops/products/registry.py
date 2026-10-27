@@ -303,6 +303,13 @@ PRODUCTS: tuple[Product, ...] = (
         manual="newsroom lab run|list|show|branch|score|verify (no timer on purpose: an experiment is a decision, and a live run spends money)",
         feeds_from=("markets", "corpus_index")),
     Product(
+        id="acquisition", title="Acquisition ledger (when we first held each source)", owner="acquisition",
+        what="Append-only ledger of the first time a corpus build saw each source unit (key + content hash). It survives every index rebuild, which resets the index's own ingest times; the experiment lab reads it to replay history without hindsight.",
+        stores=(Store("acquisition_store", loc.acquisition, "ALGENT_ACQUISITION_STORE", True, budget=_b(0.5, 20, 100, 20, 0.2, "estimate (unmeasured): ~200 bytes a unit version; a few thousand units and a few new versions a day")),),
+        retention=(Retention("append-only", "ledger.jsonl is never rewritten; a unit version is one line, forever (small)", "acquisition/store.py::Ledger.flush", "job:corpus-build"),),
+        irreplaceable=True, why="acquisition times cannot be reconstructed after the fact: a rebuild only knows when it ran, so a lost ledger loses what we held when",
+        feeds_from=("corpus_index",)),
+    Product(
         id="library", title="Source library (crawl cache)", owner="library",
         what="The crawled pages the research and dailies read, in one SQLite file.",
         stores=(Store("library_store", loc.library, "ALGENT_LIBRARY_STORE", False, "the crawl cache (library.db): re-crawled by the library timer",

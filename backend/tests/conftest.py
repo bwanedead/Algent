@@ -19,6 +19,12 @@ def _isolated_runs_dir(tmp_path, monkeypatch):
 
 
 @pytest.fixture(autouse=True)
+def _isolated_acquisition_ledger(tmp_path, monkeypatch):
+    """Corpus builds append to the acquisition ledger; no test may write the real one (it is irreplaceable)."""
+    monkeypatch.setenv("ALGENT_ACQUISITION_STORE", str(tmp_path / "acquisition_iso"))
+
+
+@pytest.fixture(autouse=True)
 def _isolated_spend_budget(tmp_path, monkeypatch):
     """The spend envelope caps REAL unattended spend. A test run once claimed five run slots
     from a live overnight envelope — so no test may ever see the real file."""

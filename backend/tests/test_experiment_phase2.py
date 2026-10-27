@@ -99,7 +99,7 @@ def test_production_research_policy_runs_against_the_cutoff_view_only():
     man = store.read_json(f"runs/{rec.run_id}/manifest.json")
     assert man["research"]["hidden_by_cutoff"] and sorted(man["research"]["shown"]) == ["d-old", "ev-old"] and not man["research"]["knob_drift"]
     assert sorted(s["id"] for s in man["shown"]) == ["d-old", "ev-old"]
-    assert rec.usd == pytest.approx(0.02)                                           # the planner's spend is part of the protocol's cost
+    assert rec.usd == pytest.approx(0.03)                                           # two planning rounds (0.02) plus the forecast (0.01): planner spend is part of the cost
     assert not runner.verify(rec.run_id) and not controls.impl_drift(p0b)
 
 

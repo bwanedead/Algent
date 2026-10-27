@@ -11,6 +11,7 @@ from __future__ import annotations
 import sqlite3
 from collections.abc import Iterable
 from pathlib import Path
+from typing import Any
 from typing import Protocol as TypingProtocol
 
 from . import store
@@ -38,20 +39,33 @@ class CorpusSource:
     """The corpus index (``corpus.db``), opened read-only. A coarse date pre-filter keeps the read small; the access gate still decides."""
 
     name = "corpus-index"
-    acquired_known = False
+    acquired_known = False                  # true only after ``candidates`` found the acquisition ledger holding EVERY candidate unit (see ``n_acquired``)
 
-    def __init__(self, db: Path | str, limit: int = 4000):
-        self.db, self.limit = Path(db), limit
+    def __init__(self, db: Path | str, limit: int = 4000, ledger: dict[Any, dict[str, Any]] | None = None):
+        self.db, self.limit, self._ledger = Path(db), limit, ledger
+        self.n_acquired = 0
 
     def candidates(self, cutoff: str) -> Iterable[Evidence]:
+        """Acquired time comes from the acquisition ledger (never from the index's own ``ingested_at``, which a rebuild resets): a document whose unit and content
+        fingerprint the ledger holds gets that first-seen time; any other document has an unknown acquired time, which the manifest says."""
+        from algent_backend.acquisition import store as acq
+
+        ledger = acq.load() if self._ledger is None else self._ledger
         con = sqlite3.connect(f"file:{self.db.as_posix()}?mode=ro", uri=True)
         try:
-            rows = con.execute("SELECT id, kind, product, title, body, date, ingested_at FROM documents WHERE date != '' AND date <= ? ORDER BY date DESC LIMIT ?",
-                               (cutoff[:10], self.limit)).fetchall()
+            try:
+                rows = con.execute("SELECT d.id, d.kind, d.product, d.title, d.body, d.date, d.origin, s.fingerprint FROM documents d LEFT JOIN ingest_state s ON s.unit = d.origin "
+                                   "WHERE d.date != '' AND d.date <= ? ORDER BY d.date DESC LIMIT ?", (cutoff[:10], self.limit)).fetchall()
+            except sqlite3.OperationalError:              # an index without provenance tables: no unit to look up
+                rows = [(*r, "", "") for r in con.execute("SELECT id, kind, product, title, body, date FROM documents WHERE date != '' AND date <= ? ORDER BY date DESC LIMIT ?",
+                                                          (cutoff[:10], self.limit))]
         finally:
             con.close()
-        return [Evidence(id=r[0], kind=r[1], source=f"{r[2]}/{r[1]}", title=r[3], body=r[4], event_time=r[5], publish_time=r[5], acquired_at=r[6],
-                         content_hash=store.digest(r[4])) for r in rows]
+        out = [Evidence(id=r[0], kind=r[1], source=f"{r[2]}/{r[1]}", title=r[3], body=r[4], event_time=r[5], publish_time=r[5],
+                        acquired_at=acq.acquired_at(ledger.get((r[6], r[7]))), content_hash=store.digest(r[4])) for r in rows]
+        self.n_acquired = sum(1 for e in out if e.acquired_at)
+        self.acquired_known = bool(out) and self.n_acquired == len(out)
+        return out
 
 
 def question_from_market(market_id: str, cutoff: str) -> Question:

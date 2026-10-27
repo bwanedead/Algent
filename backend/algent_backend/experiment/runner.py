@@ -29,7 +29,7 @@ def build_snapshot(source: Any, q: Question) -> tuple[str, list[Evidence], dict[
     (ids only, never bodies)."""
     reader = Reader(source.candidates(q.cutoff), [], [], cutoff=q.cutoff, branch="")
     items = sorted(reader.evidence(), key=lambda e: e.id)
-    meta = {"cutoff": q.cutoff, "source": source.name, "acquired_known": source.acquired_known, "n_visible": len(items), "excluded": reader.excluded}
+    meta = {"cutoff": q.cutoff, "source": source.name, "acquired_known": source.acquired_known, "n_acquired": getattr(source, "n_acquired", None), "n_visible": len(items), "excluded": reader.excluded}
     sid = store.digest({"items": [e.model_dump() for e in items], "meta": meta})
     store.write_once(f"snapshots/{sid}.json", {"meta": meta, "items": [e.model_dump() for e in items]})
     return sid, items, meta

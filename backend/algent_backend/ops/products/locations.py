@@ -94,6 +94,12 @@ def experiments() -> Path:
     return root()
 
 
+def acquisition() -> Path:
+    from algent_backend.acquisition.store import root
+
+    return root()
+
+
 def maritime() -> Path:
     from algent_backend.maritime.store import root
 
