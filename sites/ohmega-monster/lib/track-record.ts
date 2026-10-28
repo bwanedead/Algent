@@ -86,7 +86,7 @@ export type DayGroup = { label: string; n: number; shown: boolean; wins: number 
 export type DayOrder = { market_id: string; question: string; action: string; side: string; stake: number; requested: number; price: number; reason: string; clips: string[] };
 export type DayRunRow = {
   id: string; at: string; usd: number; turns: number; tool_calls: number; stopped: string; summary: string; considered: { id: string; question: string; ends: string }[];
-  n_considered: number; queries: string[]; n_queries: number; orders: DayOrder[]; equity: number | null;
+  n_considered: number; queries: string[]; n_queries: number; orders: DayOrder[]; equity: number | null; must_trade: string;   // "" unless the strategy must trade ("met: 2 of 2" / "unmet: 1 of 2")
 };
 // What the agent wished the corpus held (product feedback on which data sources to add), merged across runs.
 export type WishRow = { topic: string; runs: number; asks: number; why: string; source: string; last: string; markets: { market_id: string; question: string }[] };
@@ -228,7 +228,7 @@ function parseDay(raw: unknown, fallbackRule: Portfolio): DayBook | null {
     runs: list(raw.runs).map((r) => ({
       id: str(r.id), at: str(r.at), usd: n0(r.usd), turns: n0(r.turns), tool_calls: n0(r.tool_calls), stopped: str(r.stopped), summary: str(r.summary),
       considered: list(r.considered).map((c) => ({ id: str(c.id), question: str(c.question), ends: str(c.ends) })), n_considered: n0(r.n_considered), queries: strs(r.queries),
-      n_queries: n0(r.n_queries), equity: num(r.equity),
+      n_queries: n0(r.n_queries), equity: num(r.equity), must_trade: str(r.must_trade),
       orders: list(r.orders).map((o) => ({ market_id: str(o.market_id), question: str(o.question), action: str(o.action), side: str(o.side), stake: n0(o.stake), requested: n0(o.requested), price: n0(o.price), reason: str(o.reason), clips: strs(o.clips) })),
     })),
     wishes: list(raw.wishes).map((w) => ({
