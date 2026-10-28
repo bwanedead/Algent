@@ -82,7 +82,7 @@
 .tr-bg-daily { background: var(--strong); } .tr-bg-fast { background: var(--link-accent); } .tr-bg-day { background: var(--accent); } .tr-bg-rule { background: var(--muted); }
 
 .tr-books { margin: 0 0 14px; border-top: 1px solid var(--rule-strong); }
-.tr-row { display: grid; grid-template-columns: minmax(120px, 1.5fr) minmax(90px, 1fr) minmax(130px, 1.9fr) 64px minmax(80px, 1fr) 40px 48px 96px 96px; gap: 0 10px; align-items: baseline; padding: 7px 0; font-size: 12px; font-variant-numeric: tabular-nums; }
+.tr-row { display: grid; grid-template-columns: minmax(120px, 1.5fr) minmax(90px, 1fr) minmax(130px, 1.9fr) 64px minmax(80px, 1fr) minmax(120px, 1.2fr) 96px 40px 48px 96px 96px; gap: 0 10px; align-items: baseline; padding: 7px 0; font-size: 12px; font-variant-numeric: tabular-nums; }
 .tr-row .n { text-align: right; }
 .tr-rowhead { color: var(--muted); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; border-bottom: 1px solid var(--rule-strong); }
 .tr-book { border-bottom: 1px solid var(--rule); }

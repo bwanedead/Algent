@@ -93,3 +93,14 @@ def _sell(requested: float, held: Holding | None, yes_price: float, clips: list[
     proceeds = round(shares * price, 2)
     realised = round(proceeds - held.cost * shares / held.shares, 2)
     return Fill("sell", held.side, price, shares, proceeds, realised, clips)
+
+
+def floor_stake(p_yes: float, side: str, yes_price: float, bankroll: float) -> float:
+    """The stake for a position taken only to fill the activity floor: fractional Kelly on the agent's OWN probability against the all-in price, never below the
+    minimum ticket (no edge, or no probability given, means the ticket). The ordinary guards still clip it in ``apply``."""
+    if not 0.0 < p_yes < 1.0:
+        return flags.TRADE_MIN_TICKET
+    q = p_yes if side == "yes" else 1.0 - p_yes
+    cost = min(0.99, side_price(yes_price, side) + flags.SLIPPAGE)
+    full = (q - cost) / (1.0 - cost)
+    return round(max(flags.TRADE_MIN_TICKET, flags.KELLY_FRACTION * full * bankroll if full > 0 else 0.0), 2)

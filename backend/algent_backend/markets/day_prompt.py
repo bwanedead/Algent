@@ -97,6 +97,16 @@ your best guess (the minimum ticket) in the market where your probability differ
 Do not skip the research: the point is that the bet is still your honest view.
 """
 
+FEEDBACK = """
+FORECASTS AND ACTIVITY. Two things are measured apart from your P&L.
+- Forecasts. Every run, record your own probability for at least {n} markets you examined, whether or not you trade them: list them in the turn's
+  forecasts field (market, p_pct as a PERCENT 0-100, confidence low/medium/high, one plain sentence). A forecast costs no order and moves no money.
+  They are scored when the markets resolve, and nobody else sees them, so state your honest number, not a safe one. A run that ends with fewer is sent back.
+- Activity. Aim to keep at least {floor:.0%} of the bankroll at risk. The portfolio tells you where you stand. If you are under it, add positions on
+  your best-edge markets. If you truly see no edge, take small positions sized by your own probability against the price (the size tool does this), set
+  floor=true on the buy, and say plainly in the reason that it had no real edge. Those are tagged and judged separately from your chosen bets.
+"""
+
 
 def _span(hours: float) -> str:
     return {48: "two days"}.get(int(hours), f"{hours / 24:g} days")
@@ -108,6 +118,7 @@ def role(strategy: Strategy | None = None) -> str:
     s = strategy or strategies.get("day")
     text = ROLE.format(horizon=f"{s.horizon_h:g}", window=f"{s.horizon_h:g}", span=_span(s.horizon_h), per_turn=s.calls_per_turn, pos=s.position_frac, exp=s.exposure_frac,
                        ticket=flags.TRADE_MIN_TICKET, orders=s.max_orders)
+    text += FEEDBACK.format(n=s.forecasts_per_run, floor=s.floor_pct) if s.forecasts_per_run or s.floor_pct else ""
     return text + methods.section(s.method) + (MUST_TRADE.format(n=s.min_orders, s="" if s.min_orders == 1 else "s") if s.must_trade else "")
 
 
@@ -122,6 +133,7 @@ class Call(BaseModel):
     reason: str = Field(default="", description="buy / sell: the edge or why you are leaving, plain words; request_research: what you would do with it.")
     p_yes: float = Field(default=0.0, description="buy / sell / size: YOUR probability that the market resolves YES, a FRACTION strictly between 0 and 1 (0.07 means 7%; never write 7). 0 means not given.")
     action: Literal["list", "add", "remove", ""] = Field(default="", description="watchlist: what to do.")
+    floor: bool = Field(default=False, description="buy: true when this position is only to fill the minimum-exposure floor (no real edge); it is tagged and judged apart.")
     cited: list[str] = Field(default_factory=list, description="buy / sell: corpus ids from results that you relied on.")
     since: str = Field(default="", description="Corpus tools: ISO date to start from, or empty.")
     kinds: list[str] = Field(default_factory=list, description="Corpus tools: optional narrowing (document kinds, or claim / event / document).")
@@ -137,9 +149,17 @@ class WishOut(BaseModel):
     source: str = Field(default="", description="The source or kind of data that would supply it.")
 
 
+class ForecastOut(BaseModel):
+    market: str = Field(description="The market id you examined.")
+    p_pct: float = Field(description="YOUR probability that it resolves YES, as a PERCENT between 1 and 99 (7 means 7%).")
+    confidence: Literal["low", "medium", "high", ""] = Field(default="", description="How sure you are of that number.")
+    reason: str = Field(default="", description="One plain sentence: what the number rests on.")
+
+
 class Turn(BaseModel):
     notes: str = Field(default="", description="One line: what this turn is for.")
     calls: list[Call] = Field(default_factory=list, description="Tool calls to run now, in order.")
+    forecasts: list[ForecastOut] = Field(default_factory=list, description="Your own probability for markets you examined, traded or not (no order, no cost). Needed every run.")
     done: bool = Field(default=False, description="True when the run is over.")
     summary: str = Field(default="", description="When done: what you looked at, what you did, what you are watching.")
     wishes: list[WishOut] = Field(default_factory=list, description="When done: what the corpus lacked that you wanted (data-source feedback).")

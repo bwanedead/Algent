@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import type { CurvePoint, Strategy, TrackRecord, Trader, TraderPosition, TradeRow } from "@/lib/track-record";
+import type { CurvePoint, ForecastStats, Strategy, TrackRecord, Trader, TraderPosition, TradeRow } from "@/lib/track-record";
 
 import { DayRuns, Wishes } from "./DayBook";
 import { OpenPositions } from "./TrackTables";
@@ -104,7 +104,33 @@ export function ValueChart({ t }: { t: TrackRecord }) {
 }
 
 // ── one expandable row per bot ───────────────────────────────────────────────────────────────────
-type Row = { id: string; name: string; cls: string; method: string; style: string; next: string; mustTrade?: number; t: Trader; lastRun: string };
+type Row = { id: string; name: string; cls: string; method: string; style: string; next: string; mustTrade?: number; t: Trader; lastRun: string; s?: Strategy };
+
+/** "8 made, 3 resolved, Brier 0.21" once enough have resolved; before that "n=3, too early". */
+function forecastLine(f: ForecastStats): string {
+  if (!f.made) return "none yet";
+  return f.shown && f.brier !== null ? `${f.made} made, ${f.resolved} resolved, Brier ${f.brier.toFixed(3)}` : `${f.made} made, ${f.resolved} resolved (n=${f.resolved}, too early)`;
+}
+const pct0 = (v: number) => `${Math.round(v * 100)}%`;
+
+function Forecasts({ f }: { f: ForecastStats }) {
+  if (!f.recent.length) return <p className="tr-note">No forecasts recorded yet.</p>;
+  return (
+    <table className="tr-table tr-stack" aria-label="Recent forecasts">
+      <thead><tr><th>Market</th><th className="n">Its view</th><th className="n">Market</th><th className="n">Outcome</th></tr></thead>
+      <tbody>
+        {f.recent.map((r) => (
+          <tr key={`${r.market_id}-${r.at}`}>
+            <td className="q" data-label="Market" title={r.reason}>{r.question}</td>
+            <td className="n" data-label="Its view">{pct0(r.p)}</td>
+            <td className="n" data-label="Market">{r.market === null ? "n/a" : pct0(r.market)}</td>
+            <td className="n" data-label="Outcome">{r.outcome ? r.outcome.toUpperCase() : "open"}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
 
 function WinRate({ t, min }: { t: Trader["summary"]; min: number }) {
   const n = t.wins + t.losses;
@@ -179,6 +205,8 @@ function BookRow({ row, min, children }: { row: Row; min: number; children?: Rea
         <Cell label="Style" className="tr-why">{row.style}</Cell>
         <Cell label="Value" className="n">{money(s.equity)}</Cell>
         <Cell label="P&L" className={`n ${tone(s.pnl)}`}>{usd(s.pnl)} ({s.pnl >= 0 ? "+" : ""}{((s.pnl / bank) * 100).toFixed(1)}%)</Cell>
+        <Cell label="Forecasts" className="n">{row.s ? forecastLine(row.s.forecasts) : "n/a"}</Cell>
+        <Cell label="Exposure" className="n">{row.s?.exposure ? `${pct0(row.s.exposure.pct)} (floor ${pct0(row.s.exposure.floor_pct)})` : "n/a"}</Cell>
         <Cell label="Open" className="n">{s.open}</Cell>
         <Cell label="Trades" className="n">{s.buys + s.sells}</Cell>
         <Cell label="Last run" className="n">{stamp(row.lastRun)}</Cell>
@@ -188,6 +216,18 @@ function BookRow({ row, min, children }: { row: Row; min: number; children?: Rea
         <p className="tr-note">
           Win rate: <WinRate t={s} min={min} />. Cash {money(s.cash)}.
         </p>
+        {row.s ? (
+          <>
+            <h3 className="tr-h3">Recent forecasts</h3>
+            <Forecasts f={row.s.forecasts} />
+            {row.s.floor?.opened ? (
+              <p className="tr-note">
+                Floor positions (opened only to keep exposure up, no real edge): {row.s.floor.opened} opened.{" "}
+                {row.s.floor.groups.map((g) => `${g.label}: ${g.n} closed${g.shown && g.pnl !== null ? `, ${usd(g.pnl)}` : ""}`).join("; ")}.
+              </p>
+            ) : null}
+          </>
+        ) : null}
         <h3 className="tr-h3">Open positions</h3>
         <Positions rows={row.t.open_positions} />
         <h3 className="tr-h3">Trades, newest first</h3>
@@ -201,7 +241,7 @@ function BookRow({ row, min, children }: { row: Row; min: number; children?: Rea
 const METHOD_ORDER = ["Baseline research", "Base rate first", "Delineation", "Delineation + base rate"];
 
 function fromStrategy(x: Strategy): Row {
-  return { id: x.id, name: x.name, cls: x.id, method: x.method_name, style: x.style, next: x.next_run, mustTrade: x.must_trade ? x.min_orders : undefined, t: x, lastRun: x.runs[0]?.at || x.last_at };
+  return { id: x.id, name: x.name, cls: x.id, method: x.method_name, style: x.style, next: x.next_run, mustTrade: x.must_trade ? x.min_orders : undefined, t: x, lastRun: x.runs[0]?.at || x.last_at, s: x };
 }
 
 export function Books({ t }: { t: TrackRecord }) {
@@ -224,7 +264,7 @@ export function Books({ t }: { t: TrackRecord }) {
   return (
     <div className="tr-books" role="group" aria-label="Bots">
       <div className="tr-row tr-rowhead" aria-hidden="true">
-        <span>Bot</span><span>Method</span><span>Style</span><span className="n">Value</span><span className="n">P&amp;L</span><span className="n">Open</span><span className="n">Trades</span><span className="n">Last run</span><span className="n">Next run</span>
+        <span>Bot</span><span>Method</span><span>Style</span><span className="n">Value</span><span className="n">P&amp;L</span><span className="n">Forecasts</span><span className="n">Exposure</span><span className="n">Open</span><span className="n">Trades</span><span className="n">Last run</span><span className="n">Next run</span>
       </div>
       {methods.map((m) => (
         <div key={m} role="group" aria-label={m}>
@@ -255,6 +295,8 @@ export function Books({ t }: { t: TrackRecord }) {
           <Cell label="Style" className="tr-why">retired: it needed a shared forecast, so it opens nothing now; history only</Cell>
           <Cell label="Value" className="n">{money(ruleValue)}</Cell>
           <Cell label="P&L" className={`n ${tone(rule.total_pnl)}`}>{usd(rule.total_pnl)} ({rule.total_pnl >= 0 ? "+" : ""}{((rule.total_pnl / rule.bankroll) * 100).toFixed(1)}%)</Cell>
+          <Cell label="Forecasts" className="n">n/a</Cell>
+          <Cell label="Exposure" className="n">n/a</Cell>
           <Cell label="Open" className="n">{rule.open}</Cell>
           <Cell label="Trades" className="n">{rule.open + rule.settled}</Cell>
           <Cell label="Last run" className="n">{stamp(t.as_of)}</Cell>

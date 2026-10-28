@@ -60,6 +60,24 @@ def _owes(st: strategies.Strategy, session: Session) -> int:
     return max(0, st.min_orders - _fills(session)) if st.must_trade else 0
 
 
+def _forecasts_owed(session: Session) -> int:
+    return max(0, session.s.forecasts_per_run - len(session.forecast_log))
+
+
+def _floor_owed(session: Session) -> float:
+    """Paper dollars still to put at risk to meet the activity floor; 0 once the run has no orders left to place them with."""
+    return session.floor_gap() if session.attempts < session.s.max_orders else 0.0
+
+
+def _debts(session: Session) -> str:
+    out = []
+    if n := _forecasts_owed(session):
+        out.append(f"YOU STILL OWE {n} MORE FORECAST{'S' if n > 1 else ''} this run (forecasts field: market, p_pct, confidence, reason; no order needed)")
+    if gap := _floor_owed(session):
+        out.append(f"YOU ARE ${gap:,.0f} UNDER YOUR {session.s.floor_pct:.0%} ACTIVITY FLOOR: add positions on your best-edge markets (small, sized by your own probability, floor=true if no real edge)")
+    return (" " + "; ".join(out) + ".") if out else ""
+
+
 def _task(now: datetime, entries: list[tuple[str, str]], turn: int, session: Session) -> str:
     st = session.s
     calls_left = st.max_tool_calls - len(session.events)
@@ -71,7 +89,7 @@ def _task(now: datetime, entries: list[tuple[str, str]], turn: int, session: Ses
     if owes := _owes(st, session):
         head += (f" YOU MUST STILL FILL {owes} MORE ORDER{'S' if owes > 1 else ''} THIS RUN" +
                  (": do it this turn, at the smallest size if nothing has edge." if last or turn >= st.max_turns - 2 else "."))
-    return head + "\n\n" + _transcript(entries, flags.DAY_TRANSCRIPT_CHARS)
+    return head + _debts(session) + "\n\n" + _transcript(entries, flags.DAY_TRANSCRIPT_CHARS)
 
 
 def run(*, strategy_id: str = "day", ask: Ask | None = None, now: datetime | None = None, get: Fetch | None = None, corpus: Any = None) -> dict[str, Any]:
@@ -98,6 +116,7 @@ def run(*, strategy_id: str = "day", ask: Ask | None = None, now: datetime | Non
     entries.append(("WATCHLIST (kept between runs):", session.watch_text()))
     wished: list[Any] = []
     spent, worst, tokens, turns, stopped, summary, pushes = 0.0, 0.0, 0, 0, "", "", 0
+    fc_pushes = floor_pushes = 0
     for turn in range(st.max_turns):
         if spent + worst > st.max_usd_run and turns:
             stopped = "run budget reached"
@@ -124,11 +143,23 @@ def run(*, strategy_id: str = "day", ask: Ask | None = None, now: datetime | Non
                 break
             ev = session.run(turn + 1, c)
             entries.append((f"-> {c.tool}({', '.join(f'{k}={v!r}' for k, v in ev.args.items())})", ev.result))
+        fcs = list(getattr(out, "forecasts", None) or [])
+        if fcs:
+            tokens += sum(len(f.model_dump_json()) for f in fcs) // 4
+            entries.append((f"-> forecasts({len(fcs)})", session.forecasts(fcs)))
         wished += list(getattr(out, "wishes", None) or [])
         summary = " ".join((getattr(out, "summary", "") or "").split())[:600] or summary
         if stopped:
             break
-        if getattr(out, "done", False) or not calls:
+        if getattr(out, "done", False) or not (calls or fcs):
+            if _forecasts_owed(session) and fc_pushes < flags.FORECAST_PUSHES and turn + 1 < st.max_turns:
+                fc_pushes += 1                               # a run's feedback is its forecasts: top up, bounded
+                entries.append(("FORECASTS OWED: you ended the run before recording enough forecasts; list your own probability for more of the markets you examined.", ""))
+                continue
+            if _floor_owed(session) and floor_pushes < flags.FLOOR_PUSHES and turn + 1 < st.max_turns:
+                floor_pushes += 1
+                entries.append(("ACTIVITY FLOOR: you ended the run under your minimum exposure; add positions as instructed.", ""))
+                continue
             if _owes(st, session) and pushes < flags.MUST_TRADE_PUSHES and turn + 1 < st.max_turns:
                 pushes += 1                                  # not done yet: the book has to trade (the next task says how many orders it still owes)
                 entries.append(("MUST TRADE: you ended the run before filling your minimum number of orders; keep going.", ""))
@@ -137,6 +168,7 @@ def run(*, strategy_id: str = "day", ask: Ask | None = None, now: datetime | Non
             break
     else:
         stopped = "turn limit"
+    forecast_n = session.flush_forecasts()
     settled = trader.settle(now, st.id)                      # a position that resolved while the run was going
     ds = session.ds
     held = book.holdings(ds)
@@ -144,7 +176,7 @@ def run(*, strategy_id: str = "day", ask: Ask | None = None, now: datetime | Non
     run_line = DayRun(id=day_run_id(now.isoformat(timespec="seconds")), at=now.isoformat(timespec="seconds"), day=now.date().isoformat(), turns=turns,
                       tool_calls=len(session.events), events=[pf, *session.events], considered=list(session.considered.values()), queries=session.queries,
                       orders=session.orders, summary=summary, usd=round(spent, 6), tokens=tokens, stopped=stopped, settled=settled + report["settled"],
-                      equity=pt.equity, cash=pt.cash, strategy=st.id,
+                      equity=pt.equity, cash=pt.cash, strategy=st.id, forecasts=forecast_n, exposure_pct=round(session.exposure() / st.bankroll, 4),
                       must_trade=("" if not st.must_trade else "met" if _owes(st, session) == 0 else f"unmet: {_fills(session)} of {st.min_orders}"))
     store.append_day_run(run_line)
     seen_topics: set[str] = set()
@@ -160,4 +192,4 @@ def run(*, strategy_id: str = "day", ask: Ask | None = None, now: datetime | Non
     store.append_wishes(wishes)
     filled = sum(d.action in ("buy_yes", "buy_no", "sell") for d in ds if d.id in set(session.orders))
     return {**report, "turns": turns, "tool_calls": len(session.events), "orders": len(session.orders), "filled": filled, "usd": round(spent, 6), "stopped": stopped,
-            "summary": summary, "must_trade": run_line.must_trade, "equity": pt.equity, "cash": pt.cash, "considered": len(session.considered), "wishes": len(wishes)}
+            "summary": summary, "must_trade": run_line.must_trade, "forecasts": forecast_n, "exposure_pct": run_line.exposure_pct, "equity": pt.equity, "cash": pt.cash, "considered": len(session.considered), "wishes": len(wishes)}

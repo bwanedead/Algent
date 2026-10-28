@@ -10,7 +10,7 @@ Values are read from ``flags.py`` when the roster is built (``roster()``), so a 
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime, timedelta
 
 from . import flags, methods
@@ -42,6 +42,13 @@ class Strategy:
     exposure_frac: float = flags.DAY_MAX_EXPOSURE_FRAC
     bankroll: float = flags.DAY_BANKROLL
     prompt_version: str = "day-v1"
+    min_exposure_pct: float = flags.MIN_EXPOSURE_PCT           # share of the bankroll that should be at risk after each run (the activity floor)
+    forecasts_per_run: int = flags.FORECASTS_PER_RUN           # own probabilities a run must record, traded or not
+
+    @property
+    def floor_pct(self) -> float:
+        """The activity floor as enforced: never above the share of the exposure cap the guards leave reachable."""
+        return min(self.min_exposure_pct, self.exposure_frac * flags.FLOOR_CAP_SHARE)
 
     @property
     def series(self) -> str:
@@ -69,6 +76,15 @@ def _new(id: str, name: str, method: str, style: str, hours: tuple[int, ...], mi
 
 
 def roster() -> list[Strategy]:
+    return [_floors(s) for s in _roster()]
+
+
+def _floors(s: Strategy) -> Strategy:
+    """The activity floors and forecast quota, read from flags when the roster is built (so a patched flag takes effect) and the same for every bot."""
+    return replace(s, min_exposure_pct=flags.MUST_TRADE_MIN_EXPOSURE_PCT if s.must_trade else flags.MIN_EXPOSURE_PCT, forecasts_per_run=flags.FORECASTS_PER_RUN)
+
+
+def _roster() -> list[Strategy]:
     daily_h, daily_m = (int(x) for x in flags.DAILY_UTC.split(":"))
     return [
         Strategy(id="day", name="Day bot", method="p0b", style="Opportunistic: picks its own bets, 0 to 2 days out", horizon_h=flags.DAY_HORIZON_H, run_hours=tuple(flags.DAY_RUN_HOURS),
@@ -125,6 +141,8 @@ def validate(rows: list[Strategy] | None = None) -> list[str]:
             bad.append(f"{s.id}: caps or horizon unusable")
         if s.must_trade and not 1 <= s.min_orders <= s.max_orders:
             bad.append(f"{s.id}: must_trade needs 1..max_orders minimum orders")
+        if not 0.0 <= s.min_exposure_pct < 1.0 or s.forecasts_per_run < 0:
+            bad.append(f"{s.id}: floor or forecast quota out of range")
         if not s.must_trade and s.min_orders:
             bad.append(f"{s.id}: min_orders without must_trade")
     return bad

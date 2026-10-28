@@ -108,7 +108,13 @@ SHAPES: dict[str, Any] = {
                             "horizons?": {"by_horizon": [{"label": "str", "n": "int", "shown": "bool"}], "books": "obj"},
                             # additive since 10-28: the strategy roster (markets/strategies.py), every bot its own forecaster; one section each, shaped like `day`
                             "strategies?": [{"id": "str", "name": "str", "method": "str", "method_name": "str", "style": "str", "must_trade": "bool", "summary": "obj", "curve": "list",
-                                             "open_positions": "list", "log": "list", "next_run": "str", "last_at": "str", "run_hours": "list"}]},
+                                             "open_positions": "list", "log": "list", "next_run": "str", "last_at": "str", "run_hours": "list",
+                                             # additive since 10-28: forecast feedback (markets/bot_forecasts.py) and the activity floor
+                                             "forecasts?": {"made": "int", "resolved": "int", "min_resolved": "int", "shown": "bool", "brier": "num|null", "brier_market": "num|null",
+                                                            "log_loss": "num|null", "skill_vs_market": "num|null",
+                                                            "recent": [{"market_id": "str", "question": "str", "p": "num", "market": "num|null", "outcome": "str"}]},
+                                             "exposure?": {"pct": "num", "floor_pct": "num"},
+                                             "floor?": {"opened": "int", "groups": [{"label": "str", "n": "int", "shown": "bool"}]}}]},
     "ohmega.status": {"product": "str", "job": "str", "checked_at": "str", "last_ok": "bool", "last_changed_at": "str|null", "last_failed_at": "str|null", "cadence_min": "num|null", "next_due": "str|null"},
     # ── views (docs/architecture/views.md) ────────────────────────────────────────────────────
     "ohmega.view.country": {**_ENV, "iso": "str", "name": "str", "region": "str", "capital": "str", "profiled": "bool",

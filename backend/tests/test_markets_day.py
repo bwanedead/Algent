@@ -22,6 +22,8 @@ def _store(tmp_path, monkeypatch):
                       ("ALGENT_INTEL_STORE", "intel"), ("ALGENT_GEOLEDGER_STORE", "geo"), ("ALGENT_PROFILE_STORE", "prof"), ("ALGENT_RETRIEVAL_STORE", "ret")):
         monkeypatch.setenv(env, str(tmp_path / name))
     monkeypatch.delenv("DATABASE_URL", raising=False)
+    for name in ("FORECASTS_PER_RUN", "MIN_EXPOSURE_PCT", "MUST_TRADE_MIN_EXPOSURE_PCT"):   # the older tests predate the feedback quota and the floor; test_markets_feedback.py turns them on
+        monkeypatch.setattr(flags, name, 0)
 
 
 def raw(mid, hours, *, bid=0.49, ask=0.51, liq=20000.0, vol=50000.0, closed=False, q=None):
