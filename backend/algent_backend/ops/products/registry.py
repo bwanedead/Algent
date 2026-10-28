@@ -207,7 +207,8 @@ PRODUCTS: tuple[Product, ...] = (
                 Store("maritime_daily", loc.maritime_daily, "", True, budget=_b(1, 100, 500, 50, 0.5, "estimate: one small summary file a day"))),
         retention=(Retention("rollup", "daily ship summaries are written then the raw event log is cut to LOG_KEEP_DAYS (7)", "maritime/flags.py::LOG_KEEP_DAYS", "job:maritime-rollup"),),
         irreplaceable=True, why="the daily summaries are the only long record of ship behaviour (backed up as maritime_daily)",
-        jobs=(Job("maritime-rollup", ("maritime", "rollup", "--apply"), "*-*-* 04:05", every_min=1440, priority=4, what="daily ship summaries + retention of the raw event log"),),
+        jobs=(Job("maritime-rollup", ("maritime", "rollup", "--apply"), "*-*-* 04:05", every_min=1440, priority=4, what="daily ship summaries + retention of the raw event log"),
+              Job("maritime-vessels", ("maritime", "publish"), "*-*-* 04:35", every_min=1440, priority=4, what="the per-vessel documents (maritime/vessel/*.json), once a day; live passes skip them"),),
         publishes=("maritime/",), site_routes=("/intel/maritime",),
         contracts=(K("ohmega.maritime.events", 1, ("maritime/recent.json", "maritime/live.json", "maritime/vessel/*.json")), K("ohmega.maritime.counts", 1, ("maritime/counts.json",))), feeds_from=("live",), heartbeat=("maritime_store/state.json",)),
     Product(

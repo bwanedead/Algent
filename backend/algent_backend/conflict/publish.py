@@ -67,7 +67,7 @@ def source_state() -> dict[str, dict[str, Any]]:
 
 def documents(today: date | None = None) -> dict[str, Any]:
     today = today or date.today()
-    recent, countries = _Top(flags.RECENT_MAX), {}
+    recent, countries, country_newest = _Top(flags.RECENT_MAX), {}, {}
     recent_floor = (today.toordinal() - flags.RECENT_DAYS)
     newest = ""
     for e in store.iter_events(max(flags.COUNTRY_DAYS, flags.RECENT_DAYS), today):
@@ -76,13 +76,16 @@ def documents(today: date | None = None) -> dict[str, Any]:
             recent.add(e)
         if len(e.country) == 2 and (e.country == e.country.upper()):
             countries.setdefault(e.country, _Top(flags.COUNTRY_MAX)).add(e)
+            country_newest[e.country] = max(country_newest.get(e.country, ""), e.observed_at)
     by_day = store.day_counts(flags.COUNT_DAYS, today)
     in_window = sum(v["events"] for d, v in by_day.items() if date.fromisoformat(d).toordinal() >= recent_floor)
     docs: dict[str, Any] = {"conflict/recent.json": {
         "as_of": newest, "since": store.collecting_since(), "window_days": flags.RECENT_DAYS, "total": in_window, "shown": len(recent.heap),
         "capped": in_window > len(recent.heap), "by_day": by_day, "sources": source_state(), "coverage": COVERAGE, "rows": recent.rows()}}
+    # A country's as_of is ITS newest event, not the feed's: the global stamp moves every 15 minutes and would rewrite all ~150 country
+    # documents each pass (most of the R2 write budget, 2026-10-28) when only the countries with new events changed.
     for iso, top in sorted(countries.items()):
-        docs[f"conflict/country/{iso}.json"] = {"iso": iso, "as_of": newest, "window_days": flags.COUNTRY_DAYS, "total": top.seen,
+        docs[f"conflict/country/{iso}.json"] = {"iso": iso, "as_of": country_newest[iso], "window_days": flags.COUNTRY_DAYS, "total": top.seen,
                                                 "capped": top.seen > len(top.heap), "rows": top.rows()}
     return docs
 
