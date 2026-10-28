@@ -11,7 +11,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-from . import book, books, flags, gaps, store, strategies, trader_report
+from . import book, books, bot_forecasts, flags, gaps, store, strategies, trader_report
 from .contracts import Decision
 
 ORDER_ROWS = 8
@@ -33,7 +33,7 @@ def closed_trades(ds: list[Decision]) -> list[dict[str, Any]]:
         m = ms.get(mid)
         out.append({"market_id": mid, "question": m.question if m else mid, "pnl": pnl, "cost": round(sum(-d.cash_flow for d in buys), 2),
                     "hold_h": round((b - a).total_seconds() / 3600, 1) if a and b else None, "hours_to_end": buys[0].hours_to_end, "opened": buys[0].at,
-                    "closed": end.at, "how": end.action, "category": (m.tags[0] if m and m.tags else "other")})
+                    "closed": end.at, "how": end.action, "floor": buys[0].tag == "floor", "category": (m.tags[0] if m and m.tags else "other")})
     return sorted(out, key=lambda t: t["closed"])
 
 
@@ -103,7 +103,8 @@ def runs(ds: list[Decision], limit: int | None = None, strategy: str | None = "d
                            "requested": d.requested, "price": d.price, "reason": d.rationale, "clips": d.clips})
         out.append({"id": r.id, "at": r.at, "usd": round(r.usd, 4), "turns": r.turns, "tool_calls": r.tool_calls, "stopped": r.stopped, "summary": r.summary,
                     "considered": r.considered[:LIST_ROWS], "n_considered": len(r.considered), "queries": r.queries[:LIST_ROWS], "n_queries": len(r.queries),
-                    "orders": orders[:ORDER_ROWS], "equity": r.equity, "must_trade": r.must_trade})
+                    "orders": orders[:ORDER_ROWS], "equity": r.equity, "must_trade": r.must_trade,
+                    "forecasts": r.forecasts, "exposure_pct": r.exposure_pct})
     return out
 
 
@@ -127,6 +128,11 @@ def section(day: str | None = None, strategy_id: str = "day") -> dict[str, Any]:
     out["next_run"] = nxt.isoformat(timespec="minutes") if nxt else ""
     out["enabled"] = st.enabled
     out["min_for_verdict"] = flags.MIN_RESOLVED_FOR_VERDICT
+    held = book.holdings(ds)
+    out["forecasts"] = bot_forecasts.summary(st.id)
+    out["exposure"] = {"pct": round(sum(h.cost for h in held.values()) / st.bankroll, 4), "floor_pct": round(st.floor_pct, 4)}
+    out["floor"] = {"opened": sum(d.tag == "floor" and d.action in ("buy_yes", "buy_no") for d in ds),
+                    "groups": [_group("floor (no edge)", [t for t in trades if t["floor"]]), _group("chosen", [t for t in trades if not t["floor"]])]}
     out["by_horizon"] = by_horizon(trades)
     out["by_category"] = by_category(trades)
     out["avg_hold_h"] = stats(ds, st.series)["avg_hold_h"]

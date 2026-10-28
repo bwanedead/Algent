@@ -228,6 +228,27 @@ FAST_STRAT_MAX_USD_PER_DAY = 0.40
 #: A must-trade run that has not filled its minimum is sent back to trade at most this many times before it is recorded as unmet.
 MUST_TRADE_PUSHES = 2
 
+# ── forecast feedback and activity floors (day.py, bot_forecasts.py): feedback does not depend on trading ──────────────────────────
+#: Every run records its OWN probability for at least this many markets it examined, traded or not (the Turn's ``forecasts`` list: output tokens only, no
+#: order). A run that ends short is sent back to top up, at most FORECAST_PUSHES times, then recorded short. Scored on resolution (Brier, log loss, vs the
+#: market price at forecast time) in an append-only per-strategy log no other bot reads. Lots of scored predictions a day, independent of trading.
+FORECASTS_PER_RUN = 8
+FORECAST_PUSHES = 2
+#: Most forecasts one turn may carry (a bound on output size); a market is forecast once per run (a restated one replaces the earlier line in that run only).
+FORECASTS_PER_TURN = 12
+#: A bot's Brier is shown only once it has this many RESOLVED forecasts; before it the page says "n=3, too early".
+FORECAST_MIN_RESOLVED = 10
+#: Minimum activity: the share of the bankroll that should be at risk after each run. Below it the agent is told and must add positions on its best-edge
+#: markets; with no edge it takes small positions sized by its own probability vs the price (fractional Kelly, min ticket, same guards). The floor is
+#: clamped to FLOOR_CAP_SHARE of the strategy's exposure cap (guards stay: 50% total), so a 60% target means 45% in practice.
+MIN_EXPOSURE_PCT = 0.30
+MUST_TRADE_MIN_EXPOSURE_PCT = 0.60
+FLOOR_CAP_SHARE = 0.9
+FLOOR_PUSHES = 2
+#: A buy made while the book is under its floor is tagged ``floor`` when the agent says it is only filling the floor OR its own edge on that side is
+#: below EDGE_MIN: those positions are measured apart from chosen ones. Floor buys are sized at the Kelly stake on the agent's own p, never below the
+#: minimum ticket and never above the guards.
+
 # ── scoring ──────────────────────────────────────────────────────────────────────────────────────
 #: Calibration buckets are this wide (probability): ten of them.
 CALIBRATION_BUCKET = 0.1

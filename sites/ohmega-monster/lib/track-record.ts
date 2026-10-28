@@ -78,7 +78,14 @@ export type Trader = {
 };
 // The fast book (backend `markets/books.py`): the same trader on markets that settle within days, decided every few hours. Shaped like the daily trader.
 // A roster strategy (backend `markets/strategies.py`): every bot is its own forecaster. Shaped like the day book plus what it is and when it runs next.
-export type Strategy = DayBookBase & { id: string; name: string; method: string; method_name: string; style: string; must_trade: boolean; min_orders: number; next_run: string };
+// Additive: its own forecast feedback (scored apart from trading; Brier null until `min_resolved` forecasts have resolved), its share of the bankroll at risk against the
+// activity floor, and how the floor-tagged positions did against chosen ones. A document from before these existed parses to zeros.
+export type ForecastRow = { market_id: string; question: string; at: string; p: number; market: number | null; confidence: string; outcome: string; reason: string };
+export type ForecastStats = { made: number; resolved: number; min_resolved: number; shown: boolean; brier: number | null; brier_market: number | null; skill_vs_market: number | null; recent: ForecastRow[] };
+export type Strategy = DayBookBase & {
+  id: string; name: string; method: string; method_name: string; style: string; must_trade: boolean; min_orders: number; next_run: string;
+  forecasts: ForecastStats; exposure: { pct: number; floor_pct: number } | null; floor: { opened: number; groups: DayGroup[] } | null;
+};
 export type FastBook = Trader & { horizon_days: number; every_hours: number; enabled: boolean };
 // The day book (backend `markets/day*.py`): an agent that browses Polymarket itself and chooses its own 0-2 day bets, three runs a day. Shaped like the daily
 // trader plus its own parts. A horizon/category group's win rate and P&L are null (shown=false) until it holds min_for_verdict closed trades.
@@ -240,10 +247,23 @@ function parseDay(raw: unknown, fallbackRule: Portfolio): DayBook | null {
   };
 }
 
+function parseForecasts(raw: unknown): ForecastStats {
+  const f = isObj(raw) ? raw : {};
+  return {
+    made: n0(f.made), resolved: n0(f.resolved), min_resolved: n0(f.min_resolved), shown: f.shown === true, brier: num(f.brier), brier_market: num(f.brier_market), skill_vs_market: num(f.skill_vs_market),
+    recent: list(f.recent).map((x) => ({ market_id: str(x.market_id), question: str(x.question), at: str(x.at), p: n0(x.p), market: num(x.market), confidence: str(x.confidence), outcome: str(x.outcome), reason: str(x.reason) })),
+  };
+}
+
 function parseStrategies(raw: unknown, fallbackRule: Portfolio): Strategy[] {
   return list(raw).flatMap((r) => {
     const d = parseDay(r, fallbackRule);
-    return d ? [{ ...d, id: str(r.id), name: str(r.name), method: str(r.method), method_name: str(r.method_name), style: str(r.style), must_trade: r.must_trade === true, min_orders: n0(r.min_orders), next_run: str(r.next_run) }] : [];
+    const ex = isObj(r.exposure) ? r.exposure : null;
+    const fl = isObj(r.floor) ? r.floor : null;
+    return d ? [{
+      ...d, id: str(r.id), name: str(r.name), method: str(r.method), method_name: str(r.method_name), style: str(r.style), must_trade: r.must_trade === true, min_orders: n0(r.min_orders), next_run: str(r.next_run),
+      forecasts: parseForecasts(r.forecasts), exposure: ex ? { pct: n0(ex.pct), floor_pct: n0(ex.floor_pct) } : null, floor: fl ? { opened: n0(fl.opened), groups: list(fl.groups).map(dayGroup) } : null,
+    }] : [];
   });
 }
 

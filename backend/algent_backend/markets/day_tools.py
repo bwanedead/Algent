@@ -16,8 +16,8 @@ from typing import Any
 from algent_backend.retrieval.docs import clip
 
 from . import book, browse, day_report, flags, gaps, guards, research, store, strategies
-from .contracts import Decision, Snapshot, ToolEvent, WatchEvent, decision_id
-from .day_prompt import Call
+from .contracts import BotForecast, Decision, Snapshot, ToolEvent, WatchEvent, bot_forecast_id, day_run_id, decision_id
+from .day_prompt import Call, ForecastOut
 from .polymarket import Fetch, num
 
 NL = "\n"
@@ -43,6 +43,9 @@ class Session:
         self.orders: list[str] = []
         self.shown: set[str] = set()
         self.attempts = 0
+        self.run_id = day_run_id(now.isoformat(timespec="seconds"))
+        self.prices: dict[str, float] = {}                          # the YES price last seen for each market this run (a forecast is stamped with it)
+        self.forecast_log: dict[str, BotForecast] = {}              # this run's own probabilities, one per market; written once at the end (flush_forecasts)
 
     @property
     def s(self) -> strategies.Strategy:
@@ -64,6 +67,52 @@ class Session:
 
     def _see(self, v: browse.View) -> None:
         self.considered.setdefault(v.market.id, {"id": v.market.id, "question": v.market.question, "ends": v.market.end_date[:16]})
+        if v.yes is not None:
+            self.prices[v.market.id] = v.yes
+
+    # ── forecasts: the feedback signal, separate from trading ───────────────────────────────────
+    def exposure(self) -> float:
+        return sum(h.cost for h in book.holdings(self.ds).values())
+
+    def floor_gap(self) -> float:
+        """Paper dollars still to put at risk to reach the activity floor (0 when met, or when what is left is under the minimum ticket and cannot be bought)."""
+        gap = self.s.floor_pct * self.s.bankroll - self.exposure()
+        return gap if gap >= flags.TRADE_MIN_TICKET else 0.0
+
+    def _note_forecast(self, mid: str, p: float, *, confidence: str = "", reason: str = "") -> bool:
+        price = self.prices.get(mid)
+        if mid not in self.considered or price is None or not 0.0 < p < 1.0:
+            return False
+        at = (self.now + timedelta(seconds=len(self.forecast_log))).isoformat(timespec="seconds")
+        self.forecast_log[mid] = BotForecast(id=bot_forecast_id(self.s.id, self.run_id, mid), strategy=self.s.id, run_id=self.run_id, market_id=mid, at=at, day=at[:10],
+                                             p=round(min(flags.P_MAX, max(flags.P_MIN, p)), 4), market=price, confidence=confidence, question=self.considered[mid]["question"],
+                                             reason=" ".join(reason.split())[:300])
+        return True
+
+    def forecasts(self, items: list[ForecastOut]) -> str:
+        """Record the turn's forecasts. A market not yet seen this run is loaded once; one that cannot be priced is skipped and the answer says so.
+        A p given as a fraction (0.07) rather than a percent is read as a fraction, never as 0.07%."""
+        done, skipped = 0, []
+        for f in items[:flags.FORECASTS_PER_TURN]:
+            mid = f.market.strip()
+            if mid not in self.prices:
+                try:
+                    v = browse.load(mid, get=self.get) if mid else None
+                except Exception:  # noqa: BLE001
+                    v = None
+                if v is not None:
+                    self._see(v)
+            p = f.p_pct / 100.0 if f.p_pct > 1.0 else f.p_pct
+            if self._note_forecast(mid, p, confidence=f.confidence, reason=f.reason):
+                done += 1
+            else:
+                skipped.append(mid or "(blank)")
+        return f"FORECASTS recorded {done}; {len(self.forecast_log)} market(s) forecast this run" + (f"; skipped (unknown, unpriced or p outside 1-99): {', '.join(skipped)}" if skipped else "")
+
+    def flush_forecasts(self) -> int:
+        rows = list(self.forecast_log.values())
+        store.append_bot_forecasts(rows)
+        return len(rows)
 
     # ── browsing ─────────────────────────────────────────────────────────────────────────────────
     def t_search_markets(self, c: Call) -> tuple[str, str]:
@@ -106,6 +155,7 @@ class Session:
         pt = book.point(self.s.series, self.now, cash_=book.cash(self.ds), held=held, realised_=book.realised(self.ds), prices=prices)
         lines = [f"cash {_money(pt.cash)} | equity {_money(pt.equity)} (P&L {_money(pt.equity - self.s.bankroll)}) | invested {_money(sum(h.cost for h in held.values()))} "
                  f"({sum(h.cost for h in held.values()) / self.s.bankroll:.1%} of the bankroll at risk) of the {_money(self.s.exposure_frac * self.s.bankroll)} limit | "
+                 f"activity floor {self.s.floor_pct:.0%} of the bankroll{f' - YOU ARE {_money(self.floor_gap())} UNDER IT' if self.floor_gap() else ' (met)'} | "
                  f"per-market limit {_money(self.s.position_frac * self.s.bankroll)} | realised so far {_money(book.realised(self.ds))}, unrealised {_money(pt.unrealised)}"]
         for lab, mid in self._labels().items():
             h, m = held[mid], ms.get(mid)
@@ -225,13 +275,30 @@ class Session:
         elif v.yes is None:
             why = "no live price"
         action = "sell" if kind == "sell" else f"buy_{c.side}"
+        floor_clip = ""
+        under = kind == "buy" and not why and v is not None and v.yes is not None and self.exposure() < self.s.floor_pct * self.s.bankroll
+        if under:
+            assert v is not None and v.yes is not None
+            q = c.p_yes if c.side == "yes" else 1.0 - c.p_yes
+            edge = q - book.side_price(v.yes, c.side) if 0.0 < c.p_yes < 1.0 else 0.0
+            if c.floor or edge < flags.EDGE_MIN:                       # a position taken to fill the floor, not for a stated edge: small, and tagged
+                size = guards.floor_stake(c.p_yes, c.side, v.yes, self.s.bankroll)
+                floor_clip = f"floor position (no real edge): sized by your own probability, {_money(size)}" if requested > size or requested <= 0 else ""
+                requested = min(requested, size) if requested > 0 else size
+            else:
+                under = False
         if why:
             fill = guards.Fill("hold", held.side if held else "", clips=[f"refused: {why}"])
         else:
             assert v is not None and v.yes is not None
             fill = guards.apply(action, requested, held=held, yes_price=v.yes, cash=book.cash(self.ds), exposure=sum(h.cost for h in book.holdings(self.ds).values()),
                                 tradable=True, position_frac=self.s.position_frac, exposure_frac=self.s.exposure_frac, bankroll=self.s.bankroll)
-        d = self._line(action, v, mid, c, fill, list(fill.clips), min(requested, 1e9))
+        d = self._line(action, v, mid, c, fill, [*([floor_clip] if floor_clip else []), *fill.clips], min(requested, 1e9))
+        if under and d.action in ("buy_yes", "buy_no"):
+            d.tag = "floor"
+        if v is not None and 0.0 < c.p_yes < 1.0 and mid not in self.forecast_log:
+            self._see(v)
+            self._note_forecast(mid, c.p_yes, reason=c.reason)         # an order carries the agent's own probability: it is a forecast too
         store.append_decisions([d])
         self.ds.append(d)
         self.orders.append(d.id)

@@ -13,6 +13,7 @@ so the record cannot be quietly improved after the fact.
     research_trace.jsonl  one line per forecast / decision: queries, result ids, cited ids, tokens, cost, latency (trace.py; pruned by age)
     day_runs.jsonl    one DayRun per run of the day book: the full tool trace, orders, cost (day.py; pruned by age)
     day_wishes.jsonl  what the day agent wished the corpus held (product feedback); day_watchlist.jsonl its persisted watchlist (events)
+    bot_forecasts.jsonl  every strategy's own probabilities, traded or not (bot_forecasts.py; append-only, never pruned: the scored feedback record)
     status.json       the last pass: when, what it found, what failed
 """
 
@@ -27,7 +28,7 @@ from typing import TypeVar
 from pydantic import BaseModel
 
 from . import flags
-from .contracts import DayRun, Decision, EquityPoint, Forecast, ForecastFailure, Gap, GapFill, Market, Snapshot, Trace, Trade, WatchEvent, Wish
+from .contracts import BotForecast, DayRun, Decision, EquityPoint, Forecast, ForecastFailure, Gap, GapFill, Market, Snapshot, Trace, Trade, WatchEvent, Wish
 
 _ENV = "ALGENT_MARKETS_STORE"
 M = TypeVar("M", bound=BaseModel)
@@ -217,6 +218,15 @@ def day_runs(strategy: str | None = None) -> list[DayRun]:
 
 def append_day_run(run: DayRun) -> None:
     _append("day_runs.jsonl", [run])
+
+
+def bot_forecasts(strategy: str | None = None) -> list[BotForecast]:
+    rows = _read("bot_forecasts.jsonl", BotForecast)
+    return rows if strategy is None else [f for f in rows if f.strategy == strategy]
+
+
+def append_bot_forecasts(rows: list[BotForecast]) -> None:
+    _append("bot_forecasts.jsonl", rows)
 
 
 def wishes(strategy: str | None = None) -> list[Wish]:

@@ -119,7 +119,7 @@ def log(ds: list[Decision], limit: int = LOG_ROWS) -> list[dict[str, Any]]:
         out.append({"id": d.id, "market_id": d.market_id, "question": m.question if m else d.market_id, "url": m.url if m else "", "day": d.day,
                     "action": d.action, "side": d.side, "price": d.price, "stake": round(abs(d.cash_flow), 2), "shares": round(d.shares, 2),
                     "pnl": d.realised if d.action in ("sell", "settle") else None, "result": result, "outcome": outcome, "rationale": d.rationale,
-                    "ours": d.ours, "market": d.market, "clips": d.clips, "hours_to_end": d.hours_to_end})
+                    "ours": d.ours, "market": d.market, "clips": d.clips, "hours_to_end": d.hours_to_end, "tag": d.tag})
     return out
 
 

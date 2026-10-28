@@ -141,6 +141,7 @@ class Decision(BaseModel):
     evidence: str = ""                        # sufficient | thin | gap ("" before research existed)
     hours_to_end: float | None = None
     basis: str = ""                           # a strategy order: the working its reasoning method asked for (reference class, possibilities ...), plain text
+    tag: str = ""                             # "floor": a buy taken while under the minimum-exposure floor with no real edge (measured apart from chosen ones)
 
 
 class EquityPoint(BaseModel):
@@ -272,6 +273,8 @@ class DayRun(BaseModel):
     cash: float | None = None
     strategy: str = "day"                                   # which roster strategy ran (lines written before the roster are the day book's)
     must_trade: str = ""                                    # a must-trade run: "met" | "unmet: n of m" ("" for others)
+    forecasts: int = 0                                      # distinct markets this run gave its own probability for
+    exposure_pct: float | None = None                       # share of the bankroll at risk when the run ended
 
 
 class Wish(BaseModel):
@@ -308,3 +311,24 @@ def wish_id(run_id: str, topic: str) -> str:
 
 def day_run_id(at: str) -> str:
     return "dr-" + hashlib.sha1(at.encode()).hexdigest()[:14]
+
+
+class BotForecast(BaseModel):
+    """One strategy's own probability for one market, made during a run whether or not it traded. Append-only, per strategy, never shown to another bot. Scored on
+    resolution against the outcome and against ``market`` (the YES price when it was made)."""
+
+    id: str
+    strategy: str
+    run_id: str
+    market_id: str
+    at: str
+    day: str
+    p: float                                  # probability of YES, clipped inside P_MIN..P_MAX
+    market: float | None = None               # the market's YES price at that moment
+    confidence: str = ""                      # low | medium | high | ""
+    reason: str = ""
+    question: str = ""
+
+
+def bot_forecast_id(strategy: str, run_id: str, market_id: str) -> str:
+    return "bf-" + hashlib.sha1(f"{strategy}|{run_id}|{market_id}".encode()).hexdigest()[:14]
