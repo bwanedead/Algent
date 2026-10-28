@@ -103,7 +103,7 @@ def run(*, now: datetime | None = None) -> dict[str, Any]:
 
     exposure = sum(p.stake for p in pos.values() if p.status == "open")
     # open
-    for mid, f in sorted(fcs.items(), key=lambda kv: -abs(kv[1].p - 0.5)):
+    for mid, f in sorted(fcs.items() if flags.RULE_BOOK_ENABLED else [], key=lambda kv: -abs(kv[1].p - 0.5)):   # retired: no desk forecast feeds a bot any more
         m = ms.get(mid)
         if m is None or m.status != "open" or mid in pos:
             continue

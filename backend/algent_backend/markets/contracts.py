@@ -67,6 +67,19 @@ class Forecast(BaseModel):
     hours_to_end: float | None = None         # time to the market's end when forecast (for horizon splits)
 
 
+class ForecastFailure(BaseModel):
+    """A forecast call that produced no usable probability: kept as a visible row (what was said, why it was refused, what it cost), never dropped."""
+
+    id: str                                   # the forecast id it would have had
+    market_id: str
+    made_at: str
+    raw: str = ""                             # the model's raw probability value (repr), or "" when the call itself failed
+    reason: str
+    usd: float = 0.0
+    book: str = "daily"
+    prompt_version: str = ""
+
+
 class Trade(BaseModel):
     """One paper action. ``open`` stakes ``stake`` paper dollars on ``side`` at ``price`` (the price of THAT side, after slippage);
     ``mark`` is the daily mark-to-market; ``settle`` closes the position at the outcome."""
@@ -127,12 +140,13 @@ class Decision(BaseModel):
     evidence_ids: list[str] = Field(default_factory=list)   # corpus items the decision cited
     evidence: str = ""                        # sufficient | thin | gap ("" before research existed)
     hours_to_end: float | None = None
+    basis: str = ""                           # a strategy order: the working its reasoning method asked for (reference class, possibilities ...), plain text
 
 
 class EquityPoint(BaseModel):
     """A book's value at the end of a day: cash plus open positions at their current side price. Written once per (book, day), never edited."""
 
-    book: Literal["trader", "rule", "fast", "day"]
+    book: str                                 # the series: trader | rule | fast | day | a roster strategy id (strategies.py)
     day: str
     at: str
     cash: float
@@ -256,6 +270,8 @@ class DayRun(BaseModel):
     settled: int = 0
     equity: float | None = None
     cash: float | None = None
+    strategy: str = "day"                                   # which roster strategy ran (lines written before the roster are the day book's)
+    must_trade: str = ""                                    # a must-trade run: "met" | "unmet: n of m" ("" for others)
 
 
 class Wish(BaseModel):
@@ -271,6 +287,7 @@ class Wish(BaseModel):
     market_id: str = ""
     question: str = ""
     source: str = ""                          # the source or data type that would supply it
+    strategy: str = "day"
 
 
 class WatchEvent(BaseModel):
@@ -282,6 +299,7 @@ class WatchEvent(BaseModel):
     action: Literal["add", "remove"]
     question: str = ""
     note: str = ""
+    strategy: str = "day"
 
 
 def wish_id(run_id: str, topic: str) -> str:

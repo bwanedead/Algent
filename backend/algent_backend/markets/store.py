@@ -5,6 +5,7 @@ so the record cannot be quietly improved after the fact.
     markets.jsonl     one Market REVISION per line (a changed market is a new line; the last line of an id wins)
     snapshots.jsonl   one price Snapshot per line (live passes and the CLOB history backfill)
     forecasts.jsonl   one Forecast per line: OURS, immutable once written
+    forecast_failures.jsonl  forecast calls that gave no usable probability (raw value + reason): visible, never dropped
     trades.jsonl      the RULE book's paper trades: open / mark / settle (a position is a projection of its lines)
     decisions.jsonl   the TRADER's ledger: every decision (buy / sell / hold / settle) with its rationale and any guard clips
     equity.jsonl      one EquityPoint per book per day (the equity curves)
@@ -26,7 +27,7 @@ from typing import TypeVar
 from pydantic import BaseModel
 
 from . import flags
-from .contracts import DayRun, Decision, EquityPoint, Forecast, Gap, GapFill, Market, Snapshot, Trace, Trade, WatchEvent, Wish
+from .contracts import DayRun, Decision, EquityPoint, Forecast, ForecastFailure, Gap, GapFill, Market, Snapshot, Trace, Trade, WatchEvent, Wish
 
 _ENV = "ALGENT_MARKETS_STORE"
 M = TypeVar("M", bound=BaseModel)
@@ -141,6 +142,19 @@ def append_forecast(f: Forecast) -> None:
     _append("forecasts.jsonl", [f])
 
 
+def forecast_failures() -> list[ForecastFailure]:
+    return _read("forecast_failures.jsonl", ForecastFailure)
+
+
+def append_forecast_failure(f: ForecastFailure) -> None:
+    _append("forecast_failures.jsonl", [f])
+
+
+def market_revisions(market_id: str) -> list[Market]:
+    """Every stored revision of one market, oldest first (``markets()`` returns only the latest). For replays that must see the market as it was."""
+    return [m for m in _read("markets.jsonl", Market) if m.id == market_id]
+
+
 def trades() -> list[Trade]:
     return _read("trades.jsonl", Trade)
 
@@ -195,16 +209,19 @@ def _prune(name: str, rows: list, now: datetime) -> int:
     return len(rows) - len(keep)
 
 
-def day_runs() -> list[DayRun]:
-    return _read("day_runs.jsonl", DayRun)
+def day_runs(strategy: str | None = None) -> list[DayRun]:
+    """Run traces of every roster strategy (``None``) or of one; a line written before the roster is the day book's."""
+    rows = _read("day_runs.jsonl", DayRun)
+    return rows if strategy is None else [r for r in rows if r.strategy == strategy]
 
 
 def append_day_run(run: DayRun) -> None:
     _append("day_runs.jsonl", [run])
 
 
-def wishes() -> list[Wish]:
-    return _read("day_wishes.jsonl", Wish)
+def wishes(strategy: str | None = None) -> list[Wish]:
+    rows = _read("day_wishes.jsonl", Wish)
+    return rows if strategy is None else [w for w in rows if w.strategy == strategy]
 
 
 def append_wishes(rows: list[Wish]) -> None:
@@ -219,10 +236,12 @@ def append_watch(row: WatchEvent) -> None:
     _append("day_watchlist.jsonl", [row])
 
 
-def watchlist() -> dict[str, WatchEvent]:
-    """Markets currently on the day agent's watchlist (the last event per market is an add)."""
+def watchlist(strategy: str = "day") -> dict[str, WatchEvent]:
+    """Markets currently on one strategy's watchlist (the last event per market is an add). Each strategy keeps its own."""
     last: dict[str, WatchEvent] = {}
     for e in watch_events():
+        if e.strategy != strategy:
+            continue
         last[e.market_id] = e
     return {k: e for k, e in last.items() if e.action == "add"}
 

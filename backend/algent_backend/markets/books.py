@@ -53,7 +53,20 @@ BOOKS = {"daily": DAILY, "fast": FAST, "day": DAY}
 
 
 def get(name: str) -> BookSpec:
-    return BOOKS[name]
+    """A book by name: the three original specs, else a roster strategy's (``strategies.py``) built from its entry."""
+    if name in BOOKS:
+        return BOOKS[name]
+    from . import strategies
+
+    st = strategies.get(name)
+    return BookSpec(st.id, st.series, lambda m, now: True, lambda: strategies.get(name).max_usd_day, lambda: strategies.get(name).max_usd_run, lambda: strategies.get(name).max_tool_calls,
+                    lambda: strategies.get(name).call_cap_usd, lambda: timedelta(0), lambda: strategies.get(name).enabled)
+
+
+def agent_spend_today(strategy_id: str, now: datetime) -> float:
+    """What a roster strategy has spent today (UTC): its run traces carry the cost (a run with no orders writes no ledger line)."""
+    day = now.date().isoformat()
+    return round(sum(r.usd for r in store.day_runs(strategy_id) if r.day == day), 6)
 
 
 def recent_ids(ds: list, now: datetime, spec: BookSpec) -> set[str]:
@@ -69,7 +82,7 @@ def spend_today(ds: list, forecasts: list, now: datetime, spec: BookSpec) -> flo
     """What this book has spent today (UTC): its decisions, plus (fast only) the forecasts it ordered; the daily forecast pass has its own cap."""
     day = now.date().isoformat()
     if spec.name == "day":                                      # a run with no orders writes no decision line: the run lines carry the cost
-        return round(sum(r.usd for r in store.day_runs() if r.day == day), 6)
+        return agent_spend_today("day", now)
     spent = sum(d.usd for d in ds if d.day == day and d.action != "settle")
     if spec.name == "fast":
         spent += sum(f.usd for f in forecasts if f.book == "fast" and f.made_at.startswith(day))

@@ -33,7 +33,7 @@ def _remove(path: Path) -> None:
         p.unlink(missing_ok=True)
 
 
-def _run_source(db: sqlite3.Connection, src: Source, *, full: bool, since: str, now: str) -> dict[str, Any]:
+def _run_source(db: sqlite3.Connection, src: Source, *, full: bool, since: str, now: str, ledger: Any = None) -> dict[str, Any]:
     out: dict[str, Any] = {"units": 0, "changed": 0, "removed": 0, "skipped": False, "errors": [], "seconds": 0.0}
     t0 = time.perf_counter()
     mark = ""
@@ -53,6 +53,8 @@ def _run_source(db: sqlite3.Connection, src: Source, *, full: bool, since: str, 
             seen.add(unit.key)
             out["units"] += 1
             if prior.get(unit.key) == unit.fingerprint:
+                if ledger is not None:
+                    ledger.add(unit.key, unit.fingerprint, src.product, src.name, unit.date)
                 continue
             db.execute("SAVEPOINT unit")
             try:
@@ -64,6 +66,8 @@ def _run_source(db: sqlite3.Connection, src: Source, *, full: bool, since: str, 
                            (unit.key, src.product, src.name, unit.path, unit.date, unit.fingerprint, now))
                 db.execute("RELEASE unit")
                 out["changed"] += 1
+                if ledger is not None:
+                    ledger.add(unit.key, unit.fingerprint, src.product, src.name, unit.date)
             except Exception as exc:  # noqa: BLE001 - one bad unit must not lose the source
                 db.execute("ROLLBACK TO unit")
                 db.execute("RELEASE unit")
@@ -83,14 +87,33 @@ def _run_source(db: sqlite3.Connection, src: Source, *, full: bool, since: str, 
     return out
 
 
+def _open_ledger() -> Any:
+    """The acquisition ledger (``acquisition/store.py``): additive, so a ledger that cannot be opened never stops a build."""
+    try:
+        from algent_backend.acquisition.store import Ledger
+
+        return Ledger()
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def _flush_ledger(ledger: Any, now: str) -> dict[str, Any]:
+    if ledger is None:
+        return {"written": 0, "error": "ledger unavailable"}
+    try:
+        return {"written": ledger.flush(now), "backfill": ledger.backfill}
+    except Exception as exc:  # noqa: BLE001 - never fatal to the index
+        return {"written": 0, "error": f"{type(exc).__name__}: {str(exc)[:100]}"}
+
+
 def counts(db: sqlite3.Connection) -> dict[str, int]:
     return {t: db.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0] for t in schema.COUNTED}      # noqa: S608 - constants
 
 
-def _build_into(db: sqlite3.Connection, only: list[str] | None, *, full: bool, since: str, now: str) -> dict[str, Any]:
+def _build_into(db: sqlite3.Connection, only: list[str] | None, *, full: bool, since: str, now: str, ledger: Any = None) -> dict[str, Any]:
     report: dict[str, Any] = {"sources": {}}
     for src in sources.load(only):
-        report["sources"][src.name] = _run_source(db, src, full=full, since=since, now=now)
+        report["sources"][src.name] = _run_source(db, src, full=full, since=since, now=now, ledger=ledger)
     touched = full or any(s["changed"] or s["removed"] or s["errors"] for s in report["sources"].values())
     report["touched"] = touched
     if touched:                                                # nothing changed: the link pass would reproduce what is already there
@@ -123,7 +146,9 @@ def build(store: Path | str | None = None, *, full: bool = False, since: str = "
     db.isolation_level = None                                  # autocommit: transactions are explicit (a unit is a savepoint inside its source's)
     try:
         schema.create(db, fts=fts)
-        report = _build_into(db, only, full=full, since=since, now=now)
+        ledger = _open_ledger()
+        report = _build_into(db, only, full=full, since=since, now=now, ledger=ledger)
+        report["acquisition"] = _flush_ledger(ledger, now)
         if not full and report.get("merge_monotone") is False:      # identities split: rows already folded together cannot be un-merged in place
             db.close()
             return build(store, full=True, only=only)

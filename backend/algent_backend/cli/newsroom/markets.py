@@ -1,14 +1,14 @@
 """
 ``newsroom markets`` — the Polymarket paper-trading benchmark. PAPER ONLY: no wallet, no key, no order is ever placed.
 
-    newsroom markets refresh [--no-publish]     mirror (discover, snapshot, resolutions), then the paper pass (open, mark, settle) and publish (free)
+    newsroom markets refresh [--no-publish]     mirror (discover, snapshot, resolutions), then the paper pass (the retired rule book: settle and mark only) and publish (free)
     newsroom markets paper                      the paper pass alone: settle resolved positions, open per the edge rule, mark to market
     newsroom markets score [--full]             the scoreboard: us vs the market, calibration, paper P&L (--full: the whole document)
     newsroom markets list [--theater ID] [--status S] [--limit N]   the mirrored markets with their latest price
-    newsroom markets forecast [--limit N] [--dry-run]   PAID: our blind probability for mirrored markets (day-capped)
-    newsroom markets trade [--limit N] [--dry-run]      PAID: the trader's decisions on its book (day-capped)
-    newsroom markets daily [--no-forecast] [--no-trade] PAID, the scheduled job: refresh prices -> blind forecasts -> rule book -> trade -> mark -> publish
-    newsroom markets fast [--no-forecast] [--limit N] [--dry-run]   the FAST book (markets settling within days), every 4 h; capped, gated like a paid job
+    newsroom markets forecast [--limit N] [--dry-run]   the DESK's blind forecast (the lab's P0 control + scoring; feeds no bot, not scheduled)
+    newsroom markets strategy <id> | --list    one run of a roster strategy (each its own forecaster and trader; daily / fast / day are shortcuts)
+    newsroom markets daily [--no-trade]         the scheduled job: refresh prices -> the daily trader strategy -> mark -> publish
+    newsroom markets fast [--dry-run]           the FAST strategy (markets settling within days), every 4 h; capped, gated like a paid job
     newsroom markets day [--dry-run]            the DAY book: an agent that browses and chooses its own 0-2 day bets, 3 runs a day; capped, gated like a paid job
     newsroom markets gaps [--list] [--dry-run] [--limit N]          PAID, daily: research the bots' most-asked gaps into the corpus (capped at $0.50/day)
     newsroom markets evidence                   how the corpus served the bots: coverage, citations, tools, top gaps, accuracy by richness
@@ -43,22 +43,20 @@ def add_parser(sub: Any) -> None:
     fc.add_argument("--limit", type=int)
     fc.add_argument("--dry-run", action="store_true", help="list the markets that would be forecast; call nothing")
     fc.set_defaults(handler=run_forecast)
-    tr = verbs.add_parser("trade", help="the trader's decisions for today (paid, capped per day)")
-    tr.add_argument("--limit", type=int)
-    tr.add_argument("--dry-run", action="store_true", help="list the markets that would be offered to the trader; call nothing")
-    tr.set_defaults(handler=run_trade)
-    dl = verbs.add_parser("daily", help="the once-a-day paid job: refresh, forecast, trade, mark, publish")
-    dl.add_argument("--no-forecast", action="store_true")
+    dl = verbs.add_parser("daily", help="the once-a-day job: refresh prices, run the daily trader strategy, mark, publish")
     dl.add_argument("--no-trade", action="store_true")
     dl.set_defaults(handler=run_daily)
-    dy = verbs.add_parser("day", help="the day book: an agent that browses and picks its own 0-2 day bets (capped, gated like a paid job)")
+    dy = verbs.add_parser("day", help="the day strategy: an agent that browses and picks its own 0-2 day bets (capped, gated like a paid job)")
     dy.add_argument("--dry-run", action="store_true", help="print the schedule and caps; call nothing")
     dy.set_defaults(handler=run_day)
-    fa = verbs.add_parser("fast", help="the fast book: forecast + trade the markets that settle within days (capped)")
-    fa.add_argument("--no-forecast", action="store_true")
-    fa.add_argument("--limit", type=int)
-    fa.add_argument("--dry-run", action="store_true", help="list the markets the fast book would look at; call nothing")
+    fa = verbs.add_parser("fast", help="the fast strategy: trades the markets that settle within days, every few hours (capped)")
+    fa.add_argument("--dry-run", action="store_true", help="print the schedule and caps; call nothing")
     fa.set_defaults(handler=run_fast)
+    sg = verbs.add_parser("strategy", help="one run of a roster strategy (markets/strategies.py), or the roster with --list")
+    sg.add_argument("id", nargs="?", default="", help="a strategy id from the roster")
+    sg.add_argument("--list", action="store_true", help="print the roster, schedule and caps; call nothing")
+    sg.add_argument("--dry-run", action="store_true")
+    sg.set_defaults(handler=run_strategy)
     gp = verbs.add_parser("gaps", help="turn the most-asked gaps into research runs (paid, capped per day)")
     gp.add_argument("--list", action="store_true", help="show the top gaps and do nothing")
     gp.add_argument("--dry-run", action="store_true")
@@ -78,9 +76,10 @@ def run_refresh(args: Any) -> int:
 
     report = mirror.refresh()
     report["traces_pruned"] = store.prune_traces()
-    report["paper"] = paper.run()
-    report["trader_settled"] = trader.settle()               # free: a held market that resolved pays out
-    report["day_settled"] = trader.settle(book_name="day")   # the day book is settled, and marked (the mirror pass above priced it), on every refresh
+    report["paper"] = paper.run()                            # the retired rule book: settles and marks what it still holds, opens nothing
+    from algent_backend.markets import strategies
+
+    report["settled"] = {st.id: trader.settle(book_name=st.id) for st in strategies.roster()}   # free: every strategy's resolved positions pay out, then the mark below
     report["marked"] = len(book.mark())
     if not args.no_publish:
         report["publish"] = publish.publish()
@@ -139,19 +138,6 @@ def run_forecast(args: Any) -> int:
     return _emit(report)
 
 
-def run_trade(args: Any) -> int:
-    from datetime import UTC, datetime
-
-    from algent_backend.markets import publish, trader
-
-    if args.dry_run:
-        todo = trader.candidates(datetime.now(UTC))
-        return _emit({"candidates": len(todo), "first": [{"id": m.id, "question": m.question, "ours": f.p if f else None} for m, f in todo[:20]]})
-    report = trader.run(limit=args.limit)
-    report["publish"] = publish.publish()
-    return _emit(report)
-
-
 def _step(fn: Any) -> tuple[dict[str, Any], bool]:
     try:
         return fn(), False
@@ -159,79 +145,62 @@ def _step(fn: Any) -> tuple[dict[str, Any], bool]:
         return {"error": f"{type(exc).__name__}: {str(exc)[:200]}"}, True
 
 
-def run_daily(args: Any) -> int:
-    """refresh prices -> blind forecasts -> rule book -> trader -> mark both books -> publish. A paid step that raises does not stop the free
-    steps after it (the books are still marked and published); the exit code is then 1 so the scheduler sees the failure."""
+def _run_strategy(sid: str, *, gated: bool) -> int:
+    """One run of a roster strategy: settle, the agent loop, mark, publish. ``gated`` applies the scheduler's refusals (kill switch, runner claim, spend halt)
+    first, for the ``capped`` registry jobs (the scheduler's paid class is daily-only); the daily job already passes the gate through ``schedule run``."""
     from datetime import UTC, datetime
 
-    from algent_backend.markets import book, forecast, mirror, paper, publish, trader
+    from algent_backend.markets import book, day, publish
 
-    now = datetime.now(UTC)
-    report: dict[str, Any] = {"day": now.date().isoformat(), "mirror": mirror.refresh()}
-    failed = False
-    index = forecast.evidence_index(now.date())                  # built once, shared by the forecaster and the trader
-    if not args.no_forecast:
-        report["forecast"], bad = _step(lambda: forecast.run(index=index))
-        failed = failed or bad
-    report["paper"] = paper.run()
-    if not args.no_trade:
-        report["trade"], bad = _step(lambda: trader.run(index=index))
-        failed = failed or bad
-    report["marked"] = [p.model_dump() for p in book.mark()]
-    report["publish"] = publish.publish()
-    _emit(report)
-    return 1 if failed else 0
+    if gated:
+        from algent_backend.ops import schedule
 
-
-def run_fast(args: Any) -> int:
-    """The fast book: blind forecasts for the markets inside the horizon that lack a fresh one, then the fast trader, mark, publish. Gated like a paid
-    job (the registry job is ``capped`` because the scheduler's paid class is daily-only): the same refusals apply, then its own caps."""
-    from datetime import UTC, datetime
-
-    from algent_backend.markets import book, flags, forecast, publish, trader
-
-    now = datetime.now(UTC)
-    if args.dry_run:
-        todo = trader.candidates(now, "fast")
-        return _emit({"horizon_days": flags.FAST_HORIZON_DAYS, "needs_forecast": len(forecast.candidates(now, "fast")),
-                      "candidates": len(todo), "first": [{"id": m.id, "question": m.question, "ends": m.end_date[:16], "ours": f.p if f else None} for m, f in todo[:20]]})
-    from algent_backend.ops import schedule
-
-    if why := schedule._may_spend(schedule.Probes()):                       # noqa: SLF001 - the one gate every unattended spend passes
-        return _emit({"book": "fast", "skipped": why})
-    report: dict[str, Any] = {"book": "fast", "as_of": now.isoformat(timespec="seconds")}
-    failed = False
-    if not args.no_forecast:
-        report["forecast"], bad = _step(lambda: forecast.run(book="fast", limit=args.limit))
-        failed = failed or bad
-    report["trade"], bad = _step(lambda: trader.run(book_name="fast", limit=args.limit))
-    failed = failed or bad
-    report["marked"] = [p.model_dump() for p in book.mark()]
-    report["publish"] = publish.publish()
-    _emit(report)
-    return 1 if failed else 0
-
-
-def run_day(args: Any) -> int:
-    """One run of the day book: settle, the agent's tool loop, mark, publish. Gated like a paid job (registry class ``capped``: three runs a day do not fit
-    the paid class, which is daily-only): the kill switch, runner claim and spend halt apply, then the book's own run and day caps."""
-    from datetime import UTC, datetime
-
-    from algent_backend.markets import book, day, flags, publish, store
-
-    now = datetime.now(UTC)
-    if args.dry_run:
-        return _emit({"enabled": flags.DAY_ENABLED, "run_hours": list(flags.DAY_RUN_HOURS), "horizon_h": flags.DAY_HORIZON_H,
-                      "caps": {"run": flags.DAY_MAX_USD_PER_RUN, "day": flags.DAY_MAX_USD_PER_DAY}, "watchlist": len(store.watchlist()), "runs": len(store.day_runs())})
-    from algent_backend.ops import schedule
-
-    if why := schedule._may_spend(schedule.Probes()):                       # noqa: SLF001 - the one gate every unattended spend passes
-        return _emit({"book": "day", "skipped": why})
-    report, bad = _step(lambda: day.run(now=now))
+        if why := schedule._may_spend(schedule.Probes()):                   # noqa: SLF001 - the one gate every unattended spend passes
+            return _emit({"book": sid, "skipped": why})
+    report, bad = _step(lambda: day.run(strategy_id=sid, now=datetime.now(UTC)))
     report["marked"] = [p.model_dump() for p in book.mark()]
     report["publish"] = publish.publish()
     _emit(report)
     return 1 if bad else 0
+
+
+def _plan(sid: str) -> dict[str, Any]:
+    from algent_backend.markets import store, strategies
+
+    st = strategies.get(sid)
+    return {"id": st.id, "name": st.name, "method": st.method, "enabled": st.enabled, "run_hours": list(st.run_hours), "run_minute": st.run_minute, "horizon_h": st.horizon_h,
+            "must_trade": st.must_trade, "min_orders": st.min_orders, "caps": {"run": st.max_usd_run, "day": st.max_usd_day}, "watchlist": len(store.watchlist(st.id)),
+            "runs": len(store.day_runs(st.id))}
+
+
+def run_daily(args: Any) -> int:
+    """refresh prices -> the daily trader strategy (its own research and probabilities; no desk forecast) -> mark -> publish. A failed paid step still marks and
+    publishes; the exit code is then 1 so the scheduler sees the failure."""
+    from datetime import UTC, datetime
+
+    from algent_backend.markets import book, mirror, publish
+
+    if args.no_trade:
+        report: dict[str, Any] = {"day": datetime.now(UTC).date().isoformat(), "mirror": mirror.refresh(), "marked": [p.model_dump() for p in book.mark()], "publish": publish.publish()}
+        return _emit(report)
+    mirror.refresh()
+    return _run_strategy("daily", gated=False)
+
+
+def run_fast(args: Any) -> int:
+    return _emit(_plan("fast")) if args.dry_run else _run_strategy("fast", gated=True)
+
+
+def run_day(args: Any) -> int:
+    return _emit(_plan("day")) if args.dry_run else _run_strategy("day", gated=True)
+
+
+def run_strategy(args: Any) -> int:
+    from algent_backend.markets import strategies
+
+    if args.list or not args.id:
+        return _emit([_plan(i) for i in strategies.ids()])
+    return _emit(_plan(args.id)) if args.dry_run else _run_strategy(args.id, gated=True)
 
 
 def run_gaps(args: Any) -> int:

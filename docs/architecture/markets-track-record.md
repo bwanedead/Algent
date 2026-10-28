@@ -6,6 +6,44 @@ happened. On top of that a **trader agent** manages a paper portfolio every day,
 (below: *The trader*). **Paper only**: there is no wallet, no key and no order function anywhere; nothing here is financial advice. Code: `backend/algent_backend/markets/`;
 CLI `newsroom markets ...`; site `/intel/track-record`, `/api/v1/track-record`; the daily's "Where we disagree with the market".
 
+## The strategy roster (10-28): every bot is its own forecaster
+**Supersedes the "desk forecast feeds the trader / rule book / fast book" parts below.** No desk forecast feeds any bot. Each live paper bot is one entry in `markets/strategies.py`
+(id, name, reasoning method, style, horizon, run times, $ caps, `must_trade` + minimum orders) and is run by ONE generic loop (`day.run(strategy_id=...)`, the day-book loop
+generalised: browse markets -> corpus research -> form its own probability -> buy / sell / hold under `guards.py`). A strategy never reads another's forecasts, orders, watchlist or
+traces, and the code path cannot reach a forecast store (a test pins it). Each has its own $10,000 book (`Decision.book` = the id), run traces (`DayRun.strategy`), wishes, watchlist
+and equity series.
+
+**Reasoning methods are the lab's minds** (`markets/methods.py` reads `experiment/minds.py` lazily; the lab ids stay the source of truth): `p0b` baseline research, `p0b+prior` base
+rate first, `b` delineation, `b+prior` delineation + base rate (P3). The lab's addendum is appended to the live role and its schema fields are listed as the working to write in the
+order's `basis` (stored on the ledger line); `probability_pct` / `rationale` / `cited` map to `p_yes` / `reason` / `cited`.
+
+| id | method | style | horizon | runs (UTC) | $/run, $/day |
+|---|---|---|---|---|---|
+| `day` | baseline | opportunistic, 0-2 days | 48 h | 8, 14, 20 :40 | 0.15, 0.45 |
+| `daily` (book `daily`, series `trader`) | baseline | patient, once a day | 30 d | 07:30 | 0.15, 0.25 |
+| `fast` (book `fast`) | baseline | short horizon, every 4 h | 7 d | 0,4,..20 :20 | 0.07, 0.40 |
+| `base-rate` | base rate first | earns its edge | 7 d | 9, 13, 17, 21 :05 | 0.15, 0.40 |
+| `delineation` | delineation | maps outcomes first | 7 d | 10, 14, 18, 22 :05 | 0.15, 0.40 |
+| `delineation-base-rate` | delineation + base rate | both | 7 d | 11, 15, 19, 23 :05 | 0.15, 0.40 |
+| `baseline-must-trade` | baseline | must fill 2 orders a run | 7 d | 9, 13, 17, 21 :35 | 0.15, 0.40 |
+| `delineation-must-trade` | delineation | must fill 1 order a run | 7 d | 10, 14, 18, 22 :55 | 0.15, 0.40 |
+
+Ceiling about $3.10 a day for the roster (typical runs cost less; measure from `day_runs.jsonl`). `daily` and `fast` keep their old ledgers and equity series, so history is
+continuous; they just stop reading desk forecasts. **Must-trade** (feedback speed only, labelled on the page): a run that says it is done before filling its minimum (a buy or sell
+that went through; a refused or clipped-to-nothing order does not count) is sent back to trade up to `MUST_TRADE_PUSHES` times and the last turns are told how many orders it owes, at the
+smallest size if nothing has edge; a run still short is recorded `DayRun.must_trade = "unmet: n of m"`, never faked. Normal size caps apply.
+
+**Retired / demoted.** The rule book needed a desk probability, so it is **retired** (`flags.RULE_BOOK_ENABLED = False`: it opens nothing, still marks and settles what it holds; shown
+under "Retired"). The desk forecaster (`forecast.py`, `markets forecast`) is no longer scheduled in `markets daily` / `markets fast` and the old `markets trade` verb is gone; the code
+stays as the lab's frozen P0 / P0b control and for scoring past forecasts ("How good are the forecasts?"). `trader.py` / `trader_prompt.py` are the frozen replayable trader control only.
+
+**Schedule.** One capped registry job per strategy (`markets-<id>`, `newsroom markets strategy <id>`; `markets-day`, `markets-daily`, `markets-fast` keep their verbs), editorial priority,
+staggered at least 10 minutes apart and off 05:00-07:00 (a test pins it). `newsroom markets strategy --list` prints the roster.
+
+**Page** (`ohmega.track-record/2`, additive `strategies[]`, one section per strategy shaped like `day` plus `id, name, method, method_name, style, must_trade, min_orders, next_run`): one value
+chart with a line per bot labelled at its end (must-trade dashed), one table row per bot (name, method, style, value, P&L, open, trades, last run, next run) grouped by method, expanding
+to positions, trades with reasons, its latest run (with the must-trade check) and wishes. Documents from before the roster fall back to the three old books.
+
 ## Pipeline
 1. **Mirror** (`mirror.py`, free; timer `ohmega-markets` every 4 h). Gamma `GET /events?tag_slug=<tag>&active=true&closed=false&order=volume24hr` for each tag in
    `flags.TAGS`; events with a tag in `flags.BLOCK_TAGS` (sports, crypto, culture...) are dropped. Binary Yes/No markets only, liquid (`MIN_LIQUIDITY_USD`,

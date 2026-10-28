@@ -88,6 +88,18 @@ def markets() -> Path:
     return root()
 
 
+def experiments() -> Path:
+    from algent_backend.experiment.store import root
+
+    return root()
+
+
+def acquisition() -> Path:
+    from algent_backend.acquisition.store import root
+
+    return root()
+
+
 def maritime() -> Path:
     from algent_backend.maritime.store import root
 

@@ -45,8 +45,16 @@ def _summary(ds: list[Decision], series: str = "trader") -> dict[str, Any]:
     last = eq[-1] if eq else None
     closed = _closed(ds)
     wins = sum(v > 0 for v in closed.values())
-    return {"equity": last.equity if last else flags.BANKROLL, "pnl": round(last.equity - flags.BANKROLL, 2) if last else 0.0,
-            "cash": last.cash if last else flags.BANKROLL, "realised": book.realised(ds), "unrealised": last.unrealised if last else 0.0,
+    # Value is computed NOW from the ledger and the latest prices, not read from the last daily equity mark: a book that traded after its mark
+    # (the fast book, every 4 h) showed $10,000 cash with two open positions (operator, 2026-10-25). The equity points stay the chart's series.
+    held = open_positions(ds)
+    realised = book.realised(ds)
+    cost = sum(float(p.get("cost") or 0.0) for p in held)
+    value = sum(float(p.get("value") or 0.0) for p in held)
+    cash = round(flags.BANKROLL + realised - cost, 2)
+    equity = round(cash + value, 2) if held or ds else (last.equity if last else flags.BANKROLL)
+    return {"equity": equity, "pnl": round(equity - flags.BANKROLL, 2),
+            "cash": cash, "realised": realised, "unrealised": round(value - cost, 2),
             "open": len(book.holdings(ds)), "buys": sum(d.action in ("buy_yes", "buy_no") for d in ds), "sells": sum(d.action == "sell" for d in ds),
             "closed": len(closed), "wins": wins, "losses": sum(v < 0 for v in closed.values()),
             "hit_rate": round(wins / len(closed), 3) if closed else None}

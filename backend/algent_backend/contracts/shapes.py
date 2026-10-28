@@ -105,7 +105,10 @@ SHAPES: dict[str, Any] = {
                                           "top_gaps": [{"topic": "str", "asks": "int", "status": "str"}],
                                           "accuracy": {"rich_min_cited": "int", "min_for_verdict": "int", "forecasts": [{"label": "str", "n": "int", "shown": "bool"}], "trades": "list", "note": "str"},
                                           "caps": "obj", "gap_spend": "obj"},
-                            "horizons?": {"by_horizon": [{"label": "str", "n": "int", "shown": "bool"}], "books": "obj"}},
+                            "horizons?": {"by_horizon": [{"label": "str", "n": "int", "shown": "bool"}], "books": "obj"},
+                            # additive since 10-28: the strategy roster (markets/strategies.py), every bot its own forecaster; one section each, shaped like `day`
+                            "strategies?": [{"id": "str", "name": "str", "method": "str", "method_name": "str", "style": "str", "must_trade": "bool", "summary": "obj", "curve": "list",
+                                             "open_positions": "list", "log": "list", "next_run": "str", "last_at": "str", "run_hours": "list"}]},
     "ohmega.status": {"product": "str", "job": "str", "checked_at": "str", "last_ok": "bool", "last_changed_at": "str|null", "last_failed_at": "str|null", "cadence_min": "num|null", "next_due": "str|null"},
     # ── views (docs/architecture/views.md) ────────────────────────────────────────────────────
     "ohmega.view.country": {**_ENV, "iso": "str", "name": "str", "region": "str", "capital": "str", "profiled": "bool",

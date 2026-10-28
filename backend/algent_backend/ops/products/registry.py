@@ -12,6 +12,8 @@ no measurement exists yet (run ``newsroom envelope --text`` and replace it).
 
 from __future__ import annotations
 
+from collections.abc import Callable
+
 from . import locations as loc
 from .model import Budget, Contract as K, Job, Product, Retention, Store
 
@@ -61,6 +63,27 @@ def _markets_day_calendar() -> str:
     from algent_backend.markets import flags
 
     return f"*-*-* {','.join(str(h) for h in flags.DAY_RUN_HOURS)}:{flags.DAY_RUN_MINUTE:02d}:00"
+
+
+def _strategy_calendar(sid: str) -> Callable[[], str]:
+    """A roster strategy's runs: its hours at its minute (UTC), staggered by ``markets/strategies.py`` so no two strategies fire close together."""
+    def calendar() -> str:
+        from algent_backend.markets import strategies
+
+        st = strategies.get(sid)
+        return f"*-*-* {','.join(str(h) for h in st.run_hours)}:{st.run_minute:02d}:00"
+
+    return calendar
+
+
+def _strategy_jobs() -> tuple[Job, ...]:
+    """One capped job per independent roster strategy (day, daily and fast keep their own jobs below), all editorial priority."""
+    from algent_backend.markets import strategies
+
+    return tuple(Job(f"markets-{st.id}", ("markets", "strategy", st.id), _strategy_calendar(st.id), every_min=360, spend="capped", priority=1, est_min=5, est_mb=400, max_wait_min=30,
+                     deadline_min=40, what=f"{st.name} ({st.method_name}): its own research and probabilities, paper bets {st.horizon_h / 24:g} days out, {len(st.run_hours)} runs a day"
+                     + (f"; must fill {st.min_orders} order(s) a run" if st.must_trade else ""))
+                 for st in strategies.roster() if st.id not in ("day", "daily", "fast"))
 
 
 def _calendar_every(minutes: int) -> str:
@@ -283,16 +306,34 @@ PRODUCTS: tuple[Product, ...] = (
                    Retention("prune", "research traces (observability, never read by scoring) older than TRACE_KEEP_DAYS are dropped by the free refresh pass; forecasts, decisions, gaps and fills are never pruned", "markets/flags.py::TRACE_KEEP_DAYS", "job:markets")),
         irreplaceable=True, why="our forecasts and trades are the scored record; they cannot be reconstructed",
         jobs=(Job("markets", ("markets", "refresh"), "3/4:50", every_min=240, what="Polymarket mirror: markets, prices, resolutions; paper track record"),
-              Job("markets-daily", ("markets", "daily"), at=_markets_daily_at, every_min=1440, spend="paid", est_min=15, deadline_min=120, what="Polymarket paper trader: forecasts, trades, marks",
+              Job("markets-daily", ("markets", "daily"), at=_markets_daily_at, every_min=1440, spend="paid", est_min=15, deadline_min=120, what="daily trader strategy: its own research and probabilities, paper trades, marks",
                   then=AFTER_PUBLISH),
               Job("markets-fast", ("markets", "fast"), _markets_fast_calendar, every_min=480, spend="capped", priority=2, est_min=6, est_mb=400, max_wait_min=45, deadline_min=60,
-                  what="fast book: markets settling within days, forecast + paper trade every 4 h (own cap; gated like a paid job)"),
+                  what="fast strategy: markets settling within days, its own research and paper trades every 4 h (own cap; gated like a paid job)"),
               Job("markets-day", ("markets", "day"), _markets_day_calendar, every_min=720, spend="capped", priority=1, est_min=5, est_mb=400, max_wait_min=30, deadline_min=40,
-                  what="day book: an agent that browses Polymarket and picks its own 0-2 day paper bets, 3 runs a day (own caps; gated like a paid job)"),
+                  what="day strategy: an agent that browses Polymarket and picks its own 0-2 day paper bets, 3 runs a day (own caps; gated like a paid job)"),
+              *_strategy_jobs(),
               Job("markets-gaps", ("markets", "gaps"), at=_markets_gaps_at, every_min=1440, spend="paid", est_min=20, deadline_min=180,
                   what="research the bots' most-asked corpus gaps into profiles (capped $0.50/day)")),
         publishes=("data/track-record.json",), contracts=(K("ohmega.track-record", 2, ("data/track-record.json",), accepts=(1,)),),
         site_routes=("/intel/forecasts", "/intel/track-record"), feeds_from=("dailies", "profiles"), heartbeat=("markets_store/status.json",)),
+    Product(
+        id="experiments", title="Experiment lab (protocol comparisons)", owner="experiment",
+        what="Phase 1 of the experiment framework: frozen and forked forecasting protocols compared on one question and one evidence snapshot; write-once manifests, prompts, outputs, resolutions. Off by default; read-only over the markets store and the corpus index.",
+        stores=(Store("experiment_store", loc.experiments, "ALGENT_EXPERIMENT_STORE", False, "an early lab: runs on resolved markets can be re-run from the markets store, and the first frozen control is a few KB; add to the backup (one line here) when a result starts to matter",
+                      budget=_b(0.1, 20, 100, 5, 0.5, "estimate (unmeasured): a run is ~30 KB (snapshot of <= 4000 documents is the bulk, stored once per question); no run is scheduled")),),
+        retention=(Retention("append-only", "write-once files, never rewritten; a run is a few tens of KB and only a person starts one", "experiment/store.py::write_once", "manual"),),
+        why="early lab data; a frozen control is small but re-capturing it later would capture later code, so back it up before relying on it",
+        manual="newsroom lab questions|run|decide|list|show|branch|score|verify (no timer on purpose: an experiment is a decision, and a live run spends money)",
+        feeds_from=("markets", "corpus_index")),
+    Product(
+        id="acquisition", title="Acquisition ledger (when we first held each source)", owner="acquisition",
+        what="Append-only ledger of the first time a corpus build saw each source unit (key + content hash). It survives every index rebuild, which resets the index's own ingest times; the experiment lab reads it to replay history without hindsight.",
+        stores=(Store("acquisition_store", loc.acquisition, "ALGENT_ACQUISITION_STORE", True, budget=_b(0.5, 20, 100, 20, 0.2, "estimate (unmeasured): ~200 bytes a unit version; a few thousand units and a few new versions a day")),),
+        retention=(Retention("append-only", "ledger.jsonl is never rewritten; a unit version is one line, forever (small)", "acquisition/store.py::load", "job:corpus-build"),),
+        irreplaceable=True, why="acquisition times cannot be reconstructed after the fact: a rebuild only knows when it ran, so a lost ledger loses what we held when",
+        manual="written by `newsroom corpus build` (the corpus-build job) as a side effect; read by `newsroom lab`; nothing to run by hand",
+        feeds_from=("corpus_index",)),
     Product(
         id="library", title="Source library (crawl cache)", owner="library",
         what="The crawled pages the research and dailies read, in one SQLite file.",

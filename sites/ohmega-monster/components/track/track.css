@@ -82,7 +82,7 @@
 .tr-bg-daily { background: var(--strong); } .tr-bg-fast { background: var(--link-accent); } .tr-bg-day { background: var(--accent); } .tr-bg-rule { background: var(--muted); }
 
 .tr-books { margin: 0 0 14px; border-top: 1px solid var(--rule-strong); }
-.tr-row { display: grid; grid-template-columns: minmax(150px, 2.2fr) repeat(2, minmax(70px, 1fr)) 50px minmax(60px, 0.8fr) 56px minmax(100px, 1.3fr) minmax(90px, 1fr); gap: 0 10px; align-items: baseline; padding: 7px 0; font-size: 12px; font-variant-numeric: tabular-nums; }
+.tr-row { display: grid; grid-template-columns: minmax(120px, 1.5fr) minmax(90px, 1fr) minmax(130px, 1.9fr) 64px minmax(80px, 1fr) 40px 48px 96px 96px; gap: 0 10px; align-items: baseline; padding: 7px 0; font-size: 12px; font-variant-numeric: tabular-nums; }
 .tr-row .n { text-align: right; }
 .tr-rowhead { color: var(--muted); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; border-bottom: 1px solid var(--rule-strong); }
 .tr-book { border-bottom: 1px solid var(--rule); }
@@ -122,3 +122,12 @@
   .tr-why1 { white-space: normal; max-width: none; }
   .tr-fig-wide { max-width: 100%; }
 }
+
+/* roster strategies: one colour each (line, end label, swatch); the must-trade variants are dashed */
+.tr-l-base-rate { stroke: hsl(190 55% 45%); } .tr-d-base-rate, .tr-t-base-rate { fill: hsl(190 55% 45%); } .tr-bg-base-rate { background: hsl(190 55% 45%); }
+.tr-l-delineation { stroke: hsl(280 45% 58%); } .tr-d-delineation, .tr-t-delineation { fill: hsl(280 45% 58%); } .tr-bg-delineation { background: hsl(280 45% 58%); }
+.tr-l-delineation-base-rate { stroke: hsl(330 55% 55%); } .tr-d-delineation-base-rate, .tr-t-delineation-base-rate { fill: hsl(330 55% 55%); } .tr-bg-delineation-base-rate { background: hsl(330 55% 55%); }
+.tr-l-baseline-must-trade { stroke: hsl(35 80% 50%); stroke-dasharray: 3 2; } .tr-d-baseline-must-trade, .tr-t-baseline-must-trade { fill: hsl(35 80% 50%); } .tr-bg-baseline-must-trade { background: hsl(35 80% 50%); }
+.tr-l-delineation-must-trade { stroke: hsl(100 40% 45%); stroke-dasharray: 3 2; } .tr-d-delineation-must-trade, .tr-t-delineation-must-trade { fill: hsl(100 40% 45%); } .tr-bg-delineation-must-trade { background: hsl(100 40% 45%); }
+.tr-group { padding: 10px 0 3px; color: var(--muted); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; border-bottom: 1px solid var(--rule); }
+.tr-tag { margin-left: 6px; padding: 0 5px; border: 1px solid var(--rule-strong); border-radius: 2px; font-size: 10px; color: var(--muted); }

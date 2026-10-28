@@ -77,6 +77,8 @@ export type Trader = {
   limits: { bankroll: number; max_position_frac: number; max_exposure_frac: number; slippage: number; min_ticket: number };
 };
 // The fast book (backend `markets/books.py`): the same trader on markets that settle within days, decided every few hours. Shaped like the daily trader.
+// A roster strategy (backend `markets/strategies.py`): every bot is its own forecaster. Shaped like the day book plus what it is and when it runs next.
+export type Strategy = DayBookBase & { id: string; name: string; method: string; method_name: string; style: string; must_trade: boolean; min_orders: number; next_run: string };
 export type FastBook = Trader & { horizon_days: number; every_hours: number; enabled: boolean };
 // The day book (backend `markets/day*.py`): an agent that browses Polymarket itself and chooses its own 0-2 day bets, three runs a day. Shaped like the daily
 // trader plus its own parts. A horizon/category group's win rate and P&L are null (shown=false) until it holds min_for_verdict closed trades.
@@ -84,11 +86,12 @@ export type DayGroup = { label: string; n: number; shown: boolean; wins: number 
 export type DayOrder = { market_id: string; question: string; action: string; side: string; stake: number; requested: number; price: number; reason: string; clips: string[] };
 export type DayRunRow = {
   id: string; at: string; usd: number; turns: number; tool_calls: number; stopped: string; summary: string; considered: { id: string; question: string; ends: string }[];
-  n_considered: number; queries: string[]; n_queries: number; orders: DayOrder[]; equity: number | null;
+  n_considered: number; queries: string[]; n_queries: number; orders: DayOrder[]; equity: number | null; must_trade: string;   // "" unless the strategy must trade ("met: 2 of 2" / "unmet: 1 of 2")
 };
 // What the agent wished the corpus held (product feedback on which data sources to add), merged across runs.
 export type WishRow = { topic: string; runs: number; asks: number; why: string; source: string; last: string; markets: { market_id: string; question: string }[] };
-export type DayBook = Trader & {
+export type DayBook = DayBookBase;
+export type DayBookBase = Trader & {
   horizon_hours: number; run_hours: number[]; run_minute: number; enabled: boolean; min_for_verdict: number; spend_usd: number; spend_today: number; avg_hold_h: number | null;
   by_horizon: DayGroup[]; by_category: DayGroup[]; runs: DayRunRow[]; wishes: WishRow[]; watchlist: { market_id: string; question: string; note: string; since: string }[];
   caps: { max_usd_per_day: number; max_usd_per_run: number };
@@ -121,6 +124,8 @@ export type TrackRecord = {
   trader: Trader;
   fast: FastBook | null;
   day: DayBook | null;
+  // Additive: one section per roster strategy, in roster order. Empty on documents from before the roster (the page then falls back to trader / fast / day).
+  strategies: Strategy[];
   evidence: Evidence | null;
   horizons: Horizons | null;
   scores: Scores;
@@ -223,7 +228,7 @@ function parseDay(raw: unknown, fallbackRule: Portfolio): DayBook | null {
     runs: list(raw.runs).map((r) => ({
       id: str(r.id), at: str(r.at), usd: n0(r.usd), turns: n0(r.turns), tool_calls: n0(r.tool_calls), stopped: str(r.stopped), summary: str(r.summary),
       considered: list(r.considered).map((c) => ({ id: str(c.id), question: str(c.question), ends: str(c.ends) })), n_considered: n0(r.n_considered), queries: strs(r.queries),
-      n_queries: n0(r.n_queries), equity: num(r.equity),
+      n_queries: n0(r.n_queries), equity: num(r.equity), must_trade: str(r.must_trade),
       orders: list(r.orders).map((o) => ({ market_id: str(o.market_id), question: str(o.question), action: str(o.action), side: str(o.side), stake: n0(o.stake), requested: n0(o.requested), price: n0(o.price), reason: str(o.reason), clips: strs(o.clips) })),
     })),
     wishes: list(raw.wishes).map((w) => ({
@@ -233,6 +238,13 @@ function parseDay(raw: unknown, fallbackRule: Portfolio): DayBook | null {
     watchlist: list(raw.watchlist).map((w) => ({ market_id: str(w.market_id), question: str(w.question), note: str(w.note), since: str(w.since) })),
     caps: { max_usd_per_day: n0(lim.max_usd_per_day), max_usd_per_run: n0(lim.max_usd_per_run) },
   };
+}
+
+function parseStrategies(raw: unknown, fallbackRule: Portfolio): Strategy[] {
+  return list(raw).flatMap((r) => {
+    const d = parseDay(r, fallbackRule);
+    return d ? [{ ...d, id: str(r.id), name: str(r.name), method: str(r.method), method_name: str(r.method_name), style: str(r.style), must_trade: r.must_trade === true, min_orders: n0(r.min_orders), next_run: str(r.next_run) }] : [];
+  });
 }
 
 const coverage = (c: Obj): Coverage => ({
@@ -309,6 +321,7 @@ export function parseTrackRecord(raw: unknown): TrackRecord | null {
     trader: parseTrader(raw.trader, rulePortfolio),
     fast: parseFast(raw.fast, rulePortfolio),
     day: parseDay(raw.day, rulePortfolio),
+    strategies: parseStrategies(raw.strategies, rulePortfolio),
     evidence: parseEvidence(raw.evidence),
     horizons: parseHorizons(raw.horizons),
     open_positions: list(raw.open_positions).map((r) => ({
