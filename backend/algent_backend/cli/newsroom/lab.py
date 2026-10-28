@@ -21,7 +21,7 @@ corpus index, writes only to its own store (ALGENT_EXPERIMENT_STORE), and calls 
     newsroom lab errors --set ID|latest [--json]            per question and protocol: p, outcome, Brier, market, evidence and independent chains, relevance, a tag
     newsroom lab tree [--json]                              protocol genealogy (parent, policies changed, abandoned ones marked)
     newsroom lab retire PROTOCOL --reason TEXT              mark a protocol abandoned; its evidence, runs and scores stay
-    newsroom lab run --set ... --protocols p0b,p0b+prior,b [--aware]   names: p0, p0b, p0b+prior (base-rate first), b (delineation); --aware adds the market-aware second output
+    newsroom lab run --set ... --protocols p0b,p0b+prior,b [--aware]   names: p0, p0b, p0b+prior (base-rate first), b (delineation), b+prior (both); --aware adds the market-aware second output
 
 Every command prints one JSON document.
 """
@@ -124,7 +124,8 @@ def _set_run(args: Any) -> int:
     doc = qset.load(args.qset)
     names = [n.strip() for n in args.protocols.split(",") if n.strip()]
     src = sources.CorpusSource(paths.db_file(args.corpus))
-    corpus = Corpus.open(args.corpus) if args.live and any(n in names for n in ("p0b", "p0b+prior", "b")) else None
+    # every named protocol except the research-free blind forecaster (p0) plans its evidence, so it needs the corpus handle (b+prior was missed once)
+    corpus = Corpus.open(args.corpus) if args.live and any(n != "p0" for n in names) else None
     try:
         out = qset.run(doc, names, src, runner.live_ask, live=args.live, cap_usd=args.cap if args.cap is not None else flags.SET_RUN_CAP_USD,
                        plan_ask_for=lambda pv: research_policy.live_plan_ask(pv.params), corpus=corpus,
