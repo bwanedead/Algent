@@ -204,6 +204,30 @@ DAY_RUNS_SHOWN = 12
 #: Win rate and P&L by hold horizon (hours between entry and the market's end) are shown only once a bucket holds MIN_RESOLVED_FOR_VERDICT closed positions.
 DAY_HORIZON_BUCKETS: tuple[tuple[str, float, float], ...] = (("under 6 hours", 0.0, 6.0), ("6 to 24 hours", 6.0, 24.0), ("24 to 48 hours", 24.0, 1e9))
 
+# ── the strategy roster (strategies.py): every bot is its own forecaster and decision-maker, run by the generic loop in day.py ──
+#: No desk forecast feeds any bot. The mechanical rule book needed one (it traded the desk's probability on a fixed edge rule), so it is RETIRED: no new
+#: positions (its history stays on the page, marked and settled); a rule-sized strategy would be a new roster entry, not this switch.
+RULE_BOOK_ENABLED = False
+STRAT_ENABLED = True
+#: Defaults for the independent strategies (the day book keeps its DAY_* numbers, daily/fast their own below). Target: <= $0.15 a run, about $3 a day for the whole roster:
+#: day 0.45 + daily 0.25 + fast 0.40 + five strategies at 0.40 = $3.10 ceiling (typical runs cost less).
+STRAT_HORIZON_H = 168                      # 0-7 days, so results come back fast
+STRAT_MAX_USD_PER_RUN = 0.15
+STRAT_MAX_USD_PER_DAY = 0.40
+STRAT_MAX_TURNS = 7
+STRAT_MAX_TOOL_CALLS = 24
+STRAT_MAX_CALLS_PER_TURN = 6
+STRAT_MAX_ORDERS_PER_RUN = 6
+STRAT_CALL_CAP_USD = 0.05
+STRAT_EFFORT = "low"
+#: The old daily trader and fast book as roster strategies: same books and ledgers (continuous history), now forming their own probabilities.
+DAILY_STRAT_HORIZON_H = 24 * 30
+DAILY_STRAT_MAX_USD_PER_DAY = 0.25
+FAST_STRAT_MAX_USD_PER_RUN = 0.07
+FAST_STRAT_MAX_USD_PER_DAY = 0.40
+#: A must-trade run that has not filled its minimum is sent back to trade at most this many times before it is recorded as unmet.
+MUST_TRADE_PUSHES = 2
+
 # ── scoring ──────────────────────────────────────────────────────────────────────────────────────
 #: Calibration buckets are this wide (probability): ten of them.
 CALIBRATION_BUCKET = 0.1

@@ -15,9 +15,9 @@ from typing import Any
 
 from algent_backend.retrieval.docs import clip
 
-from . import book, browse, day_report, flags, gaps, guards, research, store
+from . import book, browse, day_report, flags, gaps, guards, research, store, strategies
 from .contracts import Decision, Snapshot, ToolEvent, WatchEvent, decision_id
-from .day_prompt import PROMPT_VERSION, Call
+from .day_prompt import Call
 from .polymarket import Fetch, num
 
 NL = "\n"
@@ -33,15 +33,21 @@ def _money(x: float) -> str:
 
 
 class Session:
-    def __init__(self, *, now: datetime, get: Fetch, corpus: Any = None, ds: list[Decision] | None = None) -> None:
+    def __init__(self, *, now: datetime, get: Fetch, corpus: Any = None, ds: list[Decision] | None = None, strategy: strategies.Strategy | None = None) -> None:
         self.now, self.get, self.corpus = now, get, corpus
-        self.ds: list[Decision] = list(ds if ds is not None else store.decisions("day"))
+        self.sid = (strategy.id if strategy else "day")             # which roster strategy this run is: its book, window, caps and watchlist
+        self.ds: list[Decision] = list(ds if ds is not None else store.decisions(self.sid))
         self.events: list[ToolEvent] = []
         self.considered: dict[str, dict[str, str]] = {}
         self.queries: list[str] = []
         self.orders: list[str] = []
         self.shown: set[str] = set()
         self.attempts = 0
+
+    @property
+    def s(self) -> strategies.Strategy:
+        """The strategy's entry, read afresh from the roster so a changed flag takes effect for the next call."""
+        return strategies.get(self.sid)
 
     # ── the dispatcher ───────────────────────────────────────────────────────────────────────────
     def run(self, turn: int, call: Call) -> ToolEvent:
@@ -61,7 +67,8 @@ class Session:
 
     # ── browsing ─────────────────────────────────────────────────────────────────────────────────
     def t_search_markets(self, c: Call) -> tuple[str, str]:
-        rows = browse.search(c.query, now=self.now, get=self.get, ends_within_h=c.ends_within_h or None, min_liquidity=c.min_liquidity or None, limit=c.limit or None)
+        rows = browse.search(c.query, now=self.now, get=self.get, ends_within_h=c.ends_within_h or None, min_liquidity=c.min_liquidity or None, limit=c.limit or None,
+                           horizon_h=self.s.horizon_h, min_hours=self.s.min_hours_left)
         for v in rows:
             self._see(v)
         if not rows:
@@ -96,10 +103,10 @@ class Session:
             else:
                 fresh[mid] = " (price from the last snapshot)"
         prices = store.snapshots_by_market()
-        pt = book.point("day", self.now, cash_=book.cash(self.ds), held=held, realised_=book.realised(self.ds), prices=prices)
-        lines = [f"cash {_money(pt.cash)} | equity {_money(pt.equity)} (P&L {_money(pt.equity - flags.DAY_BANKROLL)}) | invested {_money(sum(h.cost for h in held.values()))} "
-                 f"({sum(h.cost for h in held.values()) / flags.DAY_BANKROLL:.1%} of the bankroll at risk) of the {_money(flags.DAY_MAX_EXPOSURE_FRAC * flags.DAY_BANKROLL)} limit | "
-                 f"per-market limit {_money(flags.DAY_MAX_POSITION_FRAC * flags.DAY_BANKROLL)} | realised so far {_money(book.realised(self.ds))}, unrealised {_money(pt.unrealised)}"]
+        pt = book.point(self.s.series, self.now, cash_=book.cash(self.ds), held=held, realised_=book.realised(self.ds), prices=prices)
+        lines = [f"cash {_money(pt.cash)} | equity {_money(pt.equity)} (P&L {_money(pt.equity - self.s.bankroll)}) | invested {_money(sum(h.cost for h in held.values()))} "
+                 f"({sum(h.cost for h in held.values()) / self.s.bankroll:.1%} of the bankroll at risk) of the {_money(self.s.exposure_frac * self.s.bankroll)} limit | "
+                 f"per-market limit {_money(self.s.position_frac * self.s.bankroll)} | realised so far {_money(book.realised(self.ds))}, unrealised {_money(pt.unrealised)}"]
         for lab, mid in self._labels().items():
             h, m = held[mid], ms.get(mid)
             p = book.last_price(prices.get(mid, []))
@@ -108,13 +115,13 @@ class Session:
             left = f"{(end - self.now).total_seconds() / 3600:.1f} h to resolution" if end else "no end time"
             lines.append(f"{lab} [{mid}] {h.side.upper()} {m.question if m else mid} | {h.shares:.1f} sh, entry {h.entry:.3f}, now "
                          f"{'?' if p is None else round(book.side_price(p, h.side), 3)}, cost {_money(h.cost)}, value {_money(value)}, unrealised {_money(value - h.cost)} ({(value - h.cost) / h.cost:+.0%}), "
-                         f"realised on earlier sells {_money(sum(d.realised for d in self.ds if d.market_id == mid))}, {h.cost / flags.DAY_BANKROLL:.1%} of bankroll | {left}{fresh[mid]}")
+                         f"realised on earlier sells {_money(sum(d.realised for d in self.ds if d.market_id == mid))}, {h.cost / self.s.bankroll:.1%} of bankroll | {left}{fresh[mid]}")
         if not held:
             lines.append("no open positions")
         return "\n".join(lines), ""
 
     def t_performance(self, _c: Call) -> tuple[str, str]:
-        st = day_report.stats(self.ds)
+        st = day_report.stats(self.ds, self.s.series)
         eq = " ".join(f"{d[5:]} {e:,.0f}" for d, e in st["equity"]) or "no history yet"
         trade = lambda t: f"{t['question'][:60]} {_money(t['pnl'])} in {t['hold_h']} h"  # noqa: E731
         grp = lambda g: f"{g['label']}: {g['n']} closed, {g['wins']} won, {_money(g['pnl'])}"  # noqa: E731
@@ -132,7 +139,7 @@ class Session:
         self._see(v)
         held, cash = book.holdings(self.ds).get(v.market.id), book.cash(self.ds)
         exposure = sum(h.cost for h in book.holdings(self.ds).values())
-        room = min(cash, flags.DAY_MAX_POSITION_FRAC * flags.DAY_BANKROLL - (held.cost if held else 0.0), flags.DAY_MAX_EXPOSURE_FRAC * flags.DAY_BANKROLL - exposure)
+        room = min(cash, self.s.position_frac * self.s.bankroll - (held.cost if held else 0.0), self.s.exposure_frac * self.s.bankroll - exposure)
         lines = [f"YES at {v.yes} (spread {v.spread}); your p(YES) {c.p_yes:.2f}; room under the caps and cash {_money(max(0.0, room))}"]
         for side, q in (("yes", c.p_yes), ("no", 1 - c.p_yes)):
             cost = min(0.99, book.side_price(v.yes, side) + flags.SLIPPAGE)
@@ -140,9 +147,9 @@ class Session:
             if full <= 0:
                 lines.append(f"{side.upper()}: all-in price {cost:.3f} vs your {q:.2f}: no edge")
                 continue
-            stake = max(0.0, min(flags.KELLY_FRACTION * full * flags.DAY_BANKROLL, room))
+            stake = max(0.0, min(flags.KELLY_FRACTION * full * self.s.bankroll, room))
             lines.append(f"{side.upper()}: all-in price {cost:.3f}; edge {q - cost:+.3f} per share, expected return {(q - cost) / cost:+.0%}; full Kelly {full:.1%} of bankroll, "
-                         f"{flags.KELLY_FRACTION:g}x Kelly = {_money(flags.KELLY_FRACTION * full * flags.DAY_BANKROLL)}; after the caps {_money(stake)}")
+                         f"{flags.KELLY_FRACTION:g}x Kelly = {_money(flags.KELLY_FRACTION * full * self.s.bankroll)}; after the caps {_money(stake)}")
         if held:
             lines.append(f"you hold {held.side.upper()} (cost {_money(held.cost)}): compare the expected value of holding with selling at the bid before adding")
         return NL.join(lines), ""
@@ -153,11 +160,11 @@ class Session:
             v = browse.load(mid, get=self.get) if c.action == "add" else None
             q = v.market.question if v else store.markets().get(mid).question if mid in store.markets() else ""
             store.append_watch(WatchEvent(id=f"wl-{len(store.watch_events()) + 1}-{mid}", at=self.now.isoformat(timespec="seconds"), market_id=mid, action=c.action,
-                                          question=q, note=" ".join(c.reason.split())[:200]))
+                                          question=q, note=" ".join(c.reason.split())[:200], strategy=self.s.id))
         return self.watch_text(), ""
 
     def watch_text(self) -> str:
-        w = store.watchlist()
+        w = store.watchlist(self.s.id)
         return NL.join(f"[{e.market_id}] {e.question} | since {e.at[:10]} | {e.note}" for e in w.values()) or "watchlist is empty"
 
     # ── the corpus ───────────────────────────────────────────────────────────────────────────────
@@ -174,7 +181,7 @@ class Session:
     t_entity = t_about = t_search = t_timeline = t_related = t_series = _corpus
 
     def t_request_research(self, c: Call) -> tuple[str, str]:
-        g = gaps.record(c.query, c.reason, market_id=c.market.strip() or "day", question=self.considered.get(c.market.strip(), {}).get("question", ""), book="day",
+        g = gaps.record(c.query, c.reason, market_id=c.market.strip() or self.s.id, question=self.considered.get(c.market.strip(), {}).get("question", ""), book=self.s.id,
                         kind="trade", at=self.now.isoformat(timespec="seconds"))
         self.queries.append(f"request_research({c.query.strip()[:80]})")
         return ("filed for the desk's research job; it lands in the corpus later, not in this run" if g else "not filed (empty, or already asked for this market)"), ""
@@ -189,10 +196,10 @@ class Session:
         at = (self.now + timedelta(seconds=len(self.orders))).isoformat(timespec="seconds")
         end = store.parse_iso(v.market.end_date) if v else None
         cited = [i for i in c.cited if i in self.shown]
-        return Decision(id=decision_id(mid, fill.action, f"{at}day{self.attempts}"), market_id=mid, at=at, day=at[:10], action=fill.action,  # type: ignore[arg-type]
+        return Decision(id=decision_id(mid, fill.action, f"{at}{self.s.id}{self.attempts}"), market_id=mid, at=at, day=at[:10], action=fill.action,  # type: ignore[arg-type]
                         requested=round(requested, 2), side=fill.side, price=fill.price, shares=fill.shares, cash_flow=fill.cash_flow,  # type: ignore[arg-type]
                         realised=fill.realised, rationale=" ".join(c.reason.split())[:420], clips=clips, ours=c.p_yes if 0.0 < c.p_yes < 1.0 else None, market=v.yes if v else None,
-                        model="house-" + flags.DAY_EFFORT, prompt_version=PROMPT_VERSION, usd=0.0, book="day", evidence_ids=cited,
+                        model="house-" + self.s.effort, prompt_version=self.s.prompt_version, usd=0.0, book=self.s.id, evidence_ids=cited, basis=" ".join(c.basis.split())[:1800],
                         hours_to_end=round((end - self.now).total_seconds() / 3600, 1) if end else None)
 
     def _order(self, kind: str, c: Call) -> tuple[str, str]:
@@ -205,12 +212,12 @@ class Session:
         v = browse.load(mid, get=self.get) if mid else None
         held = book.holdings(self.ds).get(mid)
         why = ""
-        if self.attempts >= flags.DAY_MAX_ORDERS_PER_RUN:
-            why = f"order limit for this run reached ({flags.DAY_MAX_ORDERS_PER_RUN})"
+        if self.attempts >= self.s.max_orders:
+            why = f"order limit for this run reached ({self.s.max_orders})"
         elif v is None:
             why = f"unknown market {mid!r}"
         elif kind == "buy":
-            why = browse.tradable_why(v, self.now)
+            why = browse.tradable_why(v, self.now, horizon_h=self.s.horizon_h, min_hours=self.s.min_hours_left)
             if c.side not in ("yes", "no"):
                 why = why or "side must be yes or no"
         elif v.raw.get("closed") or v.raw.get("active") is False:
@@ -223,7 +230,7 @@ class Session:
         else:
             assert v is not None and v.yes is not None
             fill = guards.apply(action, requested, held=held, yes_price=v.yes, cash=book.cash(self.ds), exposure=sum(h.cost for h in book.holdings(self.ds).values()),
-                                tradable=True, position_frac=flags.DAY_MAX_POSITION_FRAC, exposure_frac=flags.DAY_MAX_EXPOSURE_FRAC, bankroll=flags.DAY_BANKROLL)
+                                tradable=True, position_frac=self.s.position_frac, exposure_frac=self.s.exposure_frac, bankroll=self.s.bankroll)
         d = self._line(action, v, mid, c, fill, list(fill.clips), min(requested, 1e9))
         store.append_decisions([d])
         self.ds.append(d)
@@ -232,7 +239,7 @@ class Session:
             self._see(v)
         if d.action in ("buy_yes", "buy_no") and v is not None:
             if mid not in store.markets():
-                store.save_markets([v.market.model_copy(update={"origin": "day"})])
+                store.save_markets([v.market.model_copy(update={"origin": "day"})])   # "day" = brought in by an agentic bot alone: never desk-forecast
             store.append_snapshots([self._snap(v)])
         return self._answer(d), d.id
 

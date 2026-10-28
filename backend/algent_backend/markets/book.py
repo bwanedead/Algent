@@ -106,12 +106,14 @@ def mark(now: datetime | None = None) -> list[EquityPoint]:
     prices = store.snapshots_by_market()
     ds = store.decisions()
     pts = [point("trader", now, cash_=cash(ds), held=holdings(ds), realised_=realised(ds), prices=prices), rule_point(now, prices)]
-    fast = store.decisions("fast")
-    if fast:                                                    # the fast book's own $10k, its own curve (only once it has traded)
-        pts.append(point("fast", now, cash_=cash(fast), held=holdings(fast), realised_=realised(fast), prices=prices))
-    day_book = store.decisions("day")
-    if day_book:                                                # the day book's own $10k, its own curve (only once it has traded)
-        pts.append(point("day", now, cash_=cash(day_book), held=holdings(day_book), realised_=realised(day_book), prices=prices))
+    from . import strategies
+
+    for st in strategies.roster():                              # every roster strategy has its own $10k and its own curve (only once it has traded); daily keeps "trader"
+        if st.id == "daily":
+            continue                                            # already written above as the "trader" series
+        ds_ = store.decisions(st.id)
+        if ds_:
+            pts.append(point(st.series, now, cash_=cash(ds_), held=holdings(ds_), realised_=realised(ds_), prices=prices))
     have = {(e.book, e.day) for e in store.equity_points()}
     fresh = [p for p in pts if (p.book, p.day) not in have]
     store.append_equity(fresh)

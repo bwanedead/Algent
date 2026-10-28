@@ -23,7 +23,7 @@ import math
 from dataclasses import dataclass
 from typing import Any
 
-from . import day_report, flags, paper, research_report, store, trader_report
+from . import day_report, flags, paper, research_report, store, strategies, trader_report
 from .contracts import Forecast, Market
 
 EPS = 1e-3
@@ -175,6 +175,16 @@ def disagreements(now_iso: str | None = None) -> list[dict[str, Any]]:
     return sorted(out, key=lambda r: -abs(r["gap"]))
 
 
+def strategy_sections() -> list[dict[str, Any]]:
+    """Every roster strategy as one section (the page's single roster). The log is trimmed: the full ledger stays in decisions.jsonl."""
+    out = []
+    for st in strategies.roster():
+        sec = day_report.section(None, st.id)
+        sec["log"], sec["runs"] = sec["log"][:60], sec["runs"][:3]
+        out.append(sec)
+    return out
+
+
 def track_record() -> dict[str, Any]:
     """The whole scoreboard as one document (what the site and the API read)."""
     ps = pairs()
@@ -188,7 +198,7 @@ def track_record() -> dict[str, Any]:
                       "no money is staked and nothing here is financial advice.",
         "markets": {"open": sum(m.status == "open" for m in ms), "resolved": sum(m.status == "resolved" for m in ms), "void": sum(m.status == "void" for m in ms)},
         "forecasts": len(store.forecasts()), "scores": forecast_scores(ps), "portfolio": paper.summary(),
-        "trader": trader_report.section(), "fast": research_report.fast_section(), "day": day_report.section(), "evidence": research_report.section(ps),
+        "trader": trader_report.section(), "fast": research_report.fast_section(), "day": day_report.section(), "strategies": strategy_sections(), "evidence": research_report.section(ps),
         "horizons": research_report.horizons(ps), "open_positions": open_rows(), "disagreements": disagreements()[:20], "worst_misses": worst,
         "market_beat_us": len(market_won), "resolved": rows[::-1][:flags.PUBLISH_RESOLVED],
         "other": watch_scores(),

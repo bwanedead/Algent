@@ -209,16 +209,19 @@ def _prune(name: str, rows: list, now: datetime) -> int:
     return len(rows) - len(keep)
 
 
-def day_runs() -> list[DayRun]:
-    return _read("day_runs.jsonl", DayRun)
+def day_runs(strategy: str | None = None) -> list[DayRun]:
+    """Run traces of every roster strategy (``None``) or of one; a line written before the roster is the day book's."""
+    rows = _read("day_runs.jsonl", DayRun)
+    return rows if strategy is None else [r for r in rows if r.strategy == strategy]
 
 
 def append_day_run(run: DayRun) -> None:
     _append("day_runs.jsonl", [run])
 
 
-def wishes() -> list[Wish]:
-    return _read("day_wishes.jsonl", Wish)
+def wishes(strategy: str | None = None) -> list[Wish]:
+    rows = _read("day_wishes.jsonl", Wish)
+    return rows if strategy is None else [w for w in rows if w.strategy == strategy]
 
 
 def append_wishes(rows: list[Wish]) -> None:
@@ -233,10 +236,12 @@ def append_watch(row: WatchEvent) -> None:
     _append("day_watchlist.jsonl", [row])
 
 
-def watchlist() -> dict[str, WatchEvent]:
-    """Markets currently on the day agent's watchlist (the last event per market is an add)."""
+def watchlist(strategy: str = "day") -> dict[str, WatchEvent]:
+    """Markets currently on one strategy's watchlist (the last event per market is an add). Each strategy keeps its own."""
     last: dict[str, WatchEvent] = {}
     for e in watch_events():
+        if e.strategy != strategy:
+            continue
         last[e.market_id] = e
     return {k: e for k, e in last.items() if e.action == "add"}
 

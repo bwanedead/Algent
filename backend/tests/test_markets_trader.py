@@ -209,42 +209,6 @@ def test_the_report_lists_positions_with_the_agents_words_and_the_log_with_outco
 
 
 # ── CLI wiring ───────────────────────────────────────────────────────────────────────────────────
-def test_daily_runs_refresh_forecast_trade_mark_and_publish_in_order(monkeypatch, capsys):
-    from algent_backend.cli.newsroom import markets as cli
-    from algent_backend.markets import forecast, mirror
-
-    seed("a", price=0.30, ours=None, base=datetime.now(UTC))
-    order = []
-    monkeypatch.setattr(mirror, "refresh", lambda: order.append("refresh") or {"new": 0})
-
-    def fake_forecast_ask(*a, **k):
-        order.append("forecast-ask")
-        return lambda task, role="": (SimpleNamespace(probability=0.7, rationale="r", cited=[]), 0.01)
-
-    monkeypatch.setattr(forecast, "default_ask", fake_forecast_ask)
-    monkeypatch.setattr(trader, "default_ask", lambda: (order.append("trade-ask") or Agent({"M1": ("buy_yes", 150)})))
-    monkeypatch.setattr(forecast, "evidence_index", lambda today: None)
-    rc = cli.run_daily(argparse.Namespace(no_forecast=False, no_trade=False))
-    out = json.loads(capsys.readouterr().out)
-    assert rc == 0 and order[0] == "refresh" and "forecast-ask" in order and order.index("forecast-ask") < order.index("trade-ask")
-    assert out["forecast"]["made"] == 1 and out["trade"]["filled"] == 1
-    assert {p["book"] for p in out["marked"]} == {"trader", "rule"} and "publish" in out
-    assert store.decisions()[0].market_id == "a"
-
-
-def test_daily_keeps_marking_when_a_paid_step_fails_and_reports_it(monkeypatch, capsys):
-    from algent_backend.cli.newsroom import markets as cli
-    from algent_backend.markets import forecast, mirror
-
-    seed("a", base=datetime.now(UTC))
-    monkeypatch.setattr(mirror, "refresh", lambda: {})
-    monkeypatch.setattr(forecast, "evidence_index", lambda today: None)
-    monkeypatch.setattr(trader, "default_ask", lambda: (_ for _ in ()).throw(RuntimeError("no model")))
-    rc = cli.run_daily(argparse.Namespace(no_forecast=True, no_trade=False))
-    out = json.loads(capsys.readouterr().out)
-    assert rc == 1 and "RuntimeError" in out["trade"]["error"] and len(out["marked"]) == 2
-
-
 def test_the_published_document_carries_the_trader_section():
     seed("a", price=0.30, ours=0.60)
     trader.run(ask=Agent({"M1": ("buy_yes", 200)}), now=NOW, record={}, index=None)

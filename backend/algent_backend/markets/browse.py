@@ -56,7 +56,7 @@ def view_of(raw: dict[str, Any], event: dict[str, Any] | None = None) -> View | 
     return View(m, raw, polymarket.yes_price(raw), polymarket.num(raw.get("bestBid")), polymarket.num(raw.get("bestAsk")))
 
 
-def tradable_why(v: View, now: datetime, *, min_liquidity: float | None = None) -> str:
+def tradable_why(v: View, now: datetime, *, min_liquidity: float | None = None, horizon_h: float | None = None, min_hours: float | None = None) -> str:
     """Why this market may NOT be traded now ('' when it may): closed, blocked category, outside the window, too thin, or no price."""
     raw, m = v.raw, v.market
     if raw.get("closed") or raw.get("active") is False or raw.get("archived"):
@@ -64,12 +64,14 @@ def tradable_why(v: View, now: datetime, *, min_liquidity: float | None = None) 
     if set(m.tags) & set(flags.BLOCK_TAGS):
         return "its category is on the blocklist (" + ", ".join(sorted(set(m.tags) & set(flags.BLOCK_TAGS))[:3]) + ")"
     hours = v.hours_left(now)
+    lo = flags.DAY_MIN_HOURS_LEFT if min_hours is None else min_hours          # a roster strategy passes its own window; the default is the day book's
+    hi = flags.DAY_HORIZON_H if horizon_h is None else horizon_h
     if hours is None:
         return "it has no end time"
-    if hours < flags.DAY_MIN_HOURS_LEFT:
-        return f"it ends in {max(hours, 0):.1f} h, inside the {flags.DAY_MIN_HOURS_LEFT:g} h cut-off"
-    if hours > flags.DAY_HORIZON_H:
-        return f"it ends in {hours:.0f} h, beyond the {flags.DAY_HORIZON_H} h horizon"
+    if hours < lo:
+        return f"it ends in {max(hours, 0):.1f} h, inside the {lo:g} h cut-off"
+    if hours > hi:
+        return f"it ends in {hours:.0f} h, beyond the {hi:g} h horizon"
     if m.liquidity < (flags.MIN_LIQUIDITY_USD if min_liquidity is None else min_liquidity) or m.volume < flags.MIN_VOLUME_USD:
         return f"too thin (liquidity ${m.liquidity:,.0f}, volume ${m.volume:,.0f})"
     if v.yes is None:
@@ -86,9 +88,9 @@ def _event_views(events: list[dict[str, Any]]) -> list[View]:
     return out
 
 
-def _window_events(now: datetime, hours: float, get: Fetch) -> list[dict[str, Any]]:
+def _window_events(now: datetime, hours: float, get: Fetch, min_hours: float | None = None) -> list[dict[str, Any]]:
     """Open events with an end date inside the window, busiest first (Gamma filters on the EVENT's end; a market is checked again on its own)."""
-    lo, hi = now + timedelta(hours=flags.DAY_MIN_HOURS_LEFT), now + timedelta(hours=hours)
+    lo, hi = now + timedelta(hours=flags.DAY_MIN_HOURS_LEFT if min_hours is None else min_hours), now + timedelta(hours=hours)
     out: list[dict[str, Any]] = []
     for page in range(EVENT_PAGES):
         data = get(f"{GAMMA}/events", {"active": "true", "closed": "false", "end_date_min": lo.strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -116,12 +118,14 @@ def _mirror_views(now: datetime) -> list[View]:
     return out
 
 
-def search(query: str, *, now: datetime, get: Fetch, ends_within_h: float | None = None, min_liquidity: float | None = None, limit: int | None = None) -> list[View]:
+def search(query: str, *, now: datetime, get: Fetch, ends_within_h: float | None = None, min_liquidity: float | None = None, limit: int | None = None,
+           horizon_h: float | None = None, min_hours: float | None = None) -> list[View]:
     """Markets resolving inside the window, relevance first when there is a query (else busiest first). Every row passes ``tradable_why``."""
-    hours = min(float(ends_within_h or flags.DAY_HORIZON_H), float(flags.DAY_HORIZON_H))
+    ceiling = float(flags.DAY_HORIZON_H if horizon_h is None else horizon_h)
+    hours = min(float(ends_within_h or ceiling), ceiling)
     limit = max(1, min(int(limit or flags.DAY_SEARCH_LIMIT), flags.DAY_SEARCH_LIMIT_MAX))
     want = _tokens(query or "")
-    events = _window_events(now, hours, get)
+    events = _window_events(now, hours, get, min_hours)
     if want:
         try:
             events = _text_search(query, get) + events
@@ -132,7 +136,7 @@ def search(query: str, *, now: datetime, get: Fetch, ends_within_h: float | None
         if v.market.id in found:
             continue
         hrs = v.hours_left(now)
-        if hrs is None or hrs > hours or tradable_why(v, now, min_liquidity=min_liquidity):
+        if hrs is None or hrs > hours or tradable_why(v, now, min_liquidity=min_liquidity, horizon_h=ceiling, min_hours=min_hours):
             continue
         found[v.market.id] = v
     def score(v: View) -> int:

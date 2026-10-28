@@ -10,7 +10,8 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from . import flags
+from . import flags, methods, strategies
+from .strategies import Strategy
 
 PROMPT_VERSION = "day-v1"
 
@@ -29,7 +30,7 @@ hold are in the portfolio at the start.
 Your evidence is the desk's own corpus: dated documents, sourced claims, events, entities and time series. There is no web search. Market prices
 tell you what the crowd thinks, not what is true; the corpus is how you find out whether the crowd is missing something. The only thing that
 counts as a reason to trade is an edge you can state: something the corpus shows (or a reading of the resolution rules) that the price has not
-absorbed, with a catalyst inside the next two days.
+absorbed, with a catalyst inside the next {span}.
 
 Tools. Each turn you name up to {per_turn} calls; they run in order and their results come back in the next turn.
 - search_markets(query, ends_within_h, min_liquidity, limit): live Polymarket and the desk's mirror, markets resolving within {horizon} h (the
@@ -61,7 +62,7 @@ under a ${ticket:.0f} ticket, at most {orders} orders a run, and a ceiling on to
 trimmed, so spend thought on whether to act, not on the limit.
 
 How to think:
-- Near term. Look for catalysts in the next 48 hours: a vote, a deadline, a scheduled decision, a data release, a court date, a talks round.
+- Near term. Look for catalysts in the next {window} hours: a vote, a deadline, a scheduled decision, a data release, a court date, a talks round.
   A market whose outcome is already effectively decided by facts the corpus shows, but priced as open, is the cleanest edge. A market that
   is just a coin flip with no catalyst is not.
 - Price is information. A large gap between your view and the price is first a reason to ask what the crowd knows. If you cannot say what it is
@@ -89,9 +90,25 @@ done, summary is two or three plain sentences: what you looked at, what you did,
 """
 
 
-def role() -> str:
-    return ROLE.format(horizon=flags.DAY_HORIZON_H, per_turn=flags.DAY_MAX_CALLS_PER_TURN, pos=flags.DAY_MAX_POSITION_FRAC, exp=flags.DAY_MAX_EXPOSURE_FRAC,
-                       ticket=flags.TRADE_MIN_TICKET, orders=flags.DAY_MAX_ORDERS_PER_RUN)
+MUST_TRADE = """
+YOU MUST TRADE. This book exists for fast feedback, so every run has to FILL at least {n} order{s} (a buy or a sell that goes through) within the normal size
+caps; a run that ends with fewer is recorded as a failure. Choose the best edge available. If nothing shows a real edge, take the smallest-size position on
+your best guess (the minimum ticket) in the market where your probability differs most from the price, and say plainly in your reason that it had no real edge.
+Do not skip the research: the point is that the bet is still your honest view.
+"""
+
+
+def _span(hours: float) -> str:
+    return {48: "two days"}.get(int(hours), f"{hours / 24:g} days")
+
+
+def role(strategy: Strategy | None = None) -> str:
+    """The agent's standing instructions. The day book (the default) gets exactly its original text; another strategy gets its own horizon, caps, its reasoning
+    method (the lab mind's instructions, ``methods.py``) and, if it must trade, the obligation to."""
+    s = strategy or strategies.get("day")
+    text = ROLE.format(horizon=f"{s.horizon_h:g}", window=f"{s.horizon_h:g}", span=_span(s.horizon_h), per_turn=s.calls_per_turn, pos=s.position_frac, exp=s.exposure_frac,
+                       ticket=flags.TRADE_MIN_TICKET, orders=s.max_orders)
+    return text + methods.section(s.method) + (MUST_TRADE.format(n=s.min_orders, s="" if s.min_orders == 1 else "s") if s.must_trade else "")
 
 
 class Call(BaseModel):
@@ -101,6 +118,7 @@ class Call(BaseModel):
     side: Literal["yes", "no", ""] = Field(default="", description="buy: which side to buy.")
     usd: float = Field(default=0.0, description="buy: paper dollars to spend; sell: dollars of current value to sell.")
     all: bool = Field(default=False, description="sell: close the whole position.")
+    basis: str = Field(default="", description="buy: your reasoning method's working for this market (see the method section of your instructions); empty if your method asks for none.")
     reason: str = Field(default="", description="buy / sell: the edge or why you are leaving, plain words; request_research: what you would do with it.")
     p_yes: float = Field(default=0.0, description="buy / sell / size: YOUR probability that the market resolves YES, a FRACTION strictly between 0 and 1 (0.07 means 7%; never write 7). 0 means not given.")
     action: Literal["list", "add", "remove", ""] = Field(default="", description="watchlist: what to do.")

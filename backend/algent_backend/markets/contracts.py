@@ -140,12 +140,13 @@ class Decision(BaseModel):
     evidence_ids: list[str] = Field(default_factory=list)   # corpus items the decision cited
     evidence: str = ""                        # sufficient | thin | gap ("" before research existed)
     hours_to_end: float | None = None
+    basis: str = ""                           # a strategy order: the working its reasoning method asked for (reference class, possibilities ...), plain text
 
 
 class EquityPoint(BaseModel):
     """A book's value at the end of a day: cash plus open positions at their current side price. Written once per (book, day), never edited."""
 
-    book: Literal["trader", "rule", "fast", "day"]
+    book: str                                 # the series: trader | rule | fast | day | a roster strategy id (strategies.py)
     day: str
     at: str
     cash: float
@@ -269,6 +270,8 @@ class DayRun(BaseModel):
     settled: int = 0
     equity: float | None = None
     cash: float | None = None
+    strategy: str = "day"                                   # which roster strategy ran (lines written before the roster are the day book's)
+    must_trade: str = ""                                    # a must-trade run: "met" | "unmet: n of m" ("" for others)
 
 
 class Wish(BaseModel):
@@ -284,6 +287,7 @@ class Wish(BaseModel):
     market_id: str = ""
     question: str = ""
     source: str = ""                          # the source or data type that would supply it
+    strategy: str = "day"
 
 
 class WatchEvent(BaseModel):
@@ -295,6 +299,7 @@ class WatchEvent(BaseModel):
     action: Literal["add", "remove"]
     question: str = ""
     note: str = ""
+    strategy: str = "day"
 
 
 def wish_id(run_id: str, topic: str) -> str:

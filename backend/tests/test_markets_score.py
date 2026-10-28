@@ -16,6 +16,9 @@ T0 = datetime(2026, 10, 1, 12, 0, tzinfo=UTC)
 @pytest.fixture(autouse=True)
 def _store(tmp_path, monkeypatch):
     monkeypatch.setenv("ALGENT_MARKETS_STORE", str(tmp_path / "ms"))
+    from algent_backend.markets import flags as mflags
+
+    monkeypatch.setattr(mflags, "RULE_BOOK_ENABLED", True)        # these tests exercise the rule engine itself; in production it is retired
 
 
 def iso(d):
