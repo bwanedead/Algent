@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import type { CurvePoint, TrackRecord, Trader, TraderPosition, TradeRow } from "@/lib/track-record";
+import type { CurvePoint, Strategy, TrackRecord, Trader, TraderPosition, TradeRow } from "@/lib/track-record";
 
 import { DayRuns, Wishes } from "./DayBook";
 import { OpenPositions } from "./TrackTables";
@@ -23,19 +23,29 @@ const left = (h: number | null) => (h === null ? "" : h < 48 ? `${Math.max(0, Ma
 
 type Line = { id: string; name: string; cls: string; pts: Map<string, number> };
 
+// Short chart names (the line is labelled at its end; the table below has the full names). "MT" = must trade.
+const SHORT: Record<string, string> = {
+  day: "Day", daily: "Daily", fast: "Fast", "base-rate": "Base rate", delineation: "Delineation", "delineation-base-rate": "Delin.+base rate",
+  "baseline-must-trade": "Baseline MT", "delineation-must-trade": "Delin. MT",
+};
+
 function lines(t: TrackRecord): Line[] {
   const pick = (curve: CurvePoint[], key: "trader" | "rule") => new Map(curve.flatMap((c) => (c[key] === null ? [] : [[c.day, c[key] as number] as const])));
-  const out: Line[] = [{ id: "daily", name: "Daily trader", cls: "daily", pts: pick(t.trader.curve, "trader") }];
-  if (t.fast) out.push({ id: "fast", name: "Fast book", cls: "fast", pts: pick(t.fast.curve, "trader") });
-  if (t.day) out.push({ id: "day", name: "Day book", cls: "day", pts: pick(t.day.curve, "trader") });
-  out.push({ id: "rule", name: "Fixed rule", cls: "rule", pts: pick(t.trader.curve, "rule") });
+  const out: Line[] = t.strategies.length
+    ? t.strategies.map((x) => ({ id: x.id, name: SHORT[x.id] ?? x.name, cls: x.id, pts: pick(x.curve, "trader") }))
+    : [
+        { id: "daily", name: "Daily trader", cls: "daily", pts: pick(t.trader.curve, "trader") },
+        ...(t.fast ? [{ id: "fast", name: "Fast book", cls: "fast", pts: pick(t.fast.curve, "trader") }] : []),
+        ...(t.day ? [{ id: "day", name: "Day book", cls: "day", pts: pick(t.day.curve, "trader") }] : []),
+      ];
+  out.push({ id: "rule", name: "Fixed rule (retired)", cls: "rule", pts: pick(t.trader.curve, "rule") });
   return out.filter((l) => l.pts.size > 0);
 }
 
 const W = 640;
-const H = 230;
+const H = 270;
 const L = 50;
-const R = 138;
+const R = 150;
 const T = 12;
 const B = 24;
 
@@ -94,7 +104,7 @@ export function ValueChart({ t }: { t: TrackRecord }) {
 }
 
 // ── one expandable row per bot ───────────────────────────────────────────────────────────────────
-type Row = { id: string; name: string; cls: string; blurb: string; t: Trader };
+type Row = { id: string; name: string; cls: string; method: string; style: string; next: string; mustTrade?: number; t: Trader; lastRun: string };
 
 function WinRate({ t, min }: { t: Trader["summary"]; min: number }) {
   const n = t.wins + t.losses;
@@ -164,16 +174,20 @@ function BookRow({ row, min, children }: { row: Row; min: number; children?: Rea
   return (
     <details className={`tr-book tr-b-${row.cls}`}>
       <summary className="tr-row">
-        <Cell label="Bot" className="tr-name"><i className={`tr-sw tr-bg-${row.cls}`} aria-hidden="true" /> <b>{row.name}</b><span className="tr-why">{row.blurb}</span></Cell>
+        <Cell label="Bot" className="tr-name"><i className={`tr-sw tr-bg-${row.cls}`} aria-hidden="true" /> <b>{row.name}</b>{row.mustTrade ? <span className="tr-tag" title={`Fills at least ${row.mustTrade} order(s) every run, for faster feedback`}>must trade</span> : null}</Cell>
+        <Cell label="Method">{row.method}</Cell>
+        <Cell label="Style" className="tr-why">{row.style}</Cell>
         <Cell label="Value" className="n">{money(s.equity)}</Cell>
         <Cell label="P&L" className={`n ${tone(s.pnl)}`}>{usd(s.pnl)} ({s.pnl >= 0 ? "+" : ""}{((s.pnl / bank) * 100).toFixed(1)}%)</Cell>
         <Cell label="Open" className="n">{s.open}</Cell>
-        <Cell label="Cash" className="n">{money(s.cash)}</Cell>
         <Cell label="Trades" className="n">{s.buys + s.sells}</Cell>
-        <Cell label="Win rate" className="n"><WinRate t={s} min={min} /></Cell>
-        <Cell label="Last run" className="n">{stamp(row.t.last_at)}</Cell>
+        <Cell label="Last run" className="n">{stamp(row.lastRun)}</Cell>
+        <Cell label="Next run" className="n">{row.next ? stamp(row.next) : "n/a"}</Cell>
       </summary>
       <div className="tr-detail">
+        <p className="tr-note">
+          Win rate: <WinRate t={s} min={min} />. Cash {money(s.cash)}.
+        </p>
         <h3 className="tr-h3">Open positions</h3>
         <Positions rows={row.t.open_positions} />
         <h3 className="tr-h3">Trades, newest first</h3>
@@ -184,36 +198,67 @@ function BookRow({ row, min, children }: { row: Row; min: number; children?: Rea
   );
 }
 
+const METHOD_ORDER = ["Baseline research", "Base rate first", "Delineation", "Delineation + base rate"];
+
+function fromStrategy(x: Strategy): Row {
+  return { id: x.id, name: x.name, cls: x.id, method: x.method_name, style: x.style, next: x.next_run, mustTrade: x.must_trade ? x.min_orders : undefined, t: x, lastRun: x.runs[0]?.at || x.last_at };
+}
+
 export function Books({ t }: { t: TrackRecord }) {
   const min = t.rules.min_for_verdict;
-  const rows: Row[] = [{ id: "daily", name: "Daily trader", cls: "daily", blurb: "once a day, markets we forecast", t: t.trader }];
-  if (t.fast) rows.push({ id: "fast", name: "Fast book", cls: "fast", blurb: `settles within ${t.fast.horizon_days} days, every ${t.fast.every_hours} h`, t: t.fast });
+  // Every bot is its own forecaster (no shared desk forecast), so there is one roster, grouped by reasoning method. A document from before the roster
+  // falls back to the three books it knew.
+  const strategies = t.strategies.length
+    ? t.strategies
+    : [];
+  const rows: Row[] = strategies.length
+    ? strategies.map(fromStrategy)
+    : [
+        { id: "daily", name: "Daily trader", cls: "daily", method: "Desk forecast", style: "once a day, markets we forecast", next: "", t: t.trader, lastRun: t.trader.last_at },
+        ...(t.fast ? [{ id: "fast", name: "Fast book", cls: "fast", method: "Desk forecast", style: `settles within ${t.fast.horizon_days} days`, next: "", t: t.fast, lastRun: t.fast.last_at }] : []),
+        ...(t.day ? [{ id: "day", name: "Day book", cls: "day", method: "Baseline research", style: `picks its own bets, ${t.day.horizon_hours} h out`, next: "", t: t.day, lastRun: t.day.last_at }] : []),
+      ];
+  const methods = [...new Set([...METHOD_ORDER, ...rows.map((r) => r.method)])].filter((m) => rows.some((r) => r.method === m));
   const rule = t.portfolio;
   const ruleValue = rule.bankroll + rule.total_pnl;
   return (
     <div className="tr-books" role="group" aria-label="Bots">
       <div className="tr-row tr-rowhead" aria-hidden="true">
-        <span>Bot</span><span className="n">Value</span><span className="n">P&amp;L</span><span className="n">Open</span><span className="n">Cash</span><span className="n">Trades</span><span className="n">Win rate</span><span className="n">Last run</span>
+        <span>Bot</span><span>Method</span><span>Style</span><span className="n">Value</span><span className="n">P&amp;L</span><span className="n">Open</span><span className="n">Trades</span><span className="n">Last run</span><span className="n">Next run</span>
       </div>
-      {rows.map((r) => <BookRow key={r.id} row={r} min={min} />)}
-      {t.day && (
-        <BookRow row={{ id: "day", name: "Day book", cls: "day", blurb: `picks its own bets, ${t.day.horizon_hours} h out, ${t.day.run_hours.length} runs a day`, t: t.day }} min={min}>
-          <h3 className="tr-h3">Latest run: what it browsed and why</h3>
-          <DayRuns rows={t.day.runs.slice(0, 1)} />
-          <h3 className="tr-h3">What it wished we knew</h3>
-          <Wishes rows={t.day.wishes.slice(0, 3)} />
-        </BookRow>
-      )}
+      {methods.map((m) => (
+        <div key={m} role="group" aria-label={m}>
+          <div className="tr-group">{m}</div>
+          {rows.filter((r) => r.method === m).map((r) => {
+            const x = strategies.find((q) => q.id === r.id);
+            return (
+              <BookRow key={r.id} row={r} min={min}>
+                {x && (
+                  <>
+                    <h3 className="tr-h3">Latest run: what it browsed and why</h3>
+                    {x.runs[0]?.must_trade ? <p className="tr-note">Must-trade check for this run: {x.runs[0].must_trade}.</p> : null}
+                    <DayRuns rows={x.runs.slice(0, 1)} />
+                    <h3 className="tr-h3">What it wished we knew</h3>
+                    <Wishes rows={x.wishes.slice(0, 3)} />
+                  </>
+                )}
+              </BookRow>
+            );
+          })}
+        </div>
+      ))}
+      <div className="tr-group">Retired</div>
       <details className="tr-book tr-b-rule">
         <summary className="tr-row">
-          <Cell label="Bot" className="tr-name"><i className="tr-sw tr-bg-rule" aria-hidden="true" /> <b>Fixed rule</b><span className="tr-why">baseline: no judgement, never sells early</span></Cell>
+          <Cell label="Bot" className="tr-name"><i className="tr-sw tr-bg-rule" aria-hidden="true" /> <b>Fixed rule</b></Cell>
+          <Cell label="Method">Edge rule on the desk forecast</Cell>
+          <Cell label="Style" className="tr-why">retired: it needed a shared forecast, so it opens nothing now; history only</Cell>
           <Cell label="Value" className="n">{money(ruleValue)}</Cell>
           <Cell label="P&L" className={`n ${tone(rule.total_pnl)}`}>{usd(rule.total_pnl)} ({rule.total_pnl >= 0 ? "+" : ""}{((rule.total_pnl / rule.bankroll) * 100).toFixed(1)}%)</Cell>
           <Cell label="Open" className="n">{rule.open}</Cell>
-          <Cell label="Cash" className="n">{money(rule.bankroll - rule.staked_open + rule.realised_pnl)}</Cell>
           <Cell label="Trades" className="n">{rule.open + rule.settled}</Cell>
-          <Cell label="Win rate" className="n">{rule.wins + rule.losses >= min && rule.hit_rate !== null ? `${Math.round(rule.hit_rate * 100)}% (${rule.wins}W ${rule.losses}L)` : `n=${rule.wins + rule.losses}, too early`}</Cell>
           <Cell label="Last run" className="n">{stamp(t.as_of)}</Cell>
+          <Cell label="Next run" className="n">retired</Cell>
         </summary>
         <div className="tr-detail">
           <h3 className="tr-h3">Open positions</h3>
