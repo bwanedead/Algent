@@ -124,13 +124,13 @@ def _stable_rows(events: list[BehaviourEvent], now: datetime) -> dict[str, dict[
     return out
 
 
-def documents(now: datetime | None = None) -> dict[str, Any]:
+def documents(now: datetime | None = None, *, vessels: bool = True) -> dict[str, Any]:
     """The maritime products as site documents (egress-aware: each page fetches only what it renders):
 
     ``maritime/live.json``     still-going events plus those ended in the last ``LIVE_HOURS`` h, evidence trimmed to the last few points (/live, home)
     ``maritime/recent.json``   the last ``RETAIN_DAYS`` days, newest first (/intel/maritime)
     ``maritime/counts.json``   real totals for the page lead: all events kept, those still open, per kind
-    ``maritime/vessel/<imo>.json``   the events of one vessel (a place page)"""
+    ``maritime/vessel/<imo>.json``   the events of one vessel (a place page); only with ``vessels`` - the live passes leave them out (see ``run``)"""
     now = now or datetime.now(timezone.utc)
     cut = (now - timedelta(days=flags.RETAIN_DAYS)).isoformat(timespec="seconds")
     live_cut = (now - timedelta(hours=LIVE_HOURS)).isoformat(timespec="seconds")
@@ -147,6 +147,8 @@ def documents(now: datetime | None = None) -> dict[str, Any]:
         "maritime/live.json": {"events": live},
         "maritime/counts.json": {"total": len(cur), "ongoing": sum(1 for e in cur if e.ended_at is None), "byKind": by_kind},
     }
+    if not vessels:
+        return docs
     imos: dict[str, list[dict[str, Any]]] = {}
     for e in cur:
         if len(e.imo) == 7 and e.imo.isdigit():
@@ -155,13 +157,13 @@ def documents(now: datetime | None = None) -> dict[str, Any]:
     return docs
 
 
-def publish_files(now: datetime | None = None) -> dict[str, Any]:
-    return site_data.publish_built(lambda: documents(now))
+def publish_files(now: datetime | None = None, *, vessels: bool = True) -> dict[str, Any]:
+    return site_data.publish_built(lambda: documents(now, vessels=vessels))
 
 
-def publish(*, full: bool = False, connect: Callable[[], Any] | None = None) -> dict[str, Any]:
+def publish(*, full: bool = False, connect: Callable[[], Any] | None = None, vessels: bool = True) -> dict[str, Any]:
     now = datetime.now(timezone.utc)
-    files = publish_files(now)
+    files = publish_files(now, vessels=vessels)
     events, mark = pending(full=full, now=now)
     if published_db.files_only(connect):
         if files.get("ok") and events:                 # the default: documents only, no database; the record of what was sent still moves
@@ -223,7 +225,9 @@ def run(*, connect: Callable[[], Any] | None = None) -> dict[str, Any]:
     """What the timer runner calls: publish what changed, and link the changed events into the ledger. Never raises."""
     try:
         events, _ = pending()
-        out = {"publish": publish(connect=connect)}
+        # The ~1,000 per-vessel documents are left to the daily ``maritime-vessels`` job: rewritten on every live pass (~340 a day) they were
+        # ~80% of the R2 Class A budget (2026-10-28), for place pages that are rarely opened and do not need minute freshness.
+        out = {"publish": publish(connect=connect, vessels=False)}
         if events:
             out["ledger"] = link_ledger(events)
         return out

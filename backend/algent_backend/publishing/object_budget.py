@@ -38,7 +38,14 @@ _CACHE_S = 5.0
 
 
 def _fresh(month: str) -> dict[str, Any]:
-    return {"month": month, "a": 0, "b": 0, "days": {}, "objects": {}}
+    return {"month": month, "a": 0, "b": 0, "days": {}, "objects": {}, "prefixes": {}}
+
+
+def _prefix(key: str | None) -> str:
+    """Where a Class A call went, for the per-day breakdown: the key's folder, at most three levels deep ("" for bucket-level calls)."""
+    if not key:
+        return "(bucket)"
+    return "/".join(key.split("/")[:-1][:3]) or "(root)"
 
 
 class Meter:
@@ -47,7 +54,7 @@ class Meter:
         self._now = now or (lambda: datetime.now(timezone.utc))
         self._clock = clock
         self._lock = threading.RLock()
-        self._delta: dict[str, Any] = {"a": 0, "b": 0, "days": {}, "objects": {}}
+        self._delta: dict[str, Any] = {"a": 0, "b": 0, "days": {}, "objects": {}, "prefixes": {}}
         self._last_flush = 0.0
         self._cache: tuple[float, dict[str, Any]] | None = None
         self._last_log = -1e9
@@ -82,7 +89,12 @@ class Meter:
 
     def _merged(self, base: dict[str, Any]) -> dict[str, Any]:
         out = {**base, "a": base["a"] + self._delta["a"], "b": base["b"] + self._delta["b"],
-               "days": {k: list(v) for k, v in base["days"].items()}, "objects": dict(base["objects"])}
+               "days": {k: list(v) for k, v in base["days"].items()}, "objects": dict(base["objects"]),
+               "prefixes": {d: dict(v) for d, v in base.get("prefixes", {}).items()}}
+        for day, counts in self._delta["prefixes"].items():
+            cur = out["prefixes"].setdefault(day, {})
+            for pre, n in counts.items():
+                cur[pre] = cur.get(pre, 0) + n
         for day, (a, b) in self._delta["days"].items():
             cur = out["days"].setdefault(day, [0, 0])
             out["days"][day] = [cur[0] + a, cur[1] + b]
@@ -100,6 +112,7 @@ class Meter:
             self._cache = None
             merged = self._merged(self._read())
             merged["days"] = dict(sorted(merged["days"].items())[-40:])
+            merged["prefixes"] = dict(sorted(merged["prefixes"].items())[-7:])
             try:
                 self.path.parent.mkdir(parents=True, exist_ok=True)
                 tmp = self.path.with_suffix(".tmp")
@@ -107,7 +120,7 @@ class Meter:
                 os.replace(tmp, self.path)
             except OSError:
                 return                       # keep the delta; the next flush retries
-            self._delta = {"a": 0, "b": 0, "days": {}, "objects": {}}
+            self._delta = {"a": 0, "b": 0, "days": {}, "objects": {}, "prefixes": {}}
             self._last_flush = self._clock()
 
     def usage(self) -> dict[str, Any]:
@@ -150,6 +163,10 @@ class Meter:
             if (reason := self.check(cls, add_bytes, key)):
                 return reason
             self.record(cls)
+            if cls == CLASS_A:
+                day = self._now().strftime("%Y-%m-%d")
+                counts = self._delta["prefixes"].setdefault(day, {})
+                counts[_prefix(key)] = counts.get(_prefix(key), 0) + 1
             return ""
 
     def record(self, cls: str, *, key: str | None = None, size: int | None = None, removed: bool = False, count: bool = True) -> None:
@@ -182,7 +199,10 @@ class Meter:
         level = "stop" if any(r["level"] == "stop" for r in rows.values()) else "warn" if any(r["level"] == "warn" for r in rows.values()) else "ok"
         if level != "stop" and (self.check(CLASS_A) or self.check(CLASS_B)):          # a daily cap can stop writes before the month does
             level = "stop"
-        return {"month": u["month"], "level": level, "objects": len(u["objects"]), "usage": rows, "last_refusal": self.last_refusal,
+        by_prefix = u["prefixes"].get(now.strftime("%Y-%m-%d"), {})
+        top = dict(sorted(by_prefix.items(), key=lambda kv: -kv[1])[:12])
+        return {"month": u["month"], "level": level, "objects": len(u["objects"]), "usage": rows, "class_a_today_by_prefix": top,
+                "last_refusal": self.last_refusal,
                 "note": "counts this server's calls only; the site's public reads are Class B too - see the Cloudflare dashboard"}
 
 
