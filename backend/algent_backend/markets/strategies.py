@@ -56,10 +56,16 @@ class Strategy:
         return [(h, self.run_minute) for h in self.run_hours]
 
 
+def _lim() -> dict:
+    """The independent strategies' loop limits, read from flags when the roster is built (not when this module is imported)."""
+    return {"max_turns": flags.STRAT_MAX_TURNS, "max_tool_calls": flags.STRAT_MAX_TOOL_CALLS, "calls_per_turn": flags.STRAT_MAX_CALLS_PER_TURN,
+            "max_orders": flags.STRAT_MAX_ORDERS_PER_RUN, "call_cap_usd": flags.STRAT_CALL_CAP_USD, "effort": flags.STRAT_EFFORT}
+
+
 def _new(id: str, name: str, method: str, style: str, hours: tuple[int, ...], minute: int, *, must: int = 0) -> Strategy:
     return Strategy(id=id, name=name, method=method, style=style, horizon_h=flags.STRAT_HORIZON_H, run_hours=hours, run_minute=minute,
                     max_usd_day=flags.STRAT_MAX_USD_PER_DAY, max_usd_run=flags.STRAT_MAX_USD_PER_RUN, must_trade=bool(must), min_orders=must,
-                    enabled=flags.STRAT_ENABLED and flags.TRADE_ENABLED, prompt_version=f"{id}-v1")
+                    enabled=flags.STRAT_ENABLED and flags.TRADE_ENABLED, prompt_version=f"{id}-v1", **_lim())
 
 
 def roster() -> list[Strategy]:
@@ -72,10 +78,10 @@ def roster() -> list[Strategy]:
                  exposure_frac=flags.DAY_MAX_EXPOSURE_FRAC, bankroll=flags.DAY_BANKROLL, prompt_version="day-v1"),
         Strategy(id="daily", name="Daily trader", method="p0b", style="Patient: once a day, any market up to 30 days out", horizon_h=flags.DAILY_STRAT_HORIZON_H, run_hours=(daily_h,),
                  run_minute=daily_m, max_usd_day=flags.DAILY_STRAT_MAX_USD_PER_DAY, max_usd_run=flags.STRAT_MAX_USD_PER_RUN, equity="trader", min_hours_left=flags.DAY_MIN_HOURS_LEFT,
-                 enabled=flags.TRADE_ENABLED, prompt_version="daily-v2"),
+                 enabled=flags.TRADE_ENABLED, prompt_version="daily-v2", **_lim()),
         Strategy(id="fast", name="Fast trader", method="p0b", style="Short horizon: markets settling within a week, every 4 hours", horizon_h=flags.FAST_HORIZON_DAYS * 24,
                  run_hours=tuple(range(0, 24, flags.FAST_EVERY_H)), run_minute=20, max_usd_day=flags.FAST_STRAT_MAX_USD_PER_DAY, max_usd_run=flags.FAST_STRAT_MAX_USD_PER_RUN,
-                 min_hours_left=flags.FAST_MIN_HOURS_LEFT, enabled=flags.FAST_ENABLED and flags.TRADE_ENABLED, prompt_version="fast-v2"),
+                 min_hours_left=flags.FAST_MIN_HOURS_LEFT, enabled=flags.FAST_ENABLED and flags.TRADE_ENABLED, prompt_version="fast-v2", **_lim()),
         _new("base-rate", "Base-rate bot", "p0b+prior", "Starts from the base rate; trades only on edge the evidence earns", (9, 13, 17, 21), 5),
         _new("delineation", "Delineation bot", "b", "Maps the possible outcomes first, trades the ones the price mis-states", (10, 14, 18, 22), 5),
         _new("delineation-base-rate", "Delineation + base-rate bot", "b+prior", "Base rate first, then the possible outcomes", (11, 15, 19, 23), 5),
