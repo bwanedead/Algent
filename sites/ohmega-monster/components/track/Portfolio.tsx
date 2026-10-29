@@ -194,27 +194,61 @@ function Trades({ rows }: { rows: TradeRow[] }) {
   );
 }
 
+type Held = { side: string; question: string; stake: number; pnl: number };
+const clip = (q: string, n = 60) => (q.length > n ? `${q.slice(0, n - 1).trimEnd()}…` : q);
+
+/** What a bot holds, at a glance: count and money at risk, then its three biggest stakes. */
+function Holding({ held, note }: { held: Held[]; note?: string }) {
+  if (held.length === 0) return <span className="tr-muted">{note ?? "nothing held"}</span>;
+  const top = [...held].sort((a, b) => b.stake - a.stake);
+  return (
+    <span className="tr-hold">
+      <span className="tr-hold-sum">{note ?? `${held.length} open · ${money(held.reduce((a, h) => a + h.stake, 0))} at risk`}</span>
+      {top.slice(0, 3).map((h, i) => (
+        <span key={i} className="tr-hold-l" title={h.question}>
+          <b>{h.side.toUpperCase()}</b>
+          <span className="tr-hold-q">{clip(h.question)}</span>
+          <span className="n">{money(h.stake)}</span>
+          <span className={`n ${tone(h.pnl)}`}>{usd(h.pnl)}</span>
+        </span>
+      ))}
+      {top.length > 3 && <span className="tr-muted">+{top.length - 3} more</span>}
+    </span>
+  );
+}
+
+function Runs({ last, next }: { last: string; next: string }) {
+  if (next === "retired") return <span className="tr-muted">retired</span>;
+  return (
+    <span className="tr-runs">
+      <span>last {stamp(last)}</span>
+      <span className="tr-muted">{next ? `next ${stamp(next)}` : "next n/a"}</span>
+    </span>
+  );
+}
+
 function BookRow({ row, min, children }: { row: Row; min: number; children?: ReactNode }) {
   const s = row.t.summary;
   const bank = row.t.limits.bankroll;
   return (
     <details className={`tr-book tr-b-${row.cls}`}>
       <summary className="tr-row">
-        <Cell label="Bot" className="tr-name"><i className={`tr-sw tr-bg-${row.cls}`} aria-hidden="true" /> <b>{row.name}</b>{row.mustTrade ? <span className="tr-tag" title={`Fills at least ${row.mustTrade} order(s) every run, for faster feedback`}>must trade</span> : null}</Cell>
-        <Cell label="Method">{row.method}</Cell>
-        <Cell label="Style" className="tr-why">{row.style}</Cell>
-        <Cell label="Value" className="n">{money(s.equity)}</Cell>
-        <Cell label="P&L" className={`n ${tone(s.pnl)}`}>{usd(s.pnl)} ({s.pnl >= 0 ? "+" : ""}{((s.pnl / bank) * 100).toFixed(1)}%)</Cell>
-        <Cell label="Forecasts" className="n">{row.s ? forecastLine(row.s.forecasts) : "n/a"}</Cell>
-        <Cell label="Exposure" className="n">{row.s?.exposure ? `${pct0(row.s.exposure.pct)} (floor ${pct0(row.s.exposure.floor_pct)})` : "n/a"}</Cell>
-        <Cell label="Open" className="n">{s.open}</Cell>
-        <Cell label="Trades" className="n">{s.buys + s.sells}</Cell>
-        <Cell label="Last run" className="n">{stamp(row.lastRun)}</Cell>
-        <Cell label="Next run" className="n">{row.next ? stamp(row.next) : "n/a"}</Cell>
+        <Cell label="Bot" className="tr-name">
+          <i className={`tr-sw tr-bg-${row.cls}`} aria-hidden="true" /> <b>{row.name}</b>{row.mustTrade ? <span className="tr-tag" title={`Fills at least ${row.mustTrade} order(s) every run, for faster feedback`}>must trade</span> : null}
+          <span className="tr-sub">{row.method}</span>
+        </Cell>
+        <Cell label="Value" className="n">
+          {money(s.equity)}
+          <span className={`tr-sub ${tone(s.pnl)}`}>{usd(s.pnl)} ({s.pnl >= 0 ? "+" : ""}{((s.pnl / bank) * 100).toFixed(1)}%)</span>
+        </Cell>
+        <Cell label="Holding"><Holding held={row.t.open_positions.map((p) => ({ side: p.side, question: p.question, stake: p.cost, pnl: p.pnl }))} /></Cell>
+        <Cell label="Runs" className="n"><Runs last={row.lastRun} next={row.next} /></Cell>
       </summary>
       <div className="tr-detail">
         <p className="tr-note">
-          Win rate: <WinRate t={s} min={min} />. Cash {money(s.cash)}.
+          Style: {row.style}. Forecasts: {row.s ? forecastLine(row.s.forecasts) : "n/a"}.
+          {row.s?.exposure ? ` Exposure ${pct0(row.s.exposure.pct)} (floor ${pct0(row.s.exposure.floor_pct)}).` : ""} {s.buys + s.sells} trades.
+          {" "}Win rate: <WinRate t={s} min={min} />. Cash {money(s.cash)}.
         </p>
         {row.s ? (
           <>
@@ -262,9 +296,11 @@ export function Books({ t }: { t: TrackRecord }) {
   const rule = t.portfolio;
   const ruleValue = rule.bankroll + rule.total_pnl;
   return (
+    <>
+    <p className="tr-note">{rows.length} independent paper bots, {money(t.trader.limits.bankroll)} each. Each researches our corpus, forms its own probabilities and trades. Grouped by how it reasons; click a bot for its full positions and trades.</p>
     <div className="tr-books" role="group" aria-label="Bots">
       <div className="tr-row tr-rowhead" aria-hidden="true">
-        <span>Bot</span><span>Method</span><span>Style</span><span className="n">Value</span><span className="n">P&amp;L</span><span className="n">Forecasts</span><span className="n">Exposure</span><span className="n">Open</span><span className="n">Trades</span><span className="n">Last run</span><span className="n">Next run</span>
+        <span>Bot</span><span className="n">Value</span><span>Holding</span><span className="n">Runs</span>
       </div>
       {methods.map((m) => (
         <div key={m} role="group" aria-label={m}>
@@ -287,26 +323,29 @@ export function Books({ t }: { t: TrackRecord }) {
           })}
         </div>
       ))}
-      <div className="tr-group">Retired</div>
-      <details className="tr-book tr-b-rule">
-        <summary className="tr-row">
-          <Cell label="Bot" className="tr-name"><i className="tr-sw tr-bg-rule" aria-hidden="true" /> <b>Fixed rule</b></Cell>
-          <Cell label="Method">Edge rule on the desk forecast</Cell>
-          <Cell label="Style" className="tr-why">retired: it needed a shared forecast, so it opens nothing now; history only</Cell>
-          <Cell label="Value" className="n">{money(ruleValue)}</Cell>
-          <Cell label="P&L" className={`n ${tone(rule.total_pnl)}`}>{usd(rule.total_pnl)} ({rule.total_pnl >= 0 ? "+" : ""}{((rule.total_pnl / rule.bankroll) * 100).toFixed(1)}%)</Cell>
-          <Cell label="Forecasts" className="n">n/a</Cell>
-          <Cell label="Exposure" className="n">n/a</Cell>
-          <Cell label="Open" className="n">{rule.open}</Cell>
-          <Cell label="Trades" className="n">{rule.open + rule.settled}</Cell>
-          <Cell label="Last run" className="n">{stamp(t.as_of)}</Cell>
-          <Cell label="Next run" className="n">retired</Cell>
-        </summary>
-        <div className="tr-detail">
-          <h3 className="tr-h3">Open positions</h3>
-          <OpenPositions rows={t.open_positions} />
-        </div>
+      <details className="tr-fold">
+        <summary>Retired: fixed rule (history only)</summary>
+        <details className="tr-book tr-b-rule">
+          <summary className="tr-row">
+            <Cell label="Bot" className="tr-name">
+              <i className="tr-sw tr-bg-rule" aria-hidden="true" /> <b>Fixed rule</b>
+              <span className="tr-sub">Edge rule on the desk forecast</span>
+            </Cell>
+            <Cell label="Value" className="n">
+              {money(ruleValue)}
+              <span className={`tr-sub ${tone(rule.total_pnl)}`}>{usd(rule.total_pnl)} ({rule.total_pnl >= 0 ? "+" : ""}{((rule.total_pnl / rule.bankroll) * 100).toFixed(1)}%)</span>
+            </Cell>
+            <Cell label="Holding"><Holding held={t.open_positions.map((p) => ({ side: p.side, question: p.question, stake: p.stake, pnl: p.pnl }))} note={`${rule.open} open, history only`} /></Cell>
+            <Cell label="Runs" className="n"><Runs last="" next="retired" /></Cell>
+          </summary>
+          <div className="tr-detail">
+            <p className="tr-note">Retired: it needed a shared forecast, so it opens nothing now. {rule.open + rule.settled} trades in all.</p>
+            <h3 className="tr-h3">Open positions</h3>
+            <OpenPositions rows={t.open_positions} />
+          </div>
+        </details>
       </details>
     </div>
+    </>
   );
 }
