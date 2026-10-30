@@ -11,7 +11,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-from . import book, books, bot_forecasts, flags, gaps, store, strategies, trader_report
+from . import book, books, bot_forecasts, flags, gaps, resting, store, strategies, trader_report
 from .contracts import Decision
 
 ORDER_ROWS = 8
@@ -139,6 +139,7 @@ def section(day: str | None = None, strategy_id: str = "day") -> dict[str, Any]:
     out["avg_hold_h"] = stats(ds, st.series)["avg_hold_h"]
     out["runs"] = runs(ds, strategy=st.id)
     out["spend_today"] = books.agent_spend_today(st.id, now)
+    out["resting"] = resting.section(st.id)
     out["wishes"] = wishes_top(strategy=st.id)
     out["watchlist"] = [{"market_id": e.market_id, "question": e.question, "note": e.note, "since": e.at[:10]} for e in store.watchlist(st.id).values()][:LIST_ROWS]
     return out

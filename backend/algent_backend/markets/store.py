@@ -14,6 +14,7 @@ so the record cannot be quietly improved after the fact.
     day_runs.jsonl    one DayRun per run of the day book: the full tool trace, orders, cost (day.py; pruned by age)
     day_wishes.jsonl  what the day agent wished the corpus held (product feedback); day_watchlist.jsonl its persisted watchlist (events)
     bot_forecasts.jsonl  every strategy's own probabilities, traded or not (bot_forecasts.py; append-only, never pruned: the scored feedback record)
+    resting_orders.jsonl  every line of every resting limit order (resting.py): placed open, then each transition (filled / expired / cancelled) as a new line; the last line per id is its state
     status.json       the last pass: when, what it found, what failed
 """
 
@@ -28,7 +29,7 @@ from typing import TypeVar
 from pydantic import BaseModel
 
 from . import flags
-from .contracts import BotForecast, DayRun, Decision, EquityPoint, Forecast, ForecastFailure, Gap, GapFill, Market, Snapshot, Trace, Trade, WatchEvent, Wish
+from .contracts import BotForecast, DayRun, Decision, EquityPoint, Forecast, ForecastFailure, Gap, GapFill, Market, RestingOrder, Snapshot, Trace, Trade, WatchEvent, Wish
 
 _ENV = "ALGENT_MARKETS_STORE"
 M = TypeVar("M", bound=BaseModel)
@@ -254,6 +255,16 @@ def watchlist(strategy: str = "day") -> dict[str, WatchEvent]:
             continue
         last[e.market_id] = e
     return {k: e for k, e in last.items() if e.action == "add"}
+
+
+def resting_events(book: str | None = None) -> list[RestingOrder]:
+    """Every line of the resting-order record, oldest first (the audit trail); ``resting.orders`` projects the state of each order."""
+    rows = _read("resting_orders.jsonl", RestingOrder)
+    return rows if book is None else [r for r in rows if r.book == book]
+
+
+def append_resting(rows: list[RestingOrder]) -> None:
+    _append("resting_orders.jsonl", rows)
 
 
 def gaps() -> list[Gap]:

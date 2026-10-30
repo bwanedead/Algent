@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import type { CurvePoint, ForecastStats, Strategy, TrackRecord, Trader, TraderPosition, TradeRow } from "@/lib/track-record";
+import type { CurvePoint, ForecastStats, RestingFill, RestingOrder, Strategy, TrackRecord, Trader, TraderPosition, TradeRow } from "@/lib/track-record";
 
 import { DayRuns, Wishes } from "./DayBook";
 import { OpenPositions } from "./TrackTables";
@@ -210,12 +210,47 @@ function Trades({ rows }: { rows: TradeRow[] }) {
   );
 }
 
+/** Resting limit orders: what each waits for (the limit is the all-in price per share on its side), its size, and when it gives up. Filled ones are listed beneath. */
+function Resting({ open, fills }: { open: RestingOrder[]; fills: RestingFill[] }) {
+  if (open.length === 0 && fills.length === 0) return <p className="tr-empty">No resting orders.</p>;
+  return (
+    <>
+      {open.length > 0 && (
+        <table className="tr-table tr-stack" aria-label="Resting orders">
+          <thead><tr><th>Order</th><th>Market</th><th className="n">Limit</th><th className="n">Now</th><th className="n">Size</th><th>Expires</th></tr></thead>
+          <tbody>
+            {open.map((o) => (
+              <tr key={o.id}>
+                <td data-label="Order"><b className="tr-verb">{o.action === "sell" ? "Sell" : "Buy"}</b> {o.side && <Side side={o.side} />}</td>
+                <td className="q" data-label="Market">
+                  {o.url ? <a href={o.url} rel="noopener noreferrer" className="xt" title={o.reason}>{o.question}</a> : o.question}
+                  {o.reason && <details className="tr-why-d"><summary>why</summary>{o.reason}</details>}
+                </td>
+                <td className="n" data-label={o.action === "sell" ? "Sells at or above" : "Buys at or below"}>{cents(o.limit)}</td>
+                <td className="n" data-label="Now">{cents(o.now)}</td>
+                <td className="n" data-label="Size">{o.action === "sell" ? `${Math.round(o.fraction * 100)}% of position` : money(o.usd)}</td>
+                <td data-label="Expires">{stamp(o.expires_at)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+      {fills.length > 0 && (
+        <p className="tr-note">
+          Recent fills from resting orders: {fills.map((f) => `${f.action === "sell" ? "sold" : "bought"} ${f.side.toUpperCase()} ${money(f.stake)} at ${cents(f.price)} (${stamp(f.at)}) - ${clip(f.question, 40)}`).join("; ")}.
+        </p>
+      )}
+    </>
+  );
+}
+
 type Held = { side: string; question: string; stake: number; pnl: number };
 const clip = (q: string, n = 60) => (q.length > n ? `${q.slice(0, n - 1).trimEnd()}…` : q);
 
 /** What a bot holds, at a glance: count and money at risk, then its three biggest stakes. */
-function Holding({ held, note }: { held: Held[]; note?: string }) {
-  if (held.length === 0) return <span className="tr-muted">{note ?? "nothing held"}</span>;
+function Holding({ held, note, resting = 0 }: { held: Held[]; note?: string; resting?: number }) {
+  const rest = resting > 0 ? <span className="tr-muted">+{resting} resting</span> : null;
+  if (held.length === 0) return <span className="tr-hold"><span className="tr-muted">{note ?? "nothing held"}</span>{rest}</span>;
   const top = [...held].sort((a, b) => b.stake - a.stake);
   return (
     <span className="tr-hold">
@@ -229,6 +264,7 @@ function Holding({ held, note }: { held: Held[]; note?: string }) {
         </span>
       ))}
       {top.length > 3 && <span className="tr-muted">+{top.length - 3} more</span>}
+      {rest}
     </span>
   );
 }
@@ -258,7 +294,7 @@ function BookRow({ row, min, children }: { row: Row; min: number; children?: Rea
           {money(s.equity)}
           <span className={`tr-sub ${tone(s.pnl)}`}>{usd(s.pnl)} ({s.pnl >= 0 ? "+" : ""}{((s.pnl / bank) * 100).toFixed(1)}%)</span>
         </Cell>
-        <Cell label="Holding"><Holding held={row.t.open_positions.map((p) => ({ side: p.side, question: p.question, stake: p.cost, pnl: p.pnl }))} /></Cell>
+        <Cell label="Holding"><Holding held={row.t.open_positions.map((p) => ({ side: p.side, question: p.question, stake: p.cost, pnl: p.pnl }))} resting={row.s?.resting.open.length ?? 0} /></Cell>
         <Cell label="Runs" className="n"><Runs last={row.lastRun} next={row.next} /></Cell>
       </summary>
       <div className="tr-detail">
@@ -279,6 +315,9 @@ function BookRow({ row, min, children }: { row: Row; min: number; children?: Rea
           </>
         ) : null}
         <Sec title={`Open positions (${row.t.open_positions.length})`}><Positions rows={row.t.open_positions} /></Sec>
+        {row.s?.resting && (row.s.resting.open.length > 0 || row.s.resting.fills.length > 0) ? (
+          <Sec title={`Resting orders (${row.s.resting.open.length})`}><Resting open={row.s.resting.open} fills={row.s.resting.fills} /></Sec>
+        ) : null}
         <Sec title="Trades, newest first"><Trades rows={row.t.log} /></Sec>
         {children}
       </div>

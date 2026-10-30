@@ -2,6 +2,7 @@
 ``newsroom markets`` — the Polymarket paper-trading benchmark. PAPER ONLY: no wallet, no key, no order is ever placed.
 
     newsroom markets refresh [--no-publish]     mirror (discover, snapshot, resolutions), then the paper pass (the retired rule book: settle and mark only) and publish (free)
+    newsroom markets resting                    the FREE resting-order pass (hourly): refresh the quotes of markets with open limit orders, then fill / expire / cancel them
     newsroom markets paper                      the paper pass alone: settle resolved positions, open per the edge rule, mark to market
     newsroom markets score [--full]             the scoreboard: us vs the market, calibration, paper P&L (--full: the whole document)
     newsroom markets list [--theater ID] [--status S] [--limit N]   the mirrored markets with their latest price
@@ -29,6 +30,7 @@ def add_parser(sub: Any) -> None:
     r = verbs.add_parser("refresh", help="mirror pass + paper pass + publish (free)")
     r.add_argument("--no-publish", action="store_true")
     r.set_defaults(handler=run_refresh)
+    verbs.add_parser("resting", help="fill / expire resting limit orders against fresh prices (free, no model call; publishes only if something changed)").set_defaults(handler=run_resting)
     verbs.add_parser("publish", help="push the track record to the site database").set_defaults(handler=run_publish)
     verbs.add_parser("paper", help="the paper portfolio pass").set_defaults(handler=run_paper)
     sc = verbs.add_parser("score", help="the scoreboard")
@@ -72,9 +74,10 @@ def _emit(doc: Any) -> int:
 
 
 def run_refresh(args: Any) -> int:
-    from algent_backend.markets import book, mirror, paper, publish, store, trader
+    from algent_backend.markets import book, mirror, paper, publish, resting, store, trader
 
     report = mirror.refresh()
+    report["resting"] = resting.run_pass()                   # free: fills / expires resting limit orders against fresh quotes (before settlement)
     report["traces_pruned"] = store.prune_traces()
     report["paper"] = paper.run()                            # the retired rule book: settles and marks what it still holds, opens nothing
     from algent_backend.markets import strategies
@@ -82,6 +85,15 @@ def run_refresh(args: Any) -> int:
     report["settled"] = {st.id: trader.settle(book_name=st.id) for st in strategies.roster()}   # free: every strategy's resolved positions pay out, then the mark below
     report["marked"] = len(book.mark())
     if not args.no_publish:
+        report["publish"] = publish.publish()
+    return _emit(report)
+
+
+def run_resting(_args: Any) -> int:
+    from algent_backend.markets import publish, resting
+
+    report = resting.run_pass()
+    if report["filled"] or report["expired"] or report["cancelled"]:
         report["publish"] = publish.publish()
     return _emit(report)
 

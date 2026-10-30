@@ -15,7 +15,7 @@ from .strategies import Strategy
 
 PROMPT_VERSION = "day-v1"
 
-TOOLS = ("search_markets", "market", "portfolio", "entity", "about", "search", "timeline", "related", "series", "request_research", "performance", "size", "watchlist", "buy", "sell")
+TOOLS = ("search_markets", "market", "portfolio", "entity", "about", "search", "timeline", "related", "series", "request_research", "performance", "size", "watchlist", "buy", "sell", "place_resting", "cancel_resting")
 
 ROLE = """\
 Your goal is to compound your bankroll as reliably and effectively as you can: to be the highest-yielding
@@ -56,6 +56,13 @@ Tools. Each turn you name up to {per_turn} calls; they run in order and their re
   slippage. Set p_yes to your own probability of YES; it is recorded with the order. side is yes or no (to bet against an outcome, buy NO; you cannot hold both sides of one market). For a sell, market is the id of a
   position you hold; usd is dollars of current value to sell, or set all. cited lists the corpus ids (the bracketed ids in results) you leaned on.
   An order is answered at once: filled, trimmed or refused, with the reason.
+- place_resting(market, way, side, limit_price, usd or fraction/all, hours, p_yes, reason) and cancel_resting(order): a LIMIT order that waits between your runs.
+  Use it when your own probability gives edge only at a better price than today's: "I would buy YES at 40c or less; it is 47c." way is buy (side yes or no,
+  usd) or sell (a position you hold; fraction of it, or all). limit_price is the all-in price per share on your side (slippage included): a buy fills at that
+  price or lower, a sell at that or higher. hours is how long it may rest (required; never past the market's end, at most {rest_h:g} h). A free job
+  checks prices between your runs and fills it at the limit or better by itself, with no thinking; the limits above are checked again at the fill, and a
+  fill they block cancels the order. You may hold {rest_n} at once. Your open ones are in the portfolio (R1, R2 ...) for you to keep, change (cancel and
+  re-place) or cancel; if your view changes, cancel. Do not use it when the price is already acceptable (buy now).
 
 Limits that are enforced for you: about {pos:.0%} of the bankroll in any one market, {exp:.0%} in total, never more cash than you have, nothing
 under a ${ticket:.0f} ticket, at most {orders} orders a run, and a ceiling on tool calls, turns and spend per run. Asking for more simply gets
@@ -123,13 +130,13 @@ def role(strategy: Strategy | None = None) -> str:
     method (the lab mind's instructions, ``methods.py``) and, if it must trade, the obligation to."""
     s = strategy or strategies.get("day")
     text = ROLE.format(horizon=f"{s.horizon_h:g}", window=f"{s.horizon_h:g}", span=_span(s.horizon_h), per_turn=s.calls_per_turn, pos=s.position_frac, exp=s.exposure_frac,
-                       ticket=flags.TRADE_MIN_TICKET, orders=s.max_orders)
+                       ticket=flags.TRADE_MIN_TICKET, orders=s.max_orders, rest_h=flags.RESTING_MAX_HOURS, rest_n=flags.RESTING_MAX_OPEN)
     text += FEEDBACK.format(n=s.forecasts_per_run, floor=s.floor_pct) if s.forecasts_per_run or s.floor_pct else ""
     return text + methods.section(s.method) + (MUST_TRADE.format(n=s.min_orders, s="" if s.min_orders == 1 else "s") if s.must_trade else "") + (DAY_MINIMUM.format(n=s.min_fills_day, s="" if s.min_fills_day == 1 else "s") if s.min_fills_day else "")
 
 
 class Call(BaseModel):
-    tool: Literal["search_markets", "market", "portfolio", "entity", "about", "search", "timeline", "related", "series", "request_research", "performance", "size", "watchlist", "buy", "sell"]
+    tool: Literal["search_markets", "market", "portfolio", "entity", "about", "search", "timeline", "related", "series", "request_research", "performance", "size", "watchlist", "buy", "sell", "place_resting", "cancel_resting"]
     query: str = Field(default="", description="search_markets / corpus tools: the words or entity name; request_research: the one specific thing to research.")
     market: str = Field(default="", description="market / buy / sell: the market id.")
     side: Literal["yes", "no", ""] = Field(default="", description="buy: which side to buy.")
@@ -143,6 +150,11 @@ class Call(BaseModel):
     cited: list[str] = Field(default_factory=list, description="buy / sell: corpus ids from results that you relied on.")
     since: str = Field(default="", description="Corpus tools: ISO date to start from, or empty.")
     kinds: list[str] = Field(default_factory=list, description="Corpus tools: optional narrowing (document kinds, or claim / event / document).")
+    way: Literal["buy", "sell", ""] = Field(default="", description="place_resting: buy (needs side) or sell (a position you hold).")
+    limit_price: float = Field(default=0.0, description="place_resting: the all-in price per share on your side, between 0.01 and 0.99 (a buy fills at or below it, a sell at or above it).")
+    hours: float = Field(default=0.0, description="place_resting: how long the order may rest, in hours (required).")
+    fraction: float = Field(default=0.0, description="place_resting sell: the share of the position to sell, 0 to 1 (or set all).")
+    order: str = Field(default="", description="cancel_resting: the order id or its R-label from the portfolio.")
     ends_within_h: float = Field(default=0.0, description="search_markets: hours; 0 means the whole horizon.")
     min_liquidity: float = Field(default=0.0, description="search_markets: minimum liquidity in dollars; 0 means the house floor.")
     limit: int = Field(default=0, description="search_markets: rows; 0 means the default.")

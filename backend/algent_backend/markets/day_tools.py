@@ -15,7 +15,7 @@ from typing import Any
 
 from algent_backend.retrieval.docs import clip
 
-from . import book, browse, day_report, flags, gaps, guards, research, store, strategies
+from . import book, browse, day_report, flags, gaps, guards, research, resting, store, strategies
 from .contracts import BotForecast, Decision, Snapshot, ToolEvent, WatchEvent, bot_forecast_id, day_run_id, decision_id
 from .day_prompt import Call, ForecastOut
 from .polymarket import Fetch, num
@@ -168,7 +168,26 @@ class Session:
                          f"realised on earlier sells {_money(sum(d.realised for d in self.ds if d.market_id == mid))}, {h.cost / self.s.bankroll:.1%} of bankroll | {left}{fresh[mid]}")
         if not held:
             lines.append("no open positions")
+        lines += self.resting_lines(prices)
         return "\n".join(lines), ""
+
+    def _resting_labels(self) -> dict[str, str]:
+        return {f"R{i}": o.id for i, o in enumerate(resting.open_orders(self.sid), 1)}
+
+    def resting_lines(self, prices: dict[str, list[Snapshot]]) -> list[str]:
+        """The book's open resting orders, for the portfolio: label, id, what it waits for, the price now, and when it expires."""
+        ms, out = store.markets(), []
+        held_now = book.holdings(self.ds)
+        for i, o in enumerate(resting.open_orders(self.sid), 1):
+            m, p, held = ms.get(o.market_id), book.last_price(prices.get(o.market_id, [])), held_now.get(o.market_id)
+            side = o.action.removeprefix("buy_") if o.action != "sell" else (held.side if held else "")
+            price = "?" if p is None or not side else f"{book.side_price(p, side):.3f}"
+            size = f"${o.usd:,.0f}" if o.action != "sell" else f"{o.fraction:.0%} of the position"
+            end = store.parse_iso(o.expires_at)
+            left = f"{(end - self.now).total_seconds() / 3600:.1f} h" if end else "?"
+            out.append(f"R{i} [{o.id}] {o.action.replace('_', ' ').upper()} {m.question if m else o.market_id} [{o.market_id}] | limit {o.limit_price:.3f} all-in, price now {price} "
+                       f"(before slippage) | {size} | expires in {left} | your p(YES) {o.p_yes:.2f}")
+        return ["RESTING ORDERS (they fill by themselves between your runs when the price reaches the limit; cancel_resting to withdraw):", *out] if out else []
 
     def t_performance(self, _c: Call) -> tuple[str, str]:
         st = day_report.stats(self.ds, self.s.series)
@@ -318,6 +337,33 @@ class Session:
         if d.action == "sell":
             return f"FILLED sell {d.side.upper()} {d.shares:.1f} shares at {d.price:.3f} for {_money(d.cash_flow)}, realised {_money(d.realised)}; {left}.{trimmed}"
         return f"NOT FILLED.{trimmed or ' nothing to do.'} {left}."
+
+    def t_place_resting(self, c: Call) -> tuple[str, str]:
+        mid = c.market.strip()
+        mid = self._labels().get(mid.upper()) or mid
+        v = browse.load(mid, get=self.get) if mid else None
+        if v is None or v.yes is None:
+            return f"NOT PLACED: no live price for {mid!r}", ""
+        why = (browse.tradable_why(v, self.now, horizon_h=self.s.horizon_h, min_hours=self.s.min_hours_left) if c.way == "buy"
+               else "the market is closed to trading" if v.raw.get("closed") or v.raw.get("active") is False else "")
+        if why:
+            return f"NOT PLACED: {why}", ""
+        o, msg = resting.place(self.s, self.ds, now=self.now, market_id=mid, end=store.parse_iso(v.market.end_date), yes=v.yes, way=c.way, side=c.side, limit=c.limit_price, usd=c.usd,
+                               fraction=1.0 if c.all else c.fraction, p_yes=c.p_yes, hours=c.hours, reason=c.reason)
+        if o is None:
+            return f"NOT PLACED: {msg}", ""
+        self._see(v)
+        if mid not in self.forecast_log:
+            self._note_forecast(mid, c.p_yes, reason=c.reason)         # an order carries the agent's own probability: it is a forecast too
+        if mid not in store.markets():
+            store.save_markets([v.market.model_copy(update={"origin": "day"})])   # tracked by the mirror from now on, so the fill pass has prices
+        store.append_snapshots([self._snap(v)])
+        return msg, o.id
+
+    def t_cancel_resting(self, c: Call) -> tuple[str, str]:
+        ref = c.order.strip() or c.market.strip()
+        ref = self._resting_labels().get(ref.upper(), ref)
+        return resting.cancel(self.sid, ref, self.now, c.reason), ref
 
     def t_buy(self, c: Call) -> tuple[str, str]:
         return self._order("buy", c)
