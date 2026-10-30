@@ -84,6 +84,7 @@ export type ForecastRow = { market_id: string; question: string; at: string; p: 
 export type ForecastStats = { made: number; resolved: number; min_resolved: number; shown: boolean; brier: number | null; brier_market: number | null; skill_vs_market: number | null; recent: ForecastRow[] };
 export type Strategy = DayBookBase & {
   id: string; name: string; method: string; method_name: string; style: string; must_trade: boolean; min_orders: number; next_run: string;
+  bot: string; bot_name: string; desk: string; desk_name: string; desk_about: string; min_fills_day: number;   // bot = reasoning method stack, desk = cadence/horizon; one book per pair
   forecasts: ForecastStats; exposure: { pct: number; floor_pct: number } | null; floor: { opened: number; groups: DayGroup[] } | null;
 };
 export type FastBook = Trader & { horizon_days: number; every_hours: number; enabled: boolean };
@@ -261,7 +262,8 @@ function parseStrategies(raw: unknown, fallbackRule: Portfolio): Strategy[] {
     const ex = isObj(r.exposure) ? r.exposure : null;
     const fl = isObj(r.floor) ? r.floor : null;
     return d ? [{
-      ...d, id: str(r.id), name: str(r.name), method: str(r.method), method_name: str(r.method_name), style: str(r.style), must_trade: r.must_trade === true, min_orders: n0(r.min_orders), next_run: str(r.next_run),
+      ...d, id: str(r.id), name: str(r.name), method: str(r.method), method_name: str(r.method_name), bot: str(r.bot) || str(r.method), bot_name: str(r.bot_name) || str(r.method_name), desk: str(r.desk), desk_name: str(r.desk_name),
+      desk_about: str(r.desk_about), min_fills_day: n0(r.min_fills_day), style: str(r.style), must_trade: r.must_trade === true, min_orders: n0(r.min_orders), next_run: str(r.next_run),
       forecasts: parseForecasts(r.forecasts), exposure: ex ? { pct: n0(ex.pct), floor_pct: n0(ex.floor_pct) } : null, floor: fl ? { opened: n0(fl.opened), groups: list(fl.groups).map(dayGroup) } : null,
     }] : [];
   });

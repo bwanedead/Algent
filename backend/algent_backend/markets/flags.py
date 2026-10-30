@@ -225,6 +225,15 @@ DAILY_STRAT_HORIZON_H = 24 * 30
 DAILY_STRAT_MAX_USD_PER_DAY = 0.25
 FAST_STRAT_MAX_USD_PER_RUN = 0.07
 FAST_STRAT_MAX_USD_PER_DAY = 0.40
+#: The hourly desk (Baseline research): every hour, only markets ending within HOURLY_HORIZON_H hours (and not within HOURLY_MIN_HOURS_LEFT), with a per-DAY
+#: fill minimum: owed only on the day's last scheduled run, never faked (an unmet day is recorded unmet). Per-run cost is small; 24 runs a day share the day cap.
+HOURLY_ENABLED = True
+HOURLY_HORIZON_H = 12
+HOURLY_MIN_HOURS_LEFT = 1.0
+HOURLY_RUN_MINUTE = 25
+HOURLY_MIN_FILLS_DAY = 1
+HOURLY_STRAT_MAX_USD_PER_RUN = 0.05
+HOURLY_STRAT_MAX_USD_PER_DAY = 0.35
 #: A must-trade run that has not filled its minimum is sent back to trade at most this many times before it is recorded as unmet.
 MUST_TRADE_PUSHES = 2
 

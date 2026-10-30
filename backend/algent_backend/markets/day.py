@@ -56,8 +56,31 @@ def _fills(session: Session) -> int:
     return sum(d.action in ("buy_yes", "buy_no", "sell") for d in session.ds if d.id in mine)
 
 
+def _fills_today(session: Session) -> int:
+    """Fills on the book today (UTC), from every run, including this one."""
+    today = session.now.date().isoformat()
+    return sum(d.action in ("buy_yes", "buy_no", "sell") and d.day == today for d in session.ds)
+
+
+def _day_owes(st: strategies.Strategy, session: Session) -> int:
+    """The per-day minimum, owed only on the day's last scheduled run (earlier runs are free to pass)."""
+    if not st.min_fills_day or session.now.hour != st.last_hour:
+        return 0
+    return max(0, st.min_fills_day - _fills_today(session))
+
+
 def _owes(st: strategies.Strategy, session: Session) -> int:
-    return max(0, st.min_orders - _fills(session)) if st.must_trade else 0
+    return max(max(0, st.min_orders - _fills(session)) if st.must_trade else 0, _day_owes(st, session))
+
+
+def _pledge(st: strategies.Strategy, session: Session) -> str:
+    """The run's obligation outcome: "met" | "unmet: ..." | "" (a book with no obligation, or a day-minimum book on a run that owes nothing yet)."""
+    if st.must_trade:
+        return "met" if _owes(st, session) == 0 else f"unmet: {_fills(session)} of {st.min_orders}"
+    if st.min_fills_day and session.now.hour == st.last_hour:
+        n = _fills_today(session)
+        return "met" if n >= st.min_fills_day else f"unmet: {n} of {st.min_fills_day} fills today"
+    return ""
 
 
 def _forecasts_owed(session: Session) -> int:
@@ -87,7 +110,7 @@ def _task(now: datetime, entries: list[tuple[str, str]], turn: int, session: Ses
     if last or calls_left <= st.calls_per_turn:
         head += " THIS IS NEAR THE END OF YOUR BUDGET: place any orders you have decided on now and set done=true with your summary."
     if owes := _owes(st, session):
-        head += (f" YOU MUST STILL FILL {owes} MORE ORDER{'S' if owes > 1 else ''} THIS RUN" +
+        head += (f" YOU MUST STILL FILL {owes} MORE ORDER{'S' if owes > 1 else ''} {'TODAY, AND THIS IS THE LAST RUN OF THE DAY' if not st.must_trade else 'THIS RUN'}" +
                  (": do it this turn, at the smallest size if nothing has edge." if last or turn >= st.max_turns - 2 else "."))
     return head + _debts(session) + "\n\n" + _transcript(entries, flags.DAY_TRANSCRIPT_CHARS)
 
@@ -177,7 +200,7 @@ def run(*, strategy_id: str = "day", ask: Ask | None = None, now: datetime | Non
                       tool_calls=len(session.events), events=[pf, *session.events], considered=list(session.considered.values()), queries=session.queries,
                       orders=session.orders, summary=summary, usd=round(spent, 6), tokens=tokens, stopped=stopped, settled=settled + report["settled"],
                       equity=pt.equity, cash=pt.cash, strategy=st.id, forecasts=forecast_n, exposure_pct=round(session.exposure() / st.bankroll, 4),
-                      must_trade=("" if not st.must_trade else "met" if _owes(st, session) == 0 else f"unmet: {_fills(session)} of {st.min_orders}"))
+                      must_trade=_pledge(st, session))
     store.append_day_run(run_line)
     seen_topics: set[str] = set()
     wishes = []
