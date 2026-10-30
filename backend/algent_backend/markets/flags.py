@@ -250,8 +250,10 @@ FORECAST_MIN_RESOLVED = 10
 #: Minimum activity: the share of the bankroll that should be at risk after each run. Below it the agent is told and must add positions on its best-edge
 #: markets; with no edge it takes small positions sized by its own probability vs the price (fractional Kelly, min ticket, same guards). The floor is
 #: clamped to FLOOR_CAP_SHARE of the strategy's exposure cap (guards stay: 50% total), so a 60% target means 45% in practice.
-MIN_EXPOSURE_PCT = 0.30
-MUST_TRADE_MIN_EXPOSURE_PCT = 0.60
+#: OFF since 10-30: the floor made bots park the bankroll in the same near-certain bets (no edge, no signal). Resting orders, the per-run must-trade
+#: minimum and the hourly desk's daily fill minimum keep bots active instead. Set above 0 to turn it back on.
+MIN_EXPOSURE_PCT = 0.0
+MUST_TRADE_MIN_EXPOSURE_PCT = 0.0
 FLOOR_CAP_SHARE = 0.9
 FLOOR_PUSHES = 2
 #: A buy made while the book is under its floor is tagged ``floor`` when the agent says it is only filling the floor OR its own edge on that side is

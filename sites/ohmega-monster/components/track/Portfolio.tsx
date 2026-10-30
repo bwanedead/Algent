@@ -279,6 +279,42 @@ function Runs({ last, next }: { last: string; next: string }) {
   );
 }
 
+/** One bot's own value line (its colour), from its marked days plus the live equity as "now"; a dotted line marks the starting bankroll. */
+function BotChart({ row }: { row: Row }) {
+  const start = row.t.limits.bankroll;
+  const pts: { d: string; v: number }[] = row.t.curve.flatMap((c) => (c.trader === null ? [] : [{ d: c.day, v: c.trader }]));
+  if (pts.length === 0) return <p className="tr-empty">Not marked yet.</p>;
+  const eq = row.t.summary.equity;
+  if (pts[pts.length - 1].v !== eq) pts.push({ d: "now", v: eq });
+  const w = 640, h = 150, l = 50, r = 90, tp = 10, bt = 22;
+  const vals = [start, ...pts.map((p) => p.v)];
+  const pad = Math.max(40, (Math.max(...vals) - Math.min(...vals)) * 0.2);
+  const y0 = Math.min(...vals) - pad;
+  const y1 = Math.max(...vals) + pad;
+  const px = (i: number) => (pts.length === 1 ? (l + w - r) / 2 : l + (i / (pts.length - 1)) * (w - l - r));
+  const py = (v: number) => tp + (1 - (v - y0) / (y1 - y0)) * (h - tp - bt);
+  const last = pts[pts.length - 1];
+  const ticks = [y0 + pad, y1 - pad].map((v) => Math.round(v / 10) * 10);
+  return (
+    <svg viewBox={`0 0 ${w} ${h}`} role="img" className="tr-svg tr-botchart">
+      <title>{`${row.desk}: portfolio value over time, now ${money(eq)}, started at ${money(start)}`}</title>
+      {ticks.map((v) => (
+        <g key={v}>
+          <line x1={l} x2={w - r} y1={py(v)} y2={py(v)} className="tr-grid" />
+          <text x={l - 6} y={py(v) + 3} textAnchor="end" className="tr-tick">{money(v)}</text>
+        </g>
+      ))}
+      <line x1={l} x2={w - r} y1={py(start)} y2={py(start)} className="tr-eq-flat" />
+      <text x={l + 4} y={py(start) - 4} className="tr-tick">Start {money(start)}</text>
+      <path d={pts.map((p, i) => `${i ? "L" : "M"}${px(i).toFixed(1)} ${py(p.v).toFixed(1)}`).join(" ")} className="tr-botline" fill="none" />
+      {pts.length === 1 && <circle cx={px(0)} cy={py(pts[0].v)} r={3} className="tr-botdot" />}
+      <text x={w - r + 6} y={py(last.v) + 3} className="tr-end tr-botend">{money(last.v)}</text>
+      <text x={l} y={h - 6} className="tr-tick">{pts[0].d}</text>
+      {pts.length > 1 && <text x={w - r} y={h - 6} textAnchor="end" className="tr-tick">{last.d}</text>}
+    </svg>
+  );
+}
+
 function BookRow({ row, min, children }: { row: Row; min: number; children?: ReactNode }) {
   const s = row.t.summary;
   const bank = row.t.limits.bankroll;
@@ -298,6 +334,7 @@ function BookRow({ row, min, children }: { row: Row; min: number; children?: Rea
         <Cell label="Runs" className="n"><Runs last={row.lastRun} next={row.next} /></Cell>
       </summary>
       <div className="tr-detail">
+        <Sec title="Value over time"><BotChart row={row} /></Sec>
         <p className="tr-note">
           Style: {row.style}. Forecasts: {row.s ? forecastLine(row.s.forecasts) : "n/a"}.
           {row.s?.exposure ? ` Exposure ${pct0(row.s.exposure.pct)} (floor ${pct0(row.s.exposure.floor_pct)}).` : ""} {s.buys + s.sells} trades.
@@ -321,6 +358,7 @@ function BookRow({ row, min, children }: { row: Row; min: number; children?: Rea
         <Sec title="Trades, newest first"><Trades rows={row.t.log} /></Sec>
         {children}
       </div>
+      <div className="tr-end-band" aria-hidden="true">end of {row.desk} · {row.botName}</div>
     </details>
   );
 }
@@ -402,6 +440,7 @@ export function Books({ t }: { t: TrackRecord }) {
             <p className="tr-note">Retired: it needed a shared forecast, so it opens nothing now. {rule.open + rule.settled} trades in all.</p>
             <Sec title="Open positions"><OpenPositions rows={t.open_positions} /></Sec>
           </div>
+          <div className="tr-end-band" aria-hidden="true">end of Fixed rule · retired</div>
         </details>
       </details>
     </div>
