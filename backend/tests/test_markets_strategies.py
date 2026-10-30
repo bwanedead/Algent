@@ -31,7 +31,7 @@ def test_the_roster_is_valid_and_names_lab_minds():
 
     rows = strategies.roster()
     assert strategies.validate(rows) == []
-    assert strategies.ids() == ["day", "daily", "fast", *INDEPENDENT]
+    assert strategies.ids() == ["day", "daily", "fast", "hourly", *INDEPENDENT]
     assert all(s.method in qset.NAMED for s in rows)                         # the lab's ids stay the source of truth
     assert {s.method for s in rows} == set(methods.NAMES) == {"p0b", "p0b+prior", "b", "b+prior"}
     must = {s.id: s.min_orders for s in rows if s.must_trade}
@@ -106,6 +106,62 @@ def test_a_seven_day_strategy_sees_markets_the_day_book_cannot():
     assert "far" in far("base-rate") and "far" not in far("day")
 
 
+# ── bots and desks ───────────────────────────────────────────────────────────────────────────────
+def test_every_book_is_one_bot_on_one_desk():
+    rows = strategies.roster()
+    assert all(s.desk in strategies.DESKS and s.bot == s.method and s.bot_name == methods.NAMES[s.method] for s in rows)
+    assert {s.id: s.desk for s in rows} == {"day": "day", "daily": "daily", "fast": "fast", "hourly": "hourly", **{i: "fast" for i in INDEPENDENT}}
+    assert strategies.get("hourly").desk_name == "Hourly · ≤12 h" and strategies.get("fast").desk_name == "Fast · ≤7 d" and strategies.get("daily").desk_name == "Daily · ≤30 d"
+    assert len({(s.bot, s.desk) for s in rows if not s.must_trade}) == len([s for s in rows if not s.must_trade])       # one plain book per (bot, desk)
+    sec = day_report.section(None, "hourly")
+    assert (sec["bot"], sec["bot_name"], sec["desk"], sec["desk_name"], sec["min_fills_day"]) == ("p0b", "Baseline research", "hourly", "Hourly · ≤12 h", 1)
+
+
+def test_the_hourly_desk_runs_every_hour_and_sees_only_the_next_twelve_hours():
+    from algent_backend.markets import browse
+
+    h = strategies.get("hourly")
+    assert h.run_hours == tuple(range(24)) and h.horizon_h == 12 and h.min_hours_left < h.horizon_h and h.method == "p0b" and not h.must_trade
+    seen = {v.market.id for v in browse.search("", now=NOW, get=fake_get(), horizon_h=h.horizon_h, min_hours=h.min_hours_left)}
+    assert "a1" not in seen and "far" not in seen                                         # a1 ends in 20 h, far in 100 h
+    assert "a1" in {v.market.id for v in browse.search("", now=NOW, get=fake_get(), horizon_h=48, min_hours=1)}
+
+
+# ── the per-day fill minimum (hourly) ────────────────────────────────────────────────────────────
+LAST = NOW.replace(hour=23, minute=25)                                                    # the hourly desk's last run of the UTC day; a1 is then 9 h out
+
+
+def test_the_day_minimum_is_not_owed_before_the_last_run():
+    rep = day.run(strategy_id="hourly", ask=Script([Turn(done=True, summary="nothing")]), now=NOW, get=fake_get(), corpus=None)
+    assert rep["must_trade"] == "" and rep["orders"] == 0 and rep["turns"] == 1
+
+
+def test_the_day_minimum_pushes_the_last_run_and_records_met():
+    s = Script([Turn(done=True, summary="no edge"), Turn(calls=[buy(usd=10, reason="No real edge; smallest position on my best guess.")]), Turn(done=True, summary="took it")], usd=0.01)
+    rep = day.run(strategy_id="hourly", ask=s, now=LAST, get=fake_get(), corpus=None)
+    assert rep["filled"] == 1 and rep["must_trade"] == "met" and "TODAY" in s.tasks[1]
+
+
+def test_the_day_minimum_is_met_by_an_earlier_fill_today():
+    day.run(strategy_id="hourly", ask=Script([Turn(calls=[buy(usd=10)]), Turn(done=True)], usd=0.01), now=NOW.replace(hour=22), get=fake_get(), corpus=None)
+    rep = day.run(strategy_id="hourly", ask=Script([Turn(done=True, summary="held")]), now=LAST, get=fake_get(), corpus=None)
+    assert rep["orders"] == 0 and rep["must_trade"] == "met" and rep["turns"] == 1
+
+
+def test_an_unmet_day_is_recorded_unmet_never_faked():
+    rep = day.run(strategy_id="hourly", ask=Script([Turn(done=True)] * 6, usd=0.005), now=LAST, get=fake_get(), corpus=None)
+    assert rep["orders"] == 0 and rep["must_trade"] == "unmet: 0 of 1 fills today" and store.decisions("hourly") == []
+    assert store.day_runs("hourly")[0].must_trade.startswith("unmet")
+
+
+def test_validation_catches_a_bad_desk_or_day_minimum():
+    from dataclasses import replace
+
+    good = strategies.get("hourly")
+    problems = " | ".join(strategies.validate([replace(good, desk="nope"), replace(good, id="y", min_fills_day=99)]))
+    assert "desk 'nope'" in problems and "min_fills_day" in problems
+
+
 # ── must trade ───────────────────────────────────────────────────────────────────────────────────
 def test_must_trade_sends_a_finished_run_back_to_trade_and_records_met():
     s = Script([Turn(done=True, summary="no edge"), Turn(calls=[buy(usd=10, reason="No real edge; smallest position on my best guess.")]), Turn(done=True, summary="took the smallest")])
@@ -150,7 +206,7 @@ def test_position_order_and_budget_caps_apply_per_strategy(monkeypatch):
 
 def test_the_roster_stays_inside_the_spend_target():
     rows = strategies.roster()
-    assert sum(s.max_usd_day for s in rows) <= 3.2 and all(s.max_usd_run <= 0.15 for s in rows)
+    assert sum(s.max_usd_day for s in rows) <= 3.5 and all(s.max_usd_run <= 0.15 for s in rows)
 
 
 # ── the schedule ─────────────────────────────────────────────────────────────────────────────────
@@ -163,8 +219,8 @@ def test_every_strategy_has_a_staggered_job_off_the_crunch():
         job = views.job(f"markets-{s.id}")[1]
         assert job.spend in ("capped", "paid") and daily_starts(job.when()) == [h * 60 + s.run_minute for h in s.run_hours] or s.id in ("daily", "fast")
         slots += [(s.id, m) for m in daily_starts(job.when())]
-        assert not any(5 * 60 <= m < 7 * 60 for _, m in slots if _ == s.id and s.id != "daily")
-    indep = [(i, m) for i, m in slots if i in INDEPENDENT or i == "day"]
+        assert not any(5 * 60 <= m < 7 * 60 for _, m in slots if _ == s.id and s.id not in ("daily", "hourly"))      # the hourly desk runs every hour by design
+    indep = [(i, m) for i, m in slots if i in INDEPENDENT or i in ("day", "hourly")]
     for i, (a, ma) in enumerate(indep):
         for b, mb in indep[i + 1:]:
             assert abs(ma - mb) >= 10, (a, b)

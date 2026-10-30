@@ -118,7 +118,8 @@ def section(day: str | None = None, strategy_id: str = "day") -> dict[str, Any]:
     today = day or store.now_iso()[:10]
     now = datetime.fromisoformat(today + "T12:00:00+00:00")
     nxt = strategies.next_run(st, datetime.now(now.tzinfo))
-    out.update({"id": st.id, "name": st.name, "method": st.method, "method_name": st.method_name, "style": st.style, "must_trade": st.must_trade, "min_orders": st.min_orders})
+    out.update({"id": st.id, "name": st.name, "method": st.method, "method_name": st.method_name, "bot": st.bot, "bot_name": st.bot_name,
+                "desk": st.desk, "desk_name": st.desk_name, "desk_about": strategies.DESKS[st.desk].about, "min_fills_day": st.min_fills_day, "style": st.style, "must_trade": st.must_trade, "min_orders": st.min_orders})
     out["limits"] = {"bankroll": st.bankroll, "max_position_frac": st.position_frac, "max_exposure_frac": st.exposure_frac,
                      "slippage": flags.SLIPPAGE, "min_ticket": flags.TRADE_MIN_TICKET, "max_usd_per_day": st.max_usd_day, "max_usd_per_run": st.max_usd_run}
     out["spend_usd"] = round(sum(r.usd for r in store.day_runs(st.id)), 4)

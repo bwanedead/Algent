@@ -97,6 +97,12 @@ your best guess (the minimum ticket) in the market where your probability differ
 Do not skip the research: the point is that the bet is still your honest view.
 """
 
+DAY_MINIMUM = """
+DAILY FILL MINIMUM. This book must FILL at least {n} order{s} (a buy or a sell that goes through) per UTC day. Most runs may pass; on the last run of the day, if nothing has
+filled yet today, you must place the best-edge order available (the minimum ticket if nothing has real edge) and say plainly in your reason that it had no real edge.
+A day that ends without a fill is recorded as unmet.
+"""
+
 FEEDBACK = """
 FORECASTS AND ACTIVITY. Two things are measured apart from your P&L.
 - Forecasts. Every run, record your own probability for at least {n} markets you examined, whether or not you trade them: list them in the turn's
@@ -119,7 +125,7 @@ def role(strategy: Strategy | None = None) -> str:
     text = ROLE.format(horizon=f"{s.horizon_h:g}", window=f"{s.horizon_h:g}", span=_span(s.horizon_h), per_turn=s.calls_per_turn, pos=s.position_frac, exp=s.exposure_frac,
                        ticket=flags.TRADE_MIN_TICKET, orders=s.max_orders)
     text += FEEDBACK.format(n=s.forecasts_per_run, floor=s.floor_pct) if s.forecasts_per_run or s.floor_pct else ""
-    return text + methods.section(s.method) + (MUST_TRADE.format(n=s.min_orders, s="" if s.min_orders == 1 else "s") if s.must_trade else "")
+    return text + methods.section(s.method) + (MUST_TRADE.format(n=s.min_orders, s="" if s.min_orders == 1 else "s") if s.must_trade else "") + (DAY_MINIMUM.format(n=s.min_fills_day, s="" if s.min_fills_day == 1 else "s") if s.min_fills_day else "")
 
 
 class Call(BaseModel):

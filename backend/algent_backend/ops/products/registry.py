@@ -76,13 +76,19 @@ def _strategy_calendar(sid: str) -> Callable[[], str]:
     return calendar
 
 
+def _gap_min(hours: tuple[int, ...]) -> float:
+    """The longest gap between a strategy's runs, in minutes (wrapping past midnight), at least an hour."""
+    hs = sorted(hours)
+    return float(max([(b - a) % 24 or 24 for a, b in zip(hs, hs[1:] + hs[:1])]) * 60)
+
+
 def _strategy_jobs() -> tuple[Job, ...]:
     """One capped job per independent roster strategy (day, daily and fast keep their own jobs below), all editorial priority."""
     from algent_backend.markets import strategies
 
-    return tuple(Job(f"markets-{st.id}", ("markets", "strategy", st.id), _strategy_calendar(st.id), every_min=360, spend="capped", priority=1, est_min=5, est_mb=400, max_wait_min=30,
+    return tuple(Job(f"markets-{st.id}", ("markets", "strategy", st.id), _strategy_calendar(st.id), every_min=_gap_min(st.run_hours), spend="capped", priority=1, est_min=5, est_mb=400, max_wait_min=30,
                      deadline_min=40, what=f"{st.name} ({st.method_name}): its own research and probabilities, paper bets {st.horizon_h / 24:g} days out, {len(st.run_hours)} runs a day"
-                     + (f"; must fill {st.min_orders} order(s) a run" if st.must_trade else ""))
+                     + (f"; must fill {st.min_orders} order(s) a run" if st.must_trade else "") + (f"; must fill {st.min_fills_day} order(s) a day" if st.min_fills_day else ""))
                  for st in strategies.roster() if st.id not in ("day", "daily", "fast"))
 
 
