@@ -82,10 +82,18 @@ export type Trader = {
 // activity floor, and how the floor-tagged positions did against chosen ones. A document from before these existed parses to zeros.
 export type ForecastRow = { market_id: string; question: string; at: string; p: number; market: number | null; confidence: string; outcome: string; reason: string };
 export type ForecastStats = { made: number; resolved: number; min_resolved: number; shown: boolean; brier: number | null; brier_market: number | null; skill_vs_market: number | null; recent: ForecastRow[] };
+// A paper limit order a bot left to wait between its runs (backend `markets/resting.py`). `limit` is the all-in price per share on its own side; a buy fills at or
+// below it, a sell at or above it. `usd` sizes a buy, `fraction` a sell. `now` is the latest price on its side (null when none is on file).
+export type RestingOrder = {
+  id: string; market_id: string; question: string; url: string; action: "buy_yes" | "buy_no" | "sell"; side: string; limit: number; usd: number; fraction: number; now: number | null;
+  p_yes: number; reason: string; placed_at: string; expires_at: string;
+};
+export type RestingFill = { id: string; order_id: string; market_id: string; question: string; action: string; side: string; price: number; stake: number; at: string };
+export type RestingSection = { open: RestingOrder[]; fills: RestingFill[] };
 export type Strategy = DayBookBase & {
   id: string; name: string; method: string; method_name: string; style: string; must_trade: boolean; min_orders: number; next_run: string;
   bot: string; bot_name: string; desk: string; desk_name: string; desk_about: string; min_fills_day: number;   // bot = reasoning method stack, desk = cadence/horizon; one book per pair
-  forecasts: ForecastStats; exposure: { pct: number; floor_pct: number } | null; floor: { opened: number; groups: DayGroup[] } | null;
+  forecasts: ForecastStats; exposure: { pct: number; floor_pct: number } | null; floor: { opened: number; groups: DayGroup[] } | null; resting: RestingSection;
 };
 export type FastBook = Trader & { horizon_days: number; every_hours: number; enabled: boolean };
 // The day book (backend `markets/day*.py`): an agent that browses Polymarket itself and chooses its own 0-2 day bets, three runs a day. Shaped like the daily
@@ -256,6 +264,19 @@ function parseForecasts(raw: unknown): ForecastStats {
   };
 }
 
+function parseResting(raw: unknown): RestingSection {
+  const r = isObj(raw) ? raw : {};
+  return {
+    open: list(r.open).map((o) => ({
+      id: str(o.id), market_id: str(o.market_id), question: str(o.question), url: str(o.url), action: o.action === "buy_no" || o.action === "sell" ? o.action : "buy_yes", side: str(o.side),
+      limit: n0(o.limit), usd: n0(o.usd), fraction: n0(o.fraction), now: num(o.now), p_yes: n0(o.p_yes), reason: str(o.reason), placed_at: str(o.placed_at), expires_at: str(o.expires_at),
+    })),
+    fills: list(r.fills).map((f) => ({
+      id: str(f.id), order_id: str(f.order_id), market_id: str(f.market_id), question: str(f.question), action: str(f.action), side: str(f.side), price: n0(f.price), stake: n0(f.stake), at: str(f.at),
+    })),
+  };
+}
+
 function parseStrategies(raw: unknown, fallbackRule: Portfolio): Strategy[] {
   return list(raw).flatMap((r) => {
     const d = parseDay(r, fallbackRule);
@@ -265,6 +286,7 @@ function parseStrategies(raw: unknown, fallbackRule: Portfolio): Strategy[] {
       ...d, id: str(r.id), name: str(r.name), method: str(r.method), method_name: str(r.method_name), bot: str(r.bot) || str(r.method), bot_name: str(r.bot_name) || str(r.method_name), desk: str(r.desk), desk_name: str(r.desk_name),
       desk_about: str(r.desk_about), min_fills_day: n0(r.min_fills_day), style: str(r.style), must_trade: r.must_trade === true, min_orders: n0(r.min_orders), next_run: str(r.next_run),
       forecasts: parseForecasts(r.forecasts), exposure: ex ? { pct: n0(ex.pct), floor_pct: n0(ex.floor_pct) } : null, floor: fl ? { opened: n0(fl.opened), groups: list(fl.groups).map(dayGroup) } : null,
+      resting: parseResting(r.resting),
     }] : [];
   });
 }
