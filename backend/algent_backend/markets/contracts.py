@@ -141,7 +141,8 @@ class Decision(BaseModel):
     evidence: str = ""                        # sufficient | thin | gap ("" before research existed)
     hours_to_end: float | None = None
     basis: str = ""                           # a strategy order: the working its reasoning method asked for (reference class, possibilities ...), plain text
-    tag: str = ""                             # "floor": a buy taken while under the minimum-exposure floor with no real edge (measured apart from chosen ones)
+    tag: str = ""                             # "floor": a buy taken while under the minimum-exposure floor with no real edge; "resting": a fill of a resting limit order (resting.py)
+    order_id: str = ""                        # a resting fill only: the RestingOrder it filled
 
 
 class EquityPoint(BaseModel):
@@ -160,6 +161,35 @@ class EquityPoint(BaseModel):
 
 def decision_id(market_id: str, action: str, at: str) -> str:
     return "td-" + hashlib.sha1(f"{market_id}|{action}|{at}".encode()).hexdigest()[:14]
+
+
+def resting_id(book: str, market_id: str, action: str, placed_at: str) -> str:
+    return "ro-" + hashlib.sha1(f"{book}|{market_id}|{action}|{placed_at}".encode()).hexdigest()[:10]
+
+
+class RestingOrder(BaseModel):
+    """A paper limit order that waits between runs (``resting.py``). Append-only: the order is written ``open`` when placed and every later transition (filled,
+    expired, cancelled) is a NEW line carrying the whole record again, so the last line per ``id`` is its state and the earlier lines are the audit trail.
+
+    ``limit_price`` is the ALL-IN price on the order's own side (slippage included, the same price an immediate fill pays): a buy fills while that price is at or below the
+    limit, a sell while it is at or above. ``usd`` sizes a buy; a sell closes ``fraction`` of the position held at fill time."""
+
+    id: str
+    book: str
+    market_id: str
+    action: Literal["buy_yes", "buy_no", "sell"]
+    limit_price: float
+    usd: float = 0.0
+    fraction: float = 0.0
+    p_yes: float
+    reason: str = ""
+    placed_at: str
+    expires_at: str
+    status: Literal["open", "filled", "expired", "cancelled"] = "open"
+    at: str = ""                              # when THIS line was written (placement, or the transition)
+    filled_at: str = ""
+    fill_id: str = ""
+    note: str = ""                            # why a transition happened (expiry, cancellation, a cap that blocked the fill)
 
 
 # ── research traces and gaps (research.py, trace.py, gaps.py) ────────────────────────────────────

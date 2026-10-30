@@ -313,6 +313,8 @@ PRODUCTS: tuple[Product, ...] = (
                    Retention("prune", "research traces (observability, never read by scoring) older than TRACE_KEEP_DAYS are dropped by the free refresh pass; forecasts, decisions, gaps and fills are never pruned", "markets/flags.py::TRACE_KEEP_DAYS", "job:markets")),
         irreplaceable=True, why="our forecasts and trades are the scored record; they cannot be reconstructed",
         jobs=(Job("markets", ("markets", "refresh"), "3/4:50", every_min=240, what="Polymarket mirror: markets, prices, resolutions; paper track record"),
+              Job("markets-resting", ("markets", "resting"), "*:55", every_min=60, max_wait_min=20, est_min=0.5, est_mb=120,
+                  what="free resting-order pass: fresh quotes for the markets with open paper limit orders, then fill / expire them (no model call; the mirror pass above also runs it)"),
               Job("markets-daily", ("markets", "daily"), at=_markets_daily_at, every_min=1440, spend="paid", est_min=15, deadline_min=120, what="daily trader strategy: its own research and probabilities, paper trades, marks",
                   then=AFTER_PUBLISH),
               Job("markets-fast", ("markets", "fast"), _markets_fast_calendar, every_min=480, spend="capped", priority=2, est_min=6, est_mb=400, max_wait_min=45, deadline_min=60,

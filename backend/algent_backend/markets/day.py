@@ -57,9 +57,10 @@ def _fills(session: Session) -> int:
 
 
 def _fills_today(session: Session) -> int:
-    """Fills on the book today (UTC), from every run, including this one."""
+    """Fills on the book today (UTC): every run's, and every resting-order fill (``resting.py``), which lands between runs and during one."""
     today = session.now.date().isoformat()
-    return sum(d.action in ("buy_yes", "buy_no", "sell") and d.day == today for d in session.ds)
+    seen = {d.id: d for d in [*store.decisions(session.sid), *session.ds]}
+    return sum(d.action in ("buy_yes", "buy_no", "sell") and d.day == today for d in seen.values())
 
 
 def _day_owes(st: strategies.Strategy, session: Session) -> int:

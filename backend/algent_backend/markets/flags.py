@@ -270,3 +270,15 @@ DISAGREE_MIN = 0.15
 DISAGREE_LINES = 4
 #: A forecast older than this many days is not offered as "our current view" in the daily line.
 DISAGREE_MAX_AGE_DAYS = 10
+
+# ── resting limit orders (resting.py): paper only, filled by a free price pass with no model call ─────────────────────────────────
+#: A bot may leave a limit order that waits between its runs and fills when the price reaches it. Off = the tools refuse and the pass fills nothing (open orders then just expire).
+RESTING_ENABLED = True
+#: Open resting orders one book may hold at once.
+RESTING_MAX_OPEN = 6
+#: The longest an order may rest, in hours (it is also capped at the market's end).
+RESTING_MAX_HOURS = 48.0
+#: The pass fills only against a price snapshot at most this old (the pass refreshes the quotes of the markets it watches first); an older one is skipped, not guessed.
+RESTING_MAX_SNAPSHOT_AGE_H = 2.0
+#: Recent resting fills listed per bot in the published document.
+RESTING_FILLS_SHOWN = 8

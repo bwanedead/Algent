@@ -220,6 +220,23 @@ RAM: the 300M-parameter model is ~1.2 GB in fp32 (~0.6 GB in bf16) plus runtime 
 2 vCPU / 4 GB server. It fits, but not beside another heavy job: `jobs.sh` already serialises paid jobs on one lock and the model lives only inside the daily process.
 Disk: ~600 MB model download plus ~15-30 MB of cached vectors.
 
+## Resting limit orders (`resting.py`; paper only)
+A bot can leave a limit order (`place_resting` / `cancel_resting` in `day_tools.py`) that waits between its runs. `limit_price` is the all-in price on its own side (slippage included): a buy
+fills at or below it, a sell at or above it. The record is `resting_orders.jsonl`, append-only: placed `open`, then each transition (`filled` / `expired` / `cancelled`, with its reason in `note`) is a
+new line carrying the whole order, so the last line per id is its state and nothing is rewritten. A FREE pass (`resting.run_pass`, no model call) refreshes the quotes of the markets that carry
+open orders, expires orders past `expires_at` or whose market closed, and fills the rest through the same `guards.apply` and `Decision` ledger an immediate order uses (tag `resting`, `order_id` set), so a
+fill counts everywhere a fill does, including the per-day minimum (`day._fills_today` reads the store). The caps are checked at placement AND again at the fill: a fill the guards block outright
+is `cancelled` with their reason, a trim fills smaller exactly as an immediate order would. The pass only fills against a live snapshot newer than the order and at most `RESTING_MAX_SNAPSHOT_AGE_H` old.
+It runs inside `newsroom markets refresh` (every 4 h) and as the hourly free job `markets-resting` (`:55`). Flags: `RESTING_ENABLED`, `RESTING_MAX_OPEN` (6 per book), `RESTING_MAX_HOURS` (48),
+`RESTING_MAX_SNAPSHOT_AGE_H` (2), `RESTING_FILLS_SHOWN`. The track record carries each strategy's `resting: {open, fills}`; the page shows them in the bot's detail.
+
+**Before any real-money executor** (none exists; this path never reaches a venue). A real one would need, outside the model: (1) idempotent client order ids (`RestingOrder.id` is deterministic) so a retry
+can never double-send; (2) pre-trade risk checks at the venue boundary (size, price band against the live book, per-market and total exposure, cash actually held there), re-run at send time, not trusted
+from placement; (3) a kill switch that cancels every open order and blocks new ones, readable by the executor on each pass; (4) reconciliation of our ledger against the venue's fills, positions and balance
+every pass, halting on any mismatch rather than papering over it; (5) a human approval gate before an order first leaves the building, then per-order or per-day limits that approval sets; (6) position and
+loss limits enforced by the executor itself (the model can ask for anything, as with `guards.py` today); (7) partial fills, rejections and cancels as first-class states of the record, and an
+audit trail of every request and response. The paper fill price (quote plus `SLIPPAGE`) is an assumption a real fill would replace with the venue's execution price.
+
 ## The daily job
 `newsroom markets daily` (`ops/schedule.jobs()["markets-daily"]`, time `markets/flags.DAILY_UTC`, 07:30 UTC, after daily part 1): refresh prices -> blind forecast pass -> rule book
 (`paper.run`) -> trader -> mark both books -> publish. A paid step that raises does not stop the free steps after it (the books are still marked and published) and makes the exit
