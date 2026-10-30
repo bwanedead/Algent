@@ -147,3 +147,42 @@
 .tr-l-delineation-must-trade { stroke: hsl(100 40% 45%); stroke-dasharray: 3 2; } .tr-d-delineation-must-trade, .tr-t-delineation-must-trade { fill: hsl(100 40% 45%); } .tr-bg-delineation-must-trade { background: hsl(100 40% 45%); }
 .tr-group { padding: 10px 0 3px; color: var(--muted); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; border-bottom: 1px solid var(--rule); }
 .tr-tag { margin-left: 6px; padding: 0 5px; border: 1px solid var(--rule-strong); border-radius: 2px; font-size: 10px; color: var(--muted); }
+
+/* hourly desk colour (chart line, end label, swatch) */
+.tr-l-hourly { stroke: hsl(15 75% 55%); } .tr-d-hourly, .tr-t-hourly { fill: hsl(15 75% 55%); } .tr-bg-hourly { background: hsl(15 75% 55%); }
+
+/* bot panels: one panel per reasoning method, in the bot's colour (--bot), desks as rows inside; the header band says which bot you are in */
+.tr-bot { --bot: var(--muted); margin: 0 0 16px; border: 1px solid var(--rule-strong); border-left: 4px solid var(--bot); background: color-mix(in srgb, var(--bot) 5%, var(--panel)); }
+.tr-bot[data-bot="p0b"] { --bot: var(--accent); }
+.tr-bot[data-bot="p0b+prior"] { --bot: hsl(190 55% 45%); }
+.tr-bot[data-bot="b"] { --bot: hsl(280 45% 58%); }
+.tr-bot[data-bot="b+prior"] { --bot: hsl(330 55% 55%); }
+.tr-bot-h { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; padding: 8px 12px; background: color-mix(in srgb, var(--bot) 16%, var(--panel)); border-bottom: 1px solid var(--rule-strong); }
+.tr-bot-h > b { font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--strong); }
+.tr-bot-n { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.tr-bot-about { flex: 1 1 100%; font-size: 12px; color: var(--muted); }
+.tr-bot > .tr-book { padding: 0 12px; }
+.tr-bot > .tr-book:last-child { border-bottom: 0; }
+
+/* sides are neutral badges (yes and no are not good or bad) and every position is its own boxed item */
+.tr-side { display: inline-block; min-width: 30px; padding: 0 5px; border: 1px solid var(--rule-strong); border-radius: 2px; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-align: center; line-height: 16px; }
+.tr-side-yes { background: color-mix(in srgb, var(--strong) 12%, transparent); color: var(--strong); }
+.tr-side-no { background: transparent; color: var(--strong); border-style: dashed; }
+.tr-hold > .tr-hold-l { grid-template-columns: 38px minmax(0, 1fr) 52px 56px; align-items: center; margin: 3px 0; padding: 3px 6px; border: 1px solid var(--rule); border-left: 3px solid var(--bot, var(--rule-strong)); background: var(--panel); }
+.tr-hold-l .n { font-variant-numeric: tabular-nums; }
+.tr-hold-l .tr-side { color: var(--strong); }
+
+/* detail sections: each has a tinted heading band and a bordered body */
+.tr-detail { padding: 8px 0 12px; }
+.tr-sec { margin: 0 0 10px; border: 1px solid var(--rule-strong); background: var(--panel); min-width: 0; }
+.tr-detail .tr-sec > .tr-h3 { margin: 0; padding: 4px 10px; background: color-mix(in srgb, var(--bot, var(--strong)) 14%, var(--panel)); border-bottom: 1px solid var(--rule-strong); color: var(--strong); }
+.tr-sec-b { padding: 6px 10px; min-width: 0; overflow-x: auto; }
+.tr-detail > .tr-note { padding: 0 2px; }
+.tr-detail .tr-stack tbody tr { border-left: 3px solid var(--rule-strong); padding-left: 6px; }
+.tr-detail .tr-table .tr-side { vertical-align: middle; }
+@media (max-width: 720px) {
+  .tr-bot > .tr-book { padding: 0 8px; }
+  .tr-bot-h { padding: 8px; }
+  .tr-hold > .tr-hold-l { grid-template-columns: 34px minmax(0, 1fr) 46px 50px; }
+  .tr-sec-b { padding: 4px 8px; }
+}

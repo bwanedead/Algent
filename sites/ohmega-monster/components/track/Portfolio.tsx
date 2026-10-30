@@ -25,7 +25,7 @@ type Line = { id: string; name: string; cls: string; pts: Map<string, number> };
 
 // Short chart names (the line is labelled at its end; the table below has the full names). "MT" = must trade.
 const SHORT: Record<string, string> = {
-  day: "Day", daily: "Daily", fast: "Fast", "base-rate": "Base rate", delineation: "Delineation", "delineation-base-rate": "Delin.+base rate",
+  day: "Day", daily: "Daily", fast: "Fast", hourly: "Hourly", "base-rate": "Base rate", delineation: "Delineation", "delineation-base-rate": "Delin.+base rate",
   "baseline-must-trade": "Baseline MT", "delineation-must-trade": "Delin. MT",
 };
 
@@ -104,7 +104,15 @@ export function ValueChart({ t }: { t: TrackRecord }) {
 }
 
 // ── one expandable row per bot ───────────────────────────────────────────────────────────────────
-type Row = { id: string; name: string; cls: string; method: string; style: string; next: string; mustTrade?: number; t: Trader; lastRun: string; s?: Strategy };
+type Row = { id: string; name: string; cls: string; bot: string; botName: string; desk: string; deskAbout: string; style: string; next: string; mustTrade?: number; minFillsDay?: number; t: Trader; lastRun: string; s?: Strategy };
+
+// A bot is a reasoning method stack; its desks are cadences/horizons, one book each. One-line "how it reasons" per bot (the lab mind ids, backend `markets/methods.py`).
+const BOT_ABOUT: Record<string, string> = {
+  p0b: "Researches the corpus and states its own probability; no extra method.",
+  "p0b+prior": "Starts from the base rate of the reference class; trades only on edge the evidence earns.",
+  b: "Maps the possible outcomes first; trades the ones the price mis-states.",
+  "b+prior": "Base rate first, then maps the possible outcomes.",
+};
 
 /** "8 made, 3 resolved, Brier 0.21" once enough have resolved; before that "n=3, too early". */
 function forecastLine(f: ForecastStats): string {
@@ -141,6 +149,14 @@ function Cell({ label, children, className = "" }: { label: string; children: Re
   return <span className={`tr-c ${className}`} data-label={label}>{children}</span>;
 }
 
+/** A detail section with a clear band for its heading, so one ends and the next begins at a glance. */
+function Sec({ title, children }: { title: string; children: ReactNode }) {
+  return <section className="tr-sec"><h3 className="tr-h3">{title}</h3><div className="tr-sec-b">{children}</div></section>;
+}
+
+/** YES / NO as two neutral badge styles: the side is not good or bad. */
+const Side = ({ side }: { side: string }) => <b className={`tr-side tr-side-${side.toLowerCase() === "no" ? "no" : "yes"}`}>{side.toUpperCase()}</b>;
+
 function Positions({ rows }: { rows: TraderPosition[] }) {
   if (rows.length === 0) return <p className="tr-empty">Nothing held right now.</p>;
   return (
@@ -155,7 +171,7 @@ function Positions({ rows }: { rows: TraderPosition[] }) {
               {r.url ? <a href={r.url} rel="noopener noreferrer" className="xt" title={r.rationale}>{r.question}</a> : r.question}
               {r.rationale && <details className="tr-why-d"><summary>why</summary>{r.rationale}</details>}
             </td>
-            <td data-label="Side">{r.side.toUpperCase()}</td>
+            <td data-label="Side"><Side side={r.side} /></td>
             <td className="n" data-label="Entry">{cents(r.entry)}</td>
             <td className="n" data-label={r.now_at ? `Now, as of ${r.now_at.slice(11, 16)}Z` : "Now"}>{cents(r.now)}</td>
             <td className="n" data-label="Stake">{money(r.cost)}</td>
@@ -206,7 +222,7 @@ function Holding({ held, note }: { held: Held[]; note?: string }) {
       <span className="tr-hold-sum">{note ?? `${held.length} open · ${money(held.reduce((a, h) => a + h.stake, 0))} at risk`}</span>
       {top.slice(0, 3).map((h, i) => (
         <span key={i} className="tr-hold-l" title={h.question}>
-          <b>{h.side.toUpperCase()}</b>
+          <Side side={h.side} />
           <span className="tr-hold-q">{clip(h.question)}</span>
           <span className="n">{money(h.stake)}</span>
           <span className={`n ${tone(h.pnl)}`}>{usd(h.pnl)}</span>
@@ -233,9 +249,10 @@ function BookRow({ row, min, children }: { row: Row; min: number; children?: Rea
   return (
     <details className={`tr-book tr-b-${row.cls}`}>
       <summary className="tr-row">
-        <Cell label="Bot" className="tr-name">
-          <i className={`tr-sw tr-bg-${row.cls}`} aria-hidden="true" /> <b>{row.name}</b>{row.mustTrade ? <span className="tr-tag" title={`Fills at least ${row.mustTrade} order(s) every run, for faster feedback`}>must trade</span> : null}
-          <span className="tr-sub">{row.method}</span>
+        <Cell label="Desk" className="tr-name">
+          <i className={`tr-sw tr-bg-${row.cls}`} aria-hidden="true" /> <b>{row.desk}</b>{row.mustTrade ? <span className="tr-tag" title={`Fills at least ${row.mustTrade} order(s) every run, for faster feedback`}>must trade</span> : null}
+          {row.minFillsDay ? <span className="tr-tag" title={`Fills at least ${row.minFillsDay} order(s) every UTC day, enforced on the day's last run; an unmet day is recorded as unmet`}>{row.minFillsDay}+ fill / day</span> : null}
+          <span className="tr-sub">{row.deskAbout}</span>
         </Cell>
         <Cell label="Value" className="n">
           {money(s.equity)}
@@ -252,8 +269,7 @@ function BookRow({ row, min, children }: { row: Row; min: number; children?: Rea
         </p>
         {row.s ? (
           <>
-            <h3 className="tr-h3">Recent forecasts</h3>
-            <Forecasts f={row.s.forecasts} />
+            <Sec title="Recent forecasts"><Forecasts f={row.s.forecasts} /></Sec>
             {row.s.floor?.opened ? (
               <p className="tr-note">
                 Floor positions (opened only to keep exposure up, no real edge): {row.s.floor.opened} opened.{" "}
@@ -262,20 +278,18 @@ function BookRow({ row, min, children }: { row: Row; min: number; children?: Rea
             ) : null}
           </>
         ) : null}
-        <h3 className="tr-h3">Open positions</h3>
-        <Positions rows={row.t.open_positions} />
-        <h3 className="tr-h3">Trades, newest first</h3>
-        <Trades rows={row.t.log} />
+        <Sec title={`Open positions (${row.t.open_positions.length})`}><Positions rows={row.t.open_positions} /></Sec>
+        <Sec title="Trades, newest first"><Trades rows={row.t.log} /></Sec>
         {children}
       </div>
     </details>
   );
 }
 
-const METHOD_ORDER = ["Baseline research", "Base rate first", "Delineation", "Delineation + base rate"];
+const BOT_ORDER = ["p0b", "p0b+prior", "b", "b+prior"];
 
 function fromStrategy(x: Strategy): Row {
-  return { id: x.id, name: x.name, cls: x.id, method: x.method_name, style: x.style, next: x.next_run, mustTrade: x.must_trade ? x.min_orders : undefined, t: x, lastRun: x.runs[0]?.at || x.last_at, s: x };
+  return { id: x.id, name: x.name, cls: x.id, bot: x.bot, botName: x.bot_name, desk: x.desk_name || x.name, deskAbout: x.desk_about, minFillsDay: x.min_fills_day || undefined, style: x.style, next: x.next_run, mustTrade: x.must_trade ? x.min_orders : undefined, t: x, lastRun: x.runs[0]?.at || x.last_at, s: x };
 }
 
 export function Books({ t }: { t: TrackRecord }) {
@@ -288,46 +302,53 @@ export function Books({ t }: { t: TrackRecord }) {
   const rows: Row[] = strategies.length
     ? strategies.map(fromStrategy)
     : [
-        { id: "daily", name: "Daily trader", cls: "daily", method: "Desk forecast", style: "once a day, markets we forecast", next: "", t: t.trader, lastRun: t.trader.last_at },
-        ...(t.fast ? [{ id: "fast", name: "Fast book", cls: "fast", method: "Desk forecast", style: `settles within ${t.fast.horizon_days} days`, next: "", t: t.fast, lastRun: t.fast.last_at }] : []),
-        ...(t.day ? [{ id: "day", name: "Day book", cls: "day", method: "Baseline research", style: `picks its own bets, ${t.day.horizon_hours} h out`, next: "", t: t.day, lastRun: t.day.last_at }] : []),
+        { id: "daily", name: "Daily trader", cls: "daily", bot: "p0b", botName: "Desk forecast", desk: "Daily trader", deskAbout: "", style: "once a day, markets we forecast", next: "", t: t.trader, lastRun: t.trader.last_at },
+        ...(t.fast ? [{ id: "fast", name: "Fast book", cls: "fast", bot: "p0b", botName: "Desk forecast", desk: "Fast book", deskAbout: "", style: `settles within ${t.fast.horizon_days} days`, next: "", t: t.fast, lastRun: t.fast.last_at }] : []),
+        ...(t.day ? [{ id: "day", name: "Day book", cls: "day", bot: "p0b", botName: "Baseline research", desk: "Day book", deskAbout: "", style: `picks its own bets, ${t.day.horizon_hours} h out`, next: "", t: t.day, lastRun: t.day.last_at }] : []),
       ];
-  const methods = [...new Set([...METHOD_ORDER, ...rows.map((r) => r.method)])].filter((m) => rows.some((r) => r.method === m));
+  const bots = [...new Set([...BOT_ORDER, ...rows.map((r) => r.bot)])].filter((b) => rows.some((r) => r.bot === b));
   const rule = t.portfolio;
   const ruleValue = rule.bankroll + rule.total_pnl;
   return (
     <>
-    <p className="tr-note">{rows.length} independent paper bots, {money(t.trader.limits.bankroll)} each. Each researches our corpus, forms its own probabilities and trades. Grouped by how it reasons; click a bot for its full positions and trades.</p>
+    <p className="tr-note">{rows.length} independent paper bots, {money(t.trader.limits.bankroll)} each. Each researches our corpus, forms its own probabilities and trades. A bot is one way of reasoning; its desks run it on different cadences and horizons. Click a desk for its full positions and trades.</p>
     <div className="tr-books" role="group" aria-label="Bots">
       <div className="tr-row tr-rowhead" aria-hidden="true">
-        <span>Bot</span><span className="n">Value</span><span>Holding</span><span className="n">Runs</span>
+        <span>Desk</span><span className="n">Value</span><span>Holding</span><span className="n">Runs</span>
       </div>
-      {methods.map((m) => (
-        <div key={m} role="group" aria-label={m}>
-          <div className="tr-group">{m}</div>
-          {rows.filter((r) => r.method === m).map((r) => {
+      {bots.map((b) => {
+        const members = rows.filter((r) => r.bot === b);
+        return (
+        <section key={b} className="tr-bot" data-bot={b} aria-label={members[0].botName}>
+          <header className="tr-bot-h">
+            <b>{members[0].botName}</b>
+            <span className="tr-bot-n">{members.length} desk{members.length === 1 ? "" : "s"}</span>
+            {BOT_ABOUT[b] && <span className="tr-bot-about">{BOT_ABOUT[b]}</span>}
+          </header>
+          {members.map((r) => {
             const x = strategies.find((q) => q.id === r.id);
             return (
               <BookRow key={r.id} row={r} min={min}>
                 {x && (
                   <>
-                    <h3 className="tr-h3">Latest run: what it browsed and why</h3>
-                    {x.runs[0]?.must_trade ? <p className="tr-note">Must-trade check for this run: {x.runs[0].must_trade}.</p> : null}
-                    <DayRuns rows={x.runs.slice(0, 1)} />
-                    <h3 className="tr-h3">What it wished we knew</h3>
-                    <Wishes rows={x.wishes.slice(0, 3)} />
+                    <Sec title="Latest run: what it browsed and why">
+                      {x.runs[0]?.must_trade ? <p className="tr-note">Fill check for this run: {x.runs[0].must_trade}.</p> : null}
+                      <DayRuns rows={x.runs.slice(0, 1)} />
+                    </Sec>
+                    <Sec title="What it wished we knew"><Wishes rows={x.wishes.slice(0, 3)} /></Sec>
                   </>
                 )}
               </BookRow>
             );
           })}
-        </div>
-      ))}
+        </section>
+        );
+      })}
       <details className="tr-fold">
         <summary>Retired: fixed rule (history only)</summary>
         <details className="tr-book tr-b-rule">
           <summary className="tr-row">
-            <Cell label="Bot" className="tr-name">
+            <Cell label="Desk" className="tr-name">
               <i className="tr-sw tr-bg-rule" aria-hidden="true" /> <b>Fixed rule</b>
               <span className="tr-sub">Edge rule on the desk forecast</span>
             </Cell>
@@ -340,8 +361,7 @@ export function Books({ t }: { t: TrackRecord }) {
           </summary>
           <div className="tr-detail">
             <p className="tr-note">Retired: it needed a shared forecast, so it opens nothing now. {rule.open + rule.settled} trades in all.</p>
-            <h3 className="tr-h3">Open positions</h3>
-            <OpenPositions rows={t.open_positions} />
+            <Sec title="Open positions"><OpenPositions rows={t.open_positions} /></Sec>
           </div>
         </details>
       </details>
