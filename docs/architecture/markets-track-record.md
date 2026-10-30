@@ -220,6 +220,20 @@ RAM: the 300M-parameter model is ~1.2 GB in fp32 (~0.6 GB in bf16) plus runtime 
 2 vCPU / 4 GB server. It fits, but not beside another heavy job: `jobs.sh` already serialises paid jobs on one lock and the model lives only inside the daily process.
 Disk: ~600 MB model download plus ~15-30 MB of cached vectors.
 
+## Gap research loop (`gap_loop.py`)
+Closes the loop on `gaps.fill`: did a research run the bots asked for actually help? A read-only projection (nothing is stored beyond two optional `GapFill` fields) published as the
+`loop` block of the evidence section and rendered as "Did the research help?".
+- **Linking.** `GapFill.profile_id` is captured at fill time (the id the run prints, else the one the vector determines, `assembly.profile_id_for`; the id is `prof_gap_<topic slug>`).
+  Older lines have none, so `gap_loop.link` searches the profile store for a `requested_by: markets` profile written within -1h..+6h of the fill (`GapFill.at` is the job's start)
+  whose title matches the topic by the same Jaccard rule as clustering. No match = "unlinked", said plainly. Uptake is matched by corpus id (`profile:<id>`, `claim:<id>:*`, `profile-timeline:<id>:*`).
+- **Measures** (after = from the fill until the next run on the same cluster): re-asks on the cluster vs before; later traces that returned and later forecasts/decisions that cited the profile;
+  evidence ratings on the fill's markets plus every market that asked the cluster; bot edge over the market price (market Brier minus bot Brier) on markets forecast on both sides of the fill,
+  each side shown only at `MIN_RESOLVED_FOR_VERDICT` resolved forecasts, else "too early".
+- **Verdict:** `asked again` (>= `LOOP_REASK_MIN` re-asks) > `answered` (cited) > `unlinked` > `too early` (younger than `LOOP_SETTLE_DAYS`, or nothing decided on its markets since) > `unused`.
+- **Feedback.** An `asked again` cluster whose latest ok fill is inside `GAP_REFILL_DAYS` and that never had a refill becomes a candidate in `gaps.fill` once, with a brief quoting the re-asks
+  (`GapFill.refill = true`; a failed refill still counts as the one). It competes for the same `GAP_FILL_USD_PER_DAY` / `GAP_FILL_MAX_PER_DAY`; no cap was raised. Knobs: `LOOP_*` in `flags.py`.
+- **Limits.** `gaps.record` dedupes per market and topic, so only other markets can re-ask; traces are pruned after `TRACE_KEEP_DAYS`, so "returned" is a floor (citations live on the forecast/decision lines).
+
 ## Resting limit orders (`resting.py`; paper only)
 A bot can leave a limit order (`place_resting` / `cancel_resting` in `day_tools.py`) that waits between its runs. `limit_price` is the all-in price on its own side (slippage included): a buy
 fills at or below it, a sell at or above it. The record is `resting_orders.jsonl`, append-only: placed `open`, then each transition (`filled` / `expired` / `cancelled`, with its reason in `note`) is a

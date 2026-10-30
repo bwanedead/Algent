@@ -118,6 +118,17 @@ export type GapRow = { topic: string; asks: number; why: string; last: string; s
 // A group's numbers are withheld (shown=false, nulls) until it holds min_for_verdict resolved items.
 export type EvidenceGroup = { label: string; n: number; shown: boolean; brier_ours: number | null; brier_market: number | null; skill: number | null };
 export type EvidenceMoney = { label: string; n: number; shown: boolean; pnl: number | null; hit_rate: number | null };
+// Did each bot-requested research run help (backend `markets/gap_loop.py`)? Counts of later asks and cites; edge (market Brier minus ours) is null until both sides hold min_for_verdict.
+export type LoopVerdict = "answered" | "unused" | "asked again" | "too early" | "unlinked";
+export type LoopRow = {
+  topic: string; at: string; asks: number; refill: boolean; verdict: LoopVerdict; linked: boolean; reasks_before: number; reasks_after: number;
+  returned_after: number | null; cited_after: number | null; decisions_after: number;
+  edge: { shown: boolean; min: number; n_before: number; n_after: number; before: number | null; after: number | null };
+};
+export type GapLoop = {
+  fills: number; failed: number; answered: number; unused: number; asked_again: number; too_early: number; unlinked: number; usd: number; rows: LoopRow[];
+  min_for_verdict: number; settle_days: number; reask_min: number; basis: string;
+};
 export type Evidence = {
   coverage: Coverage & { forecasts: Coverage; trades: Coverage };
   citations: { n: number; mean: number | null; median: number | null; none_share: number | null };
@@ -129,6 +140,7 @@ export type Evidence = {
   accuracy: { rich_min_cited: number; min_for_verdict: number; forecasts: EvidenceGroup[]; trades: EvidenceMoney[]; note: string };
   caps: { rounds: number; queries_per_round: number; rows_per_query: number; gap_fill_usd_per_day: number; corpus_only: boolean };
   gap_spend: { asks: number; fills: number; usd: number };
+  loop: GapLoop | null;
 };
 export type BookHorizon = { positions: number; resolved: number; median_days_to_resolution: number | null; mean_days_to_resolution: number | null };
 export type Horizons = { by_horizon: EvidenceGroup[]; min_for_verdict: number; books: Record<string, BookHorizon> };
@@ -297,6 +309,25 @@ const coverage = (c: Obj): Coverage => ({
 const group = (g: Obj): EvidenceGroup => ({ label: str(g.label), n: n0(g.n), shown: g.shown === true, brier_ours: num(g.brier_ours), brier_market: num(g.brier_market), skill: num(g.skill) });
 
 // A document from before the evidence section existed has none: the page then shows nothing for it rather than failing.
+const VERDICTS: LoopVerdict[] = ["answered", "unused", "asked again", "too early", "unlinked"];
+
+// Absent in documents from before the loop check existed: the page then shows no such section.
+function parseLoop(raw: unknown): GapLoop | null {
+  if (!isObj(raw)) return null;
+  return {
+    fills: n0(raw.fills), failed: n0(raw.failed), answered: n0(raw.answered), unused: n0(raw.unused), asked_again: n0(raw.asked_again), too_early: n0(raw.too_early),
+    unlinked: n0(raw.unlinked), usd: n0(raw.usd), min_for_verdict: n0(raw.min_for_verdict), settle_days: n0(raw.settle_days), reask_min: n0(raw.reask_min), basis: str(raw.basis),
+    rows: list(raw.rows).map((r) => {
+      const e = isObj(r.edge) ? r.edge : {};
+      return {
+        topic: str(r.topic), at: str(r.at), asks: n0(r.asks), refill: r.refill === true, linked: r.linked === true, reasks_before: n0(r.reasks_before), reasks_after: n0(r.reasks_after),
+        verdict: VERDICTS.find((v) => v === r.verdict) ?? "too early", returned_after: num(r.returned_after), cited_after: num(r.cited_after), decisions_after: n0(r.decisions_after),
+        edge: { shown: e.shown === true, min: n0(e.min), n_before: n0(e.n_before), n_after: n0(e.n_after), before: num(e.before), after: num(e.after) },
+      };
+    }),
+  };
+}
+
 function parseEvidence(raw: unknown): Evidence | null {
   if (!isObj(raw)) return null;
   const cov = isObj(raw.coverage) ? raw.coverage : {};
@@ -324,6 +355,7 @@ function parseEvidence(raw: unknown): Evidence | null {
     },
     caps: { rounds: n0(caps.rounds), queries_per_round: n0(caps.queries_per_round), rows_per_query: n0(caps.rows_per_query), gap_fill_usd_per_day: n0(caps.gap_fill_usd_per_day), corpus_only: caps.corpus_only === true },
     gap_spend: { asks: n0(gs.asks), fills: n0(gs.fills), usd: n0(gs.usd) },
+    loop: parseLoop(raw.loop),
   };
 }
 

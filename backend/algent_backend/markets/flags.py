@@ -145,6 +145,15 @@ GAP_FILL_MAX_PER_DAY = 2
 GAP_REFILL_DAYS = 14
 #: A gap needs at least this many distinct asks (market x decision) to be worth a run, unless it is the only candidate; ties go to the newest.
 GAP_MIN_ASKS = 1
+#: The research-loop check (gap_loop.py): a fill younger than this many days, or with no later decision on its markets, is "too early" to judge.
+LOOP_SETTLE_DAYS = 3
+#: Asks on a filled cluster AFTER its fill (distinct gap lines) at which the research is judged "asked again" and the cluster may be refilled ONCE
+#: before GAP_REFILL_DAYS, with a brief naming what the first run left unanswered. Refills share GAP_FILL_USD_PER_DAY / GAP_FILL_MAX_PER_DAY; no extra budget.
+LOOP_REASK_MIN = 2
+#: Newest fills listed on the page's "Did the research help?" table (the totals always count every fill).
+LOOP_ROWS_SHOWN = 12
+#: Re-ask texts quoted in a refill's brief.
+LOOP_REASK_QUOTES = 4
 
 # ── the fast book: markets that settle soon, decided every few hours (trader.py with the FAST book) ──
 FAST_ENABLED = True

@@ -257,6 +257,8 @@ class GapFill(BaseModel):
     ok: bool = False
     usd: float = 0.0                          # booked at the estimate until measured
     note: str = ""
+    profile_id: str = ""                      # the profile this run produced (scraped from the run, else predicted from the vector); "" on older lines (gap_loop links those)
+    refill: bool = False                      # a second, sharper run for a cluster that was asked again after an earlier fill (gap_loop.refill_candidates)
 
 
 def trace_id(kind: str, ref: str, at: str) -> str:

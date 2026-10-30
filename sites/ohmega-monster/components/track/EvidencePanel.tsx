@@ -1,4 +1,4 @@
-import type { BookHorizon, Evidence, EvidenceGroup, EvidenceMoney, FastBook, GapRow, Horizons, Trader } from "@/lib/track-record";
+import type { BookHorizon, Evidence, EvidenceGroup, EvidenceMoney, FastBook, GapLoop, GapRow, Horizons, LoopRow, Trader } from "@/lib/track-record";
 
 // The Evidence section of the track record (backend `markets/research_report.py`): how well OUR corpus served the bots, what they went looking for and the
 // book that trades the short horizon beside the daily one. Server-rendered. A ratio with nothing under it reads "n/a"; a group below the verdict threshold
@@ -117,6 +117,51 @@ export function GapsList({ rows }: { rows: GapRow[] }) {
         </li>
       ))}
     </ul>
+  );
+}
+
+// Did the research help? One plain sentence, then a row per research run the bots asked for, newest first. The edge is the bot's lead over the market price
+// (market Brier minus ours, higher is better); until both sides of the run hold enough resolved forecasts it reads "too early".
+const edge = (e: LoopRow["edge"]) => {
+  if (!e.shown || e.before === null || e.after === null) return `too early (${e.n_before} and ${e.n_after} of ${e.min} resolved)`;
+  return `${e.before.toFixed(3)} → ${e.after.toFixed(3)}`;
+};
+const VERDICT_CLASS: Record<string, string> = { answered: "is-hit", "asked again": "is-miss" };
+
+export function LoopSummary({ l }: { l: GapLoop }) {
+  const parts = [`${l.answered} answered`, `${l.unused} unused`, `${l.asked_again} asked again`, `${l.too_early} too early`, ...(l.unlinked > 0 ? [`${l.unlinked} not traceable`] : [])];
+  return (
+    <p className="tr-note">
+      {l.fills} research run{l.fills === 1 ? "" : "s"} from bot requests: {parts.join(", ")}, ${l.usd.toFixed(2)} spent{l.failed > 0 && ` (${l.failed} more failed)`}.
+    </p>
+  );
+}
+
+export function LoopTable({ l }: { l: GapLoop }) {
+  if (l.rows.length === 0) return <p className="tr-empty">No research run has been made for a bot request yet.</p>;
+  return (
+    <>
+      <div className="tr-scroll">
+        <table className="tr-table" aria-label="Research runs and what the bots did afterwards">
+          <thead>
+            <tr><th>Topic</th><th className="n">Asked by</th><th>Verdict</th><th className="n">Cited after</th><th className="n">Asked again</th><th className="n">Edge over market, before → after</th></tr>
+          </thead>
+          <tbody>
+            {l.rows.map((r) => (
+              <tr key={`${r.topic}-${r.at}`}>
+                <td>{r.topic}{r.refill && " (second run)"} <span className="tr-muted">{r.at}</span></td>
+                <td className="n">{r.asks}</td>
+                <td><span className={`tr-tag ${VERDICT_CLASS[r.verdict] ?? ""}`}>{r.verdict}</span></td>
+                <td className="n">{r.cited_after === null ? "n/a" : r.cited_after}</td>
+                <td className="n">{r.reasks_after}</td>
+                <td className="n">{edge(r.edge)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="tr-note">{l.basis}</p>
+    </>
   );
 }
 
