@@ -7,7 +7,7 @@ import JudgmentsSwitch from "@/components/JudgmentsSwitch";
 import PageTag from "@/components/PageTag";
 
 import { BrierSeries, CalibrationChart, ChartCard } from "@/components/track/TrackCharts";
-import { AccuracyByEvidence, EvidenceStats, GapsList, HorizonTable } from "@/components/track/EvidencePanel";
+import { AccuracyByEvidence, EvidenceStats, GapsList, HorizonTable, LoopSummary, LoopTable } from "@/components/track/EvidencePanel";
 import { DayGroups, Wishes } from "@/components/track/DayBook";
 import { Books, ValueChart } from "@/components/track/Portfolio";
 import { Disagreements, Resolved } from "@/components/track/TrackTables";
@@ -118,6 +118,13 @@ export default async function TrackRecordPage() {
               </>
             )}
           </Fold>
+
+          {t.evidence?.loop && t.evidence.loop.fills + t.evidence.loop.failed > 0 && (
+            <Fold title="Did the research help?">
+              <LoopSummary l={t.evidence.loop} />
+              <LoopTable l={t.evidence.loop} />
+            </Fold>
+          )}
 
           {t.day && (
             <Fold title="Day book: results by horizon">

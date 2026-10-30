@@ -67,6 +67,7 @@ class Cluster:
     last_at: str = ""
     filled_at: str = ""
     toks: frozenset[str] = frozenset()
+    refill: bool = False                                    # a second run for a cluster asked again after its fill (gap_loop); ``why`` then carries the sharper brief
 
 
 def clusters(now: datetime | None = None, *, days: int = 30) -> list[Cluster]:
@@ -132,7 +133,17 @@ def subprocess_runner(topic: str, why: str) -> dict[str, Any]:
         p = subprocess.run(cmd, capture_output=True, text=True, timeout=2400, check=False)  # noqa: S603 - fixed argv, our own interpreter
     except (OSError, subprocess.TimeoutExpired) as exc:
         return {"ok": False, "note": f"{type(exc).__name__}: {str(exc)[:120]}"}
-    return {"ok": p.returncode == 0, "note": "" if p.returncode == 0 else f"exit {p.returncode}: {(p.stderr or p.stdout)[-160:].strip()}"}
+    return {"ok": p.returncode == 0, "note": "" if p.returncode == 0 else f"exit {p.returncode}: {(p.stderr or p.stdout)[-160:].strip()}",
+            "profile_id": _profile_id(topic, why, p.stdout or "") if p.returncode == 0 else ""}
+
+
+def _profile_id(topic: str, why: str, out: str) -> str:
+    """The profile a run produced: the id the run printed if any, else the one its vector determines (``assembly.profile_id_for``; gap_loop re-checks it against the store)."""
+    m = re.search(r"""["']?profile_id["']?\s*[:=]\s*["']?(prof_[A-Za-z0-9_\-]+)""", out)
+    if m:
+        return m.group(1)
+    from algent_backend.agent_system.agents.research.assembly import profile_id_for       # lazy: the research agent is a heavy import
+    return profile_id_for(gap_vector(topic, why))
 
 
 def fill(*, now: datetime | None = None, runner: Runner | None = None, limit: int | None = None) -> dict[str, Any]:
@@ -146,6 +157,8 @@ def fill(*, now: datetime | None = None, runner: Runner | None = None, limit: in
     refill = timedelta(days=flags.GAP_REFILL_DAYS)
     failed = [tokens(f.topic) for f in store.gap_fills() if not f.ok and (store.parse_iso(f.at) or now) >= now - refill]     # twice failed = parked until the window passes
     cands = [c for c in clusters(now) if not c.filled_at and c.asks >= flags.GAP_MIN_ASKS and sum(_same(c.toks, t) for t in failed) < 2]
+    from . import gap_loop                                  # lazy: gap_loop reads this module
+    cands = sorted([*cands, *gap_loop.refill_candidates(now)], key=lambda c: (c.asks, c.last_at), reverse=True)
     report["candidates"] = len(cands)
     runner = runner or subprocess_runner
     cap = flags.GAP_FILL_MAX_PER_DAY if limit is None else min(limit, flags.GAP_FILL_MAX_PER_DAY)
@@ -161,10 +174,11 @@ def fill(*, now: datetime | None = None, runner: Runner | None = None, limit: in
         at = datetime.now(UTC).isoformat(timespec="seconds") if now is None else now.isoformat(timespec="seconds")
         usd = float(res.get("usd") or flags.GAP_FILL_EST_USD)
         store.append_gap_fills([GapFill(id=gap_id("fill", c.key, at), at=at, day=at[:10], key=c.key, topic=c.topic, asks=c.asks, markets=c.markets[:8],
-                                        ok=bool(res.get("ok")), usd=round(usd, 4), note=str(res.get("note", ""))[:200])])
+                                        ok=bool(res.get("ok")), usd=round(usd, 4), note=str(res.get("note", ""))[:200],
+                                        profile_id=str(res.get("profile_id") or "") if res.get("ok") else "", refill=c.refill)])
         spent, runs_today = spent + usd, runs_today + 1
         report["ran"] += 1
         report["ok"] += bool(res.get("ok"))
         report["usd"] = round(report["usd"] + usd, 4)
-        report["topics"].append({"topic": c.topic, "asks": c.asks, "ok": bool(res.get("ok"))})
+        report["topics"].append({"topic": c.topic, "asks": c.asks, "ok": bool(res.get("ok")), "refill": c.refill})
     return report
