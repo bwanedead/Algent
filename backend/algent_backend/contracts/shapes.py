@@ -116,7 +116,10 @@ SHAPES: dict[str, Any] = {
                                                             "skill?": {"min_resolved": "int", "all": {"n": "int", "shown": "bool", "mean": "num|null", "se": "num|null"}, "contested": {"n": "int", "shown": "bool", "mean": "num|null", "se": "num|null"}},
                                                             "recent": [{"market_id": "str", "question": "str", "p": "num", "market": "num|null", "outcome": "str"}]},
                                              "exposure?": {"pct": "num", "floor_pct": "num"},
-                                             "floor?": {"opened": "int", "groups": [{"label": "str", "n": "int", "shown": "bool"}]}}]},
+                                             "floor?": {"opened": "int", "groups": [{"label": "str", "n": "int", "shown": "bool"}]}}],
+                            # additive 10-31: the recipe lab (markets/lab_block.py, written by `newsroom lab block`): best recipe vs market raw and recalibrated, and the live recalibration headline
+                            "lab?": {"as_of": "str", "basis": "str",
+                                     "best": "obj|null", "live": "obj|null"}},
     "ohmega.status": {"product": "str", "job": "str", "checked_at": "str", "last_ok": "bool", "last_changed_at": "str|null", "last_failed_at": "str|null", "cadence_min": "num|null", "next_due": "str|null"},
     # ── views (docs/architecture/views.md) ────────────────────────────────────────────────────
     "ohmega.view.country": {**_ENV, "iso": "str", "name": "str", "region": "str", "capital": "str", "profiled": "bool",

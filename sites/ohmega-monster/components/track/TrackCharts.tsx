@@ -47,6 +47,57 @@ export function CalibrationChart({ ours, market }: { ours: Bucket[]; market: Buc
   );
 }
 
+// The recipe lab's picture: when a recipe says X%, how often it happened, as said (hollow, thin line) and after recalibration (filled, thicker line), one line per
+// series, named directly at its last point (no key), with the diagonal for "honest". Dot area is the number of forecasts in the bin.
+export function ReliabilityChart({ raw, calibrated, title, caption }: { raw: Bucket[]; calibrated: Bucket[]; title: string; caption: string }) {
+  if (raw.length === 0 && calibrated.length === 0) return <p className="tr-empty">No forecasts to draw yet.</p>;
+  const r = (n: number) => 2.5 + Math.min(6, Math.sqrt(n) * 1.5);
+  const path = (bs: Bucket[]) => bs.map((b, i) => `${i === 0 ? "M" : "L"}${x(b.mean_p).toFixed(1)} ${y(b.hit_rate).toFixed(1)}`).join(" ");
+  const name = (bs: Bucket[], text: string, cls: string, dy: number): ReactNode => {
+    const b = bs[bs.length - 1];
+    if (!b) return null;
+    const right = x(b.mean_p) > S - 90;
+    return (
+      <text x={x(b.mean_p) + (right ? -9 : 9)} y={y(b.hit_rate) + dy} textAnchor={right ? "end" : "start"} className={cls}>
+        {text}
+      </text>
+    );
+  };
+  return (
+    <figure className="tr-fig">
+      <svg viewBox={`0 0 ${S} ${S}`} role="img" aria-label={title} className="tr-svg">
+        <title>{title}</title>
+        {[0, 0.25, 0.5, 0.75, 1].map((t) => (
+          <g key={t}>
+            <line x1={x(t)} x2={x(t)} y1={y(0)} y2={y(1)} className="tr-grid" />
+            <line x1={x(0)} x2={x(1)} y1={y(t)} y2={y(t)} className="tr-grid" />
+            <text x={x(t)} y={S - PAD + 12} textAnchor="middle" className="tr-tick">{Math.round(t * 100)}</text>
+            <text x={PAD - 6} y={y(t) + 3} textAnchor="end" className="tr-tick">{Math.round(t * 100)}</text>
+          </g>
+        ))}
+        <line x1={x(0)} y1={y(0)} x2={x(1)} y2={y(1)} className="tr-diag" />
+        <path d={path(raw)} className="tr-rel-raw" />
+        <path d={path(calibrated)} className="tr-rel-cal" />
+        {raw.map((b) => (
+          <circle key={`r${b.low}`} cx={x(b.mean_p)} cy={y(b.hit_rate)} r={r(b.n)} className="tr-pt-market">
+            <title>{`As said: ${Math.round(b.mean_p * 100)}%, happened ${Math.round(b.hit_rate * 100)}% (${b.n} forecasts)`}</title>
+          </circle>
+        ))}
+        {calibrated.map((b) => (
+          <circle key={`c${b.low}`} cx={x(b.mean_p)} cy={y(b.hit_rate)} r={r(b.n)} className="tr-pt-ours">
+            <title>{`After correction: ${Math.round(b.mean_p * 100)}%, happened ${Math.round(b.hit_rate * 100)}% (${b.n} forecasts)`}</title>
+          </circle>
+        ))}
+        {name(raw, "as said", "tr-rel-lbl-raw", -7)}
+        {name(calibrated, "corrected", "tr-rel-lbl-cal", 14)}
+        <text x={S / 2} y={S - 2} textAnchor="middle" className="tr-axis">probability stated (%)</text>
+        <text x={9} y={S / 2} textAnchor="middle" transform={`rotate(-90 9 ${S / 2})`} className="tr-axis">share that happened (%)</text>
+      </svg>
+      <figcaption className="tr-cap">{caption}</figcaption>
+    </figure>
+  );
+}
+
 export function BrierSeries({ series }: { series: DiffPoint[] }) {
   const W = 420;
   const H = 180;

@@ -173,6 +173,10 @@ check("sanctions, calendar, maritime, the geoledger, AI benchmarks and the track
   assert.equal(tr.evidence.accuracy.forecasts[0].shown, false);
   assert.equal(tr.evidence.accuracy.forecasts[0].brier_ours, null);
   assert.equal(tr.horizons.books.fast.positions, 1);
+  // The recipe lab (additive): the best recipe parses with its bins, an absent live side stays null.
+  assert.equal(tr.lab.best.protocol, "p0b");
+  assert.equal(tr.lab.best.bins_raw[0].hit_rate, 0.56);
+  assert.equal(tr.lab.live, null);
   // The day book: its positions carry time to resolution, an un-shown horizon group stays withheld, runs and the data wishes parse.
   assert.equal(tr.day.horizon_hours, 48);
   assert.equal(tr.day.open_positions[0].now_at, `${tr.day.since}T12:05`);

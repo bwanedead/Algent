@@ -153,6 +153,11 @@ export type Evidence = {
 };
 export type BookHorizon = { positions: number; resolved: number; median_days_to_resolution: number | null; mean_days_to_resolution: number | null };
 export type Horizons = { by_horizon: EvidenceGroup[]; min_for_verdict: number; books: Record<string, BookHorizon> };
+// The recipe lab (backend `markets/lab_block.py`, written by `newsroom lab block`): the best forecasting recipe against the market, raw and recalibrated, and what
+// recalibrating the live bots would have done. `raw` and `calibrated` are Brier minus the market's Brier at the same moment: below zero beats the market. Absent on
+// documents from before the lab: the page then shows no such section.
+export type LabSide = { n: number; n_fitted: number; raw: number; calibrated: number; bins_raw: Bucket[]; bins_calibrated: Bucket[]; protocol: string };
+export type LabBlock = { as_of: string; basis: string; best: LabSide | null; live: LabSide | null };
 export type TrackRecord = {
   as_of: string;
   disclaimer: string;
@@ -165,6 +170,7 @@ export type TrackRecord = {
   strategies: Strategy[];
   evidence: Evidence | null;
   horizons: Horizons | null;
+  lab: LabBlock | null;
   scores: Scores;
   portfolio: Portfolio;
   open_positions: OpenPosition[];
@@ -405,6 +411,21 @@ function parseHorizons(raw: unknown): Horizons | null {
   return { by_horizon: list(raw.by_horizon).map(group), min_for_verdict: n0(raw.min_for_verdict), books };
 }
 
+function parseLabSide(raw: unknown): LabSide | null {
+  if (!isObj(raw)) return null;
+  const r = num(raw.raw);
+  const c = num(raw.calibrated);
+  if (r === null || c === null) return null;
+  return { n: n0(raw.n), n_fitted: n0(raw.n_fitted), raw: r, calibrated: c, bins_raw: list(raw.bins_raw).map(bucket), bins_calibrated: list(raw.bins_calibrated).map(bucket), protocol: str(raw.protocol) };
+}
+
+function parseLab(raw: unknown): LabBlock | null {
+  if (!isObj(raw)) return null;
+  const best = parseLabSide(raw.best);
+  const live = parseLabSide(raw.live);
+  return best || live ? { as_of: str(raw.as_of), basis: str(raw.basis), best, live } : null;
+}
+
 export function parseTrackRecord(raw: unknown): TrackRecord | null {
   if (!isObj(raw) || (raw.schema !== "ohmega.track-record/1" && raw.schema !== "ohmega.track-record/2")) return null;
   const s = isObj(raw.scores) ? raw.scores : {};
@@ -434,6 +455,7 @@ export function parseTrackRecord(raw: unknown): TrackRecord | null {
     strategies: parseStrategies(raw.strategies, rulePortfolio),
     evidence: parseEvidence(raw.evidence),
     horizons: parseHorizons(raw.horizons),
+    lab: parseLab(raw.lab),
     open_positions: list(raw.open_positions).map((r) => ({
       market_id: str(r.market_id), question: str(r.question), url: httpOnly(r.url), ends: str(r.ends), side: r.side === "no" ? "no" : "yes", stake: n0(r.stake),
       entry: n0(r.entry), ours: n0(r.ours), market_at_open: n0(r.market_at_open), market_now: num(r.market_now), value: n0(r.value), pnl: n0(r.pnl),
