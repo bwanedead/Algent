@@ -120,3 +120,44 @@ def test_cli_builds_and_lists_sets(capsys):
     assert '"set"' in built and '"short_of_target": false' in built
     assert lab_cli.run_questions(SimpleNamespace(limit=5, qset="list", min_n=None, hours=None)) == 0
     assert '"n"' in capsys.readouterr().out
+
+
+def test_multi_cutoff_set_gives_a_market_several_questions_but_one_market_per_event():
+    res = lambda mid: datetime.fromisoformat(ms.markets()[mid].resolved_at)  # noqa: E731
+    ms.append_snapshots([Snapshot(market_id="m1", at=(res("m1") - timedelta(hours=169)).isoformat(), p=0.4), Snapshot(market_id="m1", at=(res("m1") - timedelta(hours=13)).isoformat(), p=0.6),
+                         Snapshot(market_id="m2", at=(res("m2") - timedelta(hours=13)).isoformat(), p=0.5),                            # m2 shares an event with m1
+                         Snapshot(market_id="m4", at=(res("m4") - timedelta(hours=169)).isoformat(), p=0.2)])
+    before = qset.build(min_n=3, max_n=4)
+    dry = qset.build(hours_list=tuple(flags.SET_MULTI_HOURS), dry_run=True)
+    assert dry["dry_run"] and not store.exists(f"sets/{dry['id']}/set.json")                       # a dry run stores nothing
+    doc = qset.build(hours_list=tuple(flags.SET_MULTI_HOURS))
+    assert doc["id"] == dry["id"] and doc["params"]["set_version"] == 2 and doc["params"]["hours_list"] == [168, 48, 12]
+    srcs = [e["source"] for e in doc["questions"]]
+    assert srcs.count("market:m1") == 3 and srcs.count("market:m4") == 2 and srcs.count("market:m3") == 1
+    assert "market:m2" not in srcs                                                                  # same event as m1, which covers more cutoffs: the family counts once
+    assert doc["n_markets"] == len(set(srcs)) == 5 and doc["by_hours_before"] == {"168": 2, "48": 5, "12": 1}
+    assert doc["skipped"]["same_event"] == 1 and len({e["id"] for e in doc["questions"]}) == len(doc["questions"])
+    for q in qset.questions_of(doc):
+        mid = q.source.split(":", 1)[1]
+        assert datetime.fromisoformat(q.cutoff) < res(mid) and q.reference["market_p"] is not None and q.common_set
+    assert qset.load(before["id"])["params"] == before["params"] and "hours_list" not in before["params"]      # the old set is untouched
+    capped = qset.build(hours_list=tuple(flags.SET_MULTI_HOURS), max_n=4, dry_run=True)
+    assert len(capped["questions"]) == 4
+
+
+def test_cli_dry_run_reports_the_yield_without_storing(capsys):
+    args = SimpleNamespace(qset="build", min_n=None, hours=None, multi=True, dry_run=True, limit=20)
+    assert lab_cli.run_questions(args) == 0
+    out = capsys.readouterr().out
+    assert '"dry_run": true' in out and '"n_markets"' in out and '"by_hours_before"' in out and not store.exists("sets/index.jsonl")
+
+
+def test_an_older_question_with_the_same_id_and_different_content_is_left_alone():
+    first = qset.build(hours_list=(48,))
+    qid = first["questions"][0]["id"]
+    old = store.read_json(f"questions/{qid}.json")
+    store.path(f"questions/{qid}.json").unlink()
+    store.write_once(f"questions/{qid}.json", {**old, "reference": {"market_p": None}})                # as stored by an older build
+    again = qset.build(hours_list=(48,))
+    assert qid not in {e["id"] for e in again["questions"]} and any(e["id"].startswith(qid + "-p") for e in again["questions"])
+    assert store.read_json(f"questions/{qid}.json")["reference"] == {"market_p": None}

@@ -6,8 +6,8 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
-#: The independently versioned parts of how an intelligence is constructed. A protocol is a composition of one version of each it uses.
-POLICY_KINDS = ("attention", "extraction", "memory", "interpretation", "hypothesis", "evidence", "investigation", "prediction", "decision", "learning", "model", "prompts", "tools")
+#: The independently versioned parts of how an intelligence is constructed. A protocol is a composition of one version of each it uses. ``calibration`` is applied after the mind commits and needs no model call (calibration.py).
+POLICY_KINDS = ("attention", "extraction", "memory", "interpretation", "hypothesis", "evidence", "investigation", "prediction", "decision", "learning", "model", "prompts", "tools", "calibration")
 Mode = Literal["controlled", "independent"]
 
 

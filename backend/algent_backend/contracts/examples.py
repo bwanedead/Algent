@@ -173,7 +173,10 @@ def _examples() -> dict[str, tuple[str, dict[str, Any]]]:
                                                                              "markets": [{"market_id": "d1", "question": "Will the vote pass today?"}]}],
                                                                  "watchlist": [{"market_id": "d2", "question": "Will talks start?", "note": "waiting", "since": TODAY}]},
                                                           "horizons": {"by_horizon": [{"label": "2 days or less", "n": 0, "shown": False, "brier_ours": None, "brier_market": None, "skill": None}], "min_for_verdict": 30,
-                                                                       "books": {"fast": {"positions": 1, "resolved": 0, "median_days_to_resolution": None, "mean_days_to_resolution": None}}}}, version=2)
+                                                                       "books": {"fast": {"positions": 1, "resolved": 0, "median_days_to_resolution": None, "mean_days_to_resolution": None}}},
+                                                          "lab": {"as_of": AT, "basis": "Brier minus the market", "best": {"protocol": "p0b", "n": 20, "n_fitted": 8, "raw": 0.13, "calibrated": 0.06,
+                                                                                                                       "bins_raw": [{"low": 0.0, "high": 0.2, "n": 16, "mean_p": 0.077, "hit_rate": 0.56}], "bins_calibrated": []},
+                                                                  "live": None}}, version=2)
     add("ohmega.status", "status/sanctions.json", {"product": "sanctions", "job": "sanctions", "checked_at": AT, "last_ok": True, "last_changed_at": "2026-10-12T04:00:00+00:00", "last_failed_at": None,
                                                     "cadence_min": 360, "next_due": f"{TODAY}T12:00:00+00:00"})
     return e

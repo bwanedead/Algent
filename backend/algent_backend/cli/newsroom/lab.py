@@ -11,6 +11,12 @@ corpus index, writes only to its own store (ALGENT_EXPERIMENT_STORE), and calls 
                                                             every named protocol on the whole set, controlled; total spend capped (experiment/flags.SET_RUN_CAP_USD);
                                                             without --live: builds snapshots and prints what would run and its maximum cost. Re-running continues
     newsroom lab decide --set ID|latest --forecast p0b [--cap USD] [--live]   the frozen trader on a forecast protocol's stored forecasts (decision replay)
+    newsroom lab questions --set build --multi [--dry-run]  set version 2: a market may give a question at 168/48/12 h before resolution; --dry-run prints the yield, stores nothing
+    newsroom lab calibrate [--set ID] [--live-strategies a,b] [--json]   every stored protocol x every calibration policy, raw vs calibrated, out of sample (free)
+    newsroom lab live-board [--strategies a,b] [--json]     the live bots' resolved forecasts scored the same way, raw vs recalibrated (free)
+    newsroom lab block                                      write lab_block.json (the track record's "recipe lab" block) beside the store
+    newsroom lab tournament --set ID --candidates a,b;calibration=platt [--first N] [--budget USD] [--live|--dry-run]   successive halving, hard budget
+    newsroom lab mutate PROTOCOL [--set ID] [--live] [--json]   one-change children from the measured failures; free ones always, one capped paid prompt draft with --live
     newsroom lab list                                       questions, branches, runs
     newsroom lab show ID                                    a run (manifest, prompt, output, integrity) or a question
     newsroom lab branch --from BRANCH --name NAME [--evidence NAME@V]   fork a branch with ONE evidence policy changed; the original is untouched
@@ -40,6 +46,8 @@ def add_parser(sub: Any) -> None:
     q.add_argument("--set", dest="qset", help="build | list | ID: the common question set")
     q.add_argument("--min", dest="min_n", type=int, help="build: aim for at least this many questions")
     q.add_argument("--hours", type=float, help="build: cutoff this many hours before resolution")
+    q.add_argument("--multi", action="store_true", help="build (set version 2): one market may give a question at each of flags.SET_MULTI_HOURS before resolution, when a price is on file")
+    q.add_argument("--dry-run", action="store_true", help="build: print how many markets/questions the live markets store yields, store nothing")
     q.set_defaults(handler=run_questions)
     r = verbs.add_parser("run", help="P0 vs P1 on one question")
     r.add_argument("--market", help="a single resolved market (with --cutoff), or use --set")
@@ -70,6 +78,32 @@ def add_parser(sub: Any) -> None:
     sc = verbs.add_parser("score", help="scoreboards per mode, and the decision board")
     sc.add_argument("--set", dest="qset", help="restrict to a common question set (ID or latest)")
     sc.set_defaults(handler=run_score)
+    cb = verbs.add_parser("calibrate", help="re-score every stored protocol through each calibration policy (free, no model call)")
+    cb.add_argument("--set", dest="qset", help="score only this common question set (the fit still uses every resolved forecast before each cutoff)")
+    cb.add_argument("--live-strategies", default="", help="platt-live: fit on these live strategies' forecasts only (comma-separated; default all)")
+    cb.add_argument("--json", action="store_true")
+    cb.set_defaults(handler=run_calibrate)
+    lv = verbs.add_parser("live-board", help="the live strategies' resolved forecasts scored by the lab's scorer, raw vs recalibrated out of sample (free)")
+    lv.add_argument("--strategies", default="", help="comma-separated strategy ids (default all)")
+    lv.add_argument("--json", action="store_true")
+    lv.set_defaults(handler=run_live_board)
+    bl = verbs.add_parser("block", help="write the 'recipe lab' block the track record publishes (lab_block.json beside the store) and print it")
+    bl.set_defaults(handler=run_block)
+    tn = verbs.add_parser("tournament", help="successive halving over a question set: many candidate recipes, a hard budget")
+    tn.add_argument("--set", dest="qset", default="latest")
+    tn.add_argument("--candidates", required=True, help="comma-separated specs: a named mind or protocol id, optionally ';calibration=platt' / ';evidence=keyword-overlap@1' / ';k=4' (one change)")
+    tn.add_argument("--first", type=int, help="questions per candidate in round one (doubles each round; default experiment/flags.TOURNAMENT_FIRST_SLICE)")
+    tn.add_argument("--budget", type=float, help="hard spend limit in USD (default experiment/flags.TOURNAMENT_USD), checked before every call")
+    tn.add_argument("--corpus", help="corpus store directory (default: ALGENT_CORPUS_STORE / corpus_store)")
+    tn.add_argument("--live", action="store_true", help="really call the model; without it (or with --dry-run) the plan and its maximum cost are printed")
+    tn.add_argument("--dry-run", action="store_true")
+    tn.set_defaults(handler=run_tournament)
+    mu = verbs.add_parser("mutate", help="propose one-change children of a protocol from its measured failures (free ones; one paid prompt draft with --live)")
+    mu.add_argument("protocol", help="a named mind (p0b, b, ...) or a stored protocol id/name")
+    mu.add_argument("--set", dest="qset", default="latest", help="question set whose per-question error tags are read (skipped when none is built)")
+    mu.add_argument("--live", action="store_true", help="have the house model draft a prompt addendum for the top prompt-addressable failure (capped at experiment/flags.MUTATE_CAP_USD)")
+    mu.add_argument("--json", action="store_true")
+    mu.set_defaults(handler=run_mutate)
     a = verbs.add_parser("audit", help="replay integrity audit of a run or a question")
     a.add_argument("target", nargs="?", help="a run id or a question id")
     a.add_argument("--set", dest="qset", help="audit the first answered question of this set (ID or latest)")
@@ -100,13 +134,18 @@ def run_questions(args: Any) -> int:
     from algent_backend.markets import store as ms
 
     if args.qset:
-        from algent_backend.experiment import qset, store
+        from algent_backend.experiment import flags, qset, store
 
         if args.qset == "build":
-            kw = {k: v for k, v in (("min_n", args.min_n), ("hours_before", args.hours)) if v}
-            doc = qset.build(**kw)
-            return _emit({"set": doc["id"], "n": len(doc["questions"]), "topics": doc["topics"], "skipped": doc["skipped"], "short_of_target": doc["short_of_target"],
-                          "params": doc["params"], "store": str(store.root())})
+            kw: dict[str, Any] = {k: v for k, v in (("min_n", args.min_n), ("hours_before", args.hours)) if v}
+            if getattr(args, "multi", False):
+                kw["hours_list"] = tuple(flags.SET_MULTI_HOURS)
+            doc = qset.build(**kw, dry_run=getattr(args, "dry_run", False))
+            out = {"set": doc["id"], "n": len(doc["questions"]), "topics": doc["topics"], "skipped": doc["skipped"], "short_of_target": doc["short_of_target"],
+                   "params": doc["params"], "store": str(store.root())}
+            if getattr(args, "multi", False):
+                out.update({k: doc[k] for k in ("n_markets", "n_resolved_markets", "n_event_families", "by_hours_before")})
+            return _emit({**out, "dry_run": True, "stored": False, "note": "nothing was stored"} if getattr(args, "dry_run", False) else out)
         if args.qset == "list":
             return _emit(store.read_lines("sets/index.jsonl"))
         return _emit(qset.load(args.qset))
@@ -130,6 +169,39 @@ def _set_run(args: Any) -> int:
         out = qset.run(doc, names, src, runner.live_ask, live=args.live, cap_usd=args.cap if args.cap is not None else flags.SET_RUN_CAP_USD,
                        plan_ask_for=lambda pv: research_policy.live_plan_ask(pv.params), corpus=corpus,
                        aware_ask_for=minds.live_aware_ask if args.aware else None)
+    finally:
+        if corpus is not None:
+            corpus.close()
+    return _emit(out)
+
+
+def run_mutate(args: Any) -> int:
+    from algent_backend.experiment import mutate, qset
+
+    try:
+        doc = qset.load(args.qset)
+    except KeyError:
+        doc = None
+    out = mutate.propose(args.protocol, doc, ask=mutate.live_draft_ask() if args.live else None, live=args.live)
+    if args.json:
+        return _emit(out)
+    print(mutate.render(out))
+    return 0
+
+
+def run_tournament(args: Any) -> int:
+    from algent_backend.corpus import paths
+    from algent_backend.corpus.query import Corpus
+    from algent_backend.experiment import flags, qset, research_policy, runner, sources, tournament
+
+    doc = qset.load(args.qset)
+    specs = [x.strip() for x in args.candidates.split(",") if x.strip()]
+    live = bool(args.live) and not args.dry_run
+    src = sources.CorpusSource(paths.db_file(args.corpus))
+    corpus = Corpus.open(args.corpus) if live else None
+    try:
+        out = tournament.run(doc, specs, src, runner.live_ask, live=live, budget_usd=args.budget if args.budget is not None else flags.TOURNAMENT_USD,
+                             first=args.first or flags.TOURNAMENT_FIRST_SLICE, plan_ask_for=lambda pv: research_policy.live_plan_ask(pv.params), corpus=corpus)
     finally:
         if corpus is not None:
             corpus.close()
@@ -198,11 +270,44 @@ def run_branch(args: Any) -> int:
 
 
 def run_score(args: Any) -> int:
-    from algent_backend.experiment import decision, qset, score
+    from algent_backend.experiment import calibrate, decision, qset, score
 
     if args.qset:
-        return _emit({"forecasts": qset.board(qset.load(args.qset)), "decisions": decision.board()})
-    return _emit({**score.scoreboard(), "decisions": decision.board()})
+        doc = qset.load(args.qset)
+        return _emit({"forecasts": qset.board(doc), "calibrated": calibrate.lab_board(only={e["id"] for e in doc["questions"]}), "decisions": decision.board()})
+    return _emit({**score.scoreboard(), "calibrated": calibrate.lab_board(), "decisions": decision.board()})
+
+
+def _names(text: str) -> tuple[str, ...]:
+    return tuple(x.strip() for x in text.split(",") if x.strip())
+
+
+def run_calibrate(args: Any) -> int:
+    from algent_backend.experiment import calibrate, qset
+
+    only = {e["id"] for e in qset.load(args.qset)["questions"]} if args.qset else None
+    board = calibrate.lab_board(only=only, live_strategies=_names(args.live_strategies))
+    if args.json:
+        return _emit(board)
+    print(calibrate.render_lab(board))
+    return 0
+
+
+def run_live_board(args: Any) -> int:
+    from algent_backend.experiment import calibrate
+
+    board = calibrate.live_board(strategies=_names(args.strategies))
+    if args.json:
+        return _emit(board)
+    print(calibrate.render_live(board))
+    return 0
+
+
+def run_block(args: Any) -> int:
+    from algent_backend.experiment import calibrate
+
+    block = calibrate.track_block()
+    return _emit({"written": calibrate.write_block(block), "block": block})
 
 
 def run_audit(args: Any) -> int:

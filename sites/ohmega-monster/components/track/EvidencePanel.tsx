@@ -1,4 +1,5 @@
-import type { BookHorizon, Evidence, EvidenceGroup, EvidenceMoney, FastBook, GapLoop, GapRouting, GapRow, Horizons, LoopRow, Trader } from "@/lib/track-record";
+import { ReliabilityChart } from "@/components/track/TrackCharts";
+import type { BookHorizon, Evidence, EvidenceGroup, EvidenceMoney, FastBook, GapLoop, GapRouting, GapRow, Horizons, LabBlock, LoopRow, Trader } from "@/lib/track-record";
 
 // The Evidence section of the track record (backend `markets/research_report.py`): how well OUR corpus served the bots, what they went looking for and the
 // book that trades the short horizon beside the daily one. Server-rendered. A ratio with nothing under it reads "n/a"; a group below the verdict threshold
@@ -87,6 +88,38 @@ export function AccuracyByEvidence({ e }: { e: Evidence }) {
         </table>
       </div>
       <p className="tr-note">{a.note}</p>
+    </>
+  );
+}
+
+// The recipe lab (backend `markets/lab_block.py`): in plain words, whether the best way of forecasting we have found beats the market and whether correcting its
+// systematic lean would have helped. Scores are our Brier minus the market's at the same moment, so below zero beats the market. Nothing here changes any bot's trading.
+const signed = (v: number) => `${v > 0 ? "+" : ""}${v.toFixed(3)}`;
+const CHART_CAPTION = "Hollow: what it said. Filled: after correcting the lean using only forecasts that had already resolved. Dot area is how many forecasts; the dashed diagonal is honest.";
+
+export function RecipeLab({ lab }: { lab: LabBlock }) {
+  const { best, live } = lab;
+  return (
+    <>
+      <p className="tr-note">
+        We try different ways of forecasting on markets that have already resolved and score each against the market&apos;s own price at the same moment. A score below zero means the way of forecasting beat the market; above zero, the market was closer.
+        Nothing here changes what the bots trade.
+      </p>
+      {best && (
+        <p className="tr-note">
+          Best so far{best.protocol ? `: ${best.protocol}` : ""}. Over {best.n} past questions it scored {signed(best.raw)} as it said them and {signed(best.calibrated)} once its probabilities were corrected
+          ({best.n_fitted} of {best.n} could be corrected from earlier results; the rest had too little history).
+        </p>
+      )}
+      {live && (
+        <p className="tr-note">
+          The live bots: if we had corrected their probabilities the same way, their score against the market would be {signed(live.calibrated)} instead of {signed(live.raw)} on {live.n} resolved forecasts.
+        </p>
+      )}
+      <div className="tr-figs">
+        {best && <ReliabilityChart raw={best.bins_raw} calibrated={best.bins_calibrated} title="Best recipe: when it says X%, how often does it happen?" caption={CHART_CAPTION} />}
+        {live && <ReliabilityChart raw={live.bins_raw} calibrated={live.bins_calibrated} title="Live bots: when they say X%, how often does it happen?" caption={CHART_CAPTION} />}
+      </div>
     </>
   );
 }

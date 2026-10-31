@@ -23,7 +23,7 @@ import math
 from dataclasses import dataclass
 from typing import Any
 
-from . import day_report, flags, paper, research_report, store, strategies, trader_report
+from . import day_report, flags, lab_block, paper, research_report, store, strategies, trader_report
 from .contracts import Forecast, Market
 
 EPS = 1e-3
@@ -201,7 +201,7 @@ def track_record() -> dict[str, Any]:
         "trader": trader_report.section(), "fast": research_report.fast_section(), "day": day_report.section(), "strategies": strategy_sections(), "evidence": research_report.section(ps),
         "horizons": research_report.horizons(ps), "open_positions": open_rows(), "disagreements": disagreements()[:20], "worst_misses": worst,
         "market_beat_us": len(market_won), "resolved": rows[::-1][:flags.PUBLISH_RESOLVED],
-        "other": watch_scores(),
+        "other": watch_scores(), **({"lab": lb} if (lb := lab_block.section()) else {}),
         "rules": {"bankroll": flags.BANKROLL, "edge_min": flags.EDGE_MIN, "kelly_fraction": flags.KELLY_FRACTION, "max_position_frac": flags.MAX_POSITION_FRAC,
                   "max_exposure_frac": flags.MAX_EXPOSURE_FRAC, "slippage": flags.SLIPPAGE, "min_for_verdict": flags.MIN_RESOLVED_FOR_VERDICT},
     }

@@ -7,7 +7,7 @@ import JudgmentsSwitch from "@/components/JudgmentsSwitch";
 import PageTag from "@/components/PageTag";
 
 import { BrierSeries, CalibrationChart, ChartCard } from "@/components/track/TrackCharts";
-import { AccuracyByEvidence, EvidenceStats, GapsList, HorizonTable, LoopSummary, LoopTable, MissingSummary, MissingTable } from "@/components/track/EvidencePanel";
+import { AccuracyByEvidence, EvidenceStats, GapsList, HorizonTable, LoopSummary, LoopTable, MissingSummary, MissingTable, RecipeLab } from "@/components/track/EvidencePanel";
 import { DayGroups, Wishes } from "@/components/track/DayBook";
 import { Books, ValueChart } from "@/components/track/Portfolio";
 import { Disagreements, Resolved } from "@/components/track/TrackTables";
@@ -91,6 +91,12 @@ export default async function TrackRecordPage() {
             <p className="tr-note">Our newest forecast against the current price. A gap means we disagree, not that we are right.</p>
             <Disagreements rows={t.disagreements} />
           </Fold>
+
+          {t.lab && (
+            <Fold title="The recipe lab">
+              <RecipeLab lab={t.lab} />
+            </Fold>
+          )}
 
           {t.evidence && (
             <Fold title="Did our corpus serve the bots?">

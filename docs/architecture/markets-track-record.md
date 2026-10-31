@@ -57,6 +57,8 @@ module that every buy path uses (`guards.apply` for agentic buys and resting pla
   by `floor_stake` on the same ceiling and skips the edge test (its point is a ticket with no edge).
 - Hourly repro (tested): p=0.995 at 97c, trust 0.3: q=0.9775 < cost 0.98, held. At maximal trust it is capped at $100.
 
+**The recipe lab (optional `lab` object of `ohmega.track-record/2`, additive 10-31).** Best lab recipe vs the market raw and recalibrated (with n), and the live-bots headline "if we had recalibrated, Brier vs market would be X instead of Y on N resolved", with reliability bins for both. Written by `newsroom lab block` into `lab_block.json` beside the lab store and only read by `markets/lab_block.py` (defensively; absent = no section); site section "The recipe lab" in `EvidencePanel.tsx`. Changes no trading. See `experiment-framework.md` section 15.
+
 ## Skill vs market (`bot_forecasts.skill_stats`)
 Brier against the outcome looks great (~0.03) when a bot forecasts near-decided markets; the number that says anything is Brier against the market's price at the same moment. Per strategy,
 `forecasts.skill` = `{min_resolved, all, contested}`, each block `{n, shown, mean, se}`: `mean` is the average of (market Brier - bot Brier) on `BotForecast.market`, positive = we beat the market;

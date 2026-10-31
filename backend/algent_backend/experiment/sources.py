@@ -98,7 +98,7 @@ def question_from_market(market_id: str, cutoff: str) -> Question:
     c, res = store.parse_time(cutoff), store.parse_time(latest.resolved_at)
     if c is None or (res is not None and c >= res):
         raise ValueError("the cutoff must be a valid instant before the market resolved")
-    snap = ms.price_at(ms.snapshots(market_id), cutoff)
+    snap = ms.price_at(sorted(ms.snapshots(market_id), key=lambda s: s.at), cutoff)      # price_at wants time order; a history backfill is appended after live rows
     qid = f"market-{market_id}-{cutoff[:10]}" + (f"-r{store.digest(m.updated_at)[:4]}" if rev["differs_from_latest"] else "")   # a corrected text is a NEW question id: old stored ones stay as they were
     return Question(id=qid, text=m.question, rules=m.description, cutoff=cutoff, closes_at=m.end_date, source=f"market:{market_id}",
                     category="historical" if latest.status != "open" else "live",
