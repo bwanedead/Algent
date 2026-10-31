@@ -16,6 +16,7 @@ corpus index, writes only to its own store (ALGENT_EXPERIMENT_STORE), and calls 
     newsroom lab live-board [--strategies a,b] [--json]     the live bots' resolved forecasts scored the same way, raw vs recalibrated (free)
     newsroom lab block                                      write lab_block.json (the track record's "recipe lab" block) beside the store
     newsroom lab tournament --set ID --candidates a,b;calibration=platt [--first N] [--budget USD] [--live|--dry-run]   successive halving, hard budget
+    newsroom lab mutate PROTOCOL [--set ID] [--live] [--json]   one-change children from the measured failures; free ones always, one capped paid prompt draft with --live
     newsroom lab list                                       questions, branches, runs
     newsroom lab show ID                                    a run (manifest, prompt, output, integrity) or a question
     newsroom lab branch --from BRANCH --name NAME [--evidence NAME@V]   fork a branch with ONE evidence policy changed; the original is untouched
@@ -97,6 +98,12 @@ def add_parser(sub: Any) -> None:
     tn.add_argument("--live", action="store_true", help="really call the model; without it (or with --dry-run) the plan and its maximum cost are printed")
     tn.add_argument("--dry-run", action="store_true")
     tn.set_defaults(handler=run_tournament)
+    mu = verbs.add_parser("mutate", help="propose one-change children of a protocol from its measured failures (free ones; one paid prompt draft with --live)")
+    mu.add_argument("protocol", help="a named mind (p0b, b, ...) or a stored protocol id/name")
+    mu.add_argument("--set", dest="qset", default="latest", help="question set whose per-question error tags are read (skipped when none is built)")
+    mu.add_argument("--live", action="store_true", help="have the house model draft a prompt addendum for the top prompt-addressable failure (capped at experiment/flags.MUTATE_CAP_USD)")
+    mu.add_argument("--json", action="store_true")
+    mu.set_defaults(handler=run_mutate)
     a = verbs.add_parser("audit", help="replay integrity audit of a run or a question")
     a.add_argument("target", nargs="?", help="a run id or a question id")
     a.add_argument("--set", dest="qset", help="audit the first answered question of this set (ID or latest)")
@@ -166,6 +173,20 @@ def _set_run(args: Any) -> int:
         if corpus is not None:
             corpus.close()
     return _emit(out)
+
+
+def run_mutate(args: Any) -> int:
+    from algent_backend.experiment import mutate, qset
+
+    try:
+        doc = qset.load(args.qset)
+    except KeyError:
+        doc = None
+    out = mutate.propose(args.protocol, doc, ask=mutate.live_draft_ask() if args.live else None, live=args.live)
+    if args.json:
+        return _emit(out)
+    print(mutate.render(out))
+    return 0
 
 
 def run_tournament(args: Any) -> int:

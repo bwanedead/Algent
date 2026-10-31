@@ -66,14 +66,19 @@ def with_calibration(proto: Protocol, name: str, live_strategies: tuple[str, ...
     return child(proto, calibration.named(name, live_strategies), f"{proto.name}~{name}")
 
 
-def parse(spec: str) -> Protocol:
-    """A candidate protocol from a spec (see the module docstring)."""
+def load(ref: str) -> Protocol:
+    """A protocol from a named mind (``p0b``, ``b+prior``...) or a stored protocol id, id prefix or name."""
     from . import qset
 
+    return qset.protocol_named(ref) if ref in qset.NAMED else policies.load_protocol(genealogy.resolve(ref))
+
+
+def parse(spec: str) -> Protocol:
+    """A candidate protocol from a spec (see the module docstring)."""
     base, *changes = [x.strip() for x in spec.split(";") if x.strip()]
     if len(changes) > 1:
         raise ValueError(f"{spec!r} varies more than one thing; a candidate changes exactly one policy")
-    proto = qset.protocol_named(base) if base in qset.NAMED else policies.load_protocol(genealogy.resolve(base))
+    proto = load(base)
     if not changes:
         return proto
     key, _, val = changes[0].partition("=")
