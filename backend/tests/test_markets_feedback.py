@@ -15,6 +15,11 @@ def _feedback_on(monkeypatch, _store):                                # after th
     monkeypatch.setattr(flags, "FORECASTS_PER_RUN", 2)
 
 
+@pytest.fixture(autouse=True)
+def _full_trust(monkeypatch):
+    monkeypatch.setattr(flags, "TRUST_PRIOR", 1.0)       # these tests pin caps and ledgers, not sizing: trust-shrunk sizing is tested in test_markets_sizing.py
+
+
 @pytest.fixture
 def floor(monkeypatch):
     monkeypatch.setattr(flags, "MIN_EXPOSURE_PCT", 0.02)              # $200 of the $10k bankroll

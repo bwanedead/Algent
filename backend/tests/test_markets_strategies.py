@@ -8,7 +8,7 @@ import json
 from datetime import UTC, datetime, timedelta
 
 import pytest
-from test_markets_day import NOW, WORLD, Script, _store, fake_get  # noqa: F401  (the fixture is autouse in its module; re-exported so it applies here)
+from test_markets_day import NOW, WORLD, Script, _full_trust, _store, fake_get  # noqa: F401  (the fixture is autouse in its module; re-exported so it applies here)
 
 from algent_backend.markets import book, day, day_prompt, day_report, day_tools, flags, methods, score, store, strategies
 from algent_backend.markets.contracts import Decision, DayRun, Snapshot

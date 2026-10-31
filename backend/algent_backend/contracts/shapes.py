@@ -112,6 +112,8 @@ SHAPES: dict[str, Any] = {
                                              # additive since 10-28: forecast feedback (markets/bot_forecasts.py) and the activity floor
                                              "forecasts?": {"made": "int", "resolved": "int", "min_resolved": "int", "shown": "bool", "brier": "num|null", "brier_market": "num|null",
                                                             "log_loss": "num|null", "skill_vs_market": "num|null",
+                                                            # additive 10-31: skill vs the market price at the same moment (one forecast per market), all resolved and contested only
+                                                            "skill?": {"min_resolved": "int", "all": {"n": "int", "shown": "bool", "mean": "num|null", "se": "num|null"}, "contested": {"n": "int", "shown": "bool", "mean": "num|null", "se": "num|null"}},
                                                             "recent": [{"market_id": "str", "question": "str", "p": "num", "market": "num|null", "outcome": "str"}]},
                                              "exposure?": {"pct": "num", "floor_pct": "num"},
                                              "floor?": {"opened": "int", "groups": [{"label": "str", "n": "int", "shown": "bool"}]}}]},

@@ -256,6 +256,19 @@ FORECAST_PUSHES = 2
 FORECASTS_PER_TURN = 12
 #: A bot's Brier is shown only once it has this many RESOLVED forecasts; before it the page says "n=3, too early".
 FORECAST_MIN_RESOLVED = 10
+#: A forecast is CONTESTED when the market's YES price at forecast time was inside these bounds. Near-decided markets (a 0.97 priced "will X stay above Y")
+#: make any bot's Brier look great; skill vs the market is read on all resolved forecasts AND on the contested ones, where there is something to beat.
+CONTESTED_LO, CONTESTED_HI = 0.05, 0.95
+
+# ── sizing and trust (sizing.py): the forecaster supplies a probability, sizing is mechanical ──────
+#: Every buy sizes on q = w*p + (1-w)*price, the bot's p shrunk toward the market price by its trust w (a bot that cannot yet show skill is mostly followed by the market).
+TRUST_PRIOR = 0.3
+#: Trust is earned within these bounds: w = TRUST_PRIOR + TRUST_GAIN * t, t = contested skill / its standard error (needs FORECAST_MIN_RESOLVED contested forecasts, else the prior).
+TRUST_MIN, TRUST_MAX = 0.1, 0.8
+TRUST_GAIN = 0.1
+#: Above this all-in price the whole stake is the loss if the side fails, so a stake is also capped at MAX_LOSS_FRAC_EXTREME of the bankroll (the 95-99c "sure thing" trap).
+EXTREME_PRICE = 0.90
+MAX_LOSS_FRAC_EXTREME = 0.01
 #: Minimum activity: the share of the bankroll that should be at risk after each run. Below it the agent is told and must add positions on its best-edge
 #: markets; with no edge it takes small positions sized by its own probability vs the price (fractional Kelly, min ticket, same guards). The floor is
 #: clamped to FLOOR_CAP_SHARE of the strategy's exposure cap (guards stay: 50% total), so a 60% target means 45% in practice.

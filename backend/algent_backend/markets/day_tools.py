@@ -15,7 +15,7 @@ from typing import Any
 
 from algent_backend.retrieval.docs import clip
 
-from . import book, browse, day_report, flags, gaps, guards, research, resting, store, strategies
+from . import book, browse, day_report, flags, gaps, guards, research, resting, sizing, store, strategies
 from .contracts import BotForecast, Decision, Snapshot, ToolEvent, WatchEvent, bot_forecast_id, day_run_id, decision_id
 from .day_prompt import Call, ForecastOut
 from .polymarket import Fetch, num
@@ -209,16 +209,17 @@ class Session:
         held, cash = book.holdings(self.ds).get(v.market.id), book.cash(self.ds)
         exposure = sum(h.cost for h in book.holdings(self.ds).values())
         room = min(cash, self.s.position_frac * self.s.bankroll - (held.cost if held else 0.0), self.s.exposure_frac * self.s.bankroll - exposure)
-        lines = [f"YES at {v.yes} (spread {v.spread}); your p(YES) {c.p_yes:.2f}; room under the caps and cash {_money(max(0.0, room))}"]
+        w = sizing.trust(self.s.id)
+        lines = [f"YES at {v.yes} (spread {v.spread}); your p(YES) {c.p_yes:.2f}; room under the caps and cash {_money(max(0.0, room))}; your trust {w:.2f} "
+                 f"(stakes size on p shrunk toward the price: q = trust*p + (1-trust)*price; trust is earned by beating the market on contested markets)"]
         for side, q in (("yes", c.p_yes), ("no", 1 - c.p_yes)):
             cost = min(0.99, book.side_price(v.yes, side) + flags.SLIPPAGE)
-            full = (q - cost) / (1 - cost)
-            if full <= 0:
-                lines.append(f"{side.upper()}: all-in price {cost:.3f} vs your {q:.2f}: no edge")
+            k = sizing.ceiling(c.p_yes, side, cost, self.s.bankroll, w)
+            if k.full <= 0:
+                lines.append(f"{side.upper()}: all-in price {cost:.3f}, your {q:.2f} shrunk to {k.q:.3f}: no edge, a buy would be held")
                 continue
-            stake = max(0.0, min(flags.KELLY_FRACTION * full * self.s.bankroll, room))
-            lines.append(f"{side.upper()}: all-in price {cost:.3f}; edge {q - cost:+.3f} per share, expected return {(q - cost) / cost:+.0%}; full Kelly {full:.1%} of bankroll, "
-                         f"{flags.KELLY_FRACTION:g}x Kelly = {_money(flags.KELLY_FRACTION * full * self.s.bankroll)}; after the caps {_money(stake)}")
+            lines.append(f"{side.upper()}: all-in price {cost:.3f}; your {q:.2f} shrunk to q={k.q:.3f}, edge {k.q - cost:+.3f} per share; full Kelly on q {k.full:.1%} of bankroll, "
+                         f"{flags.KELLY_FRACTION:g}x = {_money(flags.KELLY_FRACTION * k.full * self.s.bankroll)}; ceiling {_money(k.stake)} ({k.why}); after the caps {_money(max(0.0, min(k.stake, room)))}")
         if held:
             lines.append(f"you hold {held.side.upper()} (cost {_money(held.cost)}): compare the expected value of holding with selling at the bid before adding")
         return NL.join(lines), ""
@@ -289,21 +290,24 @@ class Session:
             why = browse.tradable_why(v, self.now, horizon_h=self.s.horizon_h, min_hours=self.s.min_hours_left)
             if c.side not in ("yes", "no"):
                 why = why or "side must be yes or no"
+            if not 0.0 < c.p_yes < 1.0:
+                why = why or "give p_yes: your probability of YES (a fraction between 0 and 1); the stake is sized on it, shrunk by your trust"
         elif v.raw.get("closed") or v.raw.get("active") is False:
             why = "the market is closed to trading (awaiting its resolution)"
         elif v.yes is None:
             why = "no live price"
         action = "sell" if kind == "sell" else f"buy_{c.side}"
-        floor_clip = ""
+        floor_clip, floor_sized = "", False
         under = kind == "buy" and not why and v is not None and v.yes is not None and self.exposure() < self.s.floor_pct * self.s.bankroll
         if under:
             assert v is not None and v.yes is not None
             q = c.p_yes if c.side == "yes" else 1.0 - c.p_yes
             edge = q - book.side_price(v.yes, c.side) if 0.0 < c.p_yes < 1.0 else 0.0
             if c.floor or edge < flags.EDGE_MIN:                       # a position taken to fill the floor, not for a stated edge: small, and tagged
-                size = guards.floor_stake(c.p_yes, c.side, v.yes, self.s.bankroll)
+                size = guards.floor_stake(c.p_yes, c.side, v.yes, self.s.bankroll, sizing.trust(self.s.id))
                 floor_clip = f"floor position (no real edge): sized by your own probability, {_money(size)}" if requested > size or requested <= 0 else ""
                 requested = min(requested, size) if requested > 0 else size
+                floor_sized = True                                       # already sized mechanically (the ticket at worst): the edge test would only void it
             else:
                 under = False
         if why:
@@ -311,7 +315,8 @@ class Session:
         else:
             assert v is not None and v.yes is not None
             fill = guards.apply(action, requested, held=held, yes_price=v.yes, cash=book.cash(self.ds), exposure=sum(h.cost for h in book.holdings(self.ds).values()),
-                                tradable=True, position_frac=self.s.position_frac, exposure_frac=self.s.exposure_frac, bankroll=self.s.bankroll)
+                                tradable=True, position_frac=self.s.position_frac, exposure_frac=self.s.exposure_frac, bankroll=self.s.bankroll,
+                                p_yes=c.p_yes if kind == "buy" and not floor_sized and 0.0 < c.p_yes < 1.0 else None, trust=sizing.trust(self.s.id))
         d = self._line(action, v, mid, c, fill, [*([floor_clip] if floor_clip else []), *fill.clips], min(requested, 1e9))
         if under and d.action in ("buy_yes", "buy_no"):
             d.tag = "floor"

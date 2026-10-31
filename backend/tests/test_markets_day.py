@@ -26,6 +26,11 @@ def _store(tmp_path, monkeypatch):
         monkeypatch.setattr(flags, name, 0)
 
 
+@pytest.fixture(autouse=True)
+def _full_trust(monkeypatch):
+    monkeypatch.setattr(flags, "TRUST_PRIOR", 1.0)       # these tests pin caps and ledgers, not sizing: trust-shrunk sizing is tested in test_markets_sizing.py
+
+
 def raw(mid, hours, *, bid=0.49, ask=0.51, liq=20000.0, vol=50000.0, closed=False, q=None):
     return {"id": mid, "question": q or f"Will thing {mid} happen?", "description": "Resolves YES if it does.", "slug": f"s{mid}", "outcomes": '["Yes", "No"]',
             "clobTokenIds": json.dumps([f"tok{mid}", f"tokno{mid}"]), "endDate": (NOW + timedelta(hours=hours)).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -105,7 +110,7 @@ def test_buy_fills_at_live_price_plus_slippage_clips_to_the_cap_and_tracks_the_m
     d = store.decisions("day")[0]
     assert d.action == "buy_yes" and d.book == "day" and d.ours == 0.7 and d.rationale == "Talks are scheduled."
     assert d.price == pytest.approx(0.50 + flags.SLIPPAGE) and -d.cash_flow == pytest.approx(flags.DAY_MAX_POSITION_FRAC * flags.DAY_BANKROLL)
-    assert d.clips and "position limit" in d.clips[0] and "FILLED" in ev.result and ev.ref == d.id
+    assert any("position limit" in c for c in d.clips) and "FILLED" in ev.result and ev.ref == d.id
     m = store.markets()["a1"]
     assert m.origin == "day" and store.snapshots("a1")                   # saved so the mirror marks and resolves it
     assert d.hours_to_end == 20.0
@@ -113,9 +118,9 @@ def test_buy_fills_at_live_price_plus_slippage_clips_to_the_cap_and_tracks_the_m
 
 def test_a_refused_order_is_answered_with_its_reason_and_recorded():
     s = sess()
-    far = s.run(1, Call(tool="buy", market="far", side="yes", usd=100, reason="x"))
-    sp = s.run(1, Call(tool="buy", market="sp1", side="yes", usd=100, reason="x"))
-    thin = s.run(1, Call(tool="buy", market="thin", side="no", usd=100, reason="x"))
+    far = s.run(1, Call(tool="buy", market="far", side="yes", usd=100, reason="x", p_yes=0.7))
+    sp = s.run(1, Call(tool="buy", market="sp1", side="yes", usd=100, reason="x", p_yes=0.7))
+    thin = s.run(1, Call(tool="buy", market="thin", side="no", usd=100, reason="x", p_yes=0.7))
     assert "NOT FILLED" in far.result and "beyond" in far.result
     assert "blocklist" in sp.result and "too thin" in thin.result
     lines = store.decisions("day")
@@ -125,25 +130,25 @@ def test_a_refused_order_is_answered_with_its_reason_and_recorded():
 
 def test_no_both_sides_cash_floor_and_order_limit(monkeypatch):
     s = sess()
-    s.run(1, Call(tool="buy", market="a1", side="yes", usd=100, reason="r"))
-    both = s.run(1, Call(tool="buy", market="a1", side="no", usd=100, reason="r"))
+    s.run(1, Call(tool="buy", market="a1", side="yes", usd=100, reason="r", p_yes=0.7))
+    both = s.run(1, Call(tool="buy", market="a1", side="no", usd=100, reason="r", p_yes=0.7))
     assert "sell it before buying NO" in both.result
     monkeypatch.setattr(flags, "DAY_MAX_ORDERS_PER_RUN", 2)
-    over = s.run(2, Call(tool="buy", market="a2", side="yes", usd=100, reason="r"))
+    over = s.run(2, Call(tool="buy", market="a2", side="yes", usd=100, reason="r", p_yes=0.7))
     assert "order limit" in over.result and book.cash(s.ds) <= flags.DAY_BANKROLL
 
 
 def test_exposure_cap_applies_across_markets(monkeypatch):
     monkeypatch.setattr(flags, "DAY_MAX_EXPOSURE_FRAC", 0.06)
     s = sess()
-    s.run(1, Call(tool="buy", market="a1", side="yes", usd=500, reason="r"))
-    second = s.run(1, Call(tool="buy", market="a2", side="yes", usd=500, reason="r"))
+    s.run(1, Call(tool="buy", market="a1", side="yes", usd=500, reason="r", p_yes=0.7))
+    second = s.run(1, Call(tool="buy", market="a2", side="yes", usd=500, reason="r", p_yes=0.7))
     assert "exposure limit" in second.result and sum(h.cost for h in book.holdings(s.ds).values()) <= 0.06 * flags.DAY_BANKROLL + 0.01
 
 
 def test_sell_all_partial_and_unknown_position_and_label():
     s = sess()
-    s.run(1, Call(tool="buy", market="a1", side="yes", usd=400, reason="r"))
+    s.run(1, Call(tool="buy", market="a1", side="yes", usd=400, reason="r", p_yes=0.7))
     part = s.run(2, Call(tool="sell", market="P1", usd=100, reason="Took some profit; holding adds little."))
     assert "FILLED sell" in part.result and book.holdings(s.ds)["a1"].cost < 400
     allout = s.run(2, Call(tool="sell", market="a1", all=True, reason="Thesis broke."))
@@ -156,7 +161,7 @@ def test_sell_all_partial_and_unknown_position_and_label():
 
 def test_sell_is_refused_on_a_closed_market():
     s = sess()
-    s.run(1, Call(tool="buy", market="a1", side="yes", usd=200, reason="r"))
+    s.run(1, Call(tool="buy", market="a1", side="yes", usd=200, reason="r", p_yes=0.7))
     s.get = fake_get({"events": [event("e1", ["politics"], [raw("a1", 20, closed=True)])]})
     assert "closed to trading" in s.run(2, Call(tool="sell", market="a1", all=True, reason="r")).result
 
@@ -171,7 +176,7 @@ def test_day_book_uses_its_own_caps_in_the_shared_guards(monkeypatch):
 # ── settlement, equity, forecasting ──────────────────────────────────────────────────────────────
 def test_settlement_pays_the_day_book_and_marks_its_own_curve():
     s = sess()
-    s.run(1, Call(tool="buy", market="a1", side="yes", usd=300, reason="r"))
+    s.run(1, Call(tool="buy", market="a1", side="yes", usd=300, reason="r", p_yes=0.7))
     assert [p.book for p in book.mark(NOW) if p.book == "day"] == ["day"]
     store.save_markets([store.markets()["a1"].model_copy(update={"status": "resolved", "outcome": "yes", "resolved_at": NOW.isoformat()})])
     assert trader.settle(NOW + timedelta(hours=21), "day") == 1
@@ -183,7 +188,7 @@ def test_settlement_pays_the_day_book_and_marks_its_own_curve():
 
 def test_a_market_only_the_day_book_brought_in_is_never_forecast():
     s = sess()
-    s.run(1, Call(tool="buy", market="a1", side="yes", usd=300, reason="r"))
+    s.run(1, Call(tool="buy", market="a1", side="yes", usd=300, reason="r", p_yes=0.7))
     from algent_backend.markets.contracts import Snapshot
     store.append_snapshots([Snapshot(market_id="a1", at=NOW.isoformat(), p=0.5)])
     assert forecast.candidates(NOW) == []
@@ -193,7 +198,7 @@ def test_a_market_only_the_day_book_brought_in_is_never_forecast():
 def test_portfolio_performance_size_and_watchlist():
     s = sess()
     assert "no open positions" in s.run(1, Call(tool="portfolio")).result
-    s.run(1, Call(tool="buy", market="a1", side="yes", usd=400, reason="r"))
+    s.run(1, Call(tool="buy", market="a1", side="yes", usd=400, reason="r", p_yes=0.7))
     pf = s.run(1, Call(tool="portfolio")).result
     assert "P1 [a1] YES" in pf and "at risk" in pf and "h to resolution" in pf and "unrealised" in pf and "realised on earlier sells" in pf
     s.run(2, Call(tool="sell", market="a1", all=True, reason="r"))
@@ -216,7 +221,7 @@ def test_corpus_tools_are_logged_and_citations_must_have_been_shown():
     s = sess(corpus=Corpus())
     out = s.run(1, Call(tool="search", query="talks")).result
     assert "daily:1" in out and "market:x" not in out                    # the blindness filter is the research layer's
-    s.run(1, Call(tool="buy", market="a1", side="yes", usd=100, reason="r", cited=["daily:1", "invented:9"]))
+    s.run(1, Call(tool="buy", market="a1", side="yes", usd=100, reason="r", cited=["daily:1", "invented:9"], p_yes=0.7))
     assert store.decisions("day")[0].evidence_ids == ["daily:1"]
     assert s.queries == ["search(talks)"]
     assert "not available" in sess().run(1, Call(tool="entity", query="Iran")).result
@@ -290,7 +295,7 @@ def test_day_budget_stops_a_run_before_any_call_and_a_failed_call_keeps_the_orde
                 raise RuntimeError("provider down")
             return super().__call__(task, role)
 
-    rep = day.run(ask=Boom([Turn(calls=[Call(tool="buy", market="a1", side="yes", usd=100, reason="r")])]), now=nxt, get=fake_get(), corpus=None)
+    rep = day.run(ask=Boom([Turn(calls=[Call(tool="buy", market="a1", side="yes", usd=100, reason="r", p_yes=0.7)])]), now=nxt, get=fake_get(), corpus=None)
     assert rep["stopped"].startswith("model call failed") and len(store.decisions("day")) == 1
 
 
@@ -337,7 +342,7 @@ def test_the_report_withholds_win_rates_until_the_verdict_threshold_and_shows_ru
     assert sec["wishes"][0]["topic"] == "Live parliament vote tallies" and sec["wishes"][0]["source"] == "parliament feed" and sec["wishes"][0]["runs"] == 1
     assert [r["hours_left"] for r in sec["open_positions"]] == [] and sec["log"][0]["action"] == "sell" and sec["last_at"].startswith(NOW.date().isoformat())
     held = Session(now=NOW + timedelta(hours=2), get=fake_get())
-    held.run(1, Call(tool="buy", market="a2", side="no", usd=100, reason="r"))
+    held.run(1, Call(tool="buy", market="a2", side="no", usd=100, reason="r", p_yes=0.1))
     pos = day_report.section(NOW.date().isoformat())["open_positions"][0]
     assert pos["now_at"].startswith(NOW.date().isoformat()) and pos["ends_at"].endswith(":00") and pos["url"].startswith("https://polymarket.com/event/")
 

@@ -6,7 +6,7 @@ from __future__ import annotations
 from datetime import timedelta
 
 import pytest
-from test_markets_day import NOW, WORLD, _store, event, fake_get, raw  # noqa: F401  (autouse fixture re-exported so it applies here)
+from test_markets_day import NOW, WORLD, _full_trust, _store, event, fake_get, raw  # noqa: F401  (autouse fixture re-exported so it applies here)
 
 from algent_backend.markets import book, day, day_report, flags, resting, store, strategies
 from algent_backend.markets.contracts import Decision, RestingOrder, Snapshot
