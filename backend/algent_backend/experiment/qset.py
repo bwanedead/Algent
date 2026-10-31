@@ -67,7 +67,7 @@ def _entries(chosen: list[Question], markets: dict[str, Any]) -> tuple[list[dict
         by_topic[t] = by_topic.get(t, 0) + 1
         end, cut = store.parse_time(markets[mid].resolved_at), store.parse_time(q.cutoff)
         if end is not None and cut is not None:
-            key = f"{(end - cut).total_seconds() / 3600:g}"
+            key = f"{round((end - cut).total_seconds() / 3600):g}"                 # resolved_at carries seconds; the cutoff is whole hours before it
             by_hours[key] = by_hours.get(key, 0) + 1
         entries.append({"id": q.id, "cutoff": q.cutoff, "source": q.source, "topic": t})
     return entries, by_topic, by_hours

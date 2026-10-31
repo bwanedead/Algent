@@ -40,6 +40,7 @@ def lab_rows(*, resolve_now: bool = True) -> list[Row]:
 def live_rows(strategies: tuple[str, ...] = (), *, forecasts: list[Any] | None = None, markets: dict[str, Any] | None = None) -> list[Row]:
     """The live bots' resolved forecasts, one per (strategy, market): the last made before the market resolved. ``at`` is when the bot said it."""
     from algent_backend.markets import store as ms
+    from algent_backend.markets.bot_forecasts import scorable
 
     ms_ = ms.markets() if markets is None else markets
     last: dict[tuple[str, str], Any] = {}
@@ -47,7 +48,7 @@ def live_rows(strategies: tuple[str, ...] = (), *, forecasts: list[Any] | None =
         m = ms_.get(f.market_id)
         if strategies and f.strategy not in strategies:
             continue
-        if m is not None and m.status == "resolved" and m.outcome in ("yes", "no") and (not m.resolved_at or f.at <= m.resolved_at):
+        if scorable(f, m):
             last[(f.strategy, f.market_id)] = f
     return [{"strategy": f.strategy, "market": f.market_id, "p": f.p, "o": 1 if ms_[f.market_id].outcome == "yes" else 0, "cutoff": f.at, "resolved_at": ms_[f.market_id].resolved_at,
              "market_p": f.market} for f in last.values()]

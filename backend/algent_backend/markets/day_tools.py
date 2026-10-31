@@ -83,6 +83,9 @@ class Session:
         price = self.prices.get(mid)
         if mid not in self.considered or price is None or not 0.0 < p < 1.0:
             return False
+        end = store.parse_iso(self.considered[mid].get("ends", "") + ":00+00:00") if self.considered[mid].get("ends") else None
+        if end is not None and end <= self.now:                                # an ended market's price already shows the answer: not a forecast
+            return False
         at = (self.now + timedelta(seconds=len(self.forecast_log))).isoformat(timespec="seconds")
         self.forecast_log[mid] = BotForecast(id=bot_forecast_id(self.s.id, self.run_id, mid), strategy=self.s.id, run_id=self.run_id, market_id=mid, at=at, day=at[:10],
                                              p=round(min(flags.P_MAX, max(flags.P_MIN, p)), 4), market=price, confidence=confidence, question=self.considered[mid]["question"],
@@ -107,7 +110,7 @@ class Session:
                 done += 1
             else:
                 skipped.append(mid or "(blank)")
-        return f"FORECASTS recorded {done}; {len(self.forecast_log)} market(s) forecast this run" + (f"; skipped (unknown, unpriced or p outside 1-99): {', '.join(skipped)}" if skipped else "")
+        return f"FORECASTS recorded {done}; {len(self.forecast_log)} market(s) forecast this run" + (f"; skipped (unknown, ended, unpriced or p outside 1-99): {', '.join(skipped)}" if skipped else "")
 
     def flush_forecasts(self) -> int:
         rows = list(self.forecast_log.values())

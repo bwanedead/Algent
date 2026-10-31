@@ -33,9 +33,18 @@ def log_loss(p: float, o: int) -> float:
     return -(o * math.log(p) + (1 - o) * math.log(1 - p))
 
 
+def scorable(f: Any, m: Any) -> bool:
+    """A forecast is scored only if its market resolved yes/no AND it was made before the market's end time: after the end (the mirror can still list it as
+    open for an hour or two while it settles) the price already shows the answer, and such a "forecast" is a read of the result, not a prediction."""
+    if m is None or m.status != "resolved" or m.outcome not in ("yes", "no"):
+        return False
+    at, end = store.parse_iso(f.at), store.parse_iso(getattr(m, "end_date", "") or "")
+    return (end is None or (at is not None and at < end)) and (not m.resolved_at or f.at <= m.resolved_at)
+
+
 def _outcome(f: BotForecast, ms: dict) -> str:
     m = ms.get(f.market_id)
-    return m.outcome if m is not None and m.status == "resolved" else ""
+    return m.outcome if scorable(f, m) else ""
 
 
 def _block(diffs: list[float]) -> dict[str, Any]:
@@ -53,7 +62,7 @@ def skill_stats(strategy: str) -> dict[str, Any]:
     last: dict[str, BotForecast] = {}
     for f in sorted(store.bot_forecasts(strategy), key=lambda f: f.at):
         m = ms.get(f.market_id)
-        if f.market is not None and m is not None and m.status == "resolved" and m.outcome in ("yes", "no") and (not m.resolved_at or f.at <= m.resolved_at):
+        if f.market is not None and scorable(f, m):
             last[f.market_id] = f
     diffs = [(brier(f.market, o) - brier(f.p, o), f.market) for f in last.values() if f.market is not None and (o := 1 if ms[f.market_id].outcome == "yes" else 0) in (0, 1)]
     return {"min_resolved": flags.FORECAST_MIN_RESOLVED, "all": _block([d for d, _ in diffs]),

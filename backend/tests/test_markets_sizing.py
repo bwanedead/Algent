@@ -108,3 +108,12 @@ def test_skill_is_withheld_until_enough_have_resolved(monkeypatch):
     k = bot_forecasts.skill_stats("s")
     assert k["all"] == {"n": 1, "shown": False, "mean": None, "se": None} and k["contested"]["shown"] is False
     assert sizing.trust("s") == flags.TRUST_PRIOR                                                            # no skill shown, no trust earned
+
+
+def test_a_forecast_made_after_the_market_ended_is_not_scored():
+    from types import SimpleNamespace as NS
+
+    from algent_backend.markets.bot_forecasts import scorable
+    m = NS(status="resolved", outcome="no", end_date="2026-10-30T20:00:00Z", resolved_at="2026-10-30T20:35:00+00:00")
+    assert scorable(NS(at="2026-10-30T19:25:00+00:00"), m)
+    assert not scorable(NS(at="2026-10-30T20:31:00+00:00"), m)            # after the end, before settlement: the price already shows the answer
