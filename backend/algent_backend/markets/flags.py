@@ -25,6 +25,11 @@ MAX_OPEN = 300
 #: Minimum mapping score for a market to count as about us (mapping.py: 2 per shared country + 1 per shared distinctive word).
 MIN_MAP_SCORE = 2
 
+#: The WATCH-SET (watch.py): markets any bot forecast or traded, a resting order sits on, or a lab question names are fetched by id and kept until they resolve, even when
+#: the sweep would not list them (thin, far-dated, off-theater): an unrecorded outcome is a forecast that can never be scored. At most this many NEW ones per pass (politeness).
+WATCH_ENABLED = True
+WATCH_MAX_FETCH = 80
+
 # ── snapshots ────────────────────────────────────────────────────────────────────────────────────
 #: A price snapshot is written at most this often per market (the timer may fire more often).
 SNAPSHOT_MIN_GAP_H = 3.0
