@@ -56,7 +56,8 @@ def _oplog(tmp_path) -> str:
 def test_jobs_and_their_times_come_from_the_flags() -> None:
     table = schedule.jobs()
     # ai-daily: operator-authorised 2026-10-18; markets-gaps: operator-authorised 2026-10-23 (research the market bots' corpus gaps, at most $0.50 a day)
-    assert set(table) == {"menu", "daily-1", "daily-2", "markets-daily", "ai-daily", "markets-gaps"}
+    # lab-prospective: operator-requested 2026-10-31 (prospective forecasts on live contested markets, hard cap $0.30 a day)
+    assert set(table) == {"menu", "daily-1", "daily-2", "markets-daily", "ai-daily", "markets-gaps", "lab-prospective"}
     assert table["menu"].utc == flags.MENU_UTC and table["daily-1"].utc == "05:30" and table["daily-2"].utc == "17:30"
     assert "--edition" in table["daily-2"].argv and table["daily-2"].argv[-1] == "2" and "--research" in table["daily-2"].argv
     assert table["menu"].argv == ("run", "--to", "menu")

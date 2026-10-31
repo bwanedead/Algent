@@ -28,3 +28,9 @@ TOURNAMENT_TIE_EPS = 0.002  # two candidates whose mean Brier-vs-market differs 
 MUTATE_CAP_USD = 0.05       # the one paid prompt draft per `lab mutate --live`
 MUTATE_BIAS_GAP = 0.20      # a calibration bin whose said and happened differ by this much (n >= MUTATE_BIAS_MIN_N) is a systematic lean worth naming
 MUTATE_BIAS_MIN_N = 5
+# the prospective lab (prospective.py): questions about LIVE markets, forecast blind the day they are asked, scored when the markets resolve
+PROSPECTIVE_MARKETS = 30    # new questions a day at most
+PROSPECTIVE_MIN_H = 24      # ... on markets resolving no sooner than this many hours from now (a day of lead)
+PROSPECTIVE_MAX_H = 240     # ... and no later than this (ten days: the outcome comes back within the fortnight)
+PROSPECTIVE_USD_PER_DAY = 0.30   # hard budget for all the day's forecasts together, checked before every model call
+PROSPECTIVE_MIN_RUNS_FOR_MEAN = 3   # a protocol's cost estimate is the mean of its stored runs once it has this many, else the per-run maximum

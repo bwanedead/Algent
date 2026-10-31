@@ -310,7 +310,7 @@
         "markets",
         "corpus_index"
       ],
-      "refresh_minutes": null
+      "refresh_minutes": 1440
     },
     {
       "id": "acquisition",

@@ -23,8 +23,20 @@ from . import branches, controls, flags, minds, policies, runner, score, sources
 from .contracts import Branch, Protocol, Question
 
 
-def _topic(m: Any) -> str:
+def topic(m: Any) -> str:
+    """The theme a market counts under for diversity: its first theater, else its first tag."""
     return (m.theaters[0] if m.theaters else (m.tags[0] if m.tags else "other")).lower()
+
+
+def round_robin(by_topic: dict[str, list[Any]], limit: int | None = None) -> list[Any]:
+    """Items taken one per topic in turn (topics in name order, each topic's list front first) until ``limit`` or all are taken: no theme fills the set."""
+    lists = {t: list(v) for t, v in by_topic.items()}
+    out: list[Any] = []
+    while any(lists.values()) and (limit is None or len(out) < limit):
+        for t in sorted(lists):
+            if lists[t] and (limit is None or len(out) < limit):
+                out.append(lists[t].pop(0))
+    return out
 
 
 def _unclashed(q: Question) -> Question:
@@ -63,7 +75,7 @@ def _entries(chosen: list[Question], markets: dict[str, Any]) -> tuple[list[dict
     entries = []
     for q in chosen:
         mid = q.source.split(":", 1)[1]
-        t = _topic(markets[mid])
+        t = topic(markets[mid])
         by_topic[t] = by_topic.get(t, 0) + 1
         end, cut = store.parse_time(markets[mid].resolved_at), store.parse_time(q.cutoff)
         if end is not None and cut is not None:
@@ -97,7 +109,7 @@ def plan(*, min_n: int = flags.SET_MIN_QUESTIONS, max_n: int | None = None, hour
     for fam in families.values():
         best = max(fam, key=lambda mq: len(mq[1])) if multi else fam[0]      # one cutoff keeps the old pick (most recent priced); several prefer the market covering most cutoffs
         skipped["same_event"] += len(fam) - 1
-        cands.setdefault(_topic(best[0]), []).append(best[1])
+        cands.setdefault(topic(best[0]), []).append(best[1])
     for lst in cands.values():
         lst.sort(key=lambda qs: markets[qs[0].source.split(":", 1)[1]].resolved_at, reverse=True)
     chosen: list[Question] = []
@@ -141,6 +153,10 @@ def build(*, min_n: int = flags.SET_MIN_QUESTIONS, max_n: int | None = None, hou
 
 
 def load(set_id: str) -> dict[str, Any]:
+    if set_id == "prospective":                                              # every daily prospective version together (prospective.py)
+        from . import prospective
+
+        return prospective.load()
     if set_id in ("", "latest"):
         idx = store.read_lines("sets/index.jsonl")
         if not idx:

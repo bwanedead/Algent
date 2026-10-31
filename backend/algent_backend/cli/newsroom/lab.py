@@ -17,6 +17,8 @@ corpus index, writes only to its own store (ALGENT_EXPERIMENT_STORE), and calls 
     newsroom lab block                                      write lab_block.json (the track record's "recipe lab" block) beside the store
     newsroom lab tournament --set ID --candidates a,b;calibration=platt [--first N] [--budget USD] [--live|--dry-run]   successive halving, hard budget
     newsroom lab mutate PROTOCOL [--set ID] [--live] [--json]   one-change children from the measured failures; free ones always, one capped paid prompt draft with --live
+    newsroom lab prospective [--live] [--dry-run] [--corpus DIR]   today's prospective questions (contested LIVE markets, cutoff = now) forecast blind by every active protocol
+                                                            under a hard day budget (experiment/flags.PROSPECTIVE_USD_PER_DAY); without --live the plan only. Use the questions with --set prospective
     newsroom lab list                                       questions, branches, runs
     newsroom lab show ID                                    a run (manifest, prompt, output, integrity) or a question
     newsroom lab branch --from BRANCH --name NAME [--evidence NAME@V]   fork a branch with ONE evidence policy changed; the original is untouched
@@ -98,6 +100,11 @@ def add_parser(sub: Any) -> None:
     tn.add_argument("--live", action="store_true", help="really call the model; without it (or with --dry-run) the plan and its maximum cost are printed")
     tn.add_argument("--dry-run", action="store_true")
     tn.set_defaults(handler=run_tournament)
+    pr = verbs.add_parser("prospective", help="today's prospective questions on live markets, forecast blind by every active protocol under a day budget")
+    pr.add_argument("--corpus", help="corpus store directory (default: ALGENT_CORPUS_STORE / corpus_store)")
+    pr.add_argument("--live", action="store_true", help="store the questions and really call the model (at most flags.PROSPECTIVE_USD_PER_DAY); without it only the plan is printed")
+    pr.add_argument("--dry-run", action="store_true", help="print the plan even with --live")
+    pr.set_defaults(handler=run_prospective)
     mu = verbs.add_parser("mutate", help="propose one-change children of a protocol from its measured failures (free ones; one paid prompt draft with --live)")
     mu.add_argument("protocol", help="a named mind (p0b, b, ...) or a stored protocol id/name")
     mu.add_argument("--set", dest="qset", default="latest", help="question set whose per-question error tags are read (skipped when none is built)")
@@ -187,6 +194,22 @@ def run_mutate(args: Any) -> int:
         return _emit(out)
     print(mutate.render(out))
     return 0
+
+
+def run_prospective(args: Any) -> int:
+    from algent_backend.corpus import paths
+    from algent_backend.corpus.query import Corpus
+    from algent_backend.experiment import prospective, research_policy, runner, sources
+
+    live = bool(args.live) and not args.dry_run
+    src = sources.CorpusSource(paths.db_file(args.corpus))
+    corpus = Corpus.open(args.corpus) if live else None
+    try:
+        out = prospective.run_day(source=src, ask_for=runner.live_ask, live=live, plan_ask_for=lambda pv: research_policy.live_plan_ask(pv.params), corpus=corpus)
+    finally:
+        if corpus is not None:
+            corpus.close()
+    return _emit(out)
 
 
 def run_tournament(args: Any) -> int:
