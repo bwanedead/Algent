@@ -17,7 +17,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from . import flags
+from . import flags, sizing
 from .book import Holding, side_price
 
 ACTIONS = ("buy_yes", "buy_no", "sell", "hold")
@@ -39,9 +39,11 @@ def _hold(held: Holding | None, clips: list[str]) -> Fill:
 
 
 def apply(action: str, requested: float, *, held: Holding | None, yes_price: float | None, cash: float, exposure: float,
-          tradable: bool, position_frac: float | None = None, exposure_frac: float | None = None, bankroll: float | None = None) -> Fill:
+          tradable: bool, position_frac: float | None = None, exposure_frac: float | None = None, bankroll: float | None = None,
+          p_yes: float | None = None, trust: float | None = None) -> Fill:
     """What the book does with one request. ``yes_price`` is the market's current YES price (None: no fresh price), ``exposure`` the cost of
-    all open positions, ``tradable`` whether the market is still open. A book with its own caps (the day book) passes them; the default is the daily book's."""
+    all open positions, ``tradable`` whether the market is still open. A book with its own caps (the day book) passes them; the default is the daily book's.
+    ``p_yes`` (the agent's own probability) switches on trust-weighted sizing (``sizing.ceiling`` at ``trust``, default the prior): a buy never stakes past it."""
     clips: list[str] = []
     requested = max(0.0, float(requested or 0.0))
     if action not in ACTIONS:
@@ -53,16 +55,25 @@ def apply(action: str, requested: float, *, held: Holding | None, yes_price: flo
     if yes_price is None:
         return _hold(held, ["no recent price on file: held"])
     return _sell(requested, held, yes_price, clips) if action == "sell" else _buy(action, requested, held, yes_price, cash, exposure, clips, (flags.MAX_POSITION_FRAC if position_frac is None else position_frac) * (flags.BANKROLL if bankroll is None else bankroll),
-                                                                                                          (flags.MAX_EXPOSURE_FRAC if exposure_frac is None else exposure_frac) * (flags.BANKROLL if bankroll is None else bankroll))
+                                                                                                          (flags.MAX_EXPOSURE_FRAC if exposure_frac is None else exposure_frac) * (flags.BANKROLL if bankroll is None else bankroll),
+                                                                                                          None if p_yes is None else (p_yes, flags.TRUST_PRIOR if trust is None else trust, flags.BANKROLL if bankroll is None else bankroll))
 
 
-def _buy(action: str, requested: float, held: Holding | None, yes_price: float, cash: float, exposure: float, clips: list[str], max_position: float, max_exposure: float) -> Fill:
+def _buy(action: str, requested: float, held: Holding | None, yes_price: float, cash: float, exposure: float, clips: list[str], max_position: float, max_exposure: float,
+         sized: tuple[float, float, float] | None = None) -> Fill:
     side = "yes" if action == "buy_yes" else "no"
     if held is not None and held.side != side:
         return _hold(held, [f"already holds {held.side.upper()}; sell it before buying {side.upper()}: held"])
     room = {"cash": cash, "position limit": max_position - (held.cost if held else 0.0),
             "exposure limit": max_exposure - exposure}
     stake = requested
+    if sized is not None and requested > 0:                                  # mechanical sizing: the agent's stake is honoured only up to the trust-weighted ceiling
+        c = sizing.ceiling(sized[0], side, min(0.99, side_price(yes_price, side) + flags.SLIPPAGE), sized[2], sized[1])
+        if c.stake <= 0:
+            return _hold(held, [f"{c.why} (trust {sized[1]:.2f}): held"])
+        if stake > c.stake:
+            clips.append(f"trimmed to {c.why} ${c.stake:.0f} (trust {sized[1]:.2f})")
+            stake = c.stake
     for name, limit in room.items():
         if stake > max(0.0, limit):
             clips.append(f"stake {stake:.0f} cut to {max(0.0, limit):.0f}: {name}")
@@ -95,12 +106,10 @@ def _sell(requested: float, held: Holding | None, yes_price: float, clips: list[
     return Fill("sell", held.side, price, shares, proceeds, realised, clips)
 
 
-def floor_stake(p_yes: float, side: str, yes_price: float, bankroll: float) -> float:
-    """The stake for a position taken only to fill the activity floor: fractional Kelly on the agent's OWN probability against the all-in price, never below the
-    minimum ticket (no edge, or no probability given, means the ticket). The ordinary guards still clip it in ``apply``."""
+def floor_stake(p_yes: float, side: str, yes_price: float, bankroll: float, trust: float | None = None) -> float:
+    """The stake for a position taken only to fill the activity floor: the trust-weighted ceiling (``sizing.ceiling``) on the agent's OWN probability against the all-in
+    price, never below the minimum ticket (no edge, or no probability given, means the ticket). The ordinary guards still clip it in ``apply``."""
     if not 0.0 < p_yes < 1.0:
         return flags.TRADE_MIN_TICKET
-    q = p_yes if side == "yes" else 1.0 - p_yes
-    cost = min(0.99, side_price(yes_price, side) + flags.SLIPPAGE)
-    full = (q - cost) / (1.0 - cost)
-    return round(max(flags.TRADE_MIN_TICKET, flags.KELLY_FRACTION * full * bankroll if full > 0 else 0.0), 2)
+    c = sizing.ceiling(p_yes, side, min(0.99, side_price(yes_price, side) + flags.SLIPPAGE), bankroll, flags.TRUST_PRIOR if trust is None else trust)
+    return round(max(flags.TRADE_MIN_TICKET, c.stake), 2)

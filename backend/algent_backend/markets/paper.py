@@ -22,7 +22,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any
 
-from . import flags, store
+from . import flags, sizing, store
 from .book import payout, side_price
 from .contracts import Forecast, Market, Snapshot, Trade, trade_id
 
@@ -48,9 +48,9 @@ class Position:
 
 def kelly_stake(q: float, cost: float) -> float:
     """Paper dollars for a binary contract: fractional Kelly, capped. ``q`` is our probability for the side, ``cost`` its all-in price."""
-    if cost >= 1.0 or q <= cost:
+    full = sizing.full_kelly(q, cost)               # the retired rule book trusts its desk forecast fully (w=1, no extreme cap): its history is unchanged
+    if full <= 0:
         return 0.0
-    full = (q - cost) / (1.0 - cost)
     return round(min(flags.KELLY_FRACTION * full, flags.MAX_POSITION_FRAC) * flags.BANKROLL, 2)
 
 

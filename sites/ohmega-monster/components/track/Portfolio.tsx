@@ -119,6 +119,23 @@ function forecastLine(f: ForecastStats): string {
   if (!f.made) return "none yet";
   return f.shown && f.brier !== null ? `${f.made} made, ${f.resolved} resolved, Brier ${f.brier.toFixed(3)}` : `${f.made} made, ${f.resolved} resolved (n=${f.resolved}, too early)`;
 }
+const signed3 = (v: number) => `${v >= 0 ? "+" : ""}${v.toFixed(3)}`;
+
+/** The pill's second sub line: our Brier edge over the market's price at the same moment, or "n=8, too early". Null when nothing has resolved. */
+function skillSub(f: ForecastStats | undefined): { text: string; cls: string } | null {
+  const a = f?.skill.all;
+  if (!a || (!a.n && !f?.made)) return null;
+  return a.shown && a.mean !== null ? { text: `vs market ${signed3(a.mean)} (n=${a.n})`, cls: tone(a.mean) } : { text: `vs market: n=${a.n}, too early`, cls: "" };
+}
+
+/** "Against the market price at the same moment: +0.012 Brier on 24 resolved (contested only: -0.004 on 9)." Empty until the first numbers are shown. */
+function skillSentence(f: ForecastStats): string {
+  const { all, contested } = f.skill;
+  if (!all.shown || all.mean === null) return all.n ? `Against the market price at the same moment: n=${all.n} resolved, too early.` : "";
+  const c = contested.shown && contested.mean !== null ? ` (contested only: ${signed3(contested.mean)} on ${contested.n})` : ` (contested only: n=${contested.n}, too early)`;
+  return `Against the market price at the same moment: ${signed3(all.mean)} Brier on ${all.n} resolved${c}.`;
+}
+
 const pct0 = (v: number) => `${Math.round(v * 100)}%`;
 
 function Forecasts({ f }: { f: ForecastStats }) {
@@ -329,6 +346,7 @@ function BookRow({ row, min, children }: { row: Row; min: number; children?: Rea
         <Cell label="Value" className="n">
           {money(s.equity)}
           <span className={`tr-sub ${tone(s.pnl)}`}>{usd(s.pnl)} ({s.pnl >= 0 ? "+" : ""}{((s.pnl / bank) * 100).toFixed(1)}%)</span>
+          {(() => { const k = skillSub(row.s?.forecasts); return k ? <span className={`tr-sub ${k.cls}`}>{k.text}</span> : null; })()}
         </Cell>
         <Cell label="Holding"><Holding held={row.t.open_positions.map((p) => ({ side: p.side, question: p.question, stake: p.cost, pnl: p.pnl }))} resting={row.s?.resting.open.length ?? 0} /></Cell>
         <Cell label="Runs" className="n"><Runs last={row.lastRun} next={row.next} /></Cell>
@@ -336,7 +354,7 @@ function BookRow({ row, min, children }: { row: Row; min: number; children?: Rea
       <div className="tr-detail">
         <Sec title="Value over time"><BotChart row={row} /></Sec>
         <p className="tr-note">
-          Style: {row.style}. Forecasts: {row.s ? forecastLine(row.s.forecasts) : "n/a"}.
+          Style: {row.style}. Forecasts: {row.s ? forecastLine(row.s.forecasts) : "n/a"}.{row.s && skillSentence(row.s.forecasts) ? ` ${skillSentence(row.s.forecasts)}` : ""}
           {row.s?.exposure ? ` Exposure ${pct0(row.s.exposure.pct)} (floor ${pct0(row.s.exposure.floor_pct)}).` : ""} {s.buys + s.sells} trades.
           {" "}Win rate: <WinRate t={s} min={min} />. Cash {money(s.cash)}.
         </p>

@@ -81,7 +81,9 @@ export type Trader = {
 // Additive: its own forecast feedback (scored apart from trading; Brier null until `min_resolved` forecasts have resolved), its share of the bankroll at risk against the
 // activity floor, and how the floor-tagged positions did against chosen ones. A document from before these existed parses to zeros.
 export type ForecastRow = { market_id: string; question: string; at: string; p: number; market: number | null; confidence: string; outcome: string; reason: string };
-export type ForecastStats = { made: number; resolved: number; min_resolved: number; shown: boolean; brier: number | null; brier_market: number | null; skill_vs_market: number | null; recent: ForecastRow[] };
+// Additive: mean of (market Brier - bot Brier) over one forecast per resolved market, positive = ahead of the market price; mean/se are null until `shown` (n >= min_resolved).
+export type SkillBlock = { n: number; shown: boolean; mean: number | null; se: number | null };
+export type ForecastStats = { skill: { all: SkillBlock; contested: SkillBlock }; made: number; resolved: number; min_resolved: number; shown: boolean; brier: number | null; brier_market: number | null; skill_vs_market: number | null; recent: ForecastRow[] };
 // A paper limit order a bot left to wait between its runs (backend `markets/resting.py`). `limit` is the all-in price per share on its own side; a buy fills at or
 // below it, a sell at or above it. `usd` sizes a buy, `fraction` a sell. `now` is the latest price on its side (null when none is on file).
 export type RestingOrder = {
@@ -268,9 +270,16 @@ function parseDay(raw: unknown, fallbackRule: Portfolio): DayBook | null {
   };
 }
 
+function parseSkill(raw: unknown): SkillBlock {
+  const b = isObj(raw) ? raw : {};
+  return { n: n0(b.n), shown: b.shown === true, mean: num(b.mean), se: num(b.se) };
+}
+
 function parseForecasts(raw: unknown): ForecastStats {
   const f = isObj(raw) ? raw : {};
+  const k = isObj(f.skill) ? f.skill : {};
   return {
+    skill: { all: parseSkill(k.all), contested: parseSkill(k.contested) },
     made: n0(f.made), resolved: n0(f.resolved), min_resolved: n0(f.min_resolved), shown: f.shown === true, brier: num(f.brier), brier_market: num(f.brier_market), skill_vs_market: num(f.skill_vs_market),
     recent: list(f.recent).map((x) => ({ market_id: str(x.market_id), question: str(x.question), at: str(x.at), p: n0(x.p), market: num(x.market), confidence: str(x.confidence), outcome: str(x.outcome), reason: str(x.reason) })),
   };

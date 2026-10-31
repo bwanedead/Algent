@@ -21,7 +21,7 @@ from __future__ import annotations
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
-from . import book, flags, guards, polymarket, store, strategies
+from . import book, flags, guards, polymarket, sizing, store, strategies
 from .contracts import Decision, RestingOrder, decision_id, resting_id
 from .polymarket import Fetch
 
@@ -94,7 +94,7 @@ def place(st: strategies.Strategy, ds: list[Decision], *, now: datetime, market_
         if fill_price(action, yes) <= limit + EPS:
             return None, f"the price already reaches your limit ({fill_price(action, yes):.3f} all-in now): use buy to fill it at once"
         g = guards.apply(action, max(0.0, usd), held=held, yes_price=yes, cash=book.cash(ds), exposure=exposure, tradable=True, position_frac=st.position_frac,
-                         exposure_frac=st.exposure_frac, bankroll=st.bankroll)
+                         exposure_frac=st.exposure_frac, bankroll=st.bankroll, p_yes=p_yes, trust=sizing.trust(st.id))
         if g.action == "hold":
             return None, "would be refused by the book's limits: " + "; ".join(g.clips)
         usd, clips = round(-g.cash_flow, 2), g.clips
@@ -218,7 +218,8 @@ def _decide(o: RestingOrder, now: datetime, ms: dict, prices: dict, closed: set[
             return "cancelled"
         requested = o.usd
     fill = guards.apply(o.action, requested, held=held, yes_price=yes, cash=book.cash(ds), exposure=sum(h.cost for h in book.holdings(ds).values()), tradable=True,
-                        position_frac=st.position_frac, exposure_frac=st.exposure_frac, bankroll=st.bankroll)
+                        position_frac=st.position_frac, exposure_frac=st.exposure_frac, bankroll=st.bankroll,
+                        p_yes=o.p_yes if o.action != "sell" else None, trust=sizing.trust(o.book))
     if fill.action == "hold":
         store.append_resting([_move(o, "cancelled", now, "blocked at the fill: " + "; ".join(fill.clips))])
         return "cancelled"

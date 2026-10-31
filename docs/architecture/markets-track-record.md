@@ -44,6 +44,27 @@ staggered at least 10 minutes apart and off 05:00-07:00 (a test pins it). `newsr
 chart with a line per bot labelled at its end (must-trade dashed), one table row per bot (name, method, style, value, P&L, open, trades, last run, next run) grouped by method, expanding
 to positions, trades with reasons, its latest run (with the must-trade check) and wishes. Documents from before the roster fall back to the three old books.
 
+## Sizing and trust (`sizing.py`; 10-31)
+The hourly bot bought 95-99c "sure things" at $500 (the 5% cap): ten wins made $27, two losses cost $970. The forecaster's job is a probability; sizing is mechanical and lives in ONE
+module that every buy path uses (`guards.apply` for agentic buys and resting placement/fills, `guards.floor_stake`, and `paper.kelly_stake` for the rule book's full-Kelly maths).
+- **Shrink.** `q = w*p + (1-w)*price` for the side, where `w` is the strategy's TRUST and `price` the side's quote (slippage is added to the cost, not to the anchor).
+- **Ceiling.** `KELLY_FRACTION x (q - c)/(1 - c) x bankroll` on the all-in cost `c`. `q <= c`: no trade, held, clip "no edge after trust shrink". The agent's stake is honoured only up
+  to the ceiling ("trimmed to trust-weighted Kelly $X"); the usual position/exposure/cash caps then apply. A buy with no `p_yes` is refused (it cannot be sized).
+- **Extreme prices.** When `c > EXTREME_PRICE` (0.90) the stake is also capped at `MAX_LOSS_FRAC_EXTREME` (1%) of the bankroll: the whole stake is the loss if it fails.
+- **Trust** `w = clamp(TRUST_PRIOR + TRUST_GAIN x t, TRUST_MIN, TRUST_MAX)` = `0.3 + 0.1 t` in [0.1, 0.8], `t` = contested skill / its standard error (below). Monotone in skill, grows with
+  evidence at equal skill, negative skill lowers it; with fewer than `FORECAST_MIN_RESOLVED` contested resolved forecasts there is no `t` and trust stays at the prior. `size()` shows the agent its trust and ceiling.
+- **Unchanged.** Sells. The retired rule book keeps full trust and no extreme cap (it opens nothing now), so its history is not rewritten. A floor position (`MIN_EXPOSURE_PCT`, off) is sized
+  by `floor_stake` on the same ceiling and skips the edge test (its point is a ticket with no edge).
+- Hourly repro (tested): p=0.995 at 97c, trust 0.3: q=0.9775 < cost 0.98, held. At maximal trust it is capped at $100.
+
+## Skill vs market (`bot_forecasts.skill_stats`)
+Brier against the outcome looks great (~0.03) when a bot forecasts near-decided markets; the number that says anything is Brier against the market's price at the same moment. Per strategy,
+`forecasts.skill` = `{min_resolved, all, contested}`, each block `{n, shown, mean, se}`: `mean` is the average of (market Brier - bot Brier) on `BotForecast.market`, positive = we beat the market;
+`se` is the standard error of that mean. `contested` keeps forecasts whose market price was in `CONTESTED_LO..CONTESTED_HI` (0.05..0.95) at forecast time. **One forecast per (strategy, market): the LAST
+made before the market resolved**, so a bot restating a view 20 times counts once (the older per-forecast Brier/log-loss in the same block still count every restatement). `mean`/`se` are
+null (`shown` false) until `n >= FORECAST_MIN_RESOLVED`; the page then says "n=8, too early". Additive field of `ohmega.track-record/2` (`contracts/shapes.py`). Site: pill "vs market +0.012 (n=24)" under
+the value, and in the detail "Against the market price at the same moment: +0.012 Brier on 24 resolved (contested only: -0.004 on 9)."
+
 ## Pipeline
 1. **Mirror** (`mirror.py`, free; timer `ohmega-markets` every 4 h). Gamma `GET /events?tag_slug=<tag>&active=true&closed=false&order=volume24hr` for each tag in
    `flags.TAGS`; events with a tag in `flags.BLOCK_TAGS` (sports, crypto, culture...) are dropped. Binary Yes/No markets only, liquid (`MIN_LIQUIDITY_USD`,
