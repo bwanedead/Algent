@@ -15,6 +15,7 @@ corpus index, writes only to its own store (ALGENT_EXPERIMENT_STORE), and calls 
     newsroom lab calibrate [--set ID] [--live-strategies a,b] [--json]   every stored protocol x every calibration policy, raw vs calibrated, out of sample (free)
     newsroom lab live-board [--strategies a,b] [--json]     the live bots' resolved forecasts scored the same way, raw vs recalibrated (free)
     newsroom lab block                                      write lab_block.json (the track record's "recipe lab" block) beside the store
+    newsroom lab tournament --set ID --candidates a,b;calibration=platt [--first N] [--budget USD] [--live|--dry-run]   successive halving, hard budget
     newsroom lab list                                       questions, branches, runs
     newsroom lab show ID                                    a run (manifest, prompt, output, integrity) or a question
     newsroom lab branch --from BRANCH --name NAME [--evidence NAME@V]   fork a branch with ONE evidence policy changed; the original is untouched
@@ -87,6 +88,15 @@ def add_parser(sub: Any) -> None:
     lv.set_defaults(handler=run_live_board)
     bl = verbs.add_parser("block", help="write the 'recipe lab' block the track record publishes (lab_block.json beside the store) and print it")
     bl.set_defaults(handler=run_block)
+    tn = verbs.add_parser("tournament", help="successive halving over a question set: many candidate recipes, a hard budget")
+    tn.add_argument("--set", dest="qset", default="latest")
+    tn.add_argument("--candidates", required=True, help="comma-separated specs: a named mind or protocol id, optionally ';calibration=platt' / ';evidence=keyword-overlap@1' / ';k=4' (one change)")
+    tn.add_argument("--first", type=int, help="questions per candidate in round one (doubles each round; default experiment/flags.TOURNAMENT_FIRST_SLICE)")
+    tn.add_argument("--budget", type=float, help="hard spend limit in USD (default experiment/flags.TOURNAMENT_USD), checked before every call")
+    tn.add_argument("--corpus", help="corpus store directory (default: ALGENT_CORPUS_STORE / corpus_store)")
+    tn.add_argument("--live", action="store_true", help="really call the model; without it (or with --dry-run) the plan and its maximum cost are printed")
+    tn.add_argument("--dry-run", action="store_true")
+    tn.set_defaults(handler=run_tournament)
     a = verbs.add_parser("audit", help="replay integrity audit of a run or a question")
     a.add_argument("target", nargs="?", help="a run id or a question id")
     a.add_argument("--set", dest="qset", help="audit the first answered question of this set (ID or latest)")
@@ -152,6 +162,25 @@ def _set_run(args: Any) -> int:
         out = qset.run(doc, names, src, runner.live_ask, live=args.live, cap_usd=args.cap if args.cap is not None else flags.SET_RUN_CAP_USD,
                        plan_ask_for=lambda pv: research_policy.live_plan_ask(pv.params), corpus=corpus,
                        aware_ask_for=minds.live_aware_ask if args.aware else None)
+    finally:
+        if corpus is not None:
+            corpus.close()
+    return _emit(out)
+
+
+def run_tournament(args: Any) -> int:
+    from algent_backend.corpus import paths
+    from algent_backend.corpus.query import Corpus
+    from algent_backend.experiment import flags, qset, research_policy, runner, sources, tournament
+
+    doc = qset.load(args.qset)
+    specs = [x.strip() for x in args.candidates.split(",") if x.strip()]
+    live = bool(args.live) and not args.dry_run
+    src = sources.CorpusSource(paths.db_file(args.corpus))
+    corpus = Corpus.open(args.corpus) if live else None
+    try:
+        out = tournament.run(doc, specs, src, runner.live_ask, live=live, budget_usd=args.budget if args.budget is not None else flags.TOURNAMENT_USD,
+                             first=args.first or flags.TOURNAMENT_FIRST_SLICE, plan_ask_for=lambda pv: research_policy.live_plan_ask(pv.params), corpus=corpus)
     finally:
         if corpus is not None:
             corpus.close()
