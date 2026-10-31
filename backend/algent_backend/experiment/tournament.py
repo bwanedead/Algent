@@ -77,6 +77,19 @@ class Arena:
             recs = [r for q in qs if (r := self.record(c, q))]
             c.usd, c.runs = sum(r.usd for r in recs), len(recs)
 
+    def fill(self, alive: list[Candidate], qs: list[Question], ask_for: Any, *, spent: float, budget_usd: float, plan_ask_for: Any, corpus: Any) -> tuple[float, str]:
+        """Run every missing (candidate, question) in ``qs``; the budget is checked before each call against its maximum cost. Returns (spent, why it stopped or "")."""
+        for c in alive:
+            for q in qs:
+                if self.record(c, q) is not None:
+                    continue
+                cost = qset.max_cost(c.raw)
+                if spent + cost > budget_usd:
+                    return spent, f"the ${budget_usd:.2f} budget would be exceeded by the next call (spent ${spent:.3f}, next up to ${cost:.3f})"
+                pa = plan_ask_for(c.raw.policies["evidence"]) if plan_ask_for and policies.is_planned(c.raw.policies["evidence"]) else None
+                spent += runner.run_branch(q, c.branch, self.snaps[q.id], ask_for(c.raw), live=True, plan_ask=pa, corpus=corpus).usd
+        return spent, ""
+
     def fitters(self, live: list[dict[str, Any]]) -> dict[str, calibration.Fitter]:
         lab = calibrate.lab_rows()
         return {c.raw.id: calibration.Fitter(lab=calibrate.observations([r for r in lab if r["protocol"] == c.raw.id]), live=calibrate.observations(live)) for c in self.cands}
@@ -145,18 +158,7 @@ def run(doc: dict[str, Any], specs: list[str], source: Any, ask_for: Any, *, liv
     liv = live_rows if live_rows is not None else (calibrate.live_rows() if any(c.cal and "live" in c.cal.params.get("sources", []) for c in ar.cands) else [])
     spent, stopped, alive, prev, rounds = 0.0, "", list(ar.cands), 0, []
     for i, size in enumerate(slice_sizes(len(ar.qs), first)):
-        for c in alive:
-            for q in ar.qs[prev:size]:
-                if ar.record(c, q) is not None:
-                    continue
-                cost = qset.max_cost(c.raw)
-                if spent + cost > budget_usd:
-                    stopped = f"the ${budget_usd:.2f} budget would be exceeded by the next call (spent ${spent:.3f}, next up to ${cost:.3f})"
-                    break
-                pa = plan_ask_for(c.raw.policies["evidence"]) if plan_ask_for and policies.is_planned(c.raw.policies["evidence"]) else None
-                spent += runner.run_branch(q, c.branch, ar.snaps[q.id], ask_for(c.raw), live=True, plan_ask=pa, corpus=corpus).usd
-            if stopped:
-                break
+        spent, stopped = ar.fill(alive, ar.qs[prev:size], ask_for, spent=spent, budget_usd=budget_usd, plan_ask_for=plan_ask_for, corpus=corpus)
         ar.tally(ar.qs[:size])
         table = ar.rank(alive, ar.qs[:size], res, ar.fitters(liv))
         keep = [r["spec"] for r in table] if stopped else [r["spec"] for r in table[: survivors(len(table))]]

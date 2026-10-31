@@ -134,7 +134,7 @@ def track_block(*, board: dict[str, Any] | None = None, live: dict[str, Any] | N
     board = lab_board() if board is None else board
     live = live_board() if live is None else live
     best = None
-    for pid, p in board["protocols"].items():
+    for p in board["protocols"].values():
         ev = p["policies"].get("platt")
         if ev is None or ev["raw"]["brier_minus_market"] is None:
             continue

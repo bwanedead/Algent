@@ -270,9 +270,7 @@ def run_branch(args: Any) -> int:
 
 
 def run_score(args: Any) -> int:
-    from algent_backend.experiment import decision, qset, score
-
-    from algent_backend.experiment import calibrate
+    from algent_backend.experiment import calibrate, decision, qset, score
 
     if args.qset:
         doc = qset.load(args.qset)

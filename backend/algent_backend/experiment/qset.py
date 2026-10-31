@@ -35,6 +35,44 @@ def _unclashed(q: Question) -> Question:
     return q
 
 
+def _market_questions(m: Any, cutoffs_h: tuple[float, ...], snaps: dict[str, list[Any]], skipped: dict[str, int]) -> list[Question]:
+    """One question per listed hours-before-resolution that has a price on file at its cutoff (counts what it skips)."""
+    from algent_backend.markets import store as ms
+
+    end = store.parse_time(m.resolved_at)
+    if end is None:
+        skipped["bad_cutoff"] += 1
+        return []
+    out: list[Question] = []
+    for h in cutoffs_h:
+        cutoff = (end - timedelta(hours=h)).isoformat(timespec="seconds")
+        if ms.price_at(sorted(snaps.get(m.id, []), key=lambda s: s.at), cutoff) is None:
+            skipped["no_price_at_cutoff"] += 1
+            continue
+        try:
+            out.append(_unclashed(sources.question_from_market(m.id, cutoff).model_copy(update={"common_set": True})))
+        except (KeyError, ValueError):
+            skipped["bad_cutoff"] += 1
+    return out
+
+
+def _entries(chosen: list[Question], markets: dict[str, Any]) -> tuple[list[dict[str, Any]], dict[str, int], dict[str, int]]:
+    """The set's question entries, and how many questions fall in each topic and at each number of hours before resolution."""
+    by_topic: dict[str, int] = {}
+    by_hours: dict[str, int] = {}
+    entries = []
+    for q in chosen:
+        mid = q.source.split(":", 1)[1]
+        t = _topic(markets[mid])
+        by_topic[t] = by_topic.get(t, 0) + 1
+        end, cut = store.parse_time(markets[mid].resolved_at), store.parse_time(q.cutoff)
+        if end is not None and cut is not None:
+            key = f"{(end - cut).total_seconds() / 3600:g}"
+            by_hours[key] = by_hours.get(key, 0) + 1
+        entries.append({"id": q.id, "cutoff": q.cutoff, "source": q.source, "topic": t})
+    return entries, by_topic, by_hours
+
+
 def plan(*, min_n: int = flags.SET_MIN_QUESTIONS, max_n: int | None = None, hours_before: float = flags.SET_HOURS_BEFORE, hours_list: tuple[float, ...] | None = None) -> dict[str, Any]:
     """What ``build`` would store, without storing anything (the CLI dry run prints this). One market per event family; with ``hours_list`` (set version 2) a market
     contributes one question at EACH listed number of hours before resolution that has a price on file, so one market can give several questions; the event family
@@ -52,20 +90,7 @@ def plan(*, min_n: int = flags.SET_MIN_QUESTIONS, max_n: int | None = None, hour
     snaps = ms.snapshots_by_market()
     families: dict[str, list[tuple[Any, list[Question]]]] = {}           # event family -> its markets with at least one priced cutoff, recency order
     for m in resolved:
-        end = store.parse_time(m.resolved_at)
-        if end is None:
-            skipped["bad_cutoff"] += 1
-            continue
-        qs: list[Question] = []
-        for h in cutoffs_h:
-            cutoff = (end - timedelta(hours=h)).isoformat(timespec="seconds")
-            if ms.price_at(sorted(snaps.get(m.id, []), key=lambda s: s.at), cutoff) is None:
-                skipped["no_price_at_cutoff"] += 1
-                continue
-            try:
-                qs.append(_unclashed(sources.question_from_market(m.id, cutoff).model_copy(update={"common_set": True})))
-            except (KeyError, ValueError):
-                skipped["bad_cutoff"] += 1
+        qs = _market_questions(m, cutoffs_h, snaps, skipped)
         if qs:
             families.setdefault(m.event_id or f"market:{m.id}", []).append((m, qs))
     cands: dict[str, list[list[Question]]] = {}
@@ -86,18 +111,7 @@ def plan(*, min_n: int = flags.SET_MIN_QUESTIONS, max_n: int | None = None, hour
                     elif max_n is None or len(chosen) < max_n:
                         seen_ids.add(q.id)
                         chosen.append(q)
-    by_topic: dict[str, int] = {}
-    by_hours: dict[str, int] = {}
-    entries = []
-    for q in chosen:
-        mid = q.source.split(":", 1)[1]
-        t = _topic(markets[mid])
-        by_topic[t] = by_topic.get(t, 0) + 1
-        end, cut = store.parse_time(markets[mid].resolved_at), store.parse_time(q.cutoff)
-        if end is not None and cut is not None:
-            key = f"{(end - cut).total_seconds() / 3600:g}"
-            by_hours[key] = by_hours.get(key, 0) + 1
-        entries.append({"id": q.id, "cutoff": q.cutoff, "source": q.source, "topic": t})
+    entries, by_topic, by_hours = _entries(chosen, markets)
     params: dict[str, Any] = {"min_n": min_n, "max_n": max_n, "hours_before": hours_before}
     if multi:                                                              # set version 2: old sets keep exactly their old params, and so their ids
         params = {"min_n": min_n, "max_n": max_n, "hours_list": list(cutoffs_h), "set_version": 2}

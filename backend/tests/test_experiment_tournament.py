@@ -8,7 +8,17 @@ from types import SimpleNamespace
 import pytest
 
 from algent_backend.cli.newsroom import lab as lab_cli
-from algent_backend.experiment import calibration, flags, genome, policies, qset, runner, sources, store, tournament
+from algent_backend.experiment import (
+    calibration,
+    flags,
+    genome,
+    policies,
+    qset,
+    runner,
+    sources,
+    store,
+    tournament,
+)
 from algent_backend.experiment.contracts import Evidence, Question, Resolution
 
 T0 = datetime(2026, 1, 1, 12, tzinfo=UTC)
