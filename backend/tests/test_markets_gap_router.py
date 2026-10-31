@@ -22,7 +22,8 @@ ASKS = {
     "Bulgarian CEC results": "result", "TSE vote count": "result", "Brazil election official results": "result",
     "Saudi strike on Yemen Oct 29": "event", "US strikes on Iran Oct 25": "event",
     "Trump-Putin meeting confirmed": "schedule", "Araghchi statements on enrichment": "statement",
-    "IMF Portwatch Hormuz arrivals": "series", "current head of state in Iran": "status", "Ukraine grain corridor": "other",
+    "IMF Portwatch Hormuz arrivals": "series",
+    "Bank of Canada rate decision date": "schedule", "CPI inflation rate October": "series", "current head of state in Iran": "status", "Ukraine grain corridor": "other",
 }
 
 

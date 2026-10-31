@@ -72,3 +72,25 @@ def test_watch_is_bounded_per_pass_and_can_be_switched_off(monkeypatch):
     monkeypatch.setattr(flags, "WATCH_ENABLED", False)
     off = mirror.refresh(Fake(), now=NOW + timedelta(hours=1), vocab=VOCAB)
     assert "watch_fetched" not in off
+
+
+def test_not_found_ids_are_skipped_after_the_miss_limit_and_errors_never_count(monkeypatch):
+    monkeypatch.setattr(flags, "WATCH_MISS_LIMIT", 2)
+    store.append_bot_forecasts([_bf("gone"), _bf("flaky")])
+
+    class Flaky(Fake):
+        def __call__(self, url, params=None):
+            if url.endswith("/markets/flaky"):
+                self.calls.append(url)
+                raise TimeoutError("slow")
+            return super().__call__(url, params)
+
+    for h in range(3):
+        get = Flaky()
+        mirror.refresh(get, now=NOW + timedelta(hours=h), vocab=VOCAB)
+        assert any(u.endswith("/markets/flaky") for u in get.calls)                       # a timeout is retried every pass
+        assert any(u.endswith("/markets/gone") for u in get.calls) == (h < 2)             # two clean misses: not asked a third time
+    assert store.load_status()["watch_misses"] == {"gone": 2}
+    store.save_status(watch_misses={"gone": 1})
+    mirror.refresh(Fake(by_id={"gone": raw_market("gone", days=3)}), now=NOW + timedelta(hours=9), vocab=VOCAB)
+    assert "gone" not in store.load_status()["watch_misses"] and store.markets()["gone"].origin == "watch"      # found again: the count is cleared
