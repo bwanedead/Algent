@@ -190,3 +190,20 @@ changing exactly one policy (visible in `lab tree`). One paid child with `--live
 **Promotion of a winner to a live desk (not done; deliberate later step).** Nothing in this patch changes trading or any bot. A recipe that wins a tournament AND holds on the live board would be promoted by adding it as a roster strategy (`markets/strategies.py`) whose forecast step uses the frozen protocol's policies
 (prompts, model, evidence, and for calibration the stored map fitted on everything resolved so far, applied after the mind commits), run beside the incumbent with its own book, scored by `lab live-board` and the track record for a pre-declared number of resolved markets before it replaces anything. Calibration is the exception worth doing first: it is a pure
 post-processing map, so it can be applied to the existing forecasts in shadow (`BotForecast` kept as said, calibrated p stored beside it) before any sizing reads it.
+
+**Prospective set (the data-volume fix).** Recalibration and the tournament need many resolved lab questions (fits need `CALIB_MIN_FIT` earlier-resolved), and the historical set is bounded by how many markets
+have resolved with a price on file (28 questions at the last count). `prospective.py` (`lab prospective [--live] [--dry-run]`, registry job `lab-prospective` daily 09:15 UTC, spend `paid`) grows the pool forward: each day it
+picks up to `PROSPECTIVE_MARKETS` (30) LIVE markets from the markets store that are open, CONTESTED (a fresh snapshot, within `PRICE_FRESH_H`, with YES inside `markets/flags.CONTESTED_LO..CONTESTED_HI`), pass the mirror's
+liquidity and volume floors, resolve `PROSPECTIVE_MIN_H`..`PROSPECTIVE_MAX_H` (24..240) hours from now, have not been asked before, one per event family (the deepest market), topics round-robin (`qset.topic`,
+`qset.round_robin`). Each becomes a question with cutoff = now through `sources.question_from_market`, the same constructor as the historical set, so the YES price at the cutoff is stored as the market reference
+that no protocol sees; the access gate then admits exactly what the corpus holds at that moment. The day's questions are one set version appended to `sets/prospective.jsonl` (its own index, so `--set latest`
+stays the historical set); `--set prospective` is every daily version together (`qset.load`), usable by `lab tournament`, `lab errors`, `lab calibrate --set` and `qset.board`.
+
+Every ACTIVE protocol (controlled, with stored runs, not retired) forecasts each of the day's questions through the ordinary runner, blind (the mind never sees the price). Order is question-major so the protocols are
+paired (each question is answered by all of them before the next begins), and both the protocol order and the question order rotate with the date, so a budget cut does not always starve the same protocol or question.
+`PROSPECTIVE_USD_PER_DAY` (0.30) is a hard budget checked BEFORE every call against that protocol's estimated cost (the mean of its stored runs once there are `PROSPECTIVE_MIN_RUNS_FOR_MEAN`, else the
+per-run maximum `qset.max_cost`); the first call that would not fit stops the day cleanly, and `prospective/log.jsonl` records how far it got (a same-day rerun continues from the day's spend and reuses stored runs for
+free). Results are ordinary stored runs: once a market resolves (the mirror's watch-set guarantees that it is recorded, `markets/watch.py`), `lab score`, `lab calibrate`, `lab block` and the tournament pick the
+runs up with no further step. The mirror also fetches by id, and keeps until resolution, every market any bot forecast, traded, rested an order on or a lab question names: 11 of 32 markets the `hourly` bot forecast had never been
+stored, so those forecasts could never be scored (`flags.WATCH_ENABLED`, `WATCH_MAX_FETCH` per pass; saved with `origin="watch"`, never desk-forecast). Registry job `lab-block` (free, 10:20 UTC) writes `lab_block.json`.
+

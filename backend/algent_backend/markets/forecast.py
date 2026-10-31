@@ -173,7 +173,7 @@ def candidates(now: datetime, book: str = "daily") -> list[Market]:
             last[f.market_id] = t
     out = []
     for m in store.markets().values():
-        if m.status != "open" or m.origin == "day":                  # a market the day book alone brought in is not one the desk forecasts
+        if m.status != "open" or m.origin in ("day", "watch"):       # a market the day book or the watch-set alone brought in is not one the desk forecasts
             continue
         end = store.parse_iso(m.end_date)
         if end is not None and end <= now:

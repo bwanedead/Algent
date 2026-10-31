@@ -17,6 +17,7 @@ ERR_LEAK_BRIER = 0.02       # errors.py: a right-side forecast this sharp that u
 CALIB_LAMBDA = 2.0          # ridge strength of the Platt fit, in observations: pulls (slope, intercept) toward (1, 0), so a few questions can only nudge the map
 CALIB_MIN_FIT = 12          # fewer resolved forecasts before the cutoff than this: the map is the identity (and says so)
 CALIB_MIN_CLASS = 3         # ... or fewer than this many of either outcome
+BLOCK_MIN_N = 10            # the published "best recipe" must have been scored on at least this many questions
 CALIB_A_MAX = 3.0           # the fitted slope on logit(p) stays in [0, this]
 CALIB_P_MIN, CALIB_P_MAX = 0.01, 0.99   # a recalibrated probability is kept inside these
 # the tournament (tournament.py)
@@ -27,3 +28,9 @@ TOURNAMENT_TIE_EPS = 0.002  # two candidates whose mean Brier-vs-market differs 
 MUTATE_CAP_USD = 0.05       # the one paid prompt draft per `lab mutate --live`
 MUTATE_BIAS_GAP = 0.20      # a calibration bin whose said and happened differ by this much (n >= MUTATE_BIAS_MIN_N) is a systematic lean worth naming
 MUTATE_BIAS_MIN_N = 5
+# the prospective lab (prospective.py): questions about LIVE markets, forecast blind the day they are asked, scored when the markets resolve
+PROSPECTIVE_MARKETS = 30    # new questions a day at most
+PROSPECTIVE_MIN_H = 24      # ... on markets resolving no sooner than this many hours from now (a day of lead)
+PROSPECTIVE_MAX_H = 240     # ... and no later than this (ten days: the outcome comes back within the fortnight)
+PROSPECTIVE_USD_PER_DAY = 0.30   # hard budget for all the day's forecasts together, checked before every model call
+PROSPECTIVE_MIN_RUNS_FOR_MEAN = 3   # a protocol's cost estimate is the mean of its stored runs once it has this many, else the per-run maximum

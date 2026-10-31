@@ -9,6 +9,9 @@ One pass (the ``markets`` timer, every few hours):
 3. RESOLVE. A tracked market the sweep no longer lists is fetched by id; one that has finally resolved is closed in the store with its outcome
    (yes / no / void). That is the ground truth everything is scored against.
 
+   WATCH. Every market any bot forecast or traded, any resting order sits on, or any lab question names (``watch.py``) that the store does not hold is fetched by
+   id and kept until it resolves (``flags.WATCH_*``), so its outcome is recorded whatever the sweep's filters say. This is also the backfill of markets missed earlier.
+
 Each tag and each market is isolated: a failed request is recorded and never stops the pass.
 """
 
@@ -17,7 +20,7 @@ from __future__ import annotations
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
-from . import flags, mapping, polymarket, store
+from . import flags, mapping, polymarket, store, watch
 from .contracts import Market
 from .polymarket import Fetch
 
@@ -55,6 +58,28 @@ def discover(get: Fetch, vocab: list[mapping.TheaterVocab], now: datetime, error
     return {m.id: (m, raw) for m, raw in top}
 
 
+def _watched(get: Fetch, vocab: list[mapping.TheaterVocab], held: set[str], raws: dict[str, dict[str, Any]], errors: dict[str, str], out: dict[str, Any]) -> list[Market]:
+    """Markets in the watch-set the store has never held, fetched by id (at most ``flags.WATCH_MAX_FETCH`` a pass; the rest wait for the next one). They are saved with
+    ``origin="watch"``: tracked and scored, but never forecast by the desk. Fills ``raws`` for the ones returned."""
+    missing = sorted(mid for mid in watch.watched() if mid not in held)
+    out["watch_missing"] = len(missing)
+    rows: list[Market] = []
+    for mid in missing[:flags.WATCH_MAX_FETCH]:
+        try:
+            raw = polymarket.market_by_id(mid, get)
+        except Exception as exc:  # noqa: BLE001
+            errors[f"watch:{mid}"] = f"{type(exc).__name__}: {str(exc)[:120]}"
+            continue
+        m = polymarket.parse_market(raw) if raw else None
+        if m is None:
+            continue
+        theaters, countries, score = mapping.map_market(m.question, m.event_title, vocab)
+        raws[m.id] = raw
+        rows.append(m.model_copy(update={"theaters": theaters, "countries": countries, "map_score": score, "origin": "watch"}))
+    out["watch_fetched"] = len(rows)
+    return rows
+
+
 def refresh(get: Fetch | None = None, *, now: datetime | None = None, vocab: list[mapping.TheaterVocab] | None = None) -> dict[str, Any]:
     from algent_backend import polite_http
 
@@ -88,6 +113,8 @@ def refresh(get: Fetch | None = None, *, now: datetime | None = None, vocab: lis
             continue
         raws[mid] = raw
         rows.append(old)
+    if flags.WATCH_ENABLED:
+        rows += _watched(get, vocab, set(known) | set(raws), raws, errors, out)
     resolved = []
     for m in rows:
         outcome, when = polymarket.resolution(raws[m.id])
