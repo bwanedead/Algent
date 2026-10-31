@@ -11,6 +11,10 @@ corpus index, writes only to its own store (ALGENT_EXPERIMENT_STORE), and calls 
                                                             every named protocol on the whole set, controlled; total spend capped (experiment/flags.SET_RUN_CAP_USD);
                                                             without --live: builds snapshots and prints what would run and its maximum cost. Re-running continues
     newsroom lab decide --set ID|latest --forecast p0b [--cap USD] [--live]   the frozen trader on a forecast protocol's stored forecasts (decision replay)
+    newsroom lab questions --set build --multi [--dry-run]  set version 2: a market may give a question at 168/48/12 h before resolution; --dry-run prints the yield, stores nothing
+    newsroom lab calibrate [--set ID] [--live-strategies a,b] [--json]   every stored protocol x every calibration policy, raw vs calibrated, out of sample (free)
+    newsroom lab live-board [--strategies a,b] [--json]     the live bots' resolved forecasts scored the same way, raw vs recalibrated (free)
+    newsroom lab block                                      write lab_block.json (the track record's "recipe lab" block) beside the store
     newsroom lab list                                       questions, branches, runs
     newsroom lab show ID                                    a run (manifest, prompt, output, integrity) or a question
     newsroom lab branch --from BRANCH --name NAME [--evidence NAME@V]   fork a branch with ONE evidence policy changed; the original is untouched
@@ -72,6 +76,17 @@ def add_parser(sub: Any) -> None:
     sc = verbs.add_parser("score", help="scoreboards per mode, and the decision board")
     sc.add_argument("--set", dest="qset", help="restrict to a common question set (ID or latest)")
     sc.set_defaults(handler=run_score)
+    cb = verbs.add_parser("calibrate", help="re-score every stored protocol through each calibration policy (free, no model call)")
+    cb.add_argument("--set", dest="qset", help="score only this common question set (the fit still uses every resolved forecast before each cutoff)")
+    cb.add_argument("--live-strategies", default="", help="platt-live: fit on these live strategies' forecasts only (comma-separated; default all)")
+    cb.add_argument("--json", action="store_true")
+    cb.set_defaults(handler=run_calibrate)
+    lv = verbs.add_parser("live-board", help="the live strategies' resolved forecasts scored by the lab's scorer, raw vs recalibrated out of sample (free)")
+    lv.add_argument("--strategies", default="", help="comma-separated strategy ids (default all)")
+    lv.add_argument("--json", action="store_true")
+    lv.set_defaults(handler=run_live_board)
+    bl = verbs.add_parser("block", help="write the 'recipe lab' block the track record publishes (lab_block.json beside the store) and print it")
+    bl.set_defaults(handler=run_block)
     a = verbs.add_parser("audit", help="replay integrity audit of a run or a question")
     a.add_argument("target", nargs="?", help="a run id or a question id")
     a.add_argument("--set", dest="qset", help="audit the first answered question of this set (ID or latest)")
@@ -207,9 +222,44 @@ def run_branch(args: Any) -> int:
 def run_score(args: Any) -> int:
     from algent_backend.experiment import decision, qset, score
 
+    from algent_backend.experiment import calibrate
+
     if args.qset:
-        return _emit({"forecasts": qset.board(qset.load(args.qset)), "decisions": decision.board()})
-    return _emit({**score.scoreboard(), "decisions": decision.board()})
+        doc = qset.load(args.qset)
+        return _emit({"forecasts": qset.board(doc), "calibrated": calibrate.lab_board(only={e["id"] for e in doc["questions"]}), "decisions": decision.board()})
+    return _emit({**score.scoreboard(), "calibrated": calibrate.lab_board(), "decisions": decision.board()})
+
+
+def _names(text: str) -> tuple[str, ...]:
+    return tuple(x.strip() for x in text.split(",") if x.strip())
+
+
+def run_calibrate(args: Any) -> int:
+    from algent_backend.experiment import calibrate, qset
+
+    only = {e["id"] for e in qset.load(args.qset)["questions"]} if args.qset else None
+    board = calibrate.lab_board(only=only, live_strategies=_names(args.live_strategies))
+    if args.json:
+        return _emit(board)
+    print(calibrate.render_lab(board))
+    return 0
+
+
+def run_live_board(args: Any) -> int:
+    from algent_backend.experiment import calibrate
+
+    board = calibrate.live_board(strategies=_names(args.strategies))
+    if args.json:
+        return _emit(board)
+    print(calibrate.render_live(board))
+    return 0
+
+
+def run_block(args: Any) -> int:
+    from algent_backend.experiment import calibrate
+
+    block = calibrate.track_block()
+    return _emit({"written": calibrate.write_block(block), "block": block})
 
 
 def run_audit(args: Any) -> int:
