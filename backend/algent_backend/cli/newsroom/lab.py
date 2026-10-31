@@ -40,6 +40,8 @@ def add_parser(sub: Any) -> None:
     q.add_argument("--set", dest="qset", help="build | list | ID: the common question set")
     q.add_argument("--min", dest="min_n", type=int, help="build: aim for at least this many questions")
     q.add_argument("--hours", type=float, help="build: cutoff this many hours before resolution")
+    q.add_argument("--multi", action="store_true", help="build (set version 2): one market may give a question at each of flags.SET_MULTI_HOURS before resolution, when a price is on file")
+    q.add_argument("--dry-run", action="store_true", help="build: print how many markets/questions the live markets store yields, store nothing")
     q.set_defaults(handler=run_questions)
     r = verbs.add_parser("run", help="P0 vs P1 on one question")
     r.add_argument("--market", help="a single resolved market (with --cutoff), or use --set")
@@ -100,13 +102,18 @@ def run_questions(args: Any) -> int:
     from algent_backend.markets import store as ms
 
     if args.qset:
-        from algent_backend.experiment import qset, store
+        from algent_backend.experiment import flags, qset, store
 
         if args.qset == "build":
-            kw = {k: v for k, v in (("min_n", args.min_n), ("hours_before", args.hours)) if v}
-            doc = qset.build(**kw)
-            return _emit({"set": doc["id"], "n": len(doc["questions"]), "topics": doc["topics"], "skipped": doc["skipped"], "short_of_target": doc["short_of_target"],
-                          "params": doc["params"], "store": str(store.root())})
+            kw: dict[str, Any] = {k: v for k, v in (("min_n", args.min_n), ("hours_before", args.hours)) if v}
+            if getattr(args, "multi", False):
+                kw["hours_list"] = tuple(flags.SET_MULTI_HOURS)
+            doc = qset.build(**kw, dry_run=getattr(args, "dry_run", False))
+            out = {"set": doc["id"], "n": len(doc["questions"]), "topics": doc["topics"], "skipped": doc["skipped"], "short_of_target": doc["short_of_target"],
+                   "params": doc["params"], "store": str(store.root())}
+            if getattr(args, "multi", False):
+                out.update({k: doc[k] for k in ("n_markets", "n_resolved_markets", "n_event_families", "by_hours_before")})
+            return _emit({**out, "dry_run": True, "stored": False, "note": "nothing was stored"} if getattr(args, "dry_run", False) else out)
         if args.qset == "list":
             return _emit(store.read_lines("sets/index.jsonl"))
         return _emit(qset.load(args.qset))
