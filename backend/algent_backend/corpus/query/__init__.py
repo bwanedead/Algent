@@ -81,8 +81,9 @@ class Corpus:
         e, _ = self._one(ref)
         return None if e is None else _about.timeline(self.db, e["id"], since=since, until=until, kinds=kinds, limit=limit)
 
-    def search(self, text: str, *, kinds: set[str] | None = None, since: str = "", until: str = "", limit: int = flags.DEFAULT_LIMIT) -> list[dict[str, Any]]:
-        return _search.search(self.db, text, kinds=kinds, since=since, until=until, limit=limit)
+    def search(self, text: str, *, kinds: set[str] | None = None, since: str = "", until: str = "", limit: int = flags.DEFAULT_LIMIT,
+               products: set[str] | None = None) -> list[dict[str, Any]]:
+        return _search.search(self.db, text, kinds=kinds, since=since, until=until, limit=limit, products=products)
 
     def related(self, ref: str, *, limit: int = 15, kinds: set[str] | None = None) -> list[dict[str, Any]] | None:
         e, _ = self._one(ref)

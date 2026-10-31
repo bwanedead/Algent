@@ -8,6 +8,7 @@ richer corpus evidence did better. Read-only projections of the research traces,
 * top gaps: what the bots asked for most, and whether a research run has covered it;
 * accuracy by evidence richness: Brier (forecasts) and realised P&L (closed positions) for decisions that cited at least ``flags.RICH_MIN_CITED``
   corpus items against thinner ones, each group's numbers shown ONLY once it holds ``flags.MIN_RESOLVED_FOR_VERDICT`` resolved items (the same rule as the verdict);
+* routing: what the bots asked for, by kind, the free feed that should answer it, and whether that feed holds it (gap_router.py);
 * loop: did each gap research run help (re-asks, uptake, edge before/after, a plain verdict; gap_loop.py);
 * horizons: Brier by time-to-resolution at the forecast, and how long each book's positions took to resolve.
 """
@@ -19,7 +20,7 @@ from collections import Counter
 from datetime import UTC, datetime
 from typing import Any
 
-from . import books, flags, gap_loop, gaps, store, trader_report
+from . import books, flags, gap_loop, gap_router, gaps, store, trader_report
 from .contracts import Decision, Forecast
 
 BUCKETS = (("2 days or less", 0.0, 48.0), ("2 to 7 days", 48.0, 168.0), ("7 to 30 days", 168.0, 720.0), ("over 30 days", 720.0, 1e9))
@@ -146,7 +147,7 @@ def section(ps: list[Any], now: datetime | None = None) -> dict[str, Any]:
     return {"coverage": coverage(fcs, ds), "citations": citations(fcs, ds), "tools": tools(), "top_gaps": gaps.top(8, now), "accuracy": accuracy_split(ps),
             "caps": {"rounds": flags.RESEARCH_MAX_ROUNDS, "queries_per_round": flags.RESEARCH_QUERIES_PER_ROUND, "rows_per_query": flags.RESEARCH_ROWS_PER_QUERY,
                      "gap_fill_usd_per_day": flags.GAP_FILL_USD_PER_DAY, "corpus_only": flags.CORPUS_ONLY and flags.RESEARCH_ENABLED},
-            "loop": gap_loop.block(now),
+            "loop": gap_loop.block(now), "routing": gap_router.block(now),
             "gap_spend": {"asks": len(store.gaps()), "fills": len(store.gap_fills()), "usd": round(sum(f.usd for f in store.gap_fills()), 4)}}
 
 

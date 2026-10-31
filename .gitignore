@@ -293,6 +293,7 @@ backend/maritime_store/
 backend/calendar_store/
 backend/conflict_store/
 backend/gnss_store/
+backend/elections_store/
 backend/markets_store/
 backend/ai_benchmarks_store/
 backend/retrieval_store/

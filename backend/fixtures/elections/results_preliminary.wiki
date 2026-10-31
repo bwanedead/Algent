@@ -1,0 +1,29 @@
+{{Infobox election
+| election_name = 2026 Hungarian parliamentary election
+| election_date = 12 April 2026
+}}
+The '''2026 Hungarian parliamentary election''' was held on 12 April 2026.
+
+==Results==
+The figures below are preliminary results with 96.3% of the votes counted; the National Election Office will publish the final count later.
+
+{| class="wikitable sortable" style="text-align:right"
+|-
+! colspan="2" | Party !! Votes !! % !! Seats !! +/–
+|-
+| style="background:#FF6A00;" | || align="left" | [[Tisza Party]] || 2,845,201 || 49.1 || 98 || +98
+|-
+| style="background:#00A1DE;" | || align="left" | [[Fidesz]]–[[KDNP]] || 2,398,415 || 41.4 || 85 || −35
+|-
+| style="background:#6B8E23;" | || align="left" | [[Our Homeland Movement]] || 301,200 || 5.2 || 16 || +0
+|-
+| || align="left" | Others || 252,100 || 4.3 || 0 || –
+|- class="sortbottom"
+! colspan="2" align="left" | Total || 5,796,916 || 100.00 || 199 ||
+|-
+| colspan="2" align="left" | Valid votes || 5,796,916 || 99.1 || ||
+|-
+| colspan="2" align="left" | Invalid/blank votes || 52,100 || 0.9 || ||
+|-
+| colspan="6" | Source: National Election Office
+|}

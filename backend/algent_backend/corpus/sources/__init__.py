@@ -13,7 +13,7 @@ from importlib import import_module
 from .base import Source
 
 MODULES = ("actors", "dailies", "pulses", "profiles", "articles", "statements", "sanctions", "calendar", "geoledger", "maritime", "markets",
-           "instruments", "ai_benchmarks", "conflict", "gnss")
+           "instruments", "ai_benchmarks", "conflict", "gnss", "elections")
 
 
 def load(only: list[str] | None = None) -> list[Source]:

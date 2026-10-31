@@ -261,6 +261,17 @@ PRODUCTS: tuple[Product, ...] = (
               Job("calendar-fast", ("calendar", "refresh", "--group", "fast"), "3/6:35", every_min=360, priority=3, est_min=4, est_mb=150, what="calendar: earnings, launches, our markets and watches (six-hourly class)")),
         publishes=("calendar/",), contracts=(K("ohmega.calendar", 1, ("calendar/next.json", "calendar/markets.json", "calendar/country/*.json")),), site_routes=("/calendar",), feeds_from=("statements",), heartbeat=("calendar_store/status.json",)),
     Product(
+        id="elections", title="Elections (polls, averages, results)", owner="elections",
+        what="Opinion polls, a recent poll average and results for the elections held in the last 30 days or due in the next 120 (and any a market bot asked about), read from Wikipedia's polling and "
+             "election pages (CC BY-SA 4.0, medium confidence). One append-only snapshot per election whenever its pages changed. Corpus-only: nothing is published to R2.",
+        stores=(Store("elections_store", loc.elections, "ALGENT_ELECTIONS_STORE", True,
+                      budget=_b(2, 100, 400, 30, 2, "estimate (unmeasured): a snapshot is 5-30 KB (newest 40 polls of up to 3 tables, the results table); ~60 elections, a line only when a page changed, so ~1-2 MB a week at most")),),
+        retention=(Retention("append-only", "snapshots/<election>.jsonl gains a line only when the polls or results changed; status.json is replaced", "elections/store.py::append", "on-write"),),
+        irreplaceable=True, why="forward capture: the poll average and the preliminary/official results as first read on each day cannot be re-fetched (Wikipedia keeps edits, not our as-of reads)",
+        jobs=(Job("elections", ("elections", "run"), "*-*-* 01:50", every_min=1440, priority=3, est_min=6, est_mb=250,
+                  what="elections feed: Wikipedia polling + election pages for calendar elections and those the bots asked about (free; ~120 paced requests)"),),
+        feeds_from=("calendar",), heartbeat=("elections_store/status.json",)),
+    Product(
         id="ai_benchmarks", title="AI benchmarks", owner="ai_benchmarks",
         what="Benchmark scores (Epoch hub, SWE-bench, LMArena) and lab-claimed scores found by one capped model call a day.",
         stores=(Store("ai_benchmarks_store", loc.ai_benchmarks, "ALGENT_AI_BENCHMARKS_STORE", True,
