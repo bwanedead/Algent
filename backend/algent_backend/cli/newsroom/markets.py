@@ -12,6 +12,7 @@
     newsroom markets fast [--dry-run]           the FAST strategy (markets settling within days), every 4 h; capped, gated like a paid job
     newsroom markets day [--dry-run]            the DAY book: an agent that browses and chooses its own 0-2 day bets, 3 runs a day; capped, gated like a paid job
     newsroom markets gaps [--list] [--dry-run] [--limit N]          PAID, daily: research the bots' most-asked gaps into the corpus (capped at $0.50/day)
+    newsroom markets gaps route [--json]        FREE: sort the asks by kind, route each to its feed, and say whether the corpus holds it (what the brain is missing)
     newsroom markets evidence                   how the corpus served the bots: coverage, citations, tools, top gaps, accuracy by richness
     newsroom markets status                     last pass, counts, forecasts and trader decisions, spend
 
@@ -59,7 +60,9 @@ def add_parser(sub: Any) -> None:
     sg.add_argument("--list", action="store_true", help="print the roster, schedule and caps; call nothing")
     sg.add_argument("--dry-run", action="store_true")
     sg.set_defaults(handler=run_strategy)
-    gp = verbs.add_parser("gaps", help="turn the most-asked gaps into research runs (paid, capped per day)")
+    gp = verbs.add_parser("gaps", help="turn the most-asked gaps into research runs (paid, capped per day); `gaps route` is the free routing table")
+    gp.add_argument("action", nargs="?", choices=["route"], help="route: print what the bots asked for by kind, route and whether we hold it (free)")
+    gp.add_argument("--json", action="store_true", help="with route: the whole block as JSON")
     gp.add_argument("--list", action="store_true", help="show the top gaps and do nothing")
     gp.add_argument("--dry-run", action="store_true")
     gp.add_argument("--limit", type=int)
@@ -218,9 +221,15 @@ def run_strategy(args: Any) -> int:
 def run_gaps(args: Any) -> int:
     from datetime import UTC, datetime
 
-    from algent_backend.markets import gaps
+    from algent_backend.markets import gap_router, gaps
 
     now = datetime.now(UTC)
+    if args.action == "route":
+        b = gap_router.block(now)
+        if args.json:
+            return _emit(b)
+        print(gap_router.table(b))
+        return 0
     if args.list or args.dry_run:
         return _emit({"spent_today": gaps.spent_today(now), "top": gaps.top(15, now)})
     return _emit(gaps.fill(limit=args.limit))

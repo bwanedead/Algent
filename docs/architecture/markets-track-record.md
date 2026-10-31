@@ -255,6 +255,13 @@ Closes the loop on `gaps.fill`: did a research run the bots asked for actually h
   (`GapFill.refill = true`; a failed refill still counts as the one). It competes for the same `GAP_FILL_USD_PER_DAY` / `GAP_FILL_MAX_PER_DAY`; no cap was raised. Knobs: `LOOP_*` in `flags.py`.
 - **Limits.** `gaps.record` dedupes per market and topic, so only other markets can re-ask; traces are pruned after `TRACE_KEEP_DAYS`, so "returned" is a floor (citations live on the forecast/decision lines).
 
+## Gap router (`gap_router.py`; free, no model call)
+Sorts every gap cluster into a kind (`poll`, `result`, `event`, `schedule`, `statement`, `series`, `status`, `other`; ordered keyword rules on the topic, then topic + why, then the market question) and routes it:
+`feed:<product>` (elections for polls/results, conflict for events, calendar, statements, instruments or maritime for numbers, actors for who holds an office), `research` (the paid fill) or `unknowable` (a result
+or event dated after today). For feed routes it probes the local corpus restricted to that product (`Corpus.search(products=...)`, plus series/leaders by the names in the ask): `retrieval_miss` = the product holds
+it and the bot did not find it, `coverage_miss` = it does not. `gaps.fill` skips what a free feed answers (elections asks, retrieval misses, unknowable) and records `skipped` + reason on its report; caps untouched.
+Published as the `routing` block of the evidence section ("What the bots asked for that we don't hold"); `newsroom markets gaps route` prints it. Knobs: `GAP_ROUTE_*` in `flags.py`.
+
 ## Resting limit orders (`resting.py`; paper only)
 A bot can leave a limit order (`place_resting` / `cancel_resting` in `day_tools.py`) that waits between its runs. `limit_price` is the all-in price on its own side (slippage included): a buy
 fills at or below it, a sell at or above it. The record is `resting_orders.jsonl`, append-only: placed `open`, then each transition (`filled` / `expired` / `cancelled`, with its reason in `note`) is a

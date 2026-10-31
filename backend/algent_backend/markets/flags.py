@@ -155,6 +155,17 @@ LOOP_ROWS_SHOWN = 12
 #: Re-ask texts quoted in a refill's brief.
 LOOP_REASK_QUOTES = 4
 
+# ── the gap router (gap_router.py): which free feed should answer an ask, and does the corpus hold it ──
+#: Off = ``gaps.fill`` ignores routes (every candidate is researched as before); the published "what the brain is missing" block still builds.
+GAP_ROUTE_SKIP_FILLS = True
+#: Clusters per pass whose feed is probed in the corpus (retrieval vs coverage). The rest are routed but marked unchecked. Each probe is a few local FTS queries.
+GAP_ROUTE_MAX_PROBES = 60
+#: A probe counts the product as holding the ask when this many of its hits share at least ``GAP_ROUTE_MIN_OVERLAP`` content words with it.
+GAP_ROUTE_MIN_HITS = 1
+GAP_ROUTE_MIN_OVERLAP = 2
+#: Rows on the page: the "wanted feeds" list.
+GAP_ROUTE_WANTED_SHOWN = 8
+
 # ── the fast book: markets that settle soon, decided every few hours (trader.py with the FAST book) ──
 FAST_ENABLED = True
 #: Only markets ending within this many days (and no sooner than FAST_MIN_HOURS_LEFT hours) are in the fast book.

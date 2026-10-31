@@ -131,6 +131,12 @@ export type GapLoop = {
   fills: number; failed: number; answered: number; unused: number; asked_again: number; too_early: number; unlinked: number; usd: number; rows: LoopRow[];
   min_for_verdict: number; settle_days: number; reask_min: number; basis: string;
 };
+// What the bots asked for, by kind, and whether the free feed meant to answer it holds it (backend `markets/gap_router.py`). All counts are asks; the labels are plain words.
+export type RoutingRow = { kind: string; label: string; route: string; route_label: string; asks: number; clusters: number; held_missed: number; not_held: number; unchecked: number };
+export type WantedFeed = { kind: string; label: string; product: string; route_label: string; asks: number; clusters: number; topics: string[] };
+export type GapRouting = {
+  clusters: number; asks: number; held_missed: number; not_held: number; unchecked: number; no_feed: number; unknowable: number; rows: RoutingRow[]; wanted: WantedFeed[]; basis: string;
+};
 export type Evidence = {
   coverage: Coverage & { forecasts: Coverage; trades: Coverage };
   citations: { n: number; mean: number | null; median: number | null; none_share: number | null };
@@ -143,6 +149,7 @@ export type Evidence = {
   caps: { rounds: number; queries_per_round: number; rows_per_query: number; gap_fill_usd_per_day: number; corpus_only: boolean };
   gap_spend: { asks: number; fills: number; usd: number };
   loop: GapLoop | null;
+  routing: GapRouting | null;
 };
 export type BookHorizon = { positions: number; resolved: number; median_days_to_resolution: number | null; mean_days_to_resolution: number | null };
 export type Horizons = { by_horizon: EvidenceGroup[]; min_for_verdict: number; books: Record<string, BookHorizon> };
@@ -337,6 +344,23 @@ function parseLoop(raw: unknown): GapLoop | null {
   };
 }
 
+// Absent in documents from before the router existed: the page then shows no such section.
+function parseRouting(raw: unknown): GapRouting | null {
+  if (!isObj(raw)) return null;
+  return {
+    clusters: n0(raw.clusters), asks: n0(raw.asks), held_missed: n0(raw.held_missed), not_held: n0(raw.not_held), unchecked: n0(raw.unchecked), no_feed: n0(raw.no_feed),
+    unknowable: n0(raw.unknowable), basis: str(raw.basis),
+    rows: list(raw.rows).map((r) => ({
+      kind: str(r.kind), label: str(r.label), route: str(r.route), route_label: str(r.route_label), asks: n0(r.asks), clusters: n0(r.clusters), held_missed: n0(r.held_missed),
+      not_held: n0(r.not_held), unchecked: n0(r.unchecked),
+    })),
+    wanted: list(raw.wanted).map((w) => ({
+      kind: str(w.kind), label: str(w.label), product: str(w.product), route_label: str(w.route_label), asks: n0(w.asks), clusters: n0(w.clusters),
+      topics: strs(w.topics),
+    })),
+  };
+}
+
 function parseEvidence(raw: unknown): Evidence | null {
   if (!isObj(raw)) return null;
   const cov = isObj(raw.coverage) ? raw.coverage : {};
@@ -365,6 +389,7 @@ function parseEvidence(raw: unknown): Evidence | null {
     caps: { rounds: n0(caps.rounds), queries_per_round: n0(caps.queries_per_round), rows_per_query: n0(caps.rows_per_query), gap_fill_usd_per_day: n0(caps.gap_fill_usd_per_day), corpus_only: caps.corpus_only === true },
     gap_spend: { asks: n0(gs.asks), fills: n0(gs.fills), usd: n0(gs.usd) },
     loop: parseLoop(raw.loop),
+    routing: parseRouting(raw.routing),
   };
 }
 

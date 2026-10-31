@@ -159,6 +159,11 @@ def fill(*, now: datetime | None = None, runner: Runner | None = None, limit: in
     cands = [c for c in clusters(now) if not c.filled_at and c.asks >= flags.GAP_MIN_ASKS and sum(_same(c.toks, t) for t in failed) < 2]
     from . import gap_loop                                  # lazy: gap_loop reads this module
     cands = sorted([*cands, *gap_loop.refill_candidates(now)], key=lambda c: (c.asks, c.last_at), reverse=True)
+    if flags.GAP_ROUTE_SKIP_FILLS:                          # a free feed answers it, or nothing can yet: do not pay (skips use no cap; the reason is on the report)
+        from . import gap_router
+        routed = list(zip(cands, gap_router.route_clusters(cands, now)))
+        report["skipped"] = [{"topic": c.topic, "asks": c.asks, "route": r.route, "reason": r.skip_reason()} for c, r in routed if r.skip_reason()]
+        cands = [c for c, r in routed if not r.skip_reason()]
     report["candidates"] = len(cands)
     runner = runner or subprocess_runner
     cap = flags.GAP_FILL_MAX_PER_DAY if limit is None else min(limit, flags.GAP_FILL_MAX_PER_DAY)

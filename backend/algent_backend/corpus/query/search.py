@@ -13,6 +13,7 @@ from .. import flags
 from ..norm import norm
 
 _OVERFETCH = 8                                  # candidates pulled per wanted hit, so kind/date filters applied afterwards still fill the page
+_PRODUCT_POOL = 400                             # candidates pulled when the page is restricted to a product (the FTS table does not index the product)
 
 
 def terms(text: str) -> list[str]:
@@ -61,18 +62,21 @@ def document_ranking(db: sqlite3.Connection, text: str, *, limit: int = 400) -> 
     return [r["ref"] for r in _candidates(db, ts, uses_fts(db), limit, "document")] if ts else []
 
 
-def search(db: sqlite3.Connection, text: str, *, kinds: set[str] | None = None, since: str = "", until: str = "", limit: int = flags.DEFAULT_LIMIT) -> list[dict[str, Any]]:
+def search(db: sqlite3.Connection, text: str, *, kinds: set[str] | None = None, since: str = "", until: str = "", limit: int = flags.DEFAULT_LIMIT,
+           products: set[str] | None = None) -> list[dict[str, Any]]:
     """Best matches for ``text``. ``kinds`` filters on the hit's own kind (``daily``, ``statement``, ``claim``, ``development``...) or its type
-    (``document`` / ``claim`` / ``event``)."""
+    (``document`` / ``claim`` / ``event``); ``products`` keeps only hits a given product contributed (searched within the best ``_PRODUCT_POOL`` matches)."""
     ts = terms(text)
     if not ts:
         return []
     out: list[dict[str, Any]] = []
-    for row in _candidates(db, ts, uses_fts(db), max(limit, 1) * _OVERFETCH):
+    for row in _candidates(db, ts, uses_fts(db), _PRODUCT_POOL if products else max(limit, 1) * _OVERFETCH):
         d = _detail(db, row["kind"], row["ref"])
         if d is None or (since and d["date"] < since) or (until and d["date"] > until):
             continue
         if kinds and d["kind"] not in kinds and d["type"] not in kinds:
+            continue
+        if products and d["product"] not in products:
             continue
         out.append({**d, "score": round(-row["score"], 4), "snippet": " ".join((row["snip"] or "").split())})
         if len(out) >= limit:

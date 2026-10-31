@@ -1,4 +1,4 @@
-import type { BookHorizon, Evidence, EvidenceGroup, EvidenceMoney, FastBook, GapLoop, GapRow, Horizons, LoopRow, Trader } from "@/lib/track-record";
+import type { BookHorizon, Evidence, EvidenceGroup, EvidenceMoney, FastBook, GapLoop, GapRouting, GapRow, Horizons, LoopRow, Trader } from "@/lib/track-record";
 
 // The Evidence section of the track record (backend `markets/research_report.py`): how well OUR corpus served the bots, what they went looking for and the
 // book that trades the short horizon beside the daily one. Server-rendered. A ratio with nothing under it reads "n/a"; a group below the verdict threshold
@@ -117,6 +117,61 @@ export function GapsList({ rows }: { rows: GapRow[] }) {
         </li>
       ))}
     </ul>
+  );
+}
+
+// What the bots asked for that we don't hold: one sentence, a small table by kind of ask, then the feeds worth adding first. Plain words only; the counts are asks.
+export function MissingSummary({ r }: { r: GapRouting }) {
+  const parts = [
+    r.held_missed > 0 && `${r.held_missed} are in a feed we already run but the bot did not find them`,
+    r.not_held > 0 && `${r.not_held} are in a feed that does not hold them yet`,
+    r.no_feed > 0 && `${r.no_feed} have no feed and need a paid research run`,
+    r.unknowable > 0 && `${r.unknowable} cannot be known yet`,
+    r.unchecked > 0 && `${r.unchecked} are not checked yet`,
+  ].filter(Boolean);
+  return <p className="tr-note">Of {r.asks} things the bots asked for{parts.length > 0 && `, ${parts.join(", ")}`}.</p>;
+}
+
+export function MissingTable({ r }: { r: GapRouting }) {
+  if (r.rows.length === 0) return <p className="tr-empty">The bots have not asked for anything the corpus lacked yet.</p>;
+  return (
+    <>
+      <div className="tr-scroll">
+        <table className="tr-table" aria-label="What the bots asked for, and whether we hold it">
+          <thead>
+            <tr><th>They asked for</th><th className="n">Asks</th><th>Should come from</th><th className="n">We hold it, the bot did not find it</th><th className="n">We do not hold it</th></tr>
+          </thead>
+          <tbody>
+            {r.rows.map((x) => {
+              const feed = x.route.startsWith("feed:");
+              return (
+                <tr key={`${x.kind}-${x.route}`}>
+                  <td>{x.label}</td>
+                  <td className="n">{x.asks}</td>
+                  <td>{x.route_label}</td>
+                  <td className="n">{feed ? x.held_missed : "–"}</td>
+                  <td className="n">{feed ? x.not_held : "–"}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      {r.wanted.length > 0 && (
+        <>
+          <h3 className="tr-h3">Feeds to add or fill first</h3>
+          <ul className="tr-gaps">
+            {r.wanted.map((w) => (
+              <li key={w.kind}>
+                <b>{w.label}</b> <span className="tr-muted">asked {w.asks} time{w.asks === 1 ? "" : "s"}, {w.product ? `the ${w.route_label} does not hold it` : "no feed covers it"}</span>
+                {w.topics.length > 0 && <span className="tr-why">For example: {w.topics.join("; ")}</span>}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+      <p className="tr-note">{r.basis}</p>
+    </>
   );
 }
 

@@ -7,7 +7,7 @@ import JudgmentsSwitch from "@/components/JudgmentsSwitch";
 import PageTag from "@/components/PageTag";
 
 import { BrierSeries, CalibrationChart, ChartCard } from "@/components/track/TrackCharts";
-import { AccuracyByEvidence, EvidenceStats, GapsList, HorizonTable, LoopSummary, LoopTable } from "@/components/track/EvidencePanel";
+import { AccuracyByEvidence, EvidenceStats, GapsList, HorizonTable, LoopSummary, LoopTable, MissingSummary, MissingTable } from "@/components/track/EvidencePanel";
 import { DayGroups, Wishes } from "@/components/track/DayBook";
 import { Books, ValueChart } from "@/components/track/Portfolio";
 import { Disagreements, Resolved } from "@/components/track/TrackTables";
@@ -118,6 +118,13 @@ export default async function TrackRecordPage() {
               </>
             )}
           </Fold>
+
+          {t.evidence?.routing && t.evidence.routing.asks > 0 && (
+            <Fold title="What the bots asked for that we don't hold">
+              <MissingSummary r={t.evidence.routing} />
+              <MissingTable r={t.evidence.routing} />
+            </Fold>
+          )}
 
           {t.evidence?.loop && t.evidence.loop.fills + t.evidence.loop.failed > 0 && (
             <Fold title="Did the research help?">
