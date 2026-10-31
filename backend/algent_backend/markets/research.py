@@ -23,7 +23,7 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
-from . import flags
+from . import flags, gap_router
 from .contracts import Market, QueryRun
 
 TOOLS = ("entity", "about", "search", "timeline", "related", "series")
@@ -205,6 +205,36 @@ def run_query(corpus: Any, q: Query, *, today: date) -> list[Hit]:
     else:
         raise ValueError(f"unknown tool {q.tool!r}")
     return [h for h in hits if h.id][:n]
+
+
+def _lane_product(arg: str, today: date) -> str:
+    """The feed product meant to answer this ask, or "" (research, unknowable yet, and actors: that one is reached through the entity tool)."""
+    text = arg.strip()
+    kind = gap_router.classify(text)
+    route = "research" if gap_router.unknowable(kind, text, today) else gap_router.route_of(kind, text)
+    product = route.removeprefix("feed:") if route.startswith("feed:") else ""
+    return "" if product == "actors" else product
+
+
+def lane_label(arg: str, today: date) -> str:
+    return gap_router.PRODUCT_LABEL.get(_lane_product(arg, today), "")
+
+
+def feed_lane(corpus: Any, arg: str, *, since: str = "", kinds: set[str] | None = None, today: date) -> list[Hit]:
+    """Hits from the structured feed that answers this ask (a schedule from the calendar, an event from the attack log...), found by product so news volume cannot
+    drown them. Each is labelled with its source. Empty for research/unknowable routes, the actors product (the entity tool) and no match. Raises on a corpus error."""
+    product = _lane_product(arg, today)
+    if not product or flags.SEARCH_FEED_LANE_ROWS < 1:
+        return []
+    text = arg.strip()
+    since = since if since[:4].isdigit() else (today - timedelta(days=flags.RESEARCH_LOOKBACK_DAYS)).isoformat()      # no `until`: a calendar item may be dated ahead
+    label = lane_label(arg, today)
+    rows = [r for r in corpus.search(text, kinds=kinds, since=since, products={product}, limit=flags.SEARCH_FEED_LANE_ROWS * 2) if not _blocked(r)]
+    out = []
+    for r in rows:
+        h = _claim_hit(r) if r.get("type") == "claim" else _doc_hit(r)
+        out.append(Hit(h.id, h.kind, h.date, h.title, f"(from the {label}) {h.text}".strip()))
+    return [h for h in out if h.id][:flags.SEARCH_FEED_LANE_ROWS]
 
 
 # ── the planner ──────────────────────────────────────────────────────────────────────────────────

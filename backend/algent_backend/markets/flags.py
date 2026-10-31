@@ -203,6 +203,10 @@ DAY_MIN_HOURS_LEFT = 1.0
 #: "a market worth trading". Rows the browser returns per search.
 DAY_SEARCH_LIMIT = 10
 DAY_SEARCH_LIMIT_MAX = 25
+#: The bot's ``search`` / ``about`` also look in the structured feed that answers the ask (gap_router kind -> product), so news volume cannot drown a calendar
+#: or attack-log row we hold. SEARCH_FEED_LANE_ROWS caps those extra rows; 0 or SEARCH_FEED_LANE = False turns the lane off.
+SEARCH_FEED_LANE = True
+SEARCH_FEED_LANE_ROWS = 4
 #: Own book: the same fixed paper $10k and caps as the others unless retuned here (guards.apply takes these).
 DAY_BANKROLL = BANKROLL
 DAY_MAX_POSITION_FRAC = 0.05

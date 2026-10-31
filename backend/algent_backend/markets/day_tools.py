@@ -248,8 +248,22 @@ class Session:
             return "give a query: an entity name or a few distinctive words", ""
         hits = research.run_query(self.corpus, research.Query(tool=c.tool, arg=c.query, since=c.since, kinds=c.kinds), today=self.now.date())  # type: ignore[arg-type]
         self.queries.append(f"{c.tool}({c.query.strip()[:80]})")
-        self.shown.update(h.id for h in hits)
-        return "\n".join(h.line(300) for h in hits) or "nothing in the corpus", ""
+        lane = self._feed_lane(c, hits)
+        self.shown.update(h.id for h in [*hits, *lane])
+        out = [h.line(300) for h in hits]
+        if lane:
+            out += [f"— from the {research.lane_label(c.query, self.now.date())} —", *(h.line(300) for h in lane)]
+        return "\n".join(out) or "nothing in the corpus", ""
+
+    def _feed_lane(self, c: Call, hits: list[research.Hit]) -> list[research.Hit]:
+        """The structured feed's rows for a search/about ask, minus what the normal hits show. The lab's frozen run_query is untouched; it can adopt this later as a new evidence-policy version."""
+        if c.tool not in ("search", "about") or not flags.SEARCH_FEED_LANE:
+            return []
+        try:
+            seen = {h.id for h in hits}
+            return [h for h in research.feed_lane(self.corpus, c.query, since=c.since, kinds={k for k in c.kinds if k} or None, today=self.now.date()) if h.id not in seen]  # type: ignore[arg-type]
+        except Exception:  # noqa: BLE001 - the lane is a bonus; the normal answer stands
+            return []
 
     t_entity = t_about = t_search = t_timeline = t_related = t_series = _corpus
 
