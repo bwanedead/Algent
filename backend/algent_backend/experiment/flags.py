@@ -17,6 +17,7 @@ ERR_LEAK_BRIER = 0.02       # errors.py: a right-side forecast this sharp that u
 CALIB_LAMBDA = 2.0          # ridge strength of the Platt fit, in observations: pulls (slope, intercept) toward (1, 0), so a few questions can only nudge the map
 CALIB_MIN_FIT = 12          # fewer resolved forecasts before the cutoff than this: the map is the identity (and says so)
 CALIB_MIN_CLASS = 3         # ... or fewer than this many of either outcome
+BLOCK_MIN_N = 10            # the published "best recipe" must have been scored on at least this many questions
 CALIB_A_MAX = 3.0           # the fitted slope on logit(p) stays in [0, this]
 CALIB_P_MIN, CALIB_P_MAX = 0.01, 0.99   # a recalibrated probability is kept inside these
 # the tournament (tournament.py)

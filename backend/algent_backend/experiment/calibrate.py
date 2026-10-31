@@ -137,9 +137,9 @@ def track_block(*, board: dict[str, Any] | None = None, live: dict[str, Any] | N
     best = None
     for p in board["protocols"].values():
         ev = p["policies"].get("platt")
-        if ev is None or ev["raw"]["brier_minus_market"] is None:
+        if ev is None or ev["raw"]["brier_minus_market"] is None or ev["raw"]["n_vs_market"] < flags.BLOCK_MIN_N:   # one lucky question is not a best recipe
             continue
-        if best is None or ev["raw"]["brier_minus_market"] < best["raw"]["brier_minus_market"]:
+        if best is None or ev["raw"]["brier_minus_market"] < best["raw"]:
             best = {"protocol": p["name"], "n": ev["raw"]["n_vs_market"], "raw": ev["raw"]["brier_minus_market"], "calibrated": ev["calibrated"]["brier_minus_market"], "n_fitted": ev["n_fitted"],
                     "bins_raw": ev["raw"]["bins"], "bins_calibrated": ev["calibrated"]["bins"]}
     lg = (live.get("groups") or {}).get("all")
