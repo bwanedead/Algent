@@ -262,7 +262,7 @@ Sorts every gap cluster into a kind (`poll`, `result`, `event`, `schedule`, `sta
 `feed:<product>` (elections for polls/results, conflict for events, calendar, statements, instruments or maritime for numbers, actors for who holds an office), `research` (the paid fill) or `unknowable` (a result
 or event dated after today). For feed routes it probes the local corpus restricted to that product (`Corpus.search(products=...)`, plus series/leaders by the names in the ask): `retrieval_miss` = the product holds
 it and the bot did not find it, `coverage_miss` = it does not. `gaps.fill` skips what a free feed answers (elections asks, retrieval misses, unknowable) and records `skipped` + reason on its report; caps untouched.
-Published as the `routing` block of the evidence section ("What the bots asked for that we don't hold"); `newsroom markets gaps route` prints it. Knobs: `GAP_ROUTE_*` in `flags.py`.
+Published as the `routing` block of the evidence section ("What the bots asked for that we don't hold"); `newsroom markets gaps route` prints it. Knobs: `GAP_ROUTE_*` in `flags.py`. The same routing feeds the bots' `search` / `about` tools as a feed lane (`research.feed_lane`, `SEARCH_FEED_LANE*`): rows of the product that answers the ask are appended under a "from the <feed>" header so news volume cannot drown them; `run_query` (the lab's frozen control) is unchanged.
 
 ## Resting limit orders (`resting.py`; paper only)
 A bot can leave a limit order (`place_resting` / `cancel_resting` in `day_tools.py`) that waits between its runs. `limit_price` is the all-in price on its own side (slippage included): a buy
