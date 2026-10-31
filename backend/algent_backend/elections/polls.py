@@ -21,7 +21,7 @@ from .contracts import Poll, PollAverage, PollTable
 _POLLSTER = re.compile(r"firm|pollster|agency|organi[sz]|institute|poll source|^source|commissioner|conducted by|^polling$|^poll$|^polling\b", re.I)
 _DATE = re.compile(r"date|fieldwork|period|conducted|field", re.I)
 _SAMPLE = re.compile(r"sample|^n$|size", re.I)
-_OTHER = re.compile(r"^(others?|oth\.?|undecided|don.?t know|lead|margin|abst\w*|none|refused|blank|not voting|unsure|will not vote|no answer|turnout|ref\.?|und\.?)\b", re.I)
+_OTHER = re.compile(r"^(others?|oth\.?|undecided|don.?t know|lead|margin|abst\w*|none|refused|blank|gov|govt|opp|total|not voting|unsure|will not vote|no answer|turnout|ref\.?|und\.?)\b", re.I)
 _SEATS_HEAD = re.compile(r"seat", re.I)
 _YEAR = re.compile(r"\b(19|20)\d{2}\b")
 _NUM = re.compile(r"(\d{1,3}(?:[ ,]\d{3})+|\d+)(?:[.,](\d{1,2}))?")

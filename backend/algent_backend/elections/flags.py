@@ -9,6 +9,9 @@ LOOKAHEAD_DAYS = 120
 MAX_ELECTIONS = 60
 #: Elections named in recent poll / result asks of the prediction-market bots (passed in by the CLI; this package never reads markets) and the Wikipedia searches spent resolving them.
 MAX_ASK_SEARCHES = 5
+#: An election is current only if the year its title leads with is within this many years before this one (or any later year): a search for
+#: "Likud seat polls" also finds the 2022 election, and its numbers must never read as today's.
+YEARS_BACK = 1
 #: The recent average: the mean over the newest AVERAGE_LAST_N polls of a table that carry the party (a party missing from a poll is skipped, not counted as zero).
 AVERAGE_LAST_N = 5
 #: Polls kept per table in a snapshot (newest first) and tables kept per election (the ones with most polls).

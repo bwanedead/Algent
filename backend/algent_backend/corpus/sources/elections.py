@@ -12,9 +12,11 @@ our mean of reported polls). Every document names its Wikipedia source and licen
 from __future__ import annotations
 
 from collections.abc import Iterator
+from datetime import date
 
 from algent_backend.elections import flags as ef
 from algent_backend.elections import store
+from algent_backend.elections.collect import current
 from algent_backend.elections.contracts import Poll, PollTable, Snapshot
 
 from .. import flags
@@ -115,6 +117,8 @@ def _emit(slug_: str, sink: Sink) -> None:
 def _units() -> Iterator[Unit]:
     for s in store.slugs():
         snaps = store.snapshots(s)
+        if snaps and not current(snaps[-1].election, date.today()):                 # a past election found by an over-wide search stays out of the corpus
+            continue
         yield Unit(f"election:{s}", digest_of([x.digest() for x in snaps] + [x.acquired_at[:10] for x in snaps]), lambda sink, s=s: _emit(s, sink),
                    date=snaps[-1].acquired_at[:10] if snaps else "", path=f"elections_store/snapshots/{s}.jsonl")
 

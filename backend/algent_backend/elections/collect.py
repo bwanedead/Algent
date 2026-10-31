@@ -73,7 +73,13 @@ def _words(text: str) -> set[str]:
     return {w[:5] for w in re.findall(r"[a-z]{4,}", text.casefold()) if w not in _GENERIC}
 
 
-def ask_targets(asks: Iterable[str], known: list[Target], fetch: Fetch = default_fetch) -> list[Target]:
+def current(title: str, today: date) -> bool:
+    """A title leading with a year older than ``flags.YEARS_BACK`` before today's is a past election: never collected, never indexed."""
+    m = re.match(r"\d{4}", title)
+    return not m or int(m.group(0)) >= today.year - flags.YEARS_BACK
+
+
+def ask_targets(asks: Iterable[str], known: list[Target], fetch: Fetch = default_fetch, today: date | None = None) -> list[Target]:
     """Elections named by asks that no calendar target already covers: one Wikipedia search each (bounded). An ask that finds nothing adds nothing."""
     have = [(t, _words(t.title)) for t in known]
     out: dict[str, Target] = {}
@@ -93,7 +99,7 @@ def ask_targets(asks: Iterable[str], known: list[Target], fetch: Fetch = default
             continue
         prefix = flags.POLL_PAGE.format(election="")
         title = next((t[len(prefix):] for t in titles if t.startswith(prefix)), "") or next((t for t in titles if re.match(r"\d{4} .*election", t)), "")
-        if title and slug_of(title) not in out and not any(slug_of(title) == slug_of(t.title) for t in known):
+        if title and current(title, today or date.today()) and slug_of(title) not in out and not any(slug_of(title) == slug_of(t.title) for t in known):
             out[slug_of(title)] = Target(title, via="ask", asked=ask)
     return list(out.values())
 
@@ -128,7 +134,7 @@ def run(*, today: date | None = None, asks: Iterable[str] = (), fetch: Fetch = d
     except (polite_http.SourceError, ValueError) as exc:
         targets = []
         report["errors"].append(f"calendar: {str(exc)[:160]}")
-    targets += ask_targets(asks, targets, fetch)
+    targets += ask_targets(asks, targets, fetch, today)
     for t in targets:
         try:
             snap = snapshot(t, fetch, now.isoformat(timespec="seconds"))
