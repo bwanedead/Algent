@@ -232,7 +232,7 @@ def feed_lane(corpus: Any, arg: str, *, since: str = "", kinds: set[str] | None 
     rows = [r for r in corpus.search(text, kinds=kinds, since=since, products={product}, limit=flags.SEARCH_FEED_LANE_ROWS * 2) if not _blocked(r)]
     out = []
     for r in rows:
-        h = _doc_hit(r)
+        h = _claim_hit(r) if r.get("type") == "claim" else _doc_hit(r)
         out.append(Hit(h.id, h.kind, h.date, h.title, f"(from the {label}) {h.text}".strip()))
     return [h for h in out if h.id][:flags.SEARCH_FEED_LANE_ROWS]
 
