@@ -29,6 +29,9 @@ MIN_MAP_SCORE = 2
 #: the sweep would not list them (thin, far-dated, off-theater): an unrecorded outcome is a forecast that can never be scored. At most this many NEW ones per pass (politeness).
 WATCH_ENABLED = True
 WATCH_MAX_FETCH = 80
+#: A watched id the API definitely reports as not found (deleted / invalid; a timeout or 5xx is NOT a miss) this many passes in a row is skipped from then on, so it stops
+#: eating ``WATCH_MAX_FETCH``. A later successful fetch clears the count (``status.json`` ``watch_misses``).
+WATCH_MISS_LIMIT = 3
 
 # ── snapshots ────────────────────────────────────────────────────────────────────────────────────
 #: A price snapshot is written at most this often per market (the timer may fire more often).

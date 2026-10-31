@@ -61,22 +61,30 @@ def discover(get: Fetch, vocab: list[mapping.TheaterVocab], now: datetime, error
 def _watched(get: Fetch, vocab: list[mapping.TheaterVocab], held: set[str], raws: dict[str, dict[str, Any]], errors: dict[str, str], out: dict[str, Any]) -> list[Market]:
     """Markets in the watch-set the store has never held, fetched by id (at most ``flags.WATCH_MAX_FETCH`` a pass; the rest wait for the next one). They are saved with
     ``origin="watch"``: tracked and scored, but never forecast by the desk. Fills ``raws`` for the ones returned."""
-    missing = sorted(mid for mid in watch.watched() if mid not in held)
+    misses = {k: v for k, v in (store.load_status().get("watch_misses") or {}).items() if isinstance(v, int)}
+    missing = sorted(mid for mid in watch.watched() if mid not in held and misses.get(mid, 0) < flags.WATCH_MISS_LIMIT)
     out["watch_missing"] = len(missing)
     rows: list[Market] = []
+    before = dict(misses)
     for mid in missing[:flags.WATCH_MAX_FETCH]:
         try:
             raw = polymarket.market_by_id(mid, get)
         except Exception as exc:  # noqa: BLE001
             errors[f"watch:{mid}"] = f"{type(exc).__name__}: {str(exc)[:120]}"
             continue
-        m = polymarket.parse_market(raw) if raw else None
+        if raw is None:
+            misses[mid] = misses.get(mid, 0) + 1                      # definite not-found only: errors above never count
+            continue
+        misses.pop(mid, None)
+        m = polymarket.parse_market(raw)
         if m is None:
             continue
         theaters, countries, score = mapping.map_market(m.question, m.event_title, vocab)
         raws[m.id] = raw
         rows.append(m.model_copy(update={"theaters": theaters, "countries": countries, "map_score": score, "origin": "watch"}))
     out["watch_fetched"] = len(rows)
+    if misses != before:
+        store.save_status(watch_misses=misses)
     return rows
 
 

@@ -23,7 +23,7 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
-from . import flags, gaps, store
+from . import flags, gap_router, gaps, store
 from .contracts import BotForecast, Gap, GapFill, Trace
 
 _LINK_FROM, _LINK_TO = timedelta(hours=-1), timedelta(hours=6)       # a run's profile is written after the fill's job started (``GapFill.at`` is the job's start)
@@ -176,9 +176,19 @@ def _brief(asks: list[Gap]) -> str:
             + "; ".join(seen[:flags.LOOP_REASK_QUOTES]) + "." + (f" Questions they were forecasting: {' | '.join(qs)}" if qs else ""))[:900]
 
 
+def _past(f: GapFill, asks: list[Gap], now: datetime) -> bool:
+    """The event is over: every linked market the store holds has ended or resolved; else (none held) every date the ask text names is before today."""
+    ms = store.markets()
+    held = [ms[i] for i in dict.fromkeys([*f.markets, *(g.market_id for g in asks)]) if i in ms]
+    if held:
+        return all(m.status != "open" or ((e := store.parse_iso(m.end_date)) is not None and e < now) for m in held)
+    days = gap_router.cue_dates(" ".join([f.topic, *(f"{g.why} {g.question}" for g in asks)]), now.date())
+    return bool(days) and all(d < now.date() for d in days)
+
+
 def refill_candidates(now: datetime, facts: Facts | None = None) -> list[gaps.Cluster]:
     """Clusters whose latest successful fill (inside ``GAP_REFILL_DAYS``) was asked again ``LOOP_REASK_MIN``+ times and that never had a refill: ONE more run each,
-    with a brief that quotes the re-asks. They compete for the same daily caps as any other fill; nothing here spends."""
+    with a brief that quotes the re-asks; an event already past (its markets ended / resolved, or all its dated cues gone) is dropped. They compete for the same daily caps as any other fill; nothing here spends."""
     facts = facts or load([])
     window, out = timedelta(days=flags.GAP_REFILL_DAYS), []
     for f in reversed(facts.fills):
@@ -187,7 +197,7 @@ def refill_candidates(now: datetime, facts: Facts | None = None) -> list[gaps.Cl
         if not f.ok or t is None or now - t > window or family[-1] is not f or any(x.refill for x in family) or any(gaps._same(toks, c.toks) for c in out):
             continue
         asks = sorted((g for g in facts.gaps if g.at > f.at and gaps._same(toks, gaps.tokens(g.topic))), key=lambda g: g.at)
-        if len(asks) >= flags.LOOP_REASK_MIN:
+        if len(asks) >= flags.LOOP_REASK_MIN and not _past(f, asks, now):
             out.append(gaps.Cluster(topic=f.topic, key=f.key, asks=len(asks), markets=list(dict.fromkeys(g.market_id for g in asks)), why=_brief(asks),
                                     questions=list(dict.fromkeys(g.question for g in asks if g.question)), last_at=asks[-1].at, toks=toks, refill=True))
     return out

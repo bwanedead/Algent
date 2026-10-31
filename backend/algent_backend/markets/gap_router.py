@@ -43,7 +43,7 @@ _RULES: tuple[tuple[str, re.Pattern[str]], ...] = tuple((k, re.compile(p, re.I))
     ("statement", r"\b(?:statements?|remarks|said|says|spokes(?:man|woman|person)|press conference|comments?|rhetoric|official position|declared|warned|vowed|pledged)\b"),
     ("event", r"\b(?:strikes?|struck|attacks?|attacked|bomb(?:ed|ing|ings)?|invasion|invade[sd]?|missiles?|drones?|shelling|clash(?:es)?|airstrikes?|raids?|explosions?|killed|"
              r"casualt(?:y|ies)|ceasefire|offensive|seiz(?:ed|ure)|shot down|sank|occurred|took place|happened)\b"),
-    ("schedule", r"\b(?:meetings?|meet|summit|visit|talks|scheduled?|deadline|agenda|calendar|confirmed|planned|announced|postponed?|hearing|date of)\b"),
+    ("schedule", r"\b(?:meetings?|meet|summit|visit|talks|scheduled?|deadline|agenda|calendar|confirmed|planned|announced|postponed?|hearing|decisions?|dates?|when)\b"),
     ("series", r"\b(?:arrivals?|transits?|throughput|volumes?|prices?|indices|index|yields?|barrels|exports?|imports?|inflation|cpi|gdp|unemployment|portwatch|time series|"
               r"daily counts?|flows?|traffic|output|production|inventor(?:y|ies)|reserves|rates?|levels?)\b"),
     ("status", r"\b(?:current|currently|incumbent|head of (?:state|government)|prime minister|president of|who is|who leads|leader of|in office|holds? office|status of|acting)\b"),

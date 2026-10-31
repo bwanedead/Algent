@@ -176,6 +176,20 @@ def test_an_asked_again_cluster_is_refilled_once():
     assert cands(NOW + timedelta(days=1)) == []                          # never a second refill, however it went
 
 
+def test_an_event_already_past_is_not_refilled():
+    asked_again()
+    store.save_markets([Market(id=m, question="q", description="", url="u", end_date=ago(1), volume=1.0, status="open") for m in ("a1", "a2", "a3")])
+    assert cands() == []                                                 # every linked market has ended
+    store.save_markets([Market(id="a2", question="q", description="", url="u", end_date=ago(-9), volume=1.0, status="open")])
+    assert len(cands()) == 1                                             # one is still running: the ask is live
+
+
+def test_a_past_event_is_dropped_by_its_dated_cues_when_no_market_is_held():
+    topic = "Likud polling Oct 12"
+    asked_again(topic=topic, qs=("Will Likud win the vote held Oct 12?", "Likud seats after the Oct 12 election"))
+    assert cands() == []
+
+
 def test_a_failed_refill_is_also_the_one_refill():
     asked_again()
     gaps.fill(now=NOW, runner=lambda t, w: {"ok": False})

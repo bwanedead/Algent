@@ -29,8 +29,10 @@ Fetch = Callable[[str, dict[str, Any] | None], Any]
 
 
 def fetch(url: str, params: dict[str, Any] | None = None) -> Any:
-    """GET and parse JSON (polite_http: retries, pacing). Raises ``polite_http.SourceError``."""
-    body = polite_http.get(url, params, headers={"Accept": "application/json"})
+    """GET and parse JSON (polite_http: retries, pacing). A 404 is an answer, returned as None; any other failure raises ``polite_http.SourceError``."""
+    body = polite_http.get(url, params, headers={"Accept": "application/json"}, missing_ok=True)
+    if not body:
+        return None
     try:
         return json.loads(body)
     except ValueError as exc:
