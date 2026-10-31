@@ -1,0 +1,24 @@
+== Opinion polling ==
+Polls for the [[2026 Israeli legislative election]]. Seat projections are for the 120-seat [[Knesset]].
+
+=== Seat projections ===
+{| class="wikitable sortable" style="text-align:center"
+|-
+! Polling firm !! Fieldwork date !! [[Likud]] !! [[Yesh Atid]] !! [[National Unity (Israel)|National Unity]] !! [[Shas]] !! [[Otzma Yehudit|Otzma]] !! Others
+|-
+| colspan="8" | 2026
+|-
+| [[Channel 12]] || 26 Oct 2026 || 32 || 20 || 11 || 10 || 8 || 39
+|-
+| [[Channel 13]] || 25 Oct || 31 || 22 || 12 || 10 || 7 || 38
+|-
+| [[Kan 11]] || 23 Oct || 33 || 19 || 12 || 9 || 8 || 39
+|-
+| [[Maariv]] || 22 Oct || 30 || 21 || 13 || 10 || 8 || 38
+|-
+| [[Channel 14]] || 20 Oct || 34 || 18 || 10 || 10 || 9 || 39
+|-
+| colspan="8" | 2025
+|-
+| [[Channel 12]] || 30 Dec 2025 || 29 || 23 || 14 || 10 || 6 || 38
+|}

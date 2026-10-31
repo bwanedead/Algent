@@ -24,7 +24,7 @@ MAX_MINUTES: dict[str, int] = {
 
 #: Free scheduled/maintenance subcommands that never spend and are never watched or killed.
 FREE_COMMANDS: tuple[str, ...] = (
-    "watchdog", "doctor", "envelope", "backup", "runner", "budget", "library", "instruments", "statements", "corpus", "reads", "live", "schedule", "products", "sanctions", "calendar", "flows", "satellite", "conflict", "gnss",
+    "watchdog", "doctor", "envelope", "backup", "runner", "budget", "library", "instruments", "statements", "corpus", "reads", "live", "schedule", "products", "sanctions", "calendar", "flows", "satellite", "conflict", "gnss", "elections",
 )
 
 #: Kill a single process once its own settled spend (live_spend heartbeat) passes this many USD. Article hard

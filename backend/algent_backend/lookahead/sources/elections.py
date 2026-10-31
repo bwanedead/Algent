@@ -24,6 +24,7 @@ _DAY = re.compile(r"^(\d{1,2})(?:\s+([A-Za-z]+))?\s*[–-]\s*(\d{1,2})\s+([A-Za-
 _LINK = re.compile(r"\[\[(?:[^\]|]*\|)?([^\]]*)\]\]")
 _VOTE = re.compile(r"referend|plebiscite|initiative|recall", re.I)
 _REF = re.compile(r"<ref[^>]*?/>|<ref[^>]*>.*?</ref>", re.S)
+_ARTICLE = re.compile(r"\[\[(\d{4}[^\]|#]*(?:election|referendum|plebiscite)[^\]|#]*)(?:[|#][^\]]*)?\]\]", re.I)
 
 
 def _clean(text: str) -> str:
@@ -52,7 +53,12 @@ def _when(head: str, year: int, month_hint: int | None) -> tuple[str, str]:
 
 
 def parse(wikitext: str, year: int) -> list[CalendarItem]:
-    out: list[CalendarItem] = []
+    return [item for item, _ in parse_with_pages(wikitext, year)]
+
+
+def parse_with_pages(wikitext: str, year: int) -> list[tuple[CalendarItem, str]]:
+    """``parse`` plus, per item, the title of the Wikipedia article about that election ("2026 Hungarian parliamentary election"), "" when its line links none."""
+    out: list[tuple[CalendarItem, str]] = []
     parent_date: tuple[str, str] = ("", "")
     for raw in wikitext.splitlines():
         if not raw.startswith("*"):
@@ -76,8 +82,9 @@ def parse(wikitext: str, year: int) -> list[CalendarItem]:
         iso2 = cnames.iso2(country.replace("the ", "", 1) if country.startswith("the ") else country)
         title = f"{country}: {office}" if office else f"{country} election"
         kind = "vote" if _VOTE.search(office) else "election"          # referendums, plebiscites, initiatives; runoffs stay elections ("(2nd round)")
-        out.append(make(kind, "elections", parent_date[0], title, PAGE.format(year=year), end_date=parent_date[1],
-                        countries=[iso2] if iso2 else [], confidence="medium"))
+        page = next((m.group(1).strip() for m in _ARTICLE.finditer(raw)), "")
+        out.append((make(kind, "elections", parent_date[0], title, PAGE.format(year=year), end_date=parent_date[1],
+                         countries=[iso2] if iso2 else [], confidence="medium"), page))
     return out
 
 

@@ -1,0 +1,14 @@
+==Results==
+{{Election results|official}}
+{| class="wikitable"
+! Candidate !! Party !! Votes !! %
+|-
+| [[Ana Silva]] || [[Social Party|SP]] || 52,310,442 || 50.8
+|-
+| [[Bruno Costa]] || [[Liberal Union|LU]] || 50,100,331 || 48.7
+|-
+| Blank votes || || 520,100 || 0.5
+|-
+! colspan="2" | Total || 102,930,873 || 100.00
+|}
+The Superior Electoral Court certified the official results on 4 November 2026.

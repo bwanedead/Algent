@@ -207,6 +207,16 @@
       "refresh_minutes": 360
     },
     {
+      "id": "elections",
+      "title": "Elections (polls, averages, results)",
+      "routes": [],
+      "publishes": [],
+      "feeds_from": [
+        "calendar"
+      ],
+      "refresh_minutes": 1440
+    },
+    {
       "id": "ai_benchmarks",
       "title": "AI benchmarks",
       "routes": [

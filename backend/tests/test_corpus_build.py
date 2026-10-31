@@ -28,7 +28,7 @@ from algent_backend.sanctions.contracts import SanctionsEvent
 STORES = {"ALGENT_INTEL_STORE": "intel", "ALGENT_PULSE_STORE": "pulse", "ALGENT_PROFILE_STORE": "profiles", "ALGENT_STATEMENTS_STORE": "statements",
           "ALGENT_SANCTIONS_STORE": "sanctions", "ALGENT_CALENDAR_STORE": "calendar", "ALGENT_INSTRUMENTS_STORE": "instruments",
           "ALGENT_ACTORS_STORE": "actors", "ALGENT_GEOLEDGER_STORE": "geo", "ALGENT_MARKETS_STORE": "markets", "ALGENT_MARITIME_STORE": "maritime",
-          "ALGENT_AI_BENCHMARKS_STORE": "bench", "ALGENT_CORPUS_STORE": "corpus", "ALGENT_CONFLICT_STORE": "conflict", "ALGENT_GNSS_STORE": "gnss"}
+          "ALGENT_AI_BENCHMARKS_STORE": "bench", "ALGENT_CORPUS_STORE": "corpus", "ALGENT_CONFLICT_STORE": "conflict", "ALGENT_GNSS_STORE": "gnss", "ALGENT_ELECTIONS_STORE": "elections"}
 THR = "thr_hormuz_crisis"
 
 

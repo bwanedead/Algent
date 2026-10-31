@@ -178,3 +178,9 @@ def site_radar() -> Path:
 
 def site_data() -> Path:
     return _site("public", "data")
+
+
+def elections() -> Path:
+    from algent_backend.elections.store import root
+
+    return root()
